@@ -71,7 +71,7 @@
     </li>
 
     <li>
-        <a href="{% url 'packages:hotel' %}">
+        <a href="{% url 'hotel:index' %}">
             <i class="fa fa-bed"></i> Hotels &amp; Village
         </a>
     </li>
@@ -102,67 +102,87 @@
 {% block content %}
 
 {% endblock %}
-
 <footer class="footer-area">
 <style>
 .footer-area {
+  position: relative;
   background: #0d1117;
   color: #c9d1d9;
   font-family: 'Poppins', sans-serif;
   padding: 64px 0 0;
 }
+.footer-area::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #f5a623 50%, transparent);
+  opacity: 0.6;
+}
 .footer-area .ft-container {
-  max-width: 1140px;
+  max-width: 1180px;
   margin: 0 auto;
   padding: 0 24px;
 }
 .footer-area .ft-grid {
   display: grid;
-  grid-template-columns: 2fr 1.5fr 1.5fr;
-  gap: 48px;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 56px;
+  align-items: start;
   padding-bottom: 48px;
 }
-.footer-area .ft-brand-name {
-  font-size: 22px;
-  font-weight: 700;
-  color: #fff;
-  letter-spacing: 1px;
-  margin: 0 0 12px;
+.footer-area .ft-grid > div {
+  position: relative;
 }
-.footer-area .ft-brand-dot { color: #f5a623; }
-.footer-area .ft-about-text {
-  font-size: 14px;
-  line-height: 1.8;
-  color: #8b949e;
-  margin: 0 0 20px;
+.footer-area .ft-grid > div:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  right: -28px;
+  bottom: 4px;
+  width: 1px;
+  background: #21262d;
 }
-.footer-area .ft-socials { display: flex; gap: 10px; }
+.footer-area .ft-socials {
+  display: flex;
+  flex-direction: row;
+  gap: 14px;
+    margin-top: 10px;
+}
 .footer-area .ft-social-btn {
-  width: 36px; height: 36px;
+  width: 40px; height: 40px;
   border: 1px solid #30363d;
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   color: #8b949e;
   text-decoration: none;
-  font-size: 14px;
-  transition: border-color 0.2s, color 0.2s;
+  font-size: 16px;
+  transition: border-color 0.2s, color 0.2s, background 0.2s, transform 0.2s;
 }
-.footer-area .ft-social-btn:hover { border-color: #f5a623; color: #f5a623; }
+.footer-area .ft-social-btn:hover {
+  border-color: #f5a623;
+  background: #f5a623;
+  color: #0d1117;
+  transform: translateY(-3px);
+}
 .footer-area .ft-col-title {
   font-size: 13px;
   font-weight: 600;
   color: #fff;
   letter-spacing: 1.5px;
   text-transform: uppercase;
-  margin: 0 0 20px;
-  padding-bottom: 10px;
-  border-bottom: 2px solid #f5a623;
-  display: inline-block;
+  margin: 0 0 22px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
 }
-.footer-area .ft-nav-cols {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0;
+.footer-area .ft-col-title::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: #f5a623;
+  flex-shrink: 0;
 }
 .footer-area .ft-nav-list { list-style: none; padding: 0; margin: 0; }
 .footer-area .ft-nav-list li { margin-bottom: 10px; }
@@ -170,44 +190,27 @@
   color: #8b949e;
   text-decoration: none;
   font-size: 14px;
-  transition: color 0.2s, padding-left 0.2s;
-  display: block;
-}
-.footer-area .ft-nav-list a:hover { color: #f5a623; padding-left: 6px; }
-.footer-area .ft-newsletter-text {
-  font-size: 14px;
-  color: #8b949e;
-  line-height: 1.7;
-  margin: 0 0 18px;
-}
-.footer-area .ft-email-row {
   display: flex;
-  border: 1px solid #30363d;
+  align-items: center;
+  gap: 10px;
+  transition: color 0.2s, transform 0.2s;
+  transform: translateX(0);
+}
+.footer-area .ft-nav-list a i {
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: #f5a623;
+  background: rgba(245, 166, 35, 0.1);
   border-radius: 6px;
-  overflow: hidden;
-  background: #161b22;
+  flex-shrink: 0;
+  transition: background 0.2s, color 0.2s;
 }
-.footer-area .ft-email-row input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  outline: none;
-  padding: 10px 14px;
-  color: #c9d1d9;
-  font-size: 14px;
-  font-family: 'Poppins', sans-serif;
-}
-.footer-area .ft-email-row input::placeholder { color: #484f58; }
-.footer-area .ft-email-btn {
-  background: #f5a623;
-  border: none;
-  padding: 10px 16px;
-  cursor: pointer;
-  color: #0d1117;
-  font-size: 16px;
-  transition: background 0.2s;
-}
-.footer-area .ft-email-btn:hover { background: #e09410; }
+.footer-area .ft-nav-list a:hover { color: #f5a623; transform: translateX(4px); }
+.footer-area .ft-nav-list a:hover i { background: #f5a623; color: #0d1117; }
 .footer-area .ft-divider {
   border: none;
   border-top: 1px solid #21262d;
@@ -221,37 +224,68 @@
   flex-wrap: wrap;
   gap: 12px;
 }
+.footer-area .ft-socials-col{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.footer-area .ft-footer-logo{
+    margin-bottom: 40px;
+}
+
+.footer-area .ft-footer-logo img{
+    width: 220px;
+    max-width: 80%;/* اندازه لوگو */
+    height: auto;
+    display: block;
+}
 .footer-area .ft-copy { font-size: 13px; color: #484f58; margin: 0; }
 .footer-area .ft-copy a { color: #f5a623; text-decoration: none; }
-.footer-area .ft-bottom-links { display: flex; gap: 20px; }
+.footer-area .ft-bottom-links { display: flex; gap: 0; flex-wrap: wrap; }
 .footer-area .ft-bottom-links a {
   font-size: 13px;
   color: #484f58;
   text-decoration: none;
   transition: color 0.2s;
+  padding: 0 14px;
+  border-right: 1px solid #21262d;
 }
+.footer-area .ft-bottom-links a:last-child { border-right: none; padding-right: 0; }
+.footer-area .ft-bottom-links a:first-child { padding-left: 0; }
 .footer-area .ft-bottom-links a:hover { color: #c9d1d9; }
 
-@media (max-width: 768px) {
+@media (max-width: 992px) {
+  .footer-area .ft-grid { grid-template-columns: repeat(3, 1fr); gap: 40px 24px; }
+  .footer-area .ft-grid > div::after { display: none; }
+}
+@media (max-width: 700px) {
+  .footer-area .ft-grid { grid-template-columns: repeat(2, 1fr); gap: 32px 24px; }
+}
+@media (max-width: 480px) {
   .footer-area .ft-grid { grid-template-columns: 1fr; gap: 32px; }
   .footer-area .ft-bottom { flex-direction: column; align-items: flex-start; }
   .footer-area { padding: 48px 0 0; }
 }
 @media (max-width: 480px) {
-  .footer-area .ft-nav-cols { grid-template-columns: 1fr; }
+  .footer-area .ft-col-title { white-space: normal; }
 }
 </style>
 
 <div class="ft-container">
   <div class="ft-grid">
 
-    <!-- About -->
-    <div>
-      <p class="ft-brand-name">✈ Travel<span class="ft-brand-dot">.</span></p>
-      <p class="ft-about-text">
-        The world has become so fast paced that people don't want to stand by
-        reading a page of information. We help you explore the world with ease and joy.
-      </p>
+    <!-- Socials -->
+    <div class="ft-socials-col">
+        <!-- Logo -->
+  <div class="ft-footer-logo">
+    <a href="{% url 'website:index' %}">
+      <img src="{% static 'img/logo.png' %}" alt="Travelista Logo">
+    </a>
+  </div>
+
+  <!-- Social Icons -->
+
       <div class="ft-socials">
         <a href="#" class="ft-social-btn"><i class="fa fa-facebook"></i></a>
         <a href="#" class="ft-social-btn"><i class="fa fa-twitter"></i></a>
@@ -260,35 +294,37 @@
       </div>
     </div>
 
-    <!-- Navigation -->
+    <!-- Services -->
     <div>
-      <p class="ft-col-title">Navigation</p>
-      <div class="ft-nav-cols">
-        <ul class="ft-nav-list">
-          <li><a href="{% url 'website:index' %}">Home</a></li>
-          <li><a href="{% url 'website:about' %}">About</a></li>
-          <li><a href="{% url 'blog:index' %}">Blog</a></li>
-          <li><a href="{% url 'website:contact' %}">Contact</a></li>
-        </ul>
-        <ul class="ft-nav-list">
-          <li><a href="#">Services</a></li>
-          <li><a href="#">Packages</a></li>
-          <li><a href="#">Hotels</a></li>
-          <li><a href="#">Ask and Questions</a></li>
-        </ul>
-      </div>
+      <p class="ft-col-title">Services</p>
+      <ul class="ft-nav-list">
+        <li><a href="#"><i class="fa fa-plane"></i>Flights</a></li>
+        <li><a href="#"><i class="fa fa-building-o"></i>Hotels</a></li>
+        <li><a href="#"><i class="fa fa-map-o"></i>Tour Packages</a></li>
+        <li><a href="#"><i class="fa fa-train"></i>Train Tickets</a></li>
+      </ul>
     </div>
 
-    <!-- Newsletter -->
+    <!-- Company -->
     <div>
-      <p class="ft-col-title">Newsletter</p>
-      <p class="ft-newsletter-text">
-        Subscribe to get the latest travel deals and destination guides straight to your inbox.
-      </p>
-      <div class="ft-email-row">
-        <input type="email" placeholder="Your email address">
-        <button class="ft-email-btn"><i class="fa fa-paper-plane"></i></button>
-      </div>
+      <p class="ft-col-title">Company</p>
+      <ul class="ft-nav-list">
+        <li><a href="{% url 'website:about' %}"><i class="fa fa-info-circle"></i>About Us</a></li>
+        <li><a href="{% url 'website:contact' %}"><i class="fa fa-envelope-o"></i>Contact Us</a></li>
+        <li><a href="{% url 'blog:index' %}"><i class="fa fa-rss"></i>Blog</a></li>
+        <li><a href="#"><i class="fa fa-question-circle"></i>FAQ</a></li>
+      </ul>
+    </div>
+
+    <!-- Legal -->
+    <div>
+      <p class="ft-col-title">Legal</p>
+      <ul class="ft-nav-list">
+        <li><a href="#"><i class="fa fa-file-text-o"></i>Terms &amp; Conditions</a></li>
+        <li><a href="#"><i class="fa fa-shield"></i>Privacy Policy</a></li>
+        <li><a href="#"><i class="fa fa-money"></i>Refund Policy</a></li>
+        <li><a href="#"><i class="fa fa-lock"></i>Cookie Policy</a></li>
+      </ul>
     </div>
 
   </div>
