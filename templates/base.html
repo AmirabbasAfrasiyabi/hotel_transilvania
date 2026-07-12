@@ -47,11 +47,52 @@
 </div>
 <nav id="nav-menu-container">
 <ul class="nav-menu">
-<li><a href="#">Home</a></li>
-<li><a href="#}">About</a></li>
-  <li><a href="#">Contact</a></li>
-<li><a href="#">hotels</a></li>
-<li><a href="#">blog</a></li>
+
+    <li class="dropdown">
+        <a href="#">
+            <i class="fa fa-plane"></i> Flight
+        </a>
+        <ul class="submenu">
+            <li><a href="#">Domestic Flight</a></li>
+            <li><a href="#">International Flight</a></li>
+        </ul>
+    </li>
+
+    <li>
+        <a href="#">
+            <i class="fa fa-train"></i> Train
+        </a>
+    </li>
+
+    <li>
+        <a href="#">
+            <i class="fa fa-bus"></i> Bus
+        </a>
+    </li>
+
+    <li>
+        <a href="{% url 'packages:hotel' %}">
+            <i class="fa fa-bed"></i> Hotels &amp; Village
+        </a>
+    </li>
+
+     <li>
+    <a href="#">
+        <i class="fa fa-suitcase"></i> Tour Packages
+    </a>
+    </li>
+
+    <li class="dropdown">
+        <a href="#">
+            <i class="fa fa-info-circle"></i> About Us
+        </a>
+        <ul class="submenu">
+            <li><a href="#">Our Story</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">Blog</a></li>
+        </ul>
+    </li>
+
 </ul>
 </nav>
 </div>
@@ -224,16 +265,16 @@
       <p class="ft-col-title">Navigation</p>
       <div class="ft-nav-cols">
         <ul class="ft-nav-list">
-          <li><a href="#">Home</a></li>
-          <li><a href="#">About</a></li>
-          <li><a href="#">Blog</a></li>
-          <li><a href="#">Contact</a></li>
+          <li><a href="{% url 'website:index' %}">Home</a></li>
+          <li><a href="{% url 'website:about' %}">About</a></li>
+          <li><a href="{% url 'blog:index' %}">Blog</a></li>
+          <li><a href="{% url 'website:contact' %}">Contact</a></li>
         </ul>
         <ul class="ft-nav-list">
-          <li><a href="#">Hotels</a></li>
-          <li><a href="#">Packages</a></li>
-          <li><a href="#">Pricing</a></li>
           <li><a href="#">Services</a></li>
+          <li><a href="#">Packages</a></li>
+          <li><a href="#">Hotels</a></li>
+          <li><a href="#">Ask and Questions</a></li>
         </ul>
       </div>
     </div>
