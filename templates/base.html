@@ -20,7 +20,7 @@
 <link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
 
 <!-- FIXED: Font Awesome via CDN to avoid 404 font files -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
 <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
 <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
@@ -43,7 +43,7 @@
 <div class="container main-menu">
 <div class="row align-items-center justify-content-between d-flex">
 <div id="logo">
-<a href="#"><img src="{% static 'img/logo.png' %}" alt title /></a>
+<a href="{% url 'website:index' %}"><img src="{% static 'img/logo.png' %}" alt title /></a>
 </div>
 <nav id="nav-menu-container">
 <ul class="nav-menu">
@@ -70,26 +70,32 @@
         </a>
     </li>
 
-    <li>
-        <a href="{% url 'hotel:index' %}">
-            <i class="fa fa-bed"></i> Hotels &amp; Village
+     <li class="dropdown">
+        <a href="#">
+            <i class="fa fa-bed"></i> residence
         </a>
+        <ul class="submenu">
+            <li><a href="{% url 'hotel:index' %}">Hotel</a></li>
+            <li><a href="#">Village</a></li>
+            <li><a href="#">House</a></li>
+        </ul>
     </li>
 
+
      <li>
-    <a href="#">
+    <a href="{% url 'packages:index' %}">
         <i class="fa fa-suitcase"></i> Tour Packages
     </a>
     </li>
 
     <li class="dropdown">
         <a href="#">
-            <i class="fa fa-info-circle"></i> About Us
+            <i class="fa-solid fa-book-open"></i> About Us
         </a>
         <ul class="submenu">
-            <li><a href="#">Our Story</a></li>
-            <li><a href="#">Contact</a></li>
-            <li><a href="#">Blog</a></li>
+            <li><a href="{% url 'website:about' %}">Our Story</a></li>
+            <li><a href="{% url 'website:contact' %}">Contact</a></li>
+            <li><a href="{% url 'blog:index' %}">Blog</a></li>
         </ul>
     </li>
 
@@ -293,11 +299,11 @@
 </a>
 
 <a href="https://github.com/AmirabbasAfrasiyabi" class="ft-social-btn">
-    <i class="fa fa-github"></i>
+    <i class="fa-brands fa-github"></i>
 </a>
 
 <a href="https://www.linkedin.com/in/amirabbas-afrasiyabi-a6a230259" class="ft-social-btn">
-    <i class="fa fa-linkedin"></i>
+    <i class="fa-brands fa-linkedin"></i>
 </a>
 
 <a href="mailto:abb.afrasiyabi@gmail.com" class="ft-social-btn">
@@ -312,18 +318,18 @@
       <p class="ft-col-title">Services</p>
       <ul class="ft-nav-list">
         <li><a href="#"><i class="fa fa-plane"></i>Flights</a></li>
-        <li><a href="#"><i class="fa fa-building-o"></i>Hotels</a></li>
-        <li><a href="#"><i class="fa fa-map-o"></i>Tour Packages</a></li>
-        <li><a href="#"><i class="fa fa-train"></i>Train Tickets</a></li>
+        <li><a href="#"><i class="fa fa-train"></i>Train</a></li>
+        <li><a href="#"><i class="fa fa-bus"></i>Bus</a></li>
+        <li><a href="#"><i class="fa fa-bed"></i>Residence</a></li>
       </ul>
     </div>
 
     <!-- Company -->
     <div>
-      <p class="ft-col-title">Company</p>
+      <p class="ft-col-title">About Us</p>
       <ul class="ft-nav-list">
-        <li><a href="{% url 'website:about' %}"><i class="fa fa-info-circle"></i>About Us</a></li>
-        <li><a href="{% url 'website:contact' %}"><i class="fa fa-envelope-o"></i>Contact Us</a></li>
+        <li><a href="{% url 'website:about' %}"><i class="fa-solid fa-book-open"></i>Our Story</a></li>
+        <li><a href="{% url 'website:contact' %}"><i class="fa-solid fa-envelope"></i>Contact Us</a></li>
         <li><a href="{% url 'blog:index' %}"><i class="fa fa-rss"></i>Blog</a></li>
         <li><a href="#"><i class="fa fa-question-circle"></i>FAQ</a></li>
       </ul>
@@ -333,9 +339,9 @@
     <div>
       <p class="ft-col-title">Legal</p>
       <ul class="ft-nav-list">
-        <li><a href="#"><i class="fa fa-file-text-o"></i>Terms &amp; Conditions</a></li>
+        <li><a href="#"><i class="fa-solid fa-file-lines"></i> Terms &amp; Conditions</a></li>
         <li><a href="#"><i class="fa fa-shield"></i>Privacy Policy</a></li>
-        <li><a href="#"><i class="fa fa-money"></i>Refund Policy</a></li>
+        <li><a href="#"><i class="fa-solid fa-money-bill"></i> Refund Policy</a></li>
         <li><a href="#"><i class="fa fa-lock"></i>Cookie Policy</a></li>
       </ul>
     </div>
@@ -344,19 +350,6 @@
 
   <hr class="ft-divider">
 
-  <div class="ft-bottom">
-    <p class="ft-copy">
-      &copy; <script>document.write(new Date().getFullYear());</script> Travel.
-      Made with <i class="fa fa-heart-o" aria-hidden="true"></i> by
-      <a href="https://colorlib.com" target="_blank">Colorlib</a>
-    </p>
-    <div class="ft-bottom-links">
-      <a href="#">Privacy Policy</a>
-      <a href="#">Terms of Use</a>
-      <a href="#">Cookie Policy</a>
-    </div>
-  </div>
-</div>
 </footer>
 
 <script src="{% static 'js/vendor/jquery-2.2.4.min.js' %}"></script>
