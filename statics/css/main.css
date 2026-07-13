@@ -2987,19 +2987,31 @@ body.mobile-nav-active #mobile-nav-toggle {
   transition: all 0.3s ease 0s;
 }
 
+.widget-wrap .user-info-widget .social-links {
+    display: inline-block;
+    margin: 20px auto;
+    padding: 20px 30px;
+    border-top: 3px solid  #e5e5e5;
+    border-bottom: 3px solid  #e5e5e5;
+}
+
 .widget-wrap .user-info-widget .social-links li {
   display: inline-block;
-  margin-bottom: 10px;
+  margin-bottom: 0px;
 }
 
 .widget-wrap .user-info-widget .social-links li a {
   color: #222;
   padding: 10px;
-  font-size: 14px;
+  font-size: 20px;
   -webkit-transition: all 0.3s ease 0s;
   -moz-transition: all 0.3s ease 0s;
   -o-transition: all 0.3s ease 0s;
   transition: all 0.3s ease 0s;
+}
+
+.widget-wrap .user-info-widget .social-links li a i {
+    font-size: 16px;
 }
 
 .widget-wrap .user-info-widget .social-links li a:hover {
