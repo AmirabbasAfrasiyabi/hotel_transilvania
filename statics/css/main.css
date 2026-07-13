@@ -1524,6 +1524,39 @@ b, sup, sub, u, del {
   padding-right: 15px;
 }
 
+/* کادر هدر را در دسکتاپ کمی بزرگ‌تر/عریض‌تر می‌کنیم تا منو و دکمه‌های حساب کاربری در یک ردیف جا شوند */
+@media (min-width: 992px) {
+  .container.main-menu {
+    max-width: 1600px;
+  }
+
+  .main-menu .row {
+    flex-wrap: nowrap;
+  }
+
+  .main-menu #nav-menu-container {
+    flex-shrink: 0;
+    padding-right: 0;
+  }
+
+  .main-menu .header-account-actions {
+    flex-shrink: 0;
+  }
+}
+
+/* در عرض‌های نزدیک به بریک‌پوینت موبایل، کمی فاصله‌ها را جمع‌تر می‌کنیم تا فشرده‌تر جا شوند */
+@media (min-width: 992px) and (max-width: 1300px) {
+  .nav-menu > li {
+    margin-left: 6px;
+  }
+  .nav-menu a {
+    padding: 0 5px;
+  }
+  .main-menu .header-account-actions {
+    gap: 4px;
+  }
+}
+
 #header {
   position: fixed;
   left: 0;
@@ -1793,6 +1826,104 @@ body.mobile-nav-active #mobile-nav-toggle {
 
 #nav-menu-container {
   padding-right: 15px;
+}
+
+/*--------------------------------------------------------------
+# Header Account Actions (Sign up / Payment / My Travel)
+--------------------------------------------------------------*/
+.header-account-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  padding-right: 15px;
+}
+
+.account-action-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #fff;
+  font-size: var(--text-size-small);
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: 30px;
+  white-space: nowrap;
+  -webkit-transition: all 0.3s ease 0s;
+  -moz-transition: all 0.3s ease 0s;
+  -o-transition: all 0.3s ease 0s;
+  transition: all 0.3s ease 0s;
+}
+
+.account-action-link i {
+  font-size: 15px;
+  color: #f8b600;
+}
+
+.account-action-link:hover {
+  color: #f8b600;
+  background: rgba(248, 182, 0, 0.12);
+}
+
+.account-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f8b600;
+  color: #fff;
+  font-size: var(--text-size-small);
+  font-weight: 600;
+  padding: 10px 22px;
+  border-radius: 30px;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  -webkit-transition: all 0.3s ease 0s;
+  -moz-transition: all 0.3s ease 0s;
+  -o-transition: all 0.3s ease 0s;
+  transition: all 0.3s ease 0s;
+}
+
+.account-action-btn i {
+  font-size: 14px;
+}
+
+.account-action-btn:hover {
+  background: #222222;
+  color: #fff;
+}
+
+#header.header-scrolled .account-action-link {
+  color: #fff;
+}
+
+@media (max-width: 991px) {
+  .header-account-actions {
+    margin-right: 45px;
+    /* فضای لازم برای دکمه منوی موبایل */
+    gap: 4px;
+  }
+  .account-action-link span,
+  .account-action-btn span {
+    display: none;
+  }
+  .account-action-link {
+    padding: 8px 10px;
+  }
+  .account-action-btn {
+    padding: 10px 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-account-actions {
+    gap: 2px;
+  }
+  .account-action-link {
+    padding: 6px 8px;
+  }
+  .account-action-btn {
+    padding: 8px 12px;
+  }
 }
 
 .primary-btn {
@@ -2653,7 +2784,7 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 .blog-header-content h1 {
-  max-width: 1000px;
+  max-width: 500px;
   margin-left: auto;
   margin-right: auto;
   font-size: var(--hero-title-size);

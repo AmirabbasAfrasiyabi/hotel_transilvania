@@ -41,67 +41,84 @@
 </div>
 </div>
 <div class="container main-menu">
-<div class="row align-items-center justify-content-between d-flex">
-<div id="logo">
-<a href="{% url 'website:index' %}"><img src="{% static 'img/logo.png' %}" alt title /></a>
-</div>
-<nav id="nav-menu-container">
-<ul class="nav-menu">
+  <div class="row align-items-center justify-content-between d-flex">
+    <div id="logo">
+      <a href="{% url 'website:index' %}"><img src="{% static 'img/logo.png' %}" alt title /></a>
+    </div>
 
-    <li class="dropdown">
-        <a href="#">
+    <nav id="nav-menu-container">
+      <ul class="nav-menu">
+
+        <li class="dropdown">
+          <a href="#">
             <i class="fa fa-plane"></i> Flight
-        </a>
-        <ul class="submenu">
+          </a>
+          <ul class="submenu">
             <li><a href="#">Domestic Flight</a></li>
             <li><a href="#">International Flight</a></li>
-        </ul>
-    </li>
+          </ul>
+        </li>
 
-    <li>
-        <a href="#">
+        <li>
+          <a href="#">
             <i class="fa fa-train"></i> Train
-        </a>
-    </li>
+          </a>
+        </li>
 
-    <li>
-        <a href="#">
+        <li>
+          <a href="#">
             <i class="fa fa-bus"></i> Bus
-        </a>
-    </li>
+          </a>
+        </li>
 
-     <li class="dropdown">
-        <a href="#">
+        <li class="dropdown">
+          <a href="#">
             <i class="fa fa-bed"></i> residence
-        </a>
-        <ul class="submenu">
+          </a>
+          <ul class="submenu">
             <li><a href="{% url 'hotel:index' %}">Hotel</a></li>
             <li><a href="#">Village</a></li>
             <li><a href="#">House</a></li>
-        </ul>
-    </li>
+          </ul>
+        </li>
 
+        <li>
+          <a href="{% url 'packages:index' %}">
+            <i class="fa fa-suitcase"></i> Tour Packages
+          </a>
+        </li>
 
-     <li>
-    <a href="{% url 'packages:index' %}">
-        <i class="fa fa-suitcase"></i> Tour Packages
-    </a>
-    </li>
-
-    <li class="dropdown">
-        <a href="#">
+        <li class="dropdown">
+          <a href="#">
             <i class="fa-solid fa-book-open"></i> About Us
-        </a>
-        <ul class="submenu">
+          </a>
+          <ul class="submenu">
             <li><a href="{% url 'website:about' %}">Our Story</a></li>
             <li><a href="{% url 'website:contact' %}">Contact</a></li>
             <li><a href="{% url 'blog:index' %}">Blog</a></li>
-        </ul>
-    </li>
+          </ul>
+        </li>
 
-</ul>
-</nav>
-</div>
+      </ul>
+    </nav>
+
+    <!-- دکمه‌های حساب کاربری: سفرهای من / پرداخت / ثبت‌نام -->
+    <div class="header-account-actions">
+      <a href="#" class="account-action-link">
+        <i class="fa-solid fa-suitcase-rolling"></i>
+        <span>My Travel</span>
+      </a>
+      <a href="#" class="account-action-link">
+        <i class="fa-solid fa-credit-card"></i>
+        <span>Payment</span>
+      </a>
+      <a href="#" class="account-action-btn">
+        <i class="fa-solid fa-user-plus"></i>
+        <span>Sign Up</span>
+      </a>
+    </div>
+
+  </div>
 </div>
 </header>
 
