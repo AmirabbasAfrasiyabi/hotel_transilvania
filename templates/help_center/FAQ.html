@@ -6,21 +6,20 @@
 
 {% block content %}
 <div class="faq-page">
-<div class="faq-container">
 
-  <nav class="faq-breadcrumb" aria-label="Breadcrumb">
-    <a href="{% url 'website:index' %}">Home</a>
-    <span>/</span>
-    <span>Help Center</span>
-    <span>/</span>
-    <span class="current">FAQ</span>
-  </nav>
+  <div class="faq-hero">
+    <img class="faq-hero-img" src="{% static 'img/feq/feq-hero.jpg' %}" alt="Help Center">
+    <div class="overlay faq-hero-overlay"></div>
+    <div class="faq-hero-inner">
 
-  <div class="faq-head">
-    <span>HELP CENTER</span>
-    <h1>Frequently Asked Questions</h1>
-    <p>Find answers to common questions about booking flights, trains, buses and hotels, payments, refunds and your account.</p>
+      <div class="faq-head">
+        <h1>Frequently Asked Questions</h1>
+        <p>Find answers to common questions about booking flights, trains, buses and hotels, payments, refunds and your account.</p>
+      </div>
+    </div>
   </div>
+
+<div class="faq-container">
 
   <div class="faq-search">
     <input type="text" id="faqSearchInput" placeholder="Search for a question or keyword..." autocomplete="off">

@@ -1,0 +1,639 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}FAQ - Frequently Asked Questions | Travel{% endblock %}
+{% block meta_description %}Find answers about booking flights, trains, buses and hotels, payments, refunds, your account, tours, insurance and more in our Help Center.{% endblock %}
+
+{% block content %}
+<div class="faq-page">
+
+  <div class="faq-hero">
+    <img class="faq-hero-img" src="{% static 'img/buying_and_refound/Buying.jpg' %}" alt="Help Center">
+    <div class="overlay faq-hero-overlay"></div>
+    <div class="faq-hero-inner">
+
+      <div class="faq-head">
+        <h1>Frequently Asked Questions</h1>
+        <p>Find answers to common questions about booking flights, trains, buses and hotels, payments, refunds and your account.</p>
+      </div>
+    </div>
+  </div>
+
+<div class="faq-container">
+
+  <div class="faq-search">
+    <input type="text" id="faqSearchInput" placeholder="Search for a question or keyword..." autocomplete="off">
+    <i class="fa fa-search"></i>
+  </div>
+
+  <div class="faq-category-bar-wrap">
+    <div class="faq-category-bar" id="faqCategoryBar"></div>
+  </div>
+
+  <div id="faqResults"></div>
+
+  <div class="faq-support-cta">
+    <div>
+      <h4>Still have a question?</h4>
+      <p>Our support team is available around the clock to help you.</p>
+    </div>
+    <a href="{% url 'website:contact' %}">Contact Support</a>
+  </div>
+
+</div>
+</div>
+
+<script>
+/* =====================================================================
+   Travel App - Help Center FAQ Data
+   12 categories x 10 items = 120 Q&A entries
+   Structured for easy future maintenance (add/edit items here only)
+===================================================================== */
+const FAQ_CATEGORIES = [
+  {
+    id: "domestic-flights",
+    label: "Domestic Flights",
+    icon: "fa-plane-departure",
+    items: [
+      { q: "How much baggage is included in my domestic flight ticket?",
+        a: `<p>Baggage allowance varies depending on the airline and the fare class you selected at checkout:</p>
+            <ul>
+              <li><strong>Cabin/Hand Luggage:</strong> Most domestic flights permit 1 piece of hand luggage weighing up to 7 kg (15 lbs), plus a small personal item (like a laptop bag or handbag) that fits under the seat in front of you.</li>
+              <li><strong>Checked Baggage:</strong> Standard economy tickets typically include 15–25 kg (33–55 lbs) of checked baggage. Some budget airlines don't include checked baggage by default; you can purchase additional weight under "My Bookings" up to 2 hours before your flight to avoid high airport counter fees.</li>
+            </ul>` },
+      { q: "How can I change the date or time of my domestic flight?",
+        a: `<p>You can easily request a flight change directly through our app:</p>
+            <ol>
+              <li>Go to <strong>My Bookings</strong> and select the flight you wish to modify.</li>
+              <li>Click on <strong>"Change Flight / Reschedule"</strong>.</li>
+              <li>Choose your new preferred travel date and time.</li>
+              <li>Review the change fees (airline penalty fee + any fare difference) and click <strong>"Confirm & Pay"</strong>.</li>
+            </ol>
+            <p>Note: flight changes must be completed at least 3 hours before the original scheduled departure time.</p>` },
+      { q: "What is the cancellation policy for domestic flights, and how do I request a refund?",
+        a: `<p>Refund eligibility depends strictly on the airline's fare rules:</p>
+            <ul>
+              <li><strong>Refundable tickets:</strong> Can be cancelled for a partial refund. The airline deducts a cancellation penalty, which usually increases the closer you get to departure.</li>
+              <li><strong>Non-refundable tickets:</strong> If you cancel, you'll only be refunded the government-imposed taxes and airport fees, not the base fare.</li>
+              <li><strong>How to cancel:</strong> Go to "My Bookings", select your flight, click "Cancel Booking", and review the refundable amount before confirming. Refunds are processed to your original payment method within 3–5 business days.</li>
+            </ul>` },
+      { q: "What identification do I need to bring for a domestic flight?",
+        a: `<p>For all domestic travel, you must present a valid, physical government-issued photo ID at the check-in counter and security checkpoints. Acceptable forms of ID include:</p>
+            <ul>
+              <li>National ID Card / Resident Card</li>
+              <li>Valid Driver's License</li>
+              <li>Passport (required if you're a foreign national travelling domestically)</li>
+              <li>Birth Certificate (for infants and children under 12 without a photo ID)</li>
+            </ul>
+            <p>Note: digital copies or photos of IDs on your phone are generally not accepted by airport security.</p>` },
+      { q: "Do I need to buy a separate ticket for my infant or child?",
+        a: `<p>Yes, all children must have a booking, though the ticket type depends on their age:</p>
+            <ul>
+              <li><strong>Infants (under 2):</strong> Do not require a separate seat and can travel on an adult's lap. Infant tickets are heavily discounted (usually about 10% of the adult fare plus taxes). Only one lap infant is allowed per adult passenger.</li>
+              <li><strong>Children (2–11):</strong> Must have their own booked seat, charged at a child fare, typically 75–100% of the adult fare depending on the airline.</li>
+            </ul>` },
+      { q: "When does online check-in open, and how do I get my boarding pass?",
+        a: `<p>Online check-in typically opens 24–48 hours before departure and closes 1–2 hours before the flight.</p>
+            <ul>
+              <li><strong>How to check in:</strong> Open our app, go to "My Bookings", and tap "Check-In".</li>
+              <li><strong>Boarding pass:</strong> Your digital boarding pass is saved in the app and emailed to you. With no checked bags, you can go straight to security with your digital pass.</li>
+            </ul>` },
+      { q: "What happens if my domestic flight is delayed or cancelled by the airline?",
+        a: `<p>If the airline delays or cancels your flight, your rights are protected:</p>
+            <ul>
+              <li><strong>Cancellations:</strong> The airline must offer a full refund or a seat on the next available flight at no extra cost.</li>
+              <li><strong>Delays:</strong> Depending on the length of delay, the airline must provide refreshments or hotel accommodation for overnight delays.</li>
+            </ul>
+            <p>Our app sends real-time push notifications about gate changes, delays, or cancellations, and lets you rebook directly from the alert.</p>` },
+      { q: "Can I correct a typo in my name on a flight ticket?",
+        a: `<p>Airlines have strict security policies regarding names on tickets:</p>
+            <ul>
+              <li><strong>Minor typos (1–3 letters):</strong> Most airlines allow free or low-fee corrections. Contact our Support Team via the Help Center as soon as you spot the error.</li>
+              <li><strong>Major changes / transfers:</strong> Tickets can't be transferred to another person. If the name is completely wrong, you'll need to cancel (subject to fees) and book a new one.</li>
+            </ul>` },
+      { q: "How do I add special assistance or request a specific seat?",
+        a: `<p>You can customize your journey at booking or afterwards:</p>
+            <ul>
+              <li><strong>Special services</strong> (wheelchair, dietary meals, etc.): Go to "My Bookings", select your flight, and click "Special Requests".</li>
+              <li><strong>Seat selection:</strong> Pre-book during checkout or later via "Select Seats". Preferred seats (extra legroom, exit rows, front of cabin) may carry an additional airline charge.</li>
+            </ul>` },
+      { q: "Can pregnant passengers travel on domestic flights?",
+        a: `<p>Yes, but restrictions apply based on how far along you are:</p>
+            <ul>
+              <li><strong>Up to 28 weeks:</strong> Travel allowed without medical certificates.</li>
+              <li><strong>28–35 weeks:</strong> A medical certificate dated within 7–14 days of travel is required, confirming fitness to fly.</li>
+              <li><strong>36 weeks and beyond:</strong> Most airlines don't permit travel for safety reasons. Always check your airline's specific pregnancy policy before booking.</li>
+            </ul>` },
+    ],
+  },
+  {
+    id: "international-flights",
+    label: "International Flights",
+    icon: "fa-plane",
+    items: [
+      { q: "Do I need a visa to travel, and does your app provide them?",
+        a: `<p>Visa requirements depend entirely on your citizenship and destination country. Securing the correct visa, transit visa, or travel authorization (like an ESTA or ETA) is your sole responsibility. Our app doesn't issue visas directly, but provides a "Visa Info" link on your flight booking confirmation page. Also ensure your passport is valid for at least 6 months beyond your planned return date.</p>` },
+      { q: "How do transit visas and layovers work for multi-city international flights?",
+        a: `<ul>
+              <li><strong>Single-ticket bookings:</strong> If flights are booked together under one ticket number, bags are usually checked through and you won't need to exit the transit area, so a transit visa is rarely needed unless local immigration specifies otherwise.</li>
+              <li><strong>Self-transfer bookings:</strong> With two separate tickets, you must collect bags, exit the secure zone, clear customs, and check in again — a valid visa is required to enter the transit country.</li>
+            </ul>` },
+      { q: "How early should I arrive at the airport for an international flight?",
+        a: `<p>We strongly advise arriving at least <strong>3 hours</strong> before your scheduled departure. International check-in, document verification, baggage drop, customs, and security queues take significantly longer than domestic flights. Boarding gates close 20–30 minutes before departure, and check-in desks close 60 minutes before departure.</p>` },
+      { q: "Can I book an international flight without a passport number?",
+        a: `<ul>
+              <li><strong>Most airlines:</strong> Allow booking with just your full name and date of birth; add passport details later via "My Bookings" or during online check-in.</li>
+              <li><strong>Strict airlines:</strong> Some countries/airlines require your passport number, expiry date, and issuing country at the time of booking.</li>
+            </ul>
+            <p>Crucial: the name on your ticket must exactly match your passport's machine-readable zone.</p>` },
+      { q: "What is the baggage allowance for international flights?",
+        a: `<ul>
+              <li><strong>Carry-on:</strong> Usually 1 piece up to 7–10 kg plus a personal item.</li>
+              <li><strong>Checked bags:</strong> Long-haul flights typically include 1–2 checked bags up to 23 kg (50 lbs) each.</li>
+              <li>Some flights restrict by number of bags, others by total cumulative weight — check the "Baggage Policy" on your digital ticket for exact limits.</li>
+            </ul>` },
+      { q: "How do I cancel or change an international flight ticket?",
+        a: `<ol>
+              <li>Go to "My Bookings" and click "Modify Booking".</li>
+              <li>Select whether to change dates or cancel the ticket.</li>
+              <li>The app calculates the international change/cancel penalty, partner fee, and fare difference in real time.</li>
+              <li>Confirm and pay to instantly update your itinerary.</li>
+            </ol>
+            <p>Note: some promotional or basic economy international tickets are completely non-changeable and non-refundable.</p>` },
+      { q: "What is a 'No-Show' policy on international flights?",
+        a: `<p>A "no-show" occurs if you don't check in or fail to board before the gate closes. Under the <strong>sequential use rule</strong>, most international airlines will automatically cancel all subsequent legs of a round-trip or multi-city ticket (including your return flight) with zero refund if you miss the first leg. If you know you'll miss a flight, contact support before departure to cancel or change it so you don't lose your return ticket.</p>` },
+      { q: "Does my ticket include meals, and how do I select a dietary option?",
+        a: `<p>Most full-service international flights include complimentary hot meals, snacks, and beverages. For vegetarian, vegan, halal, kosher, gluten-free, or diabetic meals, go to "My Bookings" → "Select Meal Option" at least 24 hours before your flight. Budget airlines don't include free meals, but you can pre-purchase meals in the app up to 48 hours before departure.</p>` },
+      { q: "What should I do if my baggage is lost or damaged on an international flight?",
+        a: `<ol>
+              <li>Go directly to the Baggage Service Counter in the arrivals hall of the airline that operated your final flight.</li>
+              <li>File a Property Irregularity Report (PIR) — a crucial document with a reference code required for all claims.</li>
+              <li>Keep your baggage tags safe.</li>
+              <li>Contact our in-app support with your PIR number so we can help track your bags or assist with your travel insurance claim.</li>
+            </ol>` },
+      { q: "Can I book a one-way international ticket?",
+        a: `<p>Yes, but immigration laws in many countries require visitors to hold proof of onward travel. Entering on a tourist visa with only a one-way ticket may lead airline staff or border control to deny boarding or entry unless you can show a return or onward ticket. We recommend checking your destination's entry requirements before booking one-way.</p>` },
+    ],
+  },
+  {
+    id: "domestic-hotels",
+    label: "Domestic Hotels",
+    icon: "fa-bed",
+    items: [
+      { q: "What are the standard check-in and check-out times for hotels?",
+        a: `<ul>
+              <li><strong>Check-in:</strong> Typically between 2:00 PM and 3:00 PM.</li>
+              <li><strong>Check-out:</strong> Usually between 11:00 AM and 12:00 PM (noon).</li>
+              <li><strong>Early check-in / late check-out:</strong> Message the hotel directly through our in-app chat to request this; it's subject to room availability and may incur an extra fee.</li>
+            </ul>` },
+      { q: "What documents do I need to present at hotel check-in?",
+        a: `<ul>
+              <li>A valid, physical government-issued photo ID matching the name on the booking confirmation.</li>
+              <li>The digital booking voucher/confirmation email from our app.</li>
+              <li>A valid credit or debit card (some hotels also accept cash) to cover a security deposit for incidental charges.</li>
+            </ul>` },
+      { q: "How do I cancel or modify my hotel booking?",
+        a: `<ol>
+              <li>Open the app and go to "My Bookings".</li>
+              <li>Select your hotel reservation.</li>
+              <li>Click "Cancel Booking" or "Change Dates".</li>
+            </ol>
+            <p><strong>Free cancellation</strong> bookings receive a full refund if cancelled before the hotel's deadline (usually 24–48 hours before check-in). <strong>Non-refundable</strong> bookings are charged in full regardless of cancellation.</p>` },
+      { q: "What is the difference between 'Pay Now' and 'Pay at Property'?",
+        a: `<ul>
+              <li><strong>Pay Now (prepaid):</strong> You pay the full amount securely through the app; the hotel only charges extras at check-out.</li>
+              <li><strong>Pay at Property:</strong> Your booking is secured instantly, but you pay the hotel directly at check-in/check-out. A valid card is usually required at booking to guarantee the room, with no charge until you arrive.</li>
+            </ul>` },
+      { q: "Are taxes and service charges included in the room price?",
+        a: `<p>In most cases, yes — the price shown includes the base room rate plus standard VAT/local sales tax and hotel service fees. Some cities charge a local "city tax" or "tourism fee" that can't be collected online and must be paid directly at the front desk. Always check the "Price Breakdown" and "Important Information" sections of your voucher for any excluded local fees.</p>` },
+      { q: "Can I add an extra bed or guest to my room?",
+        a: `<p>Room occupancy limits are strictly enforced due to local safety codes. To add another guest, go to "My Bookings" and select "Edit Guests". For extra beds or cots, tap "Contact Property" — these requests are subject to availability, and fees are paid directly to the hotel.</p>` },
+      { q: "Is breakfast included in my hotel room rate?",
+        a: `<ul>
+              <li><strong>Room Only:</strong> Breakfast isn't included, but can be purchased at the hotel restaurant.</li>
+              <li><strong>Breakfast Included:</strong> Daily breakfast for all registered adults is covered.</li>
+            </ul>
+            <p>If your booking doesn't include breakfast, you can often upgrade your rate plan under "My Bookings" for a discounted pre-booked breakfast rate.</p>` },
+      { q: "What is a hotel security deposit, and when will it be refunded?",
+        a: `<ul>
+              <li><strong>Credit card:</strong> The hotel places a temporary hold, released at check-out if no damages occur; it can take 3–10 business days for your bank to reflect the release.</li>
+              <li><strong>Debit card / cash:</strong> The hotel charges and refunds the amount at check-out, which may take longer.</li>
+            </ul>` },
+      { q: "What should I do if I am arriving late at the hotel?",
+        a: `<p>Most hotels have a 24-hour front desk, but some smaller guesthouses close reception at night. If you'll arrive after 6:00 PM, go to "My Bookings", select your hotel, click "Message Hotel", and send your late arrival details. This prevents being classified as a "no-show" and having your room released to other guests.</p>` },
+      { q: "Can I request a specific room type (e.g., high floor, quiet room, near elevator)?",
+        a: `<ol>
+              <li>Open your reservation in "My Bookings".</li>
+              <li>Tap "Special Requests" or "Message Host/Hotel".</li>
+              <li>Type in your request (e.g., "non-smoking room on a high floor away from the elevator").</li>
+            </ol>
+            <p>Hotels do their best to accommodate preferences, but they're subject to availability at check-in and can't be 100% guaranteed.</p>` },
+    ],
+  },
+  {
+    id: "international-hotels",
+    label: "International Hotels",
+    icon: "fa-hotel",
+    items: [
+      { q: "What are international tourist city taxes or resort fees?",
+        a: `<p>Many international destinations (Rome, Paris, New York, Barcelona, etc.) charge local city taxes, tourist taxes, or resort fees not included in the booking rate. These must be paid in local currency at the front desk when checking in or out.</p>` },
+      { q: "How does currency conversion work for international hotel bookings?",
+        a: `<p>If the hotel's local currency differs from your card's currency, your bank or payment gateway converts the amount. Rates shown in our app are indicative, using real-time interbank conversion rates — the actual amount charged depends on your card issuer's exchange rate on the processing day.</p>` },
+      { q: "Will my domestic credit card work at international hotel properties?",
+        a: `<p>Most major international hotels accept standard global card brands (Visa, Mastercard, American Express, JCB). Make sure your bank has activated international payments on your card before you depart, to avoid it being declined at check-in.</p>` },
+      { q: "Is a passport required at check-in for international hotels?",
+        a: `<p>Yes, almost all countries require international visitors to present their original, physical passport at check-in. The front desk is legally required to record your passport and entry stamp/visa details for local police or tourism authority registration.</p>` },
+      { q: "How can I contact my international hotel before my arrival?",
+        a: `<p>Use the built-in "Message Host" or "Contact Hotel" feature on your booking details page. It translates messages dynamically and lets you specify airport pickup requests, twin-bed configurations, or early check-in hours.</p>` },
+      { q: "Can I book a hotel on behalf of someone else in another country?",
+        a: `<p>Yes, but enter the guest's name exactly as it appears in their passport as the Primary Guest. The guest checking in must present their own passport and their own credit card matching that name, for safety and incidentals.</p>` },
+      { q: "What is a 'Non-Refundable' vs 'Fully Flexible' booking option?",
+        a: `<ul>
+              <li><strong>Non-Refundable:</strong> Lower rates but non-cancellable — the hotel retains 100% of the price if you cancel.</li>
+              <li><strong>Fully Flexible:</strong> Cancel or modify dates for free up to a specific deadline (e.g., 24–48 hours before arrival).</li>
+            </ul>` },
+      { q: "What should I do if the hotel cannot find my booking reservation?",
+        a: `<p>Present your digital confirmation voucher, which lists the international Booking ID and partner reservation code. If the front desk still can't locate it, use our app's "Instant Support Help" feature to call customer service immediately.</p>` },
+      { q: "Are security deposits higher at international hotels?",
+        a: `<p>Yes, deposits can range from $50–$200 per night depending on hotel category, placed as a temporary hold on your credit card. We recommend using a credit card rather than a debit card, since debit funds are actually drawn and take longer to return.</p>` },
+      { q: "What happens if I miss my flight and check in a day late?",
+        a: `<p>Notify the hotel or our support team immediately. If you don't check in on your scheduled arrival date without warning, the hotel will mark you as a "no-show" and will likely cancel the remaining nights without a refund.</p>` },
+    ],
+  },
+  {
+    id: "train-bookings",
+    label: "Train Bookings",
+    icon: "fa-train",
+    items: [
+      { q: "Do I need a printed ticket, or is an e-ticket on my phone sufficient?",
+        a: `<p>On most rail networks, a digital e-ticket with a QR code on your smartphone is fully sufficient for boarding and ticket control. Some specific regional networks still require printing your physical ticket at a station self-service terminal before boarding.</p>` },
+      { q: "How do I print or retrieve my train tickets at the station?",
+        a: `<p>If physical collection is required, go to a station ticket vending machine or counter and enter your PNR booking reference code (found on your app voucher), occasionally inserting the physical card used for purchase to verify identity.</p>` },
+      { q: "What is the luggage allowance policy on passenger trains?",
+        a: `<p>Trains are generally more generous than airlines. Typically you can bring up to 2 large bags and 1 personal item for free, provided you can lift and store them yourself in overhead racks, vestibules, or under your seat.</p>` },
+      { q: "Can I select my specific seat or carriage on a train booking?",
+        a: `<p>Yes! For high-speed or long-distance trains, our app offers an interactive Seat Selector Map where you can choose a quiet carriage, window vs. aisle seats, or seats with power sockets and dining tables.</p>` },
+      { q: "What happens if I miss my scheduled train?",
+        a: `<p>Most point-to-point tickets are valid only for the specific train time and date booked, so you'll need to purchase a new ticket. Fully flexible tickets may allow boarding the next available train the same day, subject to desk validation.</p>` },
+      { q: "Are there senior, child, or group discounts available?",
+        a: `<p>Yes, our app integrates national rail discount programs. During checkout you can select age-based discounts (under-12 child, senior rates) or enter your regional Railcard membership number to auto-apply applicable fare reductions.</p>` },
+      { q: "How do cancellations and refunds work for train tickets?",
+        a: `<p>Refund eligibility depends on the ticket's flexibility class (e.g., Super Off-Peak, Advance, Flex). Advance tickets are typically non-refundable, while Flex tickets can be cancelled for a refund (minus a small admin fee) up to 30 minutes before departure.</p>` },
+      { q: "How early should I arrive at the train station before departure?",
+        a: `<p>For standard domestic journeys, arrive 15–20 minutes before departure. For international high-speed trains (like Eurostar) or trains requiring security screening, arrive 45–60 minutes before to clear border and luggage controls.</p>` },
+      { q: "Is food and beverage service available on board?",
+        a: `<p>Long-distance and high-speed trains usually feature a buffet car, café, or trolley service selling snacks, light meals, and hot/cold drinks. You're also welcome to bring your own food and non-alcoholic beverages to enjoy at your seat.</p>` },
+      { q: "Are domestic and international trains accessible for disabled passengers?",
+        a: `<p>Yes, trains have dedicated wheelchair spots, accessible toilets, and ramp boarding support. Request ramp assistance or wheelchair boarding directly in the app's checkout, or by lodging a request at least 24 hours prior to departure.</p>` },
+    ],
+  },
+  {
+    id: "bus-bookings",
+    label: "Bus Bookings",
+    icon: "fa-bus",
+    items: [
+      { q: "How do I check in and board my booked bus?",
+        a: `<p>Arrive at the designated bus terminal or stop at least 15–30 minutes before scheduled departure. Show your digital ticket with its QR code to the driver or terminal staff, along with a valid photo ID, to board.</p>` },
+      { q: "What is the baggage policy for domestic and long-distance buses?",
+        a: `<p>Most long-distance operators include 1 large suitcase/bag in the under-bus compartment (up to 20 kg/44 lbs) and 1 small hand bag/backpack to carry on board. Oversized bags, sports equipment, or extra bags may incur an additional terminal fee.</p>` },
+      { q: "Can I cancel or change the date of my bus ticket?",
+        a: `<p>Bus tickets are typically highly restricted. Depending on the operator, you may modify your departure date up to 12–24 hours before departure for a processing fee. Cancellations within 24 hours of departure are usually non-refundable.</p>` },
+      { q: "What happens if the bus is delayed or cancelled?",
+        a: `<p>Traffic and weather can occasionally cause delays. If your bus is delayed more than 60 minutes or cancelled, we'll notify you via SMS/app notification, and the operator will transfer you to the next departure or issue a full refund.</p>` },
+      { q: "Where exactly is the bus pick-up and drop-off point located?",
+        a: `<p>Our app provides an interactive map link on your digital booking voucher showing the exact GPS coordinates and street address of both the pick-up stand and drop-off terminal.</p>` },
+      { q: "Are there toilets, power outlets, and Wi-Fi on board?",
+        a: `<p>Most premium and express long-distance operators provide air conditioning, reclining seats, power/USB sockets, a chemical toilet, and free Wi-Fi. Amenities are marked clearly in the search listings before booking.</p>` },
+      { q: "Do children or infants require a separate ticket on buses?",
+        a: `<p>Yes. For safety, every passenger (including infants) must have a designated seat with safety belts on long-distance coaches — infants may not be held on laps on major highway routes. Discounted child tickets are often available.</p>` },
+      { q: "Can I select my seat on a bus booking?",
+        a: `<p>Many express operators allow seat selection (e.g., front row, window, aisle, or next to an emergency door) at checkout. If not supported by the operator, seating is first-come, first-served upon boarding.</p>` },
+      { q: "Can I travel with my pet on the bus?",
+        a: `<p>Most long-distance operators don't allow pets on board for health and safety reasons, except certified guide/service dogs. Some regional operators allow small pets in carriers — check individual pet carriage rules before booking.</p>` },
+      { q: "What should I do if I miss my scheduled bus?",
+        a: `<p>Your ticket is rendered invalid and can't be refunded or reused, so you'll need to purchase a new one. If you realize you'll be late, try modifying your booking in "My Bookings" before the scheduled departure window.</p>` },
+    ],
+  },
+  {
+    id: "domestic-tours",
+    label: "Domestic Tours & Packages",
+    icon: "fa-suitcase-rolling",
+    items: [
+      { q: "What is typically included in a domestic holiday package?",
+        a: `<p>Each package is unique, but most include hotel accommodation, daily breakfasts, transfers between transit hubs, and pre-booked entry tickets or daily guided tours. Exact inclusions (specific lunches, flights, rental cars) are detailed under "What's Included".</p>` },
+      { q: "How and when will I meet my tour guide?",
+        a: `<p>Once your booking is confirmed, you'll receive a detailed Itinerary Voucher 48 hours before the tour start date, containing your local guide's name, contact number, and the exact time and location of your first group meeting.</p>` },
+      { q: "Can I customize the itinerary of a pre-packaged domestic tour?",
+        a: `<p>Group tour itineraries are pre-set and can't be altered. For Private Tours, you can request adjustments, extra sightseeing stops, or hotel upgrades by contacting our Package Team via the "Customize My Trip" button on the booking page.</p>` },
+      { q: "What is the cancellation and refund policy for holiday packages?",
+        a: `<p>Because packages bundle multiple suppliers (hotels, guides, transport), cancellations require advance notice. Cancellations made more than 15–30 days before departure typically receive a partial refund, while cancellations inside 7 days are non-refundable.</p>` },
+      { q: "Are flights included in the package price, or do I book them separately?",
+        a: `<p>Both options are available! Choose "Flight + Hotel + Tour" to include flights, or "Land Only" if you prefer to book your own transport and only want us to manage accommodation, local transport, and sightseeing.</p>` },
+      { q: "What happens if a tour activity is cancelled due to bad weather?",
+        a: `<p>Your safety is our top priority. If an outdoor activity (like a boat trip or mountain hike) is cancelled due to adverse weather, your guide will arrange an alternative activity, or we'll refund the cost portion of that specific excursion.</p>` },
+      { q: "Are meals included in the package, or do I pay separately?",
+        a: `<p>Breakfast is almost always included at your hotels. Lunches and dinners depend on the specific itinerary — several meals are purposely left open so you have the freedom to explore local restaurants and cuisines at your own pace.</p>` },
+      { q: "Is there a minimum number of travelers required for a group tour to run?",
+        a: `<p>Some shared group tours require a minimum number of participants. If a tour doesn't meet the minimum size, you'll be notified at least 7 days in advance and offered a full refund, a transfer to another date, or an upgrade to a private tour.</p>` },
+      { q: "How much physical fitness is required for domestic tours?",
+        a: `<p>Every package features a "Physical Activity Level" rating from 1 (easy, leisurely walking) to 5 (challenging treks/hikes). Review this rating on the package details page to ensure it matches your party's mobility and fitness levels.</p>` },
+      { q: "Is tipping the local guide and driver mandatory?",
+        a: `<p>Tipping is appreciated and standard practice in the travel industry, but entirely voluntary and at your discretion. For great service, a tip of $10–$20 per day for your guide and $5–$10 per day for your driver is customary.</p>` },
+    ],
+  },
+  {
+    id: "international-tours",
+    label: "International Tours & Packages",
+    icon: "fa-earth-americas",
+    items: [
+      { q: "Can you provide a visa invitation/support letter for international packages?",
+        a: `<p>Yes! Once you make a deposit or pay in full, our operations team can issue an official Booking Confirmation Voucher and Hotel Itinerary Letter, which you can submit to the embassy or consulate for visa processing.</p>` },
+      { q: "What is the typical group size for international guided tours?",
+        a: `<p>Group sizes vary: Small Group Tours typically range from 8–16 participants, while Classic Coach Tours can have up to 40 guests. Group size limits are clearly indicated in the "Tour Facts" section before you book.</p>` },
+      { q: "Is international travel insurance mandatory for booking these packages?",
+        a: `<p>For many international packages, comprehensive travel insurance is a strict requirement. You must purchase a policy covering medical emergencies, trip cancellations, and luggage loss, and present it before your trip starts.</p>` },
+      { q: "Are international flights included in the package price?",
+        a: `<p>By default, our international packages are listed as "Land Packages" (excluding flights), allowing you to use air miles or book from various departure hubs. You can toggle on the flight option for an all-inclusive deal.</p>` },
+      { q: "How does currency exchange work during the tour?",
+        a: `<p>While the package price is paid in your home currency, you'll need local currency for personal expenses (snacks, shopping, tips). Your itinerary booklet advises on the best places to exchange currency or use ATMs during your trip.</p>` },
+      { q: "Do the tour guides speak English on international packages?",
+        a: `<p>Yes! All international group packages are led by professional, licensed local guides fluent in English. For specific-language guides (e.g., Spanish, French), search for specialty language group listings.</p>` },
+      { q: "What happens if my visa application is denied after booking?",
+        a: `<p>We recommend applying for visas early. If your visa is officially denied, we offer a Visa Guarantee Refund Policy on select bookings — provide official embassy proof of denial at least 14 days before travel and we'll refund you.</p>` },
+      { q: "Can I book extra hotel nights before or after the tour itinerary?",
+        a: `<p>Absolutely! To arrive early or extend your stay, contact our support team after booking — we can arrange pre-tour and post-tour hotel extensions at our special contracted rates, often in the same hotel.</p>` },
+      { q: "What are the passport validity rules for international tours?",
+        a: `<p>Your passport must be valid for at least 6 months from your date of return home. Ensure you also have at least 2–4 blank pages left for necessary visa stamps and border entry records.</p>` },
+      { q: "Are airport arrival and departure transfers included?",
+        a: `<p>Most international holiday packages include shared or private airport transfers on the official tour start and end dates. Submit your complete flight details via our app at least 7 days prior to departure to secure your transfers.</p>` },
+    ],
+  },
+  {
+    id: "vacation-rentals",
+    label: "Vacation Rentals",
+    icon: "fa-house",
+    items: [
+      { q: "What are alternative accommodations (villas, cabins, apartments)?",
+        a: `<p>These are privately owned or managed residential properties — cozy cabins, city apartments, beachside villas, or rustic farmstays — offering a more personalized, home-like experience with amenities like kitchens and private yards.</p>` },
+      { q: "How do I check in and receive keys for a vacation rental?",
+        a: `<p>Unlike hotels with 24-hour reception, vacation rentals use varying check-in methods:</p>
+            <ul>
+              <li><strong>Key lockboxes / smart locks:</strong> You'll receive a secure PIN code 24–48 hours before check-in.</li>
+              <li><strong>Host meet-and-greet:</strong> The host meets you at the property at a pre-arranged time.</li>
+            </ul>
+            <p>Check your voucher for details.</p>` },
+      { q: "How do I communicate with my host?",
+        a: `<p>Our app features a secure, direct in-app chat allowing you to message your host any time. We recommend using it for all communication about check-in times, key collection, directions, and questions about the property's amenities.</p>` },
+      { q: "What should I do if a property doesn't match the listing or is dirty?",
+        a: `<p>If you find major cleanliness issues or the listing was misrepresented, take photos immediately and contact our 24/7 Customer Support team within 24 hours of check-in. We'll work to resolve the issue with the host or re-book you elsewhere.</p>` },
+      { q: "What are cleaning fees, and why are they added to my bill?",
+        a: `<p>Cleaning fees are set by hosts to cover professional cleaning, washing linens, and preparing the property for the next guest. This is a one-time charge per stay, added to your total checkout breakdown.</p>` },
+      { q: "Are there strict house rules I need to follow?",
+        a: `<p>Yes! Every rental has specific House Rules set by the owner (e.g., quiet hours, no smoking, no parties, pet allowances). Read these carefully on the property's booking page to ensure they fit your group's planned activities.</p>` },
+      { q: "What is the cancellation policy for alternative accommodations?",
+        a: `<p>Policies are chosen by the host and range from Flexible (free cancellation up to 24–48 hours before check-in) to Moderate (free cancellation up to 5–7 days) to Strict (no refunds, or partial refunds if cancelled after booking).</p>` },
+      { q: "Do I need to clean the property before checking out?",
+        a: `<p>You're not expected to deeply clean, but you should treat it with respect. Standard checkout etiquette involves washing used dishes, taking out the trash, turning off the AC/lights, and locking up securely.</p>` },
+      { q: "What happens if I accidentally damage something at the property?",
+        a: `<p>Accidents happen! Notify your host immediately via in-app chat to discuss resolution options. Depending on the booking, costs may be covered by your booking insurance or a security deposit.</p>` },
+      { q: "Are towels, bed linens, and toiletries provided?",
+        a: `<p>Yes, standard essentials like clean towels, bedsheets, and basic hand soap are provided at all listed properties. Items like luxury shampoo, conditioner, and beach towels may not be, so check the amenities list before packing.</p>` },
+    ],
+  },
+  {
+    id: "travel-insurance",
+    label: "Travel Insurance",
+    icon: "fa-shield-halved",
+    items: [
+      { q: "What does the travel insurance booked through your app cover?",
+        a: `<p>Our standard policies cover unexpected events including emergency medical expenses, emergency repatriation, trip cancellation/interruption, flight delays (over 4 hours), and lost or stolen luggage during your trip.</p>` },
+      { q: "How do I file a travel insurance claim?",
+        a: `<ol>
+              <li>Go to "My Bookings" and select your insurance policy.</li>
+              <li>Click "File a Claim" to open the partner portal.</li>
+              <li>Upload required supporting documents (medical receipts, police reports, or airline delay certificates).</li>
+            </ol>` },
+      { q: "What emergency contact number should I call while traveling?",
+        a: `<p>Every policy includes access to a 24/7 International Emergency Assistance Hotline, printed clearly on your digital insurance certificate. It can be called collect from anywhere in the world.</p>` },
+      { q: "Can I purchase travel insurance after I have already started my trip?",
+        a: `<p>No, standard policies must be purchased before your trip officially begins (prior to crossing your country's border or taking your flight). Policies purchased mid-trip are invalid and won't cover any claims.</p>` },
+      { q: "Is pre-existing medical condition coverage included?",
+        a: `<p>Standard policies typically exclude coverage for pre-existing medical conditions. If you need coverage for an existing chronic condition, contact our support desk to purchase a specialized medical rider.</p>` },
+      { q: "Does the policy cover extreme sports or adventure activities?",
+        a: `<p>Standard policies cover normal vacation activities like swimming, cycling, and city tours. Extreme sports (scuba diving, skydiving, skiing, white-water rafting) require an "Adventure Sports" add-on, selectable at checkout.</p>` },
+      { q: "How do I receive a refund if I cancel my travel insurance policy?",
+        a: `<p>You can cancel for a full refund within the "Cooling-Off Period" (typically 14 days from purchase), provided your trip hasn't started and you haven't filed any claims. Cancel directly via the app under "My Bookings".</p>` },
+      { q: "Are electronic items (laptops, phones) covered under luggage loss?",
+        a: `<p>Yes, but standard policies have a "Single Item Limit" (usually $250–$500 max per item) for high-value valuables like laptops, tablets, and professional cameras. Check your policy's high-value limits if travelling with expensive gear.</p>` },
+      { q: "What documents do I need to save to support a medical claim?",
+        a: `<ul>
+              <li>The official medical report and diagnosis from the attending doctor.</li>
+              <li>Itemized hospital bills and pharmacy invoices.</li>
+              <li>Official payment receipts.</li>
+            </ul>` },
+      { q: "Can I extend my travel insurance policy if I decide to stay abroad longer?",
+        a: `<p>Yes! You can extend your policy via "My Bookings" in our app. The extension must be purchased before your original policy expires, to prevent any gaps in coverage.</p>` },
+    ],
+  },
+  {
+    id: "ancillary-services",
+    label: "Ancillary Services",
+    icon: "fa-concierge-bell",
+    items: [
+      { q: "How do I book an airport transfer through your app?",
+        a: `<p>Add airport transfers during your flight booking process, or later by going to your flight booking details in "My Bookings" and clicking "Add Airport Transfer". Enter your flight number so the driver can track your arrival.</p>` },
+      { q: "What happens if my flight is delayed? Will my driver wait?",
+        a: `<p>Yes! Our drivers use flight-tracking software linked to the flight number you provide. If your flight is delayed, the driver automatically adjusts their arrival time and waits for you, free of charge.</p>` },
+      { q: "How do I locate my airport transfer driver on arrival?",
+        a: `<p>Your booking confirmation voucher contains the driver's contact details and exact meet-up instructions. Usually the driver waits in the Arrivals Hall holding a placard with your name, or at a designated, easily identifiable meeting point.</p>` },
+      { q: "How do I rent a car through your travel app?",
+        a: `<p>Navigate to the "Car Rentals" tab, select your pick-up and drop-off locations, dates, and times. Choose from our fleet, customize your insurance, and secure your booking — a voucher will be sent to your inbox.</p>` },
+      { q: "What do I need to bring when picking up my rental car?",
+        a: `<ul>
+              <li>A physical, valid Driver's License held for at least 1–2 years.</li>
+              <li>An International Driving Permit (IDP) if required by the destination country.</li>
+              <li>A physical credit card in the primary driver's name with sufficient funds for the security deposit.</li>
+            </ul>` },
+      { q: "What is the 'Fuel Policy' for rental cars?",
+        a: `<p>Most partners operate on a "Full-to-Full" policy: you pick up the vehicle with a full tank and must return it fully refueled. Returning it partially empty results in high fuel fees charged by the rental company.</p>` },
+      { q: "Can I book airport lounge access through your app?",
+        a: `<p>Yes! Purchase airport lounge passes under the "Travel Services" section. Select your airport and terminal to view available lounges, operating hours, and amenities (showers, buffet, Wi-Fi), then book your entry voucher.</p>` },
+      { q: "What does my airport lounge pass include?",
+        a: `<p>A pass typically includes up to 3 hours of access before your flight, covering unlimited complimentary food, snacks, soft and alcoholic drinks, high-speed Wi-Fi, newspapers, charging stations, and comfortable seating.</p>` },
+      { q: "Can I cancel or reschedule my car rental or lounge pass?",
+        a: `<p>Car rentals can generally be cancelled for a full refund up to 48 hours before pick-up. Airport lounge passes and airport transfers are typically cancellable for free up to 24 hours prior to the scheduled service time.</p>` },
+      { q: "Are child seats, GPS, or toll transponders included in car rentals?",
+        a: `<p>These are available as add-on accessories. Select and request child car seats, GPS navigation units, or toll transponders during checkout. Requests are guaranteed, though payment is often made at the local counter.</p>` },
+    ],
+  },
+  {
+    id: "esim-connectivity",
+    label: "eSIM & Connectivity",
+    icon: "fa-sim-card",
+    items: [
+      { q: "What is an eSIM, and how does it work?",
+        a: `<p>An eSIM is a digital SIM card that lets you activate a cellular data plan without using a physical plastic SIM. It installs directly onto your phone via a QR code, connecting you to local mobile data networks when abroad.</p>` },
+      { q: "Is my mobile phone compatible with eSIMs?",
+        a: `<p>eSIMs work on carrier-unlocked devices that support the technology, including Apple iPhones (XR and newer), Samsung Galaxy (S20 and newer), Google Pixel (3 and newer), and various other models. Check your phone settings to verify.</p>` },
+      { q: "How do I activate and install my eSIM?",
+        a: `<ol>
+              <li>Go to your phone's Settings → Mobile Data → Add eSIM.</li>
+              <li>Scan the QR code from your activation email.</li>
+              <li>Follow the prompts to label your new eSIM profile (e.g., "Travel Data").</li>
+            </ol>` },
+      { q: "When should I install my eSIM?",
+        a: `<p>We recommend installing your eSIM while still at home (the day before departure) using a stable home Wi-Fi connection. The data plan won't start consuming its validity until you arrive at your destination and connect to a local network.</p>` },
+      { q: "Can I make phone calls and send SMS text messages with my eSIM?",
+        a: `<p>Most travel eSIMs are data-only and don't come with a local phone number. You can still make voice calls and send messages using internet-based apps like WhatsApp, FaceTime, Skype, Telegram, or Messenger.</p>` },
+      { q: "How do I monitor my eSIM data usage?",
+        a: `<p>Monitor your remaining data balance directly inside our app in the "My eSIMs" tab under your active bookings, or check total cellular data usage in your smartphone's built-in network settings menu.</p>` },
+      { q: "Can I top up my eSIM if I run out of data?",
+        a: `<p>Yes! Go to "My Bookings" → "My eSIMs" and click "Top Up Data". Select your package, complete payment, and your data plan renews instantly without reinstallation.</p>` },
+      { q: "Can I keep my physical SIM card active for roaming calls?",
+        a: `<p>Yes, modern smartphones support Dual SIM standby. Keep your primary physical SIM active for receiving urgent texts/OTP codes, while setting your travel eSIM as the primary line for cellular data to avoid roaming fees.</p>` },
+      { q: "What should I do if my eSIM is not connecting to the internet?",
+        a: `<ul>
+              <li>Ensure "Data Roaming" is turned on specifically for your travel eSIM profile.</li>
+              <li>Restart your phone.</li>
+              <li>Ensure the eSIM is set as your primary line for Mobile/Cellular Data.</li>
+            </ul>` },
+      { q: "Can I transfer my eSIM to another mobile phone?",
+        a: `<p>No, an eSIM QR code can only be scanned and activated on a single device, once. It can't be transferred, scanned on another phone, or reinstalled if deleted. Contact our technical support if you face issues.</p>` },
+    ],
+  },
+];
+
+document.addEventListener('DOMContentLoaded', function () {
+  const categoryBar = document.getElementById('faqCategoryBar');
+  const resultsWrap = document.getElementById('faqResults');
+  const searchInput = document.getElementById('faqSearchInput');
+
+  let activeCategory = FAQ_CATEGORIES[0].id;
+  let searchTerm = '';
+
+  /* ---- build the category nav bar ---- */
+  function renderCategoryBar() {
+    categoryBar.innerHTML = FAQ_CATEGORIES.map(function (cat) {
+      const isActive = cat.id === activeCategory && !searchTerm;
+      return '<button type="button" class="faq-cat-btn' + (isActive ? ' active' : '') + '" data-cat="' + cat.id + '">' +
+        '<i class="fa ' + cat.icon + '"></i>' +
+        '<span>' + cat.label + '</span>' +
+        '<span class="faq-cat-count">(' + cat.items.length + ')</span>' +
+        '</button>';
+    }).join('');
+
+    categoryBar.querySelectorAll('.faq-cat-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        activeCategory = btn.getAttribute('data-cat');
+        searchTerm = '';
+        searchInput.value = '';
+        renderCategoryBar();
+        renderResults();
+      });
+    });
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  function highlight(text, term) {
+    if (!term) return text;
+    const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return text.replace(new RegExp('(' + escaped + ')', 'ig'), '<mark>$1</mark>');
+  }
+
+  /* ---- build one accordion item ---- */
+  function renderItem(item, term) {
+    const qHtml = term ? highlight(escapeHtml(item.q), term) : escapeHtml(item.q);
+    return '<div class="faq-item">' +
+      '<div class="faq-question">' +
+        '<span>' + qHtml + '</span>' +
+        '<span class="toggle-icon"><i class="fa fa-plus"></i></span>' +
+      '</div>' +
+      '<div class="faq-answer"><div class="faq-answer-inner">' + item.a + '</div></div>' +
+    '</div>';
+  }
+
+  /* ---- main render: either one active category, or search results across all ---- */
+  function renderResults() {
+    let html = '';
+
+    if (searchTerm) {
+      const term = searchTerm.trim().toLowerCase();
+      let totalMatches = 0;
+
+      FAQ_CATEGORIES.forEach(function (cat) {
+        const matches = cat.items.filter(function (item) {
+          return item.q.toLowerCase().includes(term) || item.a.toLowerCase().includes(term);
+        });
+        if (matches.length) {
+          totalMatches += matches.length;
+          html += '<div class="faq-group">' +
+            '<p class="faq-group-title"><i class="fa ' + cat.icon + '"></i> ' + cat.label + '</p>' +
+            matches.map(function (item) { return renderItem(item, searchTerm.trim()); }).join('') +
+            '</div>';
+        }
+      });
+
+      if (totalMatches === 0) {
+        html = '<div class="faq-empty"><i class="fa fa-magnifying-glass"></i>' +
+          '<strong>No results found</strong>' +
+          '<span>Try a different keyword, or browse a category above.</span>' +
+          '</div>';
+      }
+    } else {
+      const cat = FAQ_CATEGORIES.find(function (c) { return c.id === activeCategory; }) || FAQ_CATEGORIES[0];
+      html = '<div class="faq-group">' +
+        cat.items.map(function (item) { return renderItem(item); }).join('') +
+        '</div>';
+    }
+
+    resultsWrap.innerHTML = html;
+    bindAccordion();
+  }
+
+  /* ---- accordion open/close, one item open at a time ---- */
+  function bindAccordion() {
+    resultsWrap.querySelectorAll('.faq-item').forEach(function (item) {
+      const question = item.querySelector('.faq-question');
+      const answer = item.querySelector('.faq-answer');
+      question.addEventListener('click', function () {
+        const isActive = item.classList.contains('active');
+
+        resultsWrap.querySelectorAll('.faq-item.active').forEach(function (openItem) {
+          if (openItem !== item) {
+            openItem.classList.remove('active');
+            openItem.querySelector('.faq-answer').style.maxHeight = null;
+          }
+        });
+
+        if (isActive) {
+          item.classList.remove('active');
+          answer.style.maxHeight = null;
+        } else {
+          item.classList.add('active');
+          answer.style.maxHeight = answer.scrollHeight + 'px';
+        }
+      });
+    });
+  }
+
+  /* ---- live search ---- */
+  let searchDebounce;
+  searchInput.addEventListener('input', function () {
+    clearTimeout(searchDebounce);
+    searchDebounce = setTimeout(function () {
+      searchTerm = searchInput.value;
+      renderCategoryBar();
+      renderResults();
+    }, 150);
+  });
+
+  renderCategoryBar();
+  renderResults();
+});
+</script>
+{% endblock %}
