@@ -1470,6 +1470,7 @@ b, sup, sub, u, del {
 .header-top {
   font-size: var(--text-size-small);
   padding: 6px 0px;
+  background: #1c1e26;
 }
 
 .header-top a {
@@ -1516,12 +1517,17 @@ b, sup, sub, u, del {
   color: #f8b600;
 }
 
+/* FIXED: main-menu no longer relies on a translucent white overlay sitting on
+   a dark hero image. #header now always carries a solid background (see
+   below), so text here is legible on every page, not just the homepage. */
 .main-menu {
   padding-bottom: 20px;
   padding-top: 20px;
-  background: rgba(255, 255, 255, 0.15);
+  background: transparent;
   padding-left: 15px;
   padding-right: 15px;
+  -webkit-transition: all 0.3s ease 0s;
+  transition: all 0.3s ease 0s;
 }
 
 /* کادر هدر را در دسکتاپ کمی بزرگ‌تر/عریض‌تر می‌کنیم تا منو و دکمه‌های حساب کاربری در یک ردیف جا شوند */
@@ -1564,11 +1570,14 @@ b, sup, sub, u, del {
   right: 0;
   transition: all 0.5s;
   z-index: 997;
+  background-color: #fff;
+  box-shadow: 0 2px 20px rgba(20, 20, 30, 0.08);
 }
 
 #header.header-scrolled {
   transition: all 0.5s;
-  background-color: rgba(34, 34, 34, 0.9);
+  background-color: #fff;
+  box-shadow: 0 4px 24px rgba(20, 20, 30, 0.12);
 }
 
 #header.header-scrolled .header-top {
@@ -1576,7 +1585,8 @@ b, sup, sub, u, del {
 }
 
 #header.header-scrolled .main-menu {
-  background: transparent;
+  padding-top: 12px;
+  padding-bottom: 12px;
 }
 
 /*--------------------------------------------------------------
@@ -1650,7 +1660,7 @@ b, sup, sub, u, del {
   padding: 0 8px 0px 8px;
   text-decoration: none;
   display: inline-block;
-  color: #fff;
+  color: #222222;
   font-weight: 500;
   font-size: var(--text-size-small);
   text-transform: uppercase;
@@ -1709,7 +1719,7 @@ b, sup, sub, u, del {
 }
 
 #mobile-nav-toggle i {
-  color: #fff;
+  color: #222222;
   font-weight: 900;
 }
 
@@ -1824,6 +1834,17 @@ body.mobile-nav-active #mobile-nav-toggle {
   padding-left: 15px;
 }
 
+#logo img {
+  max-height: 42px;
+  width: auto;
+  -webkit-transition: all 0.3s ease 0s;
+  transition: all 0.3s ease 0s;
+}
+
+#header.header-scrolled #logo img {
+  max-height: 34px;
+}
+
 #nav-menu-container {
   padding-right: 15px;
 }
@@ -1843,7 +1864,7 @@ body.mobile-nav-active #mobile-nav-toggle {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: #fff;
+  color: #222222;
   font-size: var(--text-size-small);
   font-weight: 500;
   padding: 8px 14px;
@@ -1889,10 +1910,6 @@ body.mobile-nav-active #mobile-nav-toggle {
 
 .account-action-btn:hover {
   background: #222222;
-  color: #fff;
-}
-
-#header.header-scrolled .account-action-link {
   color: #fff;
 }
 
@@ -4276,4 +4293,417 @@ body.mobile-nav-active #mobile-nav-toggle {
 
 .footer-text a, .footer-text i {
   color: #f8b600;
+}
+/* =================================================================
+   10. Help Center / FAQ Page Styles
+   (moved out of FAQ.html per FAQ Help Center Improvement Plan #3:
+   no inline <style> tags, no inline style attributes — everything
+   lives here, grouped and commented, so it can't clash with other
+   pages and is easy to extend later.)
+================================================================= */
+
+.faq-page {
+  font-family: var(--font-primary), sans-serif;
+  background: #f9f9ff;
+  padding: 150px 0 90px;
+  direction: ltr;
+  text-align: left;
+}
+
+.faq-page .faq-container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ---------- Breadcrumb ---------- */
+.faq-page .faq-breadcrumb {
+  font-size: 13px;
+  color: #999;
+  margin-bottom: 26px;
+}
+
+.faq-page .faq-breadcrumb a {
+  color: #999;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.faq-page .faq-breadcrumb a:hover {
+  color: #f8b600;
+}
+
+.faq-page .faq-breadcrumb span {
+  margin: 0 6px;
+}
+
+.faq-page .faq-breadcrumb .current {
+  color: #222;
+  font-weight: 500;
+}
+
+/* ---------- Header ---------- */
+.faq-page .faq-head {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.faq-page .faq-head span {
+  display: inline-block;
+  color: #f8b600;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  background: rgba(248, 182, 0, 0.12);
+  padding: 6px 16px;
+  border-radius: 20px;
+  margin-bottom: 14px;
+}
+
+.faq-page .faq-head h1 {
+  font-size: var(--h1-size);
+  font-weight: 700;
+  color: #222;
+  margin: 0 0 12px;
+}
+
+.faq-page .faq-head p {
+  color: #777;
+  font-size: 15px;
+  max-width: 560px;
+  margin: 0 auto;
+  line-height: 1.9;
+}
+
+/* ---------- Search box ---------- */
+.faq-page .faq-search {
+  position: relative;
+  max-width: 560px;
+  margin: 0 auto 40px;
+}
+
+.faq-page .faq-search input {
+  width: 100%;
+  border: 1px solid #eee;
+  background: #fff;
+  border-radius: 30px;
+  padding: 15px 50px 15px 22px;
+  font-size: 15px;
+  font-family: var(--font-primary), sans-serif;
+  color: #222;
+  box-shadow: 0 6px 18px rgba(20, 20, 30, 0.05);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.faq-page .faq-search input:focus {
+  outline: none;
+  border-color: #f8b600;
+  box-shadow: 0 6px 18px rgba(248, 182, 0, 0.18);
+}
+
+.faq-page .faq-search i {
+  position: absolute;
+  top: 50%;
+  right: 22px;
+  transform: translateY(-50%);
+  color: #999;
+  pointer-events: none;
+}
+
+.faq-page .faq-search mark {
+  background: rgba(248, 182, 0, 0.35);
+  color: inherit;
+  border-radius: 3px;
+  padding: 0 1px;
+}
+
+/* ---------- Category nav bar ---------- */
+.faq-page .faq-category-bar-wrap {
+  position: sticky;
+  top: 90px;
+  z-index: 50;
+  background: #f9f9ff;
+  padding: 10px 0 18px;
+  margin-bottom: 12px;
+}
+
+.faq-page .faq-category-bar {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+}
+
+.faq-page .faq-category-bar::-webkit-scrollbar {
+  height: 5px;
+}
+
+.faq-page .faq-category-bar::-webkit-scrollbar-thumb {
+  background: rgba(248, 182, 0, 0.35);
+  border-radius: 10px;
+}
+
+.faq-page .faq-cat-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  border: 1px solid #eee;
+  background: #fff;
+  color: #555;
+  font-size: 13.5px;
+  font-weight: 500;
+  padding: 10px 18px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, background 0.2s, box-shadow 0.2s;
+  white-space: nowrap;
+}
+
+.faq-page .faq-cat-btn i {
+  color: #f8b600;
+  font-size: 14px;
+  transition: color 0.2s;
+}
+
+.faq-page .faq-cat-btn .faq-cat-count {
+  color: #aaa;
+  font-size: 12px;
+}
+
+.faq-page .faq-cat-btn:hover {
+  border-color: #f8b600;
+  color: #222;
+}
+
+.faq-page .faq-cat-btn.active {
+  background: #f8b600;
+  border-color: #f8b600;
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(248, 182, 0, 0.3);
+}
+
+.faq-page .faq-cat-btn.active i,
+.faq-page .faq-cat-btn.active .faq-cat-count {
+  color: #fff;
+}
+
+/* ---------- Category group heading (shown in "all results" / search mode) ---------- */
+.faq-page .faq-group-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 17px;
+  font-weight: 600;
+  color: #222;
+  margin: 0 0 18px;
+}
+
+.faq-page .faq-group-title i {
+  width: 34px;
+  height: 34px;
+  background: #f8b600;
+  color: #fff;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+/* ---------- Accordion ---------- */
+.faq-page .faq-item {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  animation: faqFadeIn 0.35s ease both;
+}
+
+.faq-page .faq-item:hover {
+  box-shadow: 0 6px 18px rgba(20, 20, 30, 0.06);
+}
+
+.faq-page .faq-item.active {
+  border-color: #f8b600;
+  box-shadow: 0 6px 18px rgba(248, 182, 0, 0.12);
+}
+
+.faq-page .faq-question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 22px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  color: #222;
+}
+
+.faq-page .faq-question .toggle-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid #f8b600;
+  color: #f8b600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  flex-shrink: 0;
+  transition: transform 0.25s, background 0.25s, color 0.25s;
+}
+
+.faq-page .faq-item.active .toggle-icon {
+  background: #f8b600;
+  color: #fff;
+  transform: rotate(45deg);
+}
+
+.faq-page .faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.faq-page .faq-answer-inner {
+  padding: 0 22px 20px;
+  color: #777;
+  font-size: 14px;
+  line-height: 1.9;
+}
+
+.faq-page .faq-answer-inner ul,
+.faq-page .faq-answer-inner ol {
+  margin: 10px 0;
+  padding-left: 20px;
+  list-style: disc;
+}
+
+.faq-page .faq-answer-inner ol {
+  list-style: decimal;
+}
+
+.faq-page .faq-answer-inner li {
+  margin-bottom: 6px;
+}
+
+.faq-page .faq-answer-inner p {
+  margin: 0 0 10px;
+}
+
+.faq-page .faq-answer-inner p:last-child {
+  margin-bottom: 0;
+}
+
+/* ---------- No results state ---------- */
+.faq-page .faq-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: #999;
+}
+
+.faq-page .faq-empty i {
+  font-size: 34px;
+  color: #f8b600;
+  margin-bottom: 14px;
+  display: block;
+}
+
+.faq-page .faq-empty strong {
+  display: block;
+  color: #222;
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+
+/* ---------- Support CTA ---------- */
+.faq-page .faq-support-cta {
+  margin-top: 20px;
+  background: #222;
+  border-radius: 12px;
+  padding: 34px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.faq-page .faq-support-cta h4 {
+  color: #fff;
+  font-size: 17px;
+  margin: 0 0 6px;
+}
+
+.faq-page .faq-support-cta p {
+  color: #bbb;
+  font-size: 13px;
+  margin: 0;
+}
+
+.faq-page .faq-support-cta a {
+  background: #f8b600;
+  color: #222;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 12px 26px;
+  border-radius: 30px;
+  white-space: nowrap;
+  transition: background 0.2s, color 0.2s;
+}
+
+.faq-page .faq-support-cta a:hover {
+  background: #222;
+  color: #f8b600;
+  box-shadow: inset 0 0 0 1px #f8b600;
+}
+
+/* ---------- Animations ---------- */
+@keyframes faqFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-page .faq-item {
+    animation: none;
+  }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .faq-page {
+    padding-top: 130px;
+  }
+  .faq-page .faq-category-bar-wrap {
+    top: 70px;
+  }
+}
+
+@media (max-width: 576px) {
+  .faq-page .faq-head h1 {
+    font-size: 24px;
+  }
+  .faq-page .faq-support-cta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .faq-page .faq-search input {
+    padding: 13px 46px 13px 18px;
+    font-size: 14px;
+  }
 }

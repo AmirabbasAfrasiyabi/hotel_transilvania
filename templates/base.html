@@ -9,11 +9,11 @@
 <link rel="shortcut icon" href="{% static 'img/logo.png' %}">
 
 <meta name="author" content="colorlib">
-<meta name="description" content>
+<meta name="description" content="{% block meta_description %}Book flights, trains, buses, hotels and tour packages all in one place.{% endblock %}">
 <meta name="keywords" content>
 <meta charset="UTF-8">
 
-<title>Travel</title>
+<title>{% block title %}Travel{% endblock %}</title>
 <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet">
 
 <!-- FIXED: Linearicons via CDN to avoid 404 font files -->
@@ -179,7 +179,7 @@
       <ul class="ft-nav-list">
         <li><a href="{% url 'website:about' %}"><i class="fa-solid fa-book-open"></i>Our Story</a></li>
         <li><a href="{% url 'website:contact' %}"><i class="fa-solid fa-envelope"></i>Contact Us</a></li>
-        <li><a href="{% url 'help_center:FAQ' %}"><i class="fa fa-question-circle"></i>Why Mine</a></li>
+        <li><a href="{% url 'website:Why_Mine' %}"><i class="fa fa-question-circle"></i>Why Mine</a></li>
         <li><a href="{% url 'blog:index' %}"><i class="fa-solid fa-file-lines"></i>Blog</a></li>
       </ul>
     </div>
@@ -188,10 +188,10 @@
     <div>
       <p class="ft-col-title">Legal</p>
       <ul class="ft-nav-list">
-        <li><a href="{% url 'help_center:Terms_and_Conditions' %}"><i class="fa fa-question-circle"></i>Faq</a></li>
-        <li><a href="#"><i class="fa-solid fa-scale-balanced"></i> Terms & Conditions</a></li>
-<li><a href="#"><i class="fa-solid fa-cart-shopping"></i> Buying Guide</a></li>
-<li><a href="#"><i class="fa-solid fa-money-bill-transfer"></i> Refund Guide</a></li>
+        <li><a href="{% url 'help_center:FAQ' %}"><i class="fa fa-question-circle"></i>Faq</a></li>
+        <li><a href="{% url 'help_center:Terms_and_Conditions' %}"><i class="fa-solid fa-scale-balanced"></i> Terms & Conditions</a></li>
+        <li><a href="{% url 'help_center:Buying_Guide' %}"><i class="fa-solid fa-cart-shopping"></i> Buying Guide</a></li>
+        <li><a href="{% url 'help_center:Refound_Guide' %}"><i class="fa-solid fa-money-bill-transfer"></i> Refund Guide</a></li>
       </ul>
     </div>
 
