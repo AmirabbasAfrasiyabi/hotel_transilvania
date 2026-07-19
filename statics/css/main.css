@@ -4800,3 +4800,398 @@ body.mobile-nav-active #mobile-nav-toggle {
     font-size: 14px;
   }
 }
+/* =================================================================
+   11. About Us Page — Extended Sections
+   (added for the redesigned About Us page: hero, story, mission/vision,
+   values, features, why-us, stats, CSR, security, how-it-works,
+   contact strip)
+================================================================= */
+
+.about-hero-sub {
+  max-width: 600px;
+  margin: 10px auto 0;
+  font-size: var(--text-size);
+}
+
+.text-center-label {
+  display: block;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #f8b600;
+  font-weight: 500;
+  font-size: var(--text-size-small);
+  margin-bottom: 10px;
+}
+
+/* ---------- Mission & Vision ---------- */
+.mission-vision-area {
+  background: #f9f9ff;
+}
+
+.mission-vision-area .mv-image img {
+  width: 100%;
+  border-radius: 6px;
+}
+
+@media (max-width: 991px) {
+  .mission-vision-area .mv-image {
+    margin-bottom: 30px;
+  }
+}
+
+.mv-card {
+  background: #fff;
+  padding: 25px 30px;
+  border-left: 3px solid #f8b600;
+  margin-bottom: 20px;
+}
+
+.mv-card:last-child {
+  margin-bottom: 0;
+}
+
+.mv-card h6 {
+  color: #f8b600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+/* ---------- Core Values ---------- */
+.core-values-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.value-card {
+  background: #f9f9ff;
+  padding: 35px 25px;
+  text-align: center;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.value-card:hover {
+  background: #fff;
+  box-shadow: 0 10px 30px rgba(60, 64, 143, 0.12);
+  transform: translateY(-5px);
+}
+
+.value-card i {
+  font-size: 32px;
+  color: #f8b600;
+  margin-bottom: 18px;
+  display: inline-block;
+}
+
+.value-card h4 {
+  margin-bottom: 10px;
+}
+
+@media (max-width: 767px) {
+  .core-values-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .core-values-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ---------- Platform Features ---------- */
+.platform-features-area {
+  background: #f9f9ff;
+}
+
+.platform-features-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.feature-item {
+  background: #fff;
+  padding: 25px 15px;
+  text-align: center;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.feature-item:hover {
+  box-shadow: 0 10px 25px rgba(60, 64, 143, 0.1);
+}
+
+.feature-item i {
+  display: block;
+  font-size: 26px;
+  color: #f8b600;
+  margin-bottom: 12px;
+}
+
+.feature-item span {
+  font-size: var(--text-size-small);
+  font-weight: 500;
+  color: #222;
+}
+
+@media (max-width: 767px) {
+  .platform-features-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ---------- Why Choose Us ---------- */
+.why-us-area .why-us-image img {
+  width: 100%;
+  border-radius: 6px;
+}
+
+@media (max-width: 991px) {
+  .why-us-area .why-us-image {
+    margin-bottom: 30px;
+  }
+}
+
+/* FIXED: .text-center-label is centered by default (used inside the
+   centered .title wrappers in Core Values / Platform Features /
+   Security). This section is a left-aligned image+text layout instead
+   (same pattern as Mission & Vision / CSR / How It Works), so the
+   label needs to sit flush left with the heading and list below it —
+   otherwise it stays centered while everything else is left-aligned,
+   which looks especially broken once the columns stack on mobile. */
+.why-us-area .text-center-label {
+  text-align: left;
+}
+
+.why-us-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 14px;
+  color: #555;
+}
+
+.why-us-list li i {
+  color: #f8b600;
+  margin-top: 4px;
+}
+
+/* Keep the list from crowding the edge on narrow screens */
+@media (max-width: 575px) {
+  .why-us-list li {
+    font-size: var(--text-size-small);
+  }
+}
+
+/* ---------- Statistics ---------- */
+/* FIXED: was a flat #222 block; now carries a real background photo
+   (same layered <img> + overlay pattern as .blog-home-banner /
+   .faq-hero) so the numbers sit on top of an actual destination shot
+   instead of a plain color. */
+.stats-area {
+  overflow: hidden;
+}
+
+.stats-area .stats-bg-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 1;
+}
+
+.stats-area .stats-overlay {
+  z-index: 2;
+  background: rgba(4, 9, 30, 0.78);
+}
+
+.stats-area .container {
+  z-index: 3;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 20px;
+  text-align: center;
+}
+
+.stat-item i {
+  display: inline-block;
+  font-size: 22px;
+  color: #f8b600;
+  margin-bottom: 12px;
+}
+
+.stat-item h2 {
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.stat-item p {
+  color: #ccc;
+  margin: 0;
+  font-size: var(--text-size-small);
+}
+
+@media (max-width: 991px) {
+  .stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+    row-gap: 35px;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ---------- CSR ---------- */
+.csr-area {
+  background: #f9f9ff;
+}
+
+.csr-area .csr-image img {
+  width: 100%;
+  border-radius: 6px;
+}
+
+@media (max-width: 991px) {
+  .csr-area .csr-image {
+    margin-top: 30px;
+  }
+}
+
+/* ---------- Security & Trust ---------- */
+.security-list {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+}
+
+.security-item {
+  text-align: center;
+  padding: 20px 10px;
+}
+
+.security-item i {
+  font-size: 26px;
+  color: #f8b600;
+  margin-bottom: 12px;
+  display: inline-block;
+}
+
+.security-item h5 {
+  margin-bottom: 6px;
+}
+
+.security-item p {
+  font-size: var(--text-size-small);
+  margin: 0;
+}
+
+@media (max-width: 991px) {
+  .security-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .security-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- How It Works ---------- */
+.how-it-works-area {
+  background: #f9f9ff;
+}
+
+.how-it-works-area .how-it-works-image img {
+  width: 100%;
+  border-radius: 6px;
+}
+
+@media (max-width: 991px) {
+  .how-it-works-area .how-it-works-image {
+    margin-top: 30px;
+  }
+}
+
+.how-it-works-steps {
+  margin-top: 25px;
+}
+
+.step-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  margin-bottom: 22px;
+}
+
+.step-num {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #f8b600;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+.step-item h5 {
+  margin-bottom: 4px;
+}
+
+.step-item p {
+  margin: 0;
+}
+
+/* ---------- Contact Strip ---------- */
+.contact-strip-area {
+  background: #f8b600;
+  padding: 26px 0;
+}
+
+.contact-strip-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.contact-strip-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #222;
+  font-weight: 500;
+}
+
+.contact-strip-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #222;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+@media (max-width: 767px) {
+  .contact-strip-inner {
+    justify-content: center;
+    text-align: center;
+  }
+}

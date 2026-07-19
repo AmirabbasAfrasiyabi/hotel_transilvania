@@ -1,338 +1,255 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block meta_description %}Discover the story, mission, values and people behind Travelista — the platform travelers trust for flights, trains, buses and stays.{% endblock %}
+{% block title %}About Us | Travelista{% endblock %}
 {% block content %}
+
+<!-- ============ 1. HERO ============ -->
 <section class="about-banner relative">
 <div class="overlay overlay-bg"></div>
 <div class="container">
 <div class="row d-flex align-items-center justify-content-center">
 <div class="about-content col-lg-12">
-<h1 class="text-white">
-Our Story
-</h1>
-<p class="text-white link-nav"><a href="{% url 'website:index' %}">Home </a> <span class="lnr lnr-arrow-right"></span> <a href="{% url 'website:about' %}"> Our Story</a></p>
+<h1 class="text-white">Our Story</h1>
+<!--<p class="text-white about-hero-sub">We're building the easiest way to book flights, trains, buses and stays — all from one trusted place.</p>-->
+<p class="text-white link-nav"><a href="{% url 'website:index' %}">Home</a> <span class="lnr lnr-arrow-right"></span> <a href="{% url 'website:about' %}"> Our Story</a></p>
 </div>
 </div>
 </div>
 </section>
 
-
+<!-- ============ 2. OUR STORY ============ -->
 <section class="about-info-area section-gap">
 <div class="container">
 <div class="row align-items-center">
 <div class="col-lg-6 info-left">
-<img class="img-fluid" src="{% static 'img/about/info-img.jpg' %}" alt>
+<!-- IMAGE 1 of 6: founding-story photo -->
+<img class="img-fluid" src="{% static 'img/about/info-img.jpg' %}" alt="The Travelista team at work">
 </div>
 <div class="col-lg-6 info-right">
 <h6>About Us</h6>
-<h1>Who We Are?</h1>
+<h1>Who We Are</h1>
 <p>
-Here, I focus on a range of items and features that we use in life without giving them a second thought. such as Coca Cola. Dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.
+Travelista started with a simple frustration: booking a trip meant juggling five different apps for flights, trains, buses and hotels — and trusting none of them completely. We set out to fix that by building a single platform where every step of a journey, from the first search to the final check-in, is fast, transparent and secure.
+</p>
+<p>
+What began as a small team comparing flight prices for friends has grown into a platform used by travelers and verified sellers across dozens of cities. The tools changed; the goal never did — make travel planning something people can actually enjoy.
 </p>
 </div>
 </div>
 </div>
 </section>
 
+<!-- ============ 3. MISSION & VISION ============ -->
+<section class="mission-vision-area section-gap">
+<div class="container">
+<div class="row align-items-center">
+<div class="col-lg-6 mv-image">
+<!-- IMAGE 2 of 6: mission & vision illustration -->
+<img class="img-fluid" src="{% static 'img/about/mission-vision.jpg' %}" alt="Travelista mission and vision">
+</div>
+<div class="col-lg-6">
+<div class="mv-card">
+<h6>Our Mission</h6>
+<h2 class="mb-10">Why We Exist</h2>
+<p>To make booking any form of travel — flight, train, bus or stay — simple, transparent and trustworthy for everyone, regardless of how experienced a traveler they are.</p>
+</div>
+<div class="mv-card">
+<h6>Our Vision</h6>
+<h2 class="mb-10">Where We're Headed</h2>
+<p>In the next decade, we want Travelista to be the first place travelers in the region open when planning any trip — known as much for reliability as for choice.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
 
-<section class="price-area section-gap">
+<!-- ============ 4. CORE VALUES ============ -->
+<section class="core-values-area section-gap">
 <div class="container">
 <div class="row d-flex justify-content-center">
 <div class="menu-content pb-70 col-lg-8">
 <div class="title text-center">
-<h1 class="mb-10">We Provide Affordable Prices</h1>
-<p>Well educated, intellectual people, especially scientists at all times demonstrate considerably.</p>
+<h6 class="text-center-label">Core Values</h6>
+<h1 class="mb-10">What Guides Every Decision</h1>
+<p>These six principles shape our product, our partnerships, and how we treat every traveler who books with us.</p>
 </div>
 </div>
 </div>
-<div class="row">
-<div class="col-lg-4">
-<div class="single-price">
-<h4>Cheap Packages</h4>
-<ul class="price-list">
-<li class="d-flex justify-content-between align-items-center">
-<span>New York</span>
-<a href="#" class="price-btn">$1500</a>
-</li>
-<li class="d-flex justify-content-between align-items-center">
-<span>Maldives</span>
-<a href="#" class="price-btn">$1500</a>
-</li>
-<li class="d-flex justify-content-between align-items-center">
-<span>Sri Lanka</span>
-<a href="#" class="price-btn">$1500</a>
-</li>
-<li class="d-flex justify-content-between align-items-center">
-<span>Nepal</span>
-<a href="#" class="price-btn">$1500</a>
-</li>
-<li class="d-flex justify-content-between align-items-center">
-<span>Thiland</span>
-<a href="#" class="price-btn">$1500</a>
-</li>
-<li class="d-flex justify-content-between align-items-center">
-<span>Singapore</span>
-<a href="#" class="price-btn">$1500</a>
-</li>
-</ul>
+<div class="core-values-grid">
+<div class="value-card">
+<i class="fa-solid fa-handshake"></i>
+<h4>Trust</h4>
+<p>Every listing is verified and every price is exactly what you pay — no surprise fees at checkout.</p>
 </div>
+<div class="value-card">
+<i class="fa-solid fa-eye"></i>
+<h4>Transparency</h4>
+<p>Clear cancellation policies, honest reviews, and pricing you can see before you commit.</p>
 </div>
-<div class="col-lg-4">
-<div class="single-price">
-<h4>Luxury Packages</h4>
-<ul class="price-list">
-<li class="d-flex justify-content-between align-items-center">
-<span>New York</span>
-<a href="#" class="price-btn">$1500</a>
-</li>
-<li class="d-flex justify-content-between align-items-center">
-<span>Maldives</span>
-<a href="#" class="price-btn">$1500</a>
-</li>
-<li class="d-flex justify-content-between align-items-center">
-<span>Sri Lanka</span>
-<a href="#" class="price-btn">$1500</a>
-</li>
-<li class="d-flex justify-content-between align-items-center">
-<span>Nepal</span>
-<a href="#" class="price-btn">$1500</a>
-</li>
-<li class="d-flex justify-content-between align-items-center">
-<span>Thiland</span>
-<a href="#" class="price-btn">$1500</a>
-</li>
-<li class="d-flex justify-content-between align-items-center">
-<span>Singapore</span>
-<a href="#" class="price-btn">$1500</a>
-</li>
-</ul>
+<div class="value-card">
+<i class="fa-solid fa-lightbulb"></i>
+<h4>Innovation</h4>
+<p>We rebuild our booking flow constantly, chasing the version that saves you the most time.</p>
 </div>
+<div class="value-card">
+<i class="fa-solid fa-medal"></i>
+<h4>Quality</h4>
+<p>Every partner — airline, hotel, or bus operator — is reviewed against a strict service standard.</p>
 </div>
-<div class="col-lg-4">
-<div class="single-price">
-<h4>Camping Packages</h4>
-<ul class="price-list">
-<li class="d-flex justify-content-between align-items-center">
-<span>New York</span>
-<a href="#" class="price-btn">$1500</a>
-</li>
-<li class="d-flex justify-content-between align-items-center">
-<span>Maldives</span>
-<a href="#" class="price-btn">$1500</a>
-</li>
-<li class="d-flex justify-content-between align-items-center">
-<span>Sri Lanka</span>
-<a href="#" class="price-btn">$1500</a>
-</li>
-<li class="d-flex justify-content-between align-items-center">
-<span>Nepal</span>
-<a href="#" class="price-btn">$1500</a>
-</li>
-<li class="d-flex justify-content-between align-items-center">
-<span>Thiland</span>
-<a href="#" class="price-btn">$1500</a>
-</li>
-<li class="d-flex justify-content-between align-items-center">
-<span>Singapore</span>
-<a href="#" class="price-btn">$1500</a>
-</li>
-</ul>
+<div class="value-card">
+<i class="fa-solid fa-heart"></i>
+<h4>Customer-First</h4>
+<p>Support that answers in minutes, not days, and refunds that don't require a fight.</p>
 </div>
+<div class="value-card">
+<i class="fa-solid fa-shield-halved"></i>
+<h4>Accountability</h4>
+<p>If something goes wrong on our end, we own it and fix it — no passing the blame to partners.</p>
 </div>
 </div>
 </div>
 </section>
 
-
-<section class="other-issue-area section-gap">
-<div class="container">
-<div class="row d-flex justify-content-center">
-<div class="menu-content pb-70 col-lg-9">
-<div class="title text-center">
-<h1 class="mb-10">Other issues we can help you with</h1>
-<p>We all live in an age that belongs to the young at heart. Life that is.</p>
-</div>
-</div>
-</div>
-<div class="row">
-<div class="col-lg-3 col-md-6">
-<div class="single-other-issue">
-<div class="thumb">
-<img class="img-fluid" src="{% static 'img/o1.jpg' %}" alt>
-</div>
-<a href="#">
-<h4>Rent a Car</h4>
-</a>
-<p>
-The preservation of human life is the ultimate value, a pillar of ethics and the foundation.
-</p>
-</div>
-</div>
-<div class="col-lg-3 col-md-6">
-<div class="single-other-issue">
-<div class="thumb">
-<img class="img-fluid" src="{% static 'img/o2.jpg' %}" alt>
-</div>
-<a href="#">
-<h4>Cruise Booking</h4>
-</a>
-<p>
-I was always somebody who felt quite sorry for myself, what I had not got compared.
-</p>
-</div>
-</div>
-<div class="col-lg-3 col-md-6">
-<div class="single-other-issue">
-<div class="thumb">
-<img class="img-fluid" src="{% static 'img/o3.jpg' %}" alt>
-</div>
-<a href="#">
-<h4>To Do List</h4>
-</a>
-<p>
-The following article covers a topic that has recently moved to center stage–at least it seems.
-</p>
-</div>
-</div>
-<div class="col-lg-3 col-md-6">
-<div class="single-other-issue">
-<div class="thumb">
-<img class="img-fluid" src="{% static 'img/o4.jpg' %}" alt>
-</div>
-<a href="#">
-<h4>Food Features</h4>
-</a>
-<p>
-There are many kinds of narratives and organizing principles. Science is driven by evidence.
-</p>
-</div>
-</div>
-</div>
-</div>
-</section>
-
-
-<section class="testimonial-area section-gap">
+<!-- ============ 5. PLATFORM FEATURES ============ -->
+<section class="platform-features-area section-gap">
 <div class="container">
 <div class="row d-flex justify-content-center">
 <div class="menu-content pb-70 col-lg-8">
 <div class="title text-center">
-<h1 class="mb-10">Testimonial from our Clients</h1>
-<p>The French Revolution constituted for the conscience of the dominant aristocratic class a fall from </p>
+<h6 class="text-center-label">On The Platform</h6>
+<h1 class="mb-10">Everything You Need, In One Place</h1>
 </div>
 </div>
 </div>
-<div class="row">
-<div class="active-testimonial">
-<div class="single-testimonial item d-flex flex-row">
-<div class="thumb">
-<img class="img-fluid" src="{% static 'img/elements/user1.png' %}" alt>
-</div>
-<div class="desc">
-<p>
-Do you want to be even more successful? Learn to love learning and growth. The more effort you put into improving your skills, the bigger the payoff you.
-</p>
-<h4>Harriet Maxwell</h4>
-<div class="star">
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star"></span>
+<div class="platform-features-grid">
+<div class="feature-item"><i class="fa fa-plane"></i><span>One-tap flight booking</span></div>
+<div class="feature-item"><i class="fa fa-train"></i><span>Train ticketing</span></div>
+<div class="feature-item"><i class="fa fa-bus"></i><span>Bus reservations</span></div>
+<div class="feature-item"><i class="fa fa-bed"></i><span>Hotels & stays</span></div>
+<div class="feature-item"><i class="fa-solid fa-lock"></i><span>Secure payments</span></div>
+<div class="feature-item"><i class="fa-solid fa-headset"></i><span>24/7 support</span></div>
+<div class="feature-item"><i class="fa-solid fa-id-card"></i><span>Verified identity checks</span></div>
+<div class="feature-item"><i class="fa-solid fa-scale-balanced"></i><span>Side-by-side comparisons</span></div>
 </div>
 </div>
+</section>
+
+<!-- ============ 6. WHY CHOOSE US ============ -->
+<section class="why-us-area section-gap">
+<div class="container">
+<div class="row align-items-center">
+<div class="col-lg-5 why-us-image">
+<!-- IMAGE 3 of 6: why choose us -->
+<img class="img-fluid" src="{% static 'img/about/why-us.jpg' %}" alt="Why travelers choose Travelista">
 </div>
-<div class="single-testimonial item d-flex flex-row">
-<div class="thumb">
-<img class="img-fluid" src="{% static 'img/elements/user2.png' %}" alt>
-</div>
-<div class="desc">
-<p>
-A purpose is the eternal condition for success. Every former smoker can tell you just how hard it is to stop smoking cigarettes. However.
-</p>
-<h4>Carolyn Craig</h4>
-<div class="star">
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star"></span>
-<span class="fa fa-star"></span>
-</div>
-</div>
-</div>
-<div class="single-testimonial item d-flex flex-row">
-<div class="thumb">
-<img class="img-fluid" src="{% static 'img/elements/user1.png' %}" alt>
-</div>
-<div class="desc">
-<p>
-Do you want to be even more successful? Learn to love learning and growth. The more effort you put into improving your skills, the bigger the payoff you.
-</p>
-<h4>Harriet Maxwell</h4>
-<div class="star">
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star"></span>
-</div>
-</div>
-</div>
-<div class="single-testimonial item d-flex flex-row">
-<div class="thumb">
-<img class="img-fluid" src="{% static 'img/elements/user2.png' %}" alt>
-</div>
-<div class="desc">
-<p>
-A purpose is the eternal condition for success. Every former smoker can tell you just how hard it is to stop smoking cigarettes. However.
-</p>
-<h4>Carolyn Craig</h4>
-<div class="star">
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star"></span>
-<span class="fa fa-star"></span>
-</div>
-</div>
-</div>
-<div class="single-testimonial item d-flex flex-row">
-<div class="thumb">
-<img class="img-fluid" src="{% static 'img/elements/user1.png' %}" alt>
-</div>
-<div class="desc">
-<p>
-Do you want to be even more successful? Learn to love learning and growth. The more effort you put into improving your skills, the bigger the payoff you.
-</p>
-<h4>Harriet Maxwell</h4>
-<div class="star">
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star"></span>
-</div>
-</div>
-</div>
-<div class="single-testimonial item d-flex flex-row">
-<div class="thumb">
-<img class="img-fluid" src="{% static 'img/elements/user2.png' %}" alt>
-</div>
-<div class="desc">
-<p>
-A purpose is the eternal condition for success. Every former smoker can tell you just how hard it is to stop smoking cigarettes. However.
-</p>
-<h4>Carolyn Craig</h4>
-<div class="star">
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star"></span>
-<span class="fa fa-star"></span>
-</div>
-</div>
-</div>
+<div class="col-lg-7">
+<h1 class="mb-20">8 Reasons Travelers Stay With Us</h1>
+<ul class="why-us-list">
+<li><i class="fa-solid fa-check"></i> Best-price guarantee across flights, trains and buses</li>
+<li><i class="fa-solid fa-check"></i> Instant, verified e-tickets — no waiting for confirmation</li>
+<li><i class="fa-solid fa-check"></i> Free cancellation windows on most bookings</li>
+<li><i class="fa-solid fa-check"></i> Verified sellers and rated accommodations only</li>
+<li><i class="fa-solid fa-check"></i> One dashboard for every trip you've ever booked</li>
+<li><i class="fa-solid fa-check"></i> Human support, not just chatbots, when it matters</li>
+<li><i class="fa-solid fa-check"></i> Transparent fees — the price you see is the price you pay</li>
+<li><i class="fa-solid fa-check"></i> Mobile app built for booking on the move</li>
+</ul>
 </div>
 </div>
 </div>
 </section>
+
+<!-- ============ 7. STATISTICS ============ -->
+<section class="stats-area section-gap relative">
+<!-- IMAGE 6 of 6: statistics background -->
+<img class="stats-bg-img" src="{% static 'img/about/stats-bg.png' %}" alt="Travelista destinations around the world">
+<div class="overlay stats-overlay"></div>
+<div class="container relative">
+<div class="stats-grid">
+<div class="stat-item"><i class="fa-solid fa-users"></i><h2>250K+</h2><p>Registered Users</p></div>
+<div class="stat-item"><i class="fa-solid fa-suitcase-rolling"></i><h2>1.2M+</h2><p>Trips Booked</p></div>
+<div class="stat-item"><i class="fa-solid fa-store"></i><h2>3,400+</h2><p>Verified Sellers</p></div>
+<div class="stat-item"><i class="fa-solid fa-city"></i><h2>60+</h2><p>Cities Covered</p></div>
+<div class="stat-item"><i class="fa-solid fa-face-smile"></i><h2>97%</h2><p>Customer Satisfaction</p></div>
+<div class="stat-item"><i class="fa-solid fa-list-check"></i><h2>18,000+</h2><p>Listings Available</p></div>
+</div>
+</div>
+</section>
+
+
+<!-- ============ 8. SOCIAL RESPONSIBILITY ============ -->
+<section class="csr-area section-gap">
+<div class="container">
+<div class="row align-items-center">
+<div class="col-lg-6">
+<h6 class="text-center-label">Social Responsibility</h6>
+<h1 class="mb-20">Travel That Gives Back</h1>
+<p>We offset a share of every booking's carbon footprint through verified reforestation partners, prioritize local and small-business accommodation listings, and donate a portion of platform fees to community transport initiatives in the cities we serve.</p>
+</div>
+<div class="col-lg-6 csr-image">
+<!-- IMAGE 4 of 6: CSR / sustainability -->
+<img class="img-fluid" src="{% static 'img/about/csr.jpg' %}" alt="Travelista community and sustainability initiatives">
+</div>
+</div>
+</div>
+</section>
+
+<!-- ============ 9. SECURITY & TRUST ============ -->
+<section class="security-area section-gap">
+<div class="container">
+<div class="row d-flex justify-content-center">
+<div class="menu-content pb-70 col-lg-8">
+<div class="title text-center">
+<h6 class="text-center-label">Security & Trust</h6>
+<h1 class="mb-10">Your Data and Money Are Protected</h1>
+</div>
+</div>
+</div>
+<div class="security-list">
+<div class="security-item"><i class="fa-solid fa-user-shield"></i><h5>Data Security</h5><p>Encrypted end-to-end, with regular independent audits.</p></div>
+<div class="security-item"><i class="fa-solid fa-lock"></i><h5>Private by Default</h5><p>We never sell traveler data to third parties.</p></div>
+<div class="security-item"><i class="fa-solid fa-credit-card"></i><h5>Secure Payments</h5><p>PCI-compliant processing on every transaction.</p></div>
+<div class="security-item"><i class="fa-solid fa-scale-balanced"></i><h5>Clear Policies</h5><p>Plain-language <a href="{% url 'help_center:Terms_and_Conditions' %}">terms & conditions</a> you can read in minutes, not hours.</p></div>
+<div class="security-item"><i class="fa-solid fa-certificate"></i><h5>Quality Guarantee</h5><p>Every partner is re-verified on a recurring basis.</p></div>
+</div>
+</div>
+</section>
+
+<!-- ============ 10. HOW IT WORKS ============ -->
+<section class="how-it-works-area section-gap">
+<div class="container">
+<div class="row align-items-center">
+<div class="col-lg-6">
+<h6 class="text-center-label">How It Works</h6>
+<h1 class="mb-20">Book a Trip in 4 Steps</h1>
+<div class="how-it-works-steps">
+<div class="step-item"><span class="step-num">1</span><div><h5>Search</h5><p>Compare flights, trains, buses and stays side by side.</p></div></div>
+<div class="step-item"><span class="step-num">2</span><div><h5>Choose</h5><p>Filter by price, rating, cancellation policy and more.</p></div></div>
+<div class="step-item"><span class="step-num">3</span><div><h5>Book Securely</h5><p>Pay safely and get an instant, verified e-ticket.</p></div></div>
+<div class="step-item"><span class="step-num">4</span><div><h5>Travel</h5><p>Manage every booking from one dashboard, before and after you go.</p></div></div>
+</div>
+</div>
+<div class="col-lg-6 how-it-works-image">
+<!-- IMAGE 5 of 6: booking flow illustration -->
+<img class="img-fluid" src="{% static 'img/about/how-it-works.png' %}" alt="How booking with Travelista works">
+</div>
+</div>
+</div>
+</section>
+
+
+
+
+<!-- ============ 11. CONTACT STRIP ============ -->
+<section class="contact-strip-area">
+<div class="container">
+<div class="contact-strip-inner">
+<div class="contact-strip-item"><i class="fa fa-envelope"></i><span>abb.afrasiyabi@gmail.com</span></div>
+<div class="contact-strip-item"><i class="fa-solid fa-location-dot"></i><span>Serving 60+ cities worldwide</span></div>
+<a href="{% url 'website:contact' %}" class="contact-strip-cta">Get in Touch <span class="lnr lnr-arrow-right"></span></a>
+</div>
+</div>
+</section>
+
 {% endblock %}
