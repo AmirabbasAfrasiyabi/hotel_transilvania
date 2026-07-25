@@ -5600,3 +5600,191 @@ body.mobile-nav-active #mobile-nav-toggle {
 /* ==========================================================================
    >>> END: TRAVELISTA — CONTACT PAGE ("BOARDING PASS") BLOCK <<<
    ========================================================================== */
+
+
+
+/* ==========================================================================
+   >>> START: TRAVELISTA — "WHY TRAVELISTA" PAGE BLOCK <<<
+   کپی این بلوک را در انتهای main.css بچسبان (بعد از بلوک صفحه Contact).
+   وابسته به متغیرهای --tvl-* که در بلوک صفحه Contact تعریف شده‌اند —
+   پس این بلوک باید *بعد* از اون بلوک در main.css بیاد.
+   ========================================================================== */
+
+/* ---------- Generic reusable page shell (same header/footer gap as Contact) ---------- */
+.page-shell {
+  margin: 56px auto;
+  border-radius: 26px;
+  overflow: hidden;
+  box-shadow: 0 35px 70px -30px rgba(18, 41, 61, 0.5);
+}
+
+@media (max-width: 767px) {
+  .page-shell {
+    margin: 28px 12px;
+    border-radius: 18px;
+  }
+}
+
+/* ---------- Why Travelista section ---------- */
+.why-area {
+  background: var(--tvl-navy);
+  padding: 90px 0 100px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.why-area::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 12% 15%, rgba(255,111,89,0.08), transparent 40%),
+    radial-gradient(circle at 92% 85%, rgba(27,122,120,0.14), transparent 45%);
+  pointer-events: none;
+}
+
+.why-area .container {
+  position: relative;
+  z-index: 1;
+}
+
+.why-intro {
+  max-width: 640px;
+  margin: 0 auto 60px auto;
+  text-align: center;
+}
+
+.why-intro .contact-eyebrow {
+  display: inline-block;
+}
+
+.why-heading {
+  max-width: none;
+  font-size: 38px;
+  margin-bottom: 18px;
+}
+
+.why-lead {
+  color: rgba(241,231,214,0.75);
+  font-size: 16px;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ---------- Feature grid (6 cards = 6 graphics) ---------- */
+.why-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 26px;
+}
+
+.feature-card {
+  background: var(--tvl-paper);
+  border-radius: 16px;
+  padding: 34px 28px;
+  border-top: 3px dashed rgba(255,111,89,0.55);
+  box-shadow: var(--tvl-shadow);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 30px 55px -20px rgba(18,41,61,0.55);
+}
+
+.feature-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--tvl-teal);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.feature-icon svg {
+  width: 26px;
+  height: 26px;
+}
+
+.feature-card h4 {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  color: var(--tvl-ink);
+  font-size: 19px;
+  margin: 0 0 10px 0;
+}
+
+.feature-card p {
+  color: var(--tvl-ink-soft);
+  font-size: 14px;
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* ---------- Closing CTA (tear-off ticket stub look) ---------- */
+.why-cta {
+  margin-top: 70px;
+  padding-top: 46px;
+  border-top: 2px dashed rgba(241,231,214,0.3);
+  text-align: center;
+}
+
+.why-cta p {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  color: #fff;
+  font-size: 24px;
+  margin-bottom: 26px;
+}
+
+.why-cta .genric-btn {
+  display: inline-block;
+  background: var(--tvl-coral);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 34px;
+  font-family: 'Space Mono', monospace;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-size: 13px;
+  text-decoration: none;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.why-cta .genric-btn:hover {
+  background: var(--tvl-coral-dark);
+  transform: translateY(-2px);
+  color: #fff;
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (max-width: 991px) {
+  .why-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .why-heading { font-size: 30px; }
+}
+
+@media (max-width: 767px) {
+  .why-area { padding: 60px 0 70px 0; }
+  .why-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .why-intro { margin-bottom: 40px; }
+  .why-heading { font-size: 26px; }
+  .feature-card { padding: 28px 22px; }
+  .why-cta { margin-top: 50px; padding-top: 34px; }
+  .why-cta p { font-size: 20px; }
+}
+
+/* ==========================================================================
+   >>> END: TRAVELISTA — "WHY TRAVELISTA" PAGE BLOCK <<<
+   ========================================================================== */
