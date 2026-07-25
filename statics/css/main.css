@@ -5195,3 +5195,408 @@ body.mobile-nav-active #mobile-nav-toggle {
     text-align: center;
   }
 }
+
+
+/* ==========================================================================
+   >>> START: TRAVELISTA — CONTACT PAGE ("BOARDING PASS") BLOCK <<<
+   کپی این کل بلوک (تا انتهای فایل، تا خط "END") را در انتهای main.css بچسبان.
+   نکته: فونت‌های Fraunces / Space Mono با <link> در <head> لود می‌شوند
+   (به بخش ۲ پاسخ مراجعه کن)، نه با @import، چون @import وسط فایل کار نمی‌کند.
+   ========================================================================== */
+
+:root {
+  --tvl-navy: #12293D;
+  --tvl-navy-soft: #1C3A52;
+  --tvl-paper: #F1E7D6;
+  --tvl-paper-dark: #E7D9C2;
+  --tvl-coral: #FF6F59;
+  --tvl-coral-dark: #E85A45;
+  --tvl-teal: #1B7A78;
+  --tvl-ink: #2C2A28;
+  --tvl-ink-soft: #6B6560;
+  --tvl-radius: 18px;
+  --tvl-shadow: 0 20px 45px -20px rgba(18, 41, 61, 0.35);
+}
+
+/* ---------- Fix 1: breathing room between header/footer and page content ---------- */
+.contact-page-shell {
+  margin: 56px auto;
+  border-radius: 26px;
+  overflow: hidden;
+  box-shadow: 0 35px 70px -30px rgba(18, 41, 61, 0.5);
+}
+
+@media (max-width: 767px) {
+  .contact-page-shell {
+    margin: 28px 12px;
+    border-radius: 18px;
+  }
+}
+
+/* ---------- Hero / breadcrumb touch-up ---------- */
+.about-banner .about-content h1 {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.about-banner .link-nav a {
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* ---------- Section wrapper ---------- */
+.contact-page-area {
+  background: var(--tvl-navy);
+  padding-top: 90px;
+  padding-bottom: 100px;
+  position: relative;
+  overflow: hidden;
+}
+
+.contact-page-area::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(255,111,89,0.08), transparent 40%),
+    radial-gradient(circle at 85% 75%, rgba(27,122,120,0.12), transparent 45%);
+  pointer-events: none;
+}
+
+/* --- GRAPHIC 1 of 2: flight-path + plane trail (inline SVG, top-right) --- */
+.contact-page-area::after {
+  content: "";
+  position: absolute;
+  top: 30px;
+  right: 4%;
+  width: 300px;
+  height: 210px;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20320%20220%22%20fill%3D%22none%22%3E%0A%3Cpath%20d%3D%22M10%20190%20C%2090%20190%2C%2070%2040%2C%20170%2040%20S%20280%2090%2C%20300%2030%22%20stroke%3D%22%23FF6F59%22%20stroke-width%3D%222%22%20stroke-dasharray%3D%226%208%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.55%22/%3E%0A%3Cg%20transform%3D%22translate%28282%2C18%29%20rotate%2835%29%22%3E%0A%3Cpath%20d%3D%22M0%208%20L22%200%20L22%204%20L10%2010%20L10%2018%20L16%2021%20L16%2024%20L6%2022%20L-4%2024%20L-4%2021%20L2%2018%20L2%2010%20L-10%204%20L-10%200%20Z%22%20fill%3D%22%23FF6F59%22%20opacity%3D%220.85%22/%3E%0A%3C/g%3E%0A%3Ccircle%20cx%3D%2210%22%20cy%3D%22190%22%20r%3D%224%22%20fill%3D%22%231B7A78%22%20opacity%3D%220.7%22/%3E%0A%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: contain;
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+.contact-page-area .container {
+  position: relative;
+  z-index: 1;
+}
+
+.contact-eyebrow {
+  font-family: 'Space Mono', monospace;
+  color: var(--tvl-coral);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-size: 13px;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.contact-heading {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  color: #fff;
+  font-size: 40px;
+  margin-bottom: 50px;
+  max-width: 560px;
+  line-height: 1.25;
+}
+
+/* ---------- Boarding-pass grid ---------- */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 0;
+  background: var(--tvl-paper);
+  border-radius: var(--tvl-radius);
+  box-shadow: var(--tvl-shadow);
+  overflow: visible;
+  position: relative;
+}
+
+/* Left stub: contact info */
+.contact-info-stub {
+  background: var(--tvl-paper-dark);
+  border-radius: var(--tvl-radius) 0 0 var(--tvl-radius);
+  padding: 6px 0 36px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.stub-ticket {
+  padding: 34px 34px 6px 34px;
+}
+
+.ticket-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px 0;
+}
+
+.ticket-row .icon {
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--tvl-teal);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.ticket-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--tvl-ink-soft);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.ticket-row h5 {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  color: var(--tvl-ink);
+  margin: 0 0 4px 0;
+  font-size: 18px;
+}
+
+.ticket-row p,
+.ticket-row a {
+  color: var(--tvl-ink-soft);
+  font-size: 14px;
+  margin: 0;
+  text-decoration: none;
+}
+
+.ticket-row a:hover {
+  color: var(--tvl-coral);
+}
+
+.ticket-divider {
+  border-top: 1px dashed rgba(44,42,40,0.25);
+  margin: 0 0;
+}
+
+/* Perforation line between the two stubs */
+.contact-grid::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 41.5%;
+  width: 0;
+  border-left: 2px dashed rgba(44,42,40,0.28);
+  z-index: 2;
+}
+
+.contact-grid::before {
+  content: "";
+  position: absolute;
+  left: calc(41.5% - 14px);
+  top: -14px;
+  width: 28px;
+  height: 28px;
+  background: var(--tvl-navy);
+  border-radius: 50%;
+  z-index: 3;
+  box-shadow: 0 calc(100% + 14px) 0 0 var(--tvl-navy);
+}
+
+/* Right stub: the form */
+.contact-form-stub {
+  background: var(--tvl-paper);
+  border-radius: 0 var(--tvl-radius) var(--tvl-radius) 0;
+  padding: 46px 48px 44px 62px;
+}
+
+.contact-form-stub .form-eyebrow {
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--tvl-teal);
+  display: block;
+  margin-bottom: 8px;
+}
+
+.contact-form-stub h2 {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  color: var(--tvl-navy);
+  font-size: 28px;
+  margin-bottom: 28px;
+}
+
+.contact-form-stub .form-control {
+  background: #fff;
+  border: 1px solid rgba(44,42,40,0.15);
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-size: 14px;
+  color: var(--tvl-ink);
+  margin-bottom: 18px;
+  width: 100%;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.contact-form-stub .form-control:focus {
+  outline: none;
+  border-color: var(--tvl-coral);
+  box-shadow: 0 0 0 3px rgba(255,111,89,0.18);
+}
+
+.contact-form-stub textarea.form-control {
+  min-height: 168px;
+  resize: vertical;
+}
+
+.contact-form-stub .genric-btn {
+  background: var(--tvl-coral);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 30px;
+  font-family: 'Space Mono', monospace;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.contact-form-stub .genric-btn:hover {
+  background: var(--tvl-coral-dark);
+  transform: translateY(-2px);
+}
+
+.contact-form-stub .genric-btn:active {
+  transform: translateY(0);
+}
+
+/* ---------- Destination postcards strip ---------- */
+/* --- GRAPHIC 2 of 2: dotted world-map watermark (inline SVG, background) --- */
+.destinations-strip {
+  margin-top: 90px;
+  text-align: center;
+  position: relative;
+  padding: 40px 0;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20600%20300%22%20fill%3D%22none%22%3E%0A%3Cg%20fill%3D%22%23F1E7D6%22%20opacity%3D%220.5%22%3E%0A%3Ccircle%20cx%3D%2280%22%20cy%3D%2290%22%20r%3D%222.5%22/%3E%3Ccircle%20cx%3D%2295%22%20cy%3D%2285%22%20r%3D%222.5%22/%3E%3Ccircle%20cx%3D%22110%22%20cy%3D%2295%22%20r%3D%222.5%22/%3E%0A%3Ccircle%20cx%3D%2290%22%20cy%3D%22110%22%20r%3D%222.5%22/%3E%3Ccircle%20cx%3D%22120%22%20cy%3D%22115%22%20r%3D%222.5%22/%3E%3Ccircle%20cx%3D%22135%22%20cy%3D%22100%22%20r%3D%222.5%22/%3E%0A%3Ccircle%20cx%3D%22150%22%20cy%3D%22120%22%20r%3D%222.5%22/%3E%3Ccircle%20cx%3D%22165%22%20cy%3D%22105%22%20r%3D%222.5%22/%3E%3Ccircle%20cx%3D%22180%22%20cy%3D%22130%22%20r%3D%222.5%22/%3E%0A%3Ccircle%20cx%3D%22250%22%20cy%3D%2280%22%20r%3D%222.5%22/%3E%3Ccircle%20cx%3D%22265%22%20cy%3D%2295%22%20r%3D%222.5%22/%3E%3Ccircle%20cx%3D%22280%22%20cy%3D%2285%22%20r%3D%222.5%22/%3E%0A%3Ccircle%20cx%3D%22270%22%20cy%3D%22110%22%20r%3D%222.5%22/%3E%3Ccircle%20cx%3D%22290%22%20cy%3D%22120%22%20r%3D%222.5%22/%3E%3Ccircle%20cx%3D%22305%22%20cy%3D%22105%22%20r%3D%222.5%22/%3E%0A%3Ccircle%20cx%3D%22260%22%20cy%3D%22140%22%20r%3D%222.5%22/%3E%3Ccircle%20cx%3D%22275%22%20cy%3D%22155%22%20r%3D%222.5%22/%3E%3Ccircle%20cx%3D%22290%22%20cy%3D%22170%22%20r%3D%222.5%22/%3E%0A%3Ccircle%20cx%3D%22380%22%20cy%3D%2270%22%20r%3D%222.5%22/%3E%3Ccircle%20cx%3D%22400%22%20cy%3D%2280%22%20r%3D%222.5%22/%3E%3Ccircle%20cx%3D%22420%22%20cy%3D%2275%22%20r%3D%222.5%22/%3E%0A%3Ccircle%20cx%3D%22410%22%20cy%3D%22100%22%20r%3D%222.5%22/%3E%3Ccircle%20cx%3D%22430%22%20cy%3D%22110%22%20r%3D%222.5%22/%3E%3Ccircle%20cx%3D%22450%22%20cy%3D%2295%22%20r%3D%222.5%22/%3E%0A%3Ccircle%20cx%3D%22440%22%20cy%3D%22130%22%20r%3D%222.5%22/%3E%3Ccircle%20cx%3D%22460%22%20cy%3D%22150%22%20r%3D%222.5%22/%3E%3Ccircle%20cx%3D%22475%22%20cy%3D%22170%22%20r%3D%222.5%22/%3E%0A%3Ccircle%20cx%3D%22500%22%20cy%3D%2290%22%20r%3D%222.5%22/%3E%3Ccircle%20cx%3D%22515%22%20cy%3D%22105%22%20r%3D%222.5%22/%3E%3Ccircle%20cx%3D%22530%22%20cy%3D%2295%22%20r%3D%222.5%22/%3E%0A%3Ccircle%20cx%3D%22520%22%20cy%3D%22120%22%20r%3D%222.5%22/%3E%3Ccircle%20cx%3D%22540%22%20cy%3D%22130%22%20r%3D%222.5%22/%3E%0A%3C/g%3E%0A%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center 10px;
+  background-size: 640px auto;
+}
+
+.destinations-strip .ticket-label {
+  color: rgba(241,231,214,0.6);
+}
+
+.destinations-strip h3 {
+  font-family: 'Fraunces', serif;
+  color: #fff;
+  font-size: 26px;
+  margin-bottom: 46px;
+}
+
+.postcards {
+  display: flex;
+  justify-content: center;
+  gap: 34px;
+  flex-wrap: wrap;
+}
+
+.postcard {
+  width: 220px;
+  height: 160px;
+  object-fit: cover;
+  border: 8px solid #fff;
+  border-radius: 4px;
+  box-shadow: 0 18px 30px -12px rgba(0,0,0,0.45);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.postcard:nth-child(1) { transform: rotate(-4deg); }
+.postcard:nth-child(2) { transform: rotate(2deg) translateY(10px); }
+.postcard:nth-child(3) { transform: rotate(-2deg); }
+
+.postcard:hover {
+  transform: rotate(0deg) translateY(-6px) scale(1.03);
+  box-shadow: 0 24px 40px -14px rgba(0,0,0,0.55);
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (max-width: 991px) {
+  .contact-page-area::after { width: 200px; height: 140px; top: 10px; }
+  .destinations-strip { background-size: 480px auto; }
+  .contact-heading { font-size: 32px; }
+
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-info-stub {
+    border-radius: var(--tvl-radius) var(--tvl-radius) 0 0;
+  }
+
+  .contact-form-stub {
+    border-radius: 0 0 var(--tvl-radius) var(--tvl-radius);
+    padding: 40px 34px;
+  }
+
+  /* horizontal perforation instead of vertical */
+  .contact-grid::after {
+    left: 0;
+    right: 0;
+    top: auto;
+    bottom: 260px;
+    height: 0;
+    width: auto;
+    border-left: none;
+    border-top: 2px dashed rgba(44,42,40,0.28);
+  }
+
+  .contact-grid::before {
+    top: auto;
+    bottom: calc(260px - 14px);
+    left: -14px;
+    box-shadow: calc(100% + 14px) 0 0 0 var(--tvl-navy);
+  }
+
+  .postcard {
+    width: 42%;
+    height: 140px;
+  }
+}
+
+@media (max-width: 767px) {
+  .contact-page-area { padding-top: 60px; padding-bottom: 70px; }
+  .contact-page-area::after { display: none; } /* flight-path: too crowded on mobile */
+  .contact-heading { font-size: 26px; margin-bottom: 34px; }
+  .stub-ticket { padding: 26px 22px 4px 22px; }
+  .contact-form-stub { padding: 32px 22px; }
+  .contact-form-stub h2 { font-size: 22px; }
+  .destinations-strip { margin-top: 60px; background-size: 340px auto; }
+  .postcards { gap: 18px; }
+  .postcard { width: 100%; max-width: 280px; height: 160px; }
+  .postcard:nth-child(2) { transform: rotate(0deg); }
+}
+
+@media (max-width: 480px) {
+  .ticket-row .icon { width: 36px; height: 36px; font-size: 14px; }
+  .ticket-row h5 { font-size: 16px; }
+}
+
+/* ==========================================================================
+   >>> END: TRAVELISTA — CONTACT PAGE ("BOARDING PASS") BLOCK <<<
+   ========================================================================== */
