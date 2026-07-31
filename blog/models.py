@@ -1,19 +1,19 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.utils.text import Truncator
 
 # Create your models here.
 
 class Post(models.Model):
     title = models.CharField(max_length=200)
     content = models.TextField(max_length=500)
-    image = models.ImageField(upload_to='blog' , default='blog/default.jpg')
-    author = models.ForeignKey(User,on_delete=models.CASCADE,null=True)
-    category = models.ManyToManyField('Category',related_name='category',blank=True,null=True)
+    image = models.ImageField(upload_to='blog', default='blog/default.jpg')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    category = models.ManyToManyField('Category', related_name='category', blank=True, null=True)
     created_date = models.DateTimeField(auto_now_add=True)
     counted_views = models.IntegerField(default=0)
     status = models.BooleanField(default=False)
-    published_date = models.DateTimeField(null=True , blank=True)
-    created_date = models.DateTimeField(auto_now_add=True)
+    published_date = models.DateTimeField(null=True, blank=True)
     updated_date = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -24,12 +24,13 @@ class Post(models.Model):
     def __str__(self):
         return "{} - {}".format(self.id, self.title)
 
+    def excerpt(self, word_count=20):
+
+        return Truncator(self.content).words(word_count, truncate=' ...')
+
 
 class Category(models.Model):
     name = models.CharField(max_length=200)
 
     def __str__(self):
         return self.name
-
-    def snippet(self):
-        return self.content[:10]+ '...'
