@@ -38,7 +38,6 @@ def blog_single(request, pid):
     prev_post = base_qs.filter(
         published_date__lt=post.published_date
     ).order_by('-published_date').first()
-
     context = {
         'posts': post,
         'next_post': next_post,
