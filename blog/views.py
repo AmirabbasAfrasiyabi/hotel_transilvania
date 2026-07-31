@@ -24,8 +24,24 @@ def blog_single(request, pid):
     Post.objects.filter(pk=post.pk).update(
         counted_views=F('counted_views') + 1
     )
-
     post.refresh_from_db()
 
-    context = {'posts': post}
+    base_qs = Post.objects.filter(
+        status=1,
+        published_date__lte=timezone.now()
+    )
+
+    next_post = base_qs.filter(
+        published_date__gt=post.published_date
+    ).order_by('published_date').first()
+
+    prev_post = base_qs.filter(
+        published_date__lt=post.published_date
+    ).order_by('-published_date').first()
+
+    context = {
+        'posts': post,
+        'next_post': next_post,
+        'prev_post': prev_post,
+    }
     return render(request, 'blog/blog-single.html', context)
