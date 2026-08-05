@@ -1,62 +1,369 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<section class="banner-area relative">
-<div class="overlay overlay-bg"></div>
-<div class="container">
-<div class="row fullscreen align-items-center justify-content-between">
-<div class="col-lg-4 col-md-6 banner-right">
-<ul class="nav nav-tabs" id="myTab" role="tablist">
-<li class="nav-item">
-<a class="nav-link active" id="flight-tab" data-toggle="tab" href="#flight" role="tab" aria-controls="flight" aria-selected="true">Flights</a>
-</li>
-<li class="nav-item">
-<a class="nav-link" id="hotel-tab" data-toggle="tab" href="#hotel" role="tab" aria-controls="hotel" aria-selected="false">Hotels</a>
-</li>
-<li class="nav-item">
-<a class="nav-link" id="holiday-tab" data-toggle="tab" href="#holiday" role="tab" aria-controls="holiday" aria-selected="false">Holidays</a>
-</li>
-</ul>
-<div class="tab-content" id="myTabContent">
-<div class="tab-pane fade show active" id="flight" role="tabpanel" aria-labelledby="flight-tab">
-<form class="form-wrap">
-<input type="text" class="form-control" name="name" placeholder="From " onfocus="this.placeholder = ''" onblur="this.placeholder = 'From '">
-<input type="text" class="form-control" name="to" placeholder="To " onfocus="this.placeholder = ''" onblur="this.placeholder = 'To '">
-<input type="text" class="form-control date-picker" name="start" placeholder="Start " onfocus="this.placeholder = ''" onblur="this.placeholder = 'Start '">
-<input type="text" class="form-control date-picker" name="return" placeholder="Return " onfocus="this.placeholder = ''" onblur="this.placeholder = 'Return '">
-<input type="number" min="1" max="20" class="form-control" name="adults" placeholder="Adults " onfocus="this.placeholder = ''" onblur="this.placeholder = 'Adults '">
-<input type="number" min="1" max="20" class="form-control" name="child" placeholder="Child " onfocus="this.placeholder = ''" onblur="this.placeholder = 'Child '">
-<a href="#" class="primary-btn text-uppercase">Search flights</a>
-</form>
-</div>
-<div class="tab-pane fade" id="hotel" role="tabpanel" aria-labelledby="hotel-tab">
-<form class="form-wrap">
-<input type="text" class="form-control" name="name" placeholder="From " onfocus="this.placeholder = ''" onblur="this.placeholder = 'From '">
-<input type="text" class="form-control" name="to" placeholder="To " onfocus="this.placeholder = ''" onblur="this.placeholder = 'To '">
-<input type="text" class="form-control date-picker" name="start" placeholder="Start " onfocus="this.placeholder = ''" onblur="this.placeholder = 'Start '">
-<input type="text" class="form-control date-picker" name="return" placeholder="Return " onfocus="this.placeholder = ''" onblur="this.placeholder = 'Return '">
-<input type="number" min="1" max="20" class="form-control" name="adults" placeholder="Adults " onfocus="this.placeholder = ''" onblur="this.placeholder = 'Adults '">
-<input type="number" min="1" max="20" class="form-control" name="child" placeholder="Child " onfocus="this.placeholder = ''" onblur="this.placeholder = 'Child '">
-<a href="#" class="primary-btn text-uppercase">Search Hotels</a>
-</form>
-</div>
-<div class="tab-pane fade" id="holiday" role="tabpanel" aria-labelledby="holiday-tab">
-<form class="form-wrap">
-<input type="text" class="form-control" name="name" placeholder="From " onfocus="this.placeholder = ''" onblur="this.placeholder = 'From '">
-<input type="text" class="form-control" name="to" placeholder="To " onfocus="this.placeholder = ''" onblur="this.placeholder = 'To '">
-<input type="text" class="form-control date-picker" name="start" placeholder="Start " onfocus="this.placeholder = ''" onblur="this.placeholder = 'Start '">
-<input type="text" class="form-control date-picker" name="return" placeholder="Return " onfocus="this.placeholder = ''" onblur="this.placeholder = 'Return '">
-<input type="number" min="1" max="20" class="form-control" name="adults" placeholder="Adults " onfocus="this.placeholder = ''" onblur="this.placeholder = 'Adults '">
-<input type="number" min="1" max="20" class="form-control" name="child" placeholder="Child " onfocus="this.placeholder = ''" onblur="this.placeholder = 'Child '">
-<a href="#" class="primary-btn text-uppercase">Search Holidays</a>
-</form>
-</div>
-</div>
-</div>
-</div>
-</div>
+
+<!-- ==========================================================================
+     TRAVELISTA — HERO SEARCH SECTION (Phase 1, extended)
+     Replaces the old .banner-area block. Styles live in main.css (appended
+     block "HERO SEARCH BLOCK"), behavior lives in static/js/hero-search.js.
+     ========================================================================== -->
+<section class="tvl-hero relative">
+  <img class="tvl-hero-bg" src="{% static 'img/hero-bg.jpg' %}" alt="">
+  <div class="tvl-hero-overlay"></div>
+
+  <div class="container">
+    <div class="tvl-hero-inner">
+
+      <span class="contact-eyebrow tvl-hero-eyebrow">BOOK IN SECONDS</span>
+      <h1 class="tvl-hero-title">Where to next?</h1>
+      <p class="tvl-hero-sub">Flights, hotels, trains, buses and tours — one search, every way to go.</p>
+
+      <!-- ================= SEARCH CARD ================= -->
+      <div class="tvl-search-card" id="tvlSearchCard">
+
+        <!-- ---- Tabs ---- -->
+        <div class="tvl-tabs" role="tablist" aria-label="Choose what to search for">
+          <button type="button" class="tvl-tab active" role="tab" id="tvl-tab-flight"
+                  aria-selected="true" aria-controls="tvl-panel-flight" data-mode="flight" data-url="/flights">
+            <i class="fa-solid fa-plane" aria-hidden="true"></i><span>Flights</span>
+          </button>
+          <button type="button" class="tvl-tab" role="tab" id="tvl-tab-hotel"
+                  aria-selected="false" aria-controls="tvl-panel-hotel" data-mode="hotel" data-url="/hotels">
+            <i class="fa-solid fa-bed" aria-hidden="true"></i><span>Hotels</span>
+          </button>
+          <button type="button" class="tvl-tab" role="tab" id="tvl-tab-train"
+                  aria-selected="false" aria-controls="tvl-panel-train" data-mode="train" data-url="/train">
+            <i class="fa-solid fa-train" aria-hidden="true"></i><span>Train</span>
+          </button>
+          <button type="button" class="tvl-tab" role="tab" id="tvl-tab-bus"
+                  aria-selected="false" aria-controls="tvl-panel-bus" data-mode="bus" data-url="/bus">
+            <i class="fa-solid fa-bus" aria-hidden="true"></i><span>Bus</span>
+          </button>
+          <button type="button" class="tvl-tab" role="tab" id="tvl-tab-tour"
+                  aria-selected="false" aria-controls="tvl-panel-tour" data-mode="tour" data-url="/tours">
+            <i class="fa-solid fa-suitcase-rolling" aria-hidden="true"></i><span>Tours</span>
+          </button>
+        </div>
+
+        <!-- ---- Panels ---- -->
+        <div class="tvl-panels">
+
+          <!-- FLIGHTS -->
+          <form class="tvl-panel active" data-panel="flight" id="tvl-panel-flight"
+                role="tabpanel" aria-labelledby="tvl-tab-flight" autocomplete="off">
+            <div class="tvl-row tvl-row-od">
+              <div class="tvl-field" data-field="origin" data-suggest>
+                <label for="flight-origin">From</label>
+                <input id="flight-origin" class="tvl-input" type="text" name="origin" placeholder="City or airport">
+                <div class="tvl-suggest-panel" data-suggest-panel hidden></div>
+              </div>
+              <button type="button" class="tvl-reverse-btn" data-reverse aria-label="Swap origin and destination">
+                <i class="fa-solid fa-right-left" aria-hidden="true"></i>
+              </button>
+              <div class="tvl-field" data-field="destination" data-suggest>
+                <label for="flight-destination">To</label>
+                <input id="flight-destination" class="tvl-input" type="text" name="destination" placeholder="City or airport">
+                <div class="tvl-suggest-panel" data-suggest-panel hidden></div>
+              </div>
+            </div>
+
+            <div class="tvl-row tvl-row-dates">
+              <div class="tvl-field" data-field="depart" data-datepicker>
+                <label for="flight-depart">Departure</label>
+                <input id="flight-depart" class="tvl-input" type="text" name="depart_date" placeholder="Add date" readonly>
+              </div>
+              <div class="tvl-field" data-field="return" data-datepicker>
+                <label for="flight-return">Return</label>
+                <input id="flight-return" class="tvl-input" type="text" name="return_date" placeholder="Add date" readonly>
+              </div>
+            </div>
+
+            <div class="tvl-row tvl-row-pax">
+              <div class="tvl-field tvl-field-pax" data-passenger data-show-class="true">
+                <label>Passengers &amp; class</label>
+                <button type="button" class="tvl-input tvl-pax-trigger" data-pax-trigger>1 adult, Economy</button>
+              </div>
+            </div>
+
+            <button type="submit" class="tvl-search-btn">
+              <span class="tvl-btn-label">Search flights</span>
+              <span class="tvl-spinner" hidden aria-hidden="true"></span>
+            </button>
+          </form>
+
+          <!-- HOTELS -->
+          <form class="tvl-panel" data-panel="hotel" id="tvl-panel-hotel"
+                role="tabpanel" aria-labelledby="tvl-tab-hotel" hidden autocomplete="off">
+            <div class="tvl-row tvl-row-single">
+              <div class="tvl-field" data-field="destination" data-suggest>
+                <label for="hotel-destination">Destination</label>
+                <input id="hotel-destination" class="tvl-input" type="text" name="destination" placeholder="City, area or hotel name">
+                <div class="tvl-suggest-panel" data-suggest-panel hidden></div>
+              </div>
+            </div>
+
+            <div class="tvl-row tvl-row-dates">
+              <div class="tvl-field" data-field="depart" data-datepicker>
+                <label for="hotel-checkin">Check-in</label>
+                <input id="hotel-checkin" class="tvl-input" type="text" name="checkin_date" placeholder="Add date" readonly>
+              </div>
+              <div class="tvl-field" data-field="return" data-datepicker>
+                <label for="hotel-checkout">Check-out</label>
+                <input id="hotel-checkout" class="tvl-input" type="text" name="checkout_date" placeholder="Add date" readonly>
+              </div>
+            </div>
+
+            <div class="tvl-row tvl-row-pax">
+              <div class="tvl-field tvl-field-pax" data-passenger data-show-class="false" data-show-rooms="true">
+                <label>Rooms &amp; guests</label>
+                <button type="button" class="tvl-input tvl-pax-trigger" data-pax-trigger>1 room, 2 guests</button>
+              </div>
+            </div>
+
+            <button type="submit" class="tvl-search-btn">
+              <span class="tvl-btn-label">Search hotels</span>
+              <span class="tvl-spinner" hidden aria-hidden="true"></span>
+            </button>
+          </form>
+
+          <!-- TRAIN -->
+          <form class="tvl-panel" data-panel="train" id="tvl-panel-train"
+                role="tabpanel" aria-labelledby="tvl-tab-train" hidden autocomplete="off">
+            <div class="tvl-row tvl-row-od">
+              <div class="tvl-field" data-field="origin" data-suggest>
+                <label for="train-origin">From</label>
+                <input id="train-origin" class="tvl-input" type="text" name="origin" placeholder="Departure station or city">
+                <div class="tvl-suggest-panel" data-suggest-panel hidden></div>
+              </div>
+              <button type="button" class="tvl-reverse-btn" data-reverse aria-label="Swap origin and destination">
+                <i class="fa-solid fa-right-left" aria-hidden="true"></i>
+              </button>
+              <div class="tvl-field" data-field="destination" data-suggest>
+                <label for="train-destination">To</label>
+                <input id="train-destination" class="tvl-input" type="text" name="destination" placeholder="Arrival station or city">
+                <div class="tvl-suggest-panel" data-suggest-panel hidden></div>
+              </div>
+            </div>
+
+            <div class="tvl-row tvl-row-dates">
+              <div class="tvl-field" data-field="depart" data-datepicker>
+                <label for="train-depart">Departure</label>
+                <input id="train-depart" class="tvl-input" type="text" name="depart_date" placeholder="Add date" readonly>
+              </div>
+              <div class="tvl-field" data-field="return" data-datepicker>
+                <label for="train-return">Return</label>
+                <input id="train-return" class="tvl-input" type="text" name="return_date" placeholder="Optional" readonly>
+              </div>
+            </div>
+
+            <div class="tvl-row tvl-row-pax">
+              <div class="tvl-field tvl-field-pax" data-passenger data-show-class="false">
+                <label>Passengers</label>
+                <button type="button" class="tvl-input tvl-pax-trigger" data-pax-trigger>1 adult</button>
+              </div>
+            </div>
+
+            <button type="submit" class="tvl-search-btn">
+              <span class="tvl-btn-label">Search trains</span>
+              <span class="tvl-spinner" hidden aria-hidden="true"></span>
+            </button>
+          </form>
+
+          <!-- BUS -->
+          <form class="tvl-panel" data-panel="bus" id="tvl-panel-bus"
+                role="tabpanel" aria-labelledby="tvl-tab-bus" hidden autocomplete="off">
+            <div class="tvl-row tvl-row-od">
+              <div class="tvl-field" data-field="origin" data-suggest>
+                <label for="bus-origin">From</label>
+                <input id="bus-origin" class="tvl-input" type="text" name="origin" placeholder="Departure city">
+                <div class="tvl-suggest-panel" data-suggest-panel hidden></div>
+              </div>
+              <button type="button" class="tvl-reverse-btn" data-reverse aria-label="Swap origin and destination">
+                <i class="fa-solid fa-right-left" aria-hidden="true"></i>
+              </button>
+              <div class="tvl-field" data-field="destination" data-suggest>
+                <label for="bus-destination">To</label>
+                <input id="bus-destination" class="tvl-input" type="text" name="destination" placeholder="Arrival city">
+                <div class="tvl-suggest-panel" data-suggest-panel hidden></div>
+              </div>
+            </div>
+
+            <div class="tvl-row tvl-row-dates">
+              <div class="tvl-field" data-field="depart" data-datepicker>
+                <label for="bus-depart">Departure</label>
+                <input id="bus-depart" class="tvl-input" type="text" name="depart_date" placeholder="Add date" readonly>
+              </div>
+              <div class="tvl-field" data-field="return" data-datepicker>
+                <label for="bus-return">Return</label>
+                <input id="bus-return" class="tvl-input" type="text" name="return_date" placeholder="Optional" readonly>
+              </div>
+            </div>
+
+            <div class="tvl-row tvl-row-pax">
+              <div class="tvl-field tvl-field-pax" data-passenger data-show-class="false">
+                <label>Passengers</label>
+                <button type="button" class="tvl-input tvl-pax-trigger" data-pax-trigger>1 adult</button>
+              </div>
+            </div>
+
+            <button type="submit" class="tvl-search-btn">
+              <span class="tvl-btn-label">Search buses</span>
+              <span class="tvl-spinner" hidden aria-hidden="true"></span>
+            </button>
+          </form>
+
+          <!-- TOURS -->
+          <form class="tvl-panel" data-panel="tour" id="tvl-panel-tour"
+                role="tabpanel" aria-labelledby="tvl-tab-tour" hidden autocomplete="off">
+            <div class="tvl-row tvl-row-single">
+              <div class="tvl-field" data-field="destination" data-suggest>
+                <label for="tour-destination">Destination</label>
+                <input id="tour-destination" class="tvl-input" type="text" name="destination" placeholder="Where do you want to go?">
+                <div class="tvl-suggest-panel" data-suggest-panel hidden></div>
+              </div>
+            </div>
+
+            <div class="tvl-row tvl-row-dates">
+              <div class="tvl-field" data-field="depart" data-datepicker>
+                <label for="tour-start">Start date</label>
+                <input id="tour-start" class="tvl-input" type="text" name="start_date" placeholder="Add date" readonly>
+              </div>
+              <div class="tvl-field" data-field="return" data-datepicker>
+                <label for="tour-end">End date</label>
+                <input id="tour-end" class="tvl-input" type="text" name="end_date" placeholder="Add date" readonly>
+              </div>
+            </div>
+
+            <div class="tvl-row tvl-row-pax">
+              <div class="tvl-field tvl-field-pax" data-passenger data-show-class="false">
+                <label>Travelers</label>
+                <button type="button" class="tvl-input tvl-pax-trigger" data-pax-trigger>1 adult</button>
+              </div>
+            </div>
+
+            <button type="submit" class="tvl-search-btn">
+              <span class="tvl-btn-label">Search tours</span>
+              <span class="tvl-spinner" hidden aria-hidden="true"></span>
+            </button>
+          </form>
+
+        </div><!-- /tvl-panels -->
+      </div><!-- /tvl-search-card -->
+
+      <!-- ================= AI PLANNER PROMO ================= -->
+      <a href="/ai" class="tvl-ai-promo">
+        <span class="tvl-ai-icon"><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i></span>
+        <span class="tvl-ai-text">
+          <strong>Not sure where to go?</strong>
+          Try the AI Travel Planner — describe your trip, get a plan.
+        </span>
+        <span class="tvl-ai-arrow"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+      </a>
+
+    </div><!-- /tvl-hero-inner -->
+  </div><!-- /container -->
 </section>
 
+<!-- ================= SHARED POPUPS (calendar + passenger) =================
+     One instance of each is reused for every field/mode; hero-search.js
+     moves it under whichever field is currently open. -->
+<div class="tvl-popup tvl-calendar-popup" id="tvlCalendarPopup" hidden>
+  <div class="tvl-calendar-head">
+    <button type="button" class="tvl-cal-nav" data-cal-prev aria-label="Previous month">
+      <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+    </button>
+    <div class="tvl-cal-months">
+      <span class="tvl-cal-month" data-cal-month-a></span>
+      <span class="tvl-cal-month tvl-cal-month-b" data-cal-month-b></span>
+    </div>
+    <button type="button" class="tvl-cal-nav" data-cal-next aria-label="Next month">
+      <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+    </button>
+  </div>
+  <div class="tvl-calendar-grids">
+    <div class="tvl-cal-grid" data-cal-grid-a></div>
+    <div class="tvl-cal-grid tvl-cal-grid-b" data-cal-grid-b></div>
+  </div>
+  <div class="tvl-calendar-foot">
+    <span class="tvl-cal-hint" data-cal-hint>Pick a start date</span>
+    <button type="button" class="tvl-cal-done" data-cal-done>Done</button>
+  </div>
+</div>
+
+<div class="tvl-popup tvl-pax-popup" id="tvlPaxPopup" hidden>
+  <div class="tvl-pax-rooms" data-pax-rooms hidden>
+    <div class="tvl-pax-row">
+      <div class="tvl-pax-row-label">
+        <strong>Rooms</strong>
+      </div>
+      <div class="tvl-counter">
+        <button type="button" class="tvl-counter-btn" data-counter="rooms" data-op="minus" aria-label="Decrease rooms">–</button>
+        <span class="tvl-counter-val" data-counter-val="rooms">1</span>
+        <button type="button" class="tvl-counter-btn" data-counter="rooms" data-op="plus" aria-label="Increase rooms">+</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="tvl-pax-row">
+    <div class="tvl-pax-row-label">
+      <strong>Adults</strong>
+      <span>Age 18+</span>
+    </div>
+    <div class="tvl-counter">
+      <button type="button" class="tvl-counter-btn" data-counter="adults" data-op="minus" aria-label="Decrease adults">–</button>
+      <span class="tvl-counter-val" data-counter-val="adults">1</span>
+      <button type="button" class="tvl-counter-btn" data-counter="adults" data-op="plus" aria-label="Increase adults">+</button>
+    </div>
+  </div>
+
+  <div class="tvl-pax-row">
+    <div class="tvl-pax-row-label">
+      <strong>Children</strong>
+      <span>Age 2–17</span>
+    </div>
+    <div class="tvl-counter">
+      <button type="button" class="tvl-counter-btn" data-counter="children" data-op="minus" aria-label="Decrease children">–</button>
+      <span class="tvl-counter-val" data-counter-val="children">0</span>
+      <button type="button" class="tvl-counter-btn" data-counter="children" data-op="plus" aria-label="Increase children">+</button>
+    </div>
+  </div>
+
+  <div class="tvl-pax-row" data-pax-infants>
+    <div class="tvl-pax-row-label">
+      <strong>Infants</strong>
+      <span>Under 2, on lap</span>
+    </div>
+    <div class="tvl-counter">
+      <button type="button" class="tvl-counter-btn" data-counter="infants" data-op="minus" aria-label="Decrease infants">–</button>
+      <span class="tvl-counter-val" data-counter-val="infants">0</span>
+      <button type="button" class="tvl-counter-btn" data-counter="infants" data-op="plus" aria-label="Increase infants">+</button>
+    </div>
+  </div>
+
+  <div class="tvl-pax-class" data-pax-class hidden>
+    <strong class="tvl-pax-class-title">Class</strong>
+    <div class="tvl-pax-class-options">
+      <label class="tvl-pax-radio">
+        <input type="radio" name="tvl-cabin-class" value="economy" checked>
+        <span>Economy</span>
+      </label>
+      <label class="tvl-pax-radio">
+        <input type="radio" name="tvl-cabin-class" value="premium">
+        <span>Premium</span>
+      </label>
+      <label class="tvl-pax-radio">
+        <input type="radio" name="tvl-cabin-class" value="business">
+        <span>Business</span>
+      </label>
+      <label class="tvl-pax-radio">
+        <input type="radio" name="tvl-cabin-class" value="first">
+        <span>First</span>
+      </label>
+    </div>
+  </div>
+
+  <button type="button" class="tvl-cal-done" data-pax-done>Done</button>
+</div>
 
 <section class="other-issue-area section-gap">
 <div class="container">
