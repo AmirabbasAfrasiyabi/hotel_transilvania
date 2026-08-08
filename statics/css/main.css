@@ -6237,24 +6237,20 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 /* ==========================================================================
-   >>> START: TRAVELISTA — HERO SEARCH BLOCK (Phase 1, extended) <<<
-   Paste this whole block at the END of main.css — AFTER the Contact-page
-   block, because it reuses the --tvl-* variables defined there
-   (--tvl-navy, --tvl-paper, --tvl-coral, --tvl-teal, --tvl-shadow, ...).
-   Nothing above this line needs to change.
+   >>> START: TRAVELISTA — HOME HERO SEARCH BLOCK <<<
+   کپی این کل بلوک را در انتهای main.css بچسبان (بعد از بلوک "WHY TRAVELISTA").
+   وابسته به متغیرهای --tvl-* که در بلوک صفحه Contact تعریف شده‌اند —
+   پس باید *بعد* از اون بلوک‌ها در main.css بیاد.
+   فونت‌های Fraunces / Space Mono باید با <link> در <head> لود شده باشند
+   (به بخش base.html در همین تحویل مراجعه کن).
    ========================================================================== */
 
-/* ---------- Hero wrapper ---------- */
-.tvl-hero {
-  position: relative;
+.hero-search-area {
   overflow: hidden;
-  min-height: 92vh;
-  display: flex;
-  align-items: center;
-  padding: 150px 0 90px;
+  padding: 190px 0 90px;
 }
 
-.tvl-hero-bg {
+.hero-search-bg {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -6264,215 +6260,162 @@ body.mobile-nav-active #mobile-nav-toggle {
   z-index: 1;
 }
 
-.tvl-hero-overlay {
+.hero-search-overlay {
   position: absolute;
   inset: 0;
   z-index: 2;
   background:
-    linear-gradient(180deg, rgba(18,41,61,0.55) 0%, rgba(18,41,61,0.78) 65%, var(--tvl-navy) 100%);
+    linear-gradient(180deg, rgba(18, 41, 61, 0.75) 0%, rgba(18, 41, 61, 0.55) 45%, rgba(18, 41, 61, 0.92) 100%);
 }
 
-/* faint dashed flight-path, reusing the same visual language as the
-   Contact page hero graphic so the whole site reads as one system */
-.tvl-hero::after {
-  content: "";
-  position: absolute;
-  z-index: 2;
-  top: 18%;
-  right: -40px;
-  width: 340px;
-  height: 220px;
-  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20320%20220%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M10%20190%20C%2090%20190%2C%2070%2040%2C%20170%2040%20S%20280%2090%2C%20300%2030%22%20stroke%3D%22%23FF6F59%22%20stroke-width%3D%222%22%20stroke-dasharray%3D%226%208%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.4%22/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-size: contain;
-  pointer-events: none;
-  opacity: 0.8;
-}
-
-.tvl-hero-inner {
+.hero-search-inner {
   position: relative;
   z-index: 3;
-  max-width: 900px;
-  margin: 0 auto;
+}
+
+.hero-search-intro {
   text-align: center;
+  max-width: 620px;
+  margin: 0 auto 34px;
 }
 
-.tvl-hero-eyebrow {
-  display: inline-block;
-  margin-bottom: 14px;
+.hero-search-intro .contact-eyebrow {
+  justify-content: center;
 }
 
-.tvl-hero-title {
+.hero-search-heading {
   font-family: 'Fraunces', serif;
   font-weight: 700;
   color: #fff;
-  font-size: clamp(2.25rem, 1.6rem + 3vw, 3.6rem);
+  font-size: clamp(2rem, 1.4rem + 2.6vw, 3.2rem);
   line-height: 1.15;
-  margin-bottom: 14px;
+  margin: 10px 0 14px;
 }
 
-.tvl-hero-sub {
-  color: rgba(241, 231, 214, 0.8);
-  font-size: var(--text-size);
-  max-width: 520px;
-  margin: 0 auto 40px;
+.hero-search-sub {
+  color: rgba(241, 231, 214, 0.82);
+  font-size: 16px;
+  line-height: 1.6;
+  margin: 0;
 }
 
-/* ---------- Search card (the "boarding pass" ticket) ---------- */
-.tvl-search-card {
+/* ---------- Search card ---------- */
+.hero-search-card {
+  max-width: 980px;
+  margin: 0 auto;
   background: var(--tvl-paper);
   border-radius: var(--tvl-radius);
   box-shadow: var(--tvl-shadow);
-  text-align: left;
-  overflow: hidden;
+  overflow: visible;
 }
 
-/* ---------- Tabs ---------- */
-.tvl-tabs {
+.hero-tabs {
   display: flex;
-  background: var(--tvl-paper-dark);
+  background: var(--tvl-navy);
+  border-radius: var(--tvl-radius) var(--tvl-radius) 0 0;
   overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
 }
 
-.tvl-tab {
-  flex: 1 1 0;
+.hero-tab {
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  border: none;
-  background: transparent;
-  color: var(--tvl-ink-soft);
+  padding: 16px 12px;
+  color: rgba(241, 231, 214, 0.65);
   font-family: 'Space Mono', monospace;
   font-size: 12.5px;
   letter-spacing: 1px;
   text-transform: uppercase;
-  padding: 18px 10px;
-  cursor: pointer;
+  text-decoration: none;
   white-space: nowrap;
-  position: relative;
-  transition: color 0.2s ease, background 0.2s ease;
+  border-bottom: 3px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
 }
 
-.tvl-tab i {
+.hero-tab i {
   font-size: 14px;
-  color: var(--tvl-teal);
-  transition: color 0.2s ease;
 }
 
-.tvl-tab:hover {
-  color: var(--tvl-ink);
+.hero-tab:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.hero-tab.active {
+  color: #fff;
+  border-bottom-color: var(--tvl-coral);
   background: rgba(255, 111, 89, 0.08);
 }
 
-.tvl-tab.active {
-  color: var(--tvl-ink);
-  background: var(--tvl-paper);
-}
-
-.tvl-tab.active::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 3px;
-  background: var(--tvl-coral);
-}
-
-.tvl-tab.active i {
-  color: var(--tvl-coral);
-}
-
-.tvl-tab:focus-visible {
+.hero-tab:focus-visible {
   outline: 2px solid var(--tvl-coral);
   outline-offset: -2px;
 }
 
-/* ---------- Panels / forms ---------- */
-.tvl-panels {
-  padding: 30px 34px 34px;
+/* ---------- Search form ---------- */
+.hero-search-form {
+  padding: 30px 30px 34px;
 }
 
-.tvl-panel {
-  animation: tvlPanelIn 0.25s ease both;
-}
-
-@keyframes tvlPanelIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.tvl-row {
-  display: grid;
-  gap: 16px;
-  margin-bottom: 16px;
-}
-
-.tvl-row-od {
-  grid-template-columns: 1fr auto 1fr;
-  align-items: end;
-}
-
-.tvl-row-single {
-  grid-template-columns: 1fr;
-}
-
-.tvl-row-dates {
-  grid-template-columns: 1fr 1fr;
-}
-
-.tvl-row-pax {
-  grid-template-columns: 1fr;
-  max-width: 320px;
-}
-
-.tvl-field {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.tvl-field label {
+.hsf-label {
+  display: block;
   font-family: 'Space Mono', monospace;
   font-size: 11px;
   letter-spacing: 1.5px;
   text-transform: uppercase;
   color: var(--tvl-ink-soft);
+  margin-bottom: 6px;
 }
 
-.tvl-input {
+.hsf-locations {
+  display: grid;
+  grid-template-columns: 1fr 44px 1fr;
+  align-items: end;
+  gap: 0 14px;
+  margin-bottom: 16px;
+}
+
+.hsf-field {
+  position: relative;
+}
+
+.hsf-input,
+.hsf-date-trigger {
   width: 100%;
   background: #fff;
   border: 1px solid rgba(44, 42, 40, 0.15);
   border-radius: 10px;
   padding: 14px 16px;
-  font-family: var(--font-primary);
-  font-size: 14px;
+  font-size: 14.5px;
   color: var(--tvl-ink);
-  text-align: left;
-  cursor: pointer;
+  font-family: var(--font-primary);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.tvl-input::placeholder {
-  color: #9d968d;
+.hsf-date-trigger {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  cursor: pointer;
 }
 
-.tvl-input:focus,
-.tvl-input.tvl-input-active {
+.hsf-date-trigger i {
+  color: var(--tvl-coral);
+}
+
+.hsf-input:focus,
+.hsf-date-trigger:focus-visible {
   outline: none;
   border-color: var(--tvl-coral);
-  box-shadow: 0 0 0 3px rgba(255, 111, 89, 0.18);
+  box-shadow: 0 0 0 3px rgba(255, 111, 89, 0.16);
 }
 
-/* Reverse (swap origin/destination) button, centered between the two fields */
-.tvl-reverse-btn {
-  align-self: center;
-  width: 40px;
-  height: 40px;
+.hsf-reverse-btn {
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   border: 1px solid rgba(44, 42, 40, 0.15);
   background: #fff;
@@ -6481,214 +6424,203 @@ body.mobile-nav-active #mobile-nav-toggle {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  margin-bottom: 2px;
-  transition: transform 0.3s ease, background 0.2s ease, color 0.2s ease;
+  margin-bottom: 1px;
+  transition: transform 0.35s ease, background 0.2s ease, color 0.2s ease;
 }
 
-.tvl-reverse-btn:hover {
+.hsf-reverse-btn:hover {
   background: var(--tvl-teal);
   color: #fff;
 }
 
-.tvl-reverse-btn.tvl-flip {
+.hsf-reverse-btn.is-swapping {
   transform: rotate(180deg);
 }
 
-/* ---------- Autocomplete suggestion panel ---------- */
-.tvl-suggest-panel {
+.hsf-secondary-row {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+/* ---------- Suggestions / autocomplete ---------- */
+.hsf-suggestions {
   position: absolute;
   top: calc(100% + 8px);
   left: 0;
   right: 0;
-  z-index: 40;
   background: #fff;
-  border: 1px solid rgba(44, 42, 40, 0.1);
   border-radius: 12px;
-  box-shadow: 0 20px 40px -16px rgba(18, 41, 61, 0.35);
+  box-shadow: 0 20px 40px -10px rgba(18, 41, 61, 0.28);
   padding: 10px;
+  z-index: 20;
   max-height: 320px;
   overflow-y: auto;
+  animation: hsfPopIn 0.15s ease both;
 }
 
-.tvl-suggest-group-title {
+.hsf-suggestions[hidden] {
+  display: none;
+}
+
+.hsf-suggestions .hsf-group-label {
   font-family: 'Space Mono', monospace;
   font-size: 10.5px;
-  letter-spacing: 1.5px;
+  letter-spacing: 1px;
   text-transform: uppercase;
   color: var(--tvl-ink-soft);
   padding: 8px 10px 4px;
 }
 
-.tvl-suggest-item {
+.hsf-suggestion-item {
   display: flex;
   align-items: center;
   gap: 12px;
+  width: 100%;
+  border: none;
+  background: none;
+  text-align: left;
   padding: 10px;
   border-radius: 8px;
   cursor: pointer;
-  transition: background 0.15s ease;
+  color: var(--tvl-ink);
+  font-size: 14px;
 }
 
-.tvl-suggest-item:hover,
-.tvl-suggest-item.tvl-active {
+.hsf-suggestion-item:hover,
+.hsf-suggestion-item.is-active {
   background: rgba(255, 111, 89, 0.1);
 }
 
-.tvl-suggest-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background: var(--tvl-paper);
+.hsf-suggestion-item i {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--tvl-paper-dark);
   color: var(--tvl-teal);
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
   font-size: 13px;
+  flex-shrink: 0;
 }
 
-.tvl-suggest-main {
-  font-size: 14px;
-  color: var(--tvl-ink);
-  font-weight: 500;
+.hsf-suggestion-item .sugg-city {
+  font-weight: 600;
 }
 
-.tvl-suggest-sub {
+.hsf-suggestion-item .sugg-detail {
+  display: block;
   font-size: 12px;
   color: var(--tvl-ink-soft);
+  font-weight: 400;
 }
 
-.tvl-suggest-empty {
-  padding: 20px 10px;
-  text-align: center;
-  color: var(--tvl-ink-soft);
-  font-size: 13px;
-}
-
-/* ---------- Shared popups (calendar + passenger) ----------
-   Positioned with JS (position: fixed, top/left set inline) so they can
-   sit under whichever field triggered them, on top of everything. */
-.tvl-popup {
-  position: fixed;
-  z-index: 900;
+/* ---------- Calendar popup ---------- */
+.hsf-calendar-popup {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
   background: #fff;
   border-radius: 14px;
-  box-shadow: 0 24px 48px -18px rgba(18, 41, 61, 0.45);
-  border: 1px solid rgba(44, 42, 40, 0.08);
+  box-shadow: 0 25px 50px -12px rgba(18, 41, 61, 0.32);
+  padding: 20px;
+  z-index: 30;
+  width: min(620px, 90vw);
+  animation: hsfPopIn 0.18s ease both;
 }
 
-/* ---------- Calendar ---------- */
-.tvl-calendar-popup {
-  width: 640px;
-  max-width: calc(100vw - 24px);
-  padding: 20px 22px;
+.hsf-calendar-popup[hidden] {
+  display: none;
 }
 
-.tvl-calendar-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 14px;
-}
-
-.tvl-cal-nav {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  border: 1px solid rgba(44, 42, 40, 0.15);
-  background: #fff;
-  color: var(--tvl-ink);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s ease, color 0.2s ease;
-}
-
-.tvl-cal-nav:hover {
-  background: var(--tvl-coral);
-  color: #fff;
-  border-color: var(--tvl-coral);
-}
-
-.tvl-cal-months {
-  display: flex;
-  gap: 24px;
-  font-family: 'Fraunces', serif;
-  font-weight: 600;
-  color: var(--tvl-navy);
-  font-size: 15px;
-}
-
-.tvl-calendar-grids {
+.cal-months {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 24px;
 }
 
-.tvl-cal-grid-b {
-  display: block;
+@media (max-width: 640px) {
+  .cal-months {
+    grid-template-columns: 1fr;
+  }
 }
 
-.tvl-cal-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 2px;
-}
-
-.tvl-cal-dow {
-  text-align: center;
-  font-family: 'Space Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 1px;
-  color: var(--tvl-ink-soft);
-  padding-bottom: 6px;
-  text-transform: uppercase;
-}
-
-.tvl-cal-day {
-  aspect-ratio: 1 / 1;
+.cal-month-head {
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  color: var(--tvl-ink);
-  border-radius: 8px;
-  cursor: pointer;
-  background: transparent;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.cal-month-head h6 {
+  font-family: 'Fraunces', serif;
+  font-size: 15px;
+  margin: 0;
+}
+
+.cal-nav-btn {
   border: none;
-  transition: background 0.15s ease, color 0.15s ease;
+  background: var(--tvl-paper);
+  color: var(--tvl-navy);
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 12px;
 }
 
-.tvl-cal-day:disabled {
-  color: #d4cfc6;
-  cursor: not-allowed;
-}
-
-.tvl-cal-day.tvl-empty {
-  visibility: hidden;
+.cal-nav-btn:disabled {
+  opacity: 0.3;
   cursor: default;
 }
 
-.tvl-cal-day:not(:disabled):not(.tvl-empty):hover {
-  background: rgba(255, 111, 89, 0.15);
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  text-align: center;
 }
 
-.tvl-cal-day.tvl-selected {
+.cal-dow {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: var(--tvl-ink-soft);
+  padding: 4px 0 8px;
+}
+
+.cal-day {
+  border: none;
+  background: none;
+  padding: 8px 0;
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--tvl-ink);
+  cursor: pointer;
+}
+
+.cal-day:disabled {
+  color: #d8d2c8;
+  cursor: default;
+}
+
+.cal-day:hover:not(:disabled) {
+  background: rgba(255, 111, 89, 0.14);
+}
+
+.cal-day.is-selected {
   background: var(--tvl-coral);
   color: #fff;
   font-weight: 600;
 }
 
-.tvl-cal-day.tvl-in-range {
-  background: rgba(255, 111, 89, 0.18);
+.cal-day.is-in-range {
+  background: rgba(255, 111, 89, 0.16);
+  border-radius: 0;
 }
 
-.tvl-cal-day.tvl-today {
-  box-shadow: inset 0 0 0 1px var(--tvl-teal);
-}
-
-.tvl-calendar-foot {
+.cal-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -6697,17 +6629,129 @@ body.mobile-nav-active #mobile-nav-toggle {
   border-top: 1px dashed rgba(44, 42, 40, 0.2);
 }
 
-.tvl-cal-hint {
+.cal-range-hint {
   font-size: 12.5px;
   color: var(--tvl-ink-soft);
 }
 
-.tvl-cal-done {
+.cal-done-btn {
+  background: var(--tvl-navy);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 9px 22px;
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+/* ---------- Passenger selector ---------- */
+.hsf-passenger-popup {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 25px 50px -12px rgba(18, 41, 61, 0.32);
+  padding: 20px;
+  z-index: 30;
+  width: min(320px, 90vw);
+  animation: hsfPopIn 0.18s ease both;
+}
+
+.hsf-passenger-popup[hidden] {
+  display: none;
+}
+
+.pax-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+}
+
+.pax-copy strong {
+  display: block;
+  font-size: 14px;
+  color: var(--tvl-ink);
+}
+
+.pax-copy span {
+  font-size: 12px;
+  color: var(--tvl-ink-soft);
+}
+
+.pax-stepper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pax-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid rgba(44, 42, 40, 0.2);
+  background: #fff;
+  color: var(--tvl-navy);
+  font-size: 15px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.pax-btn:hover {
+  border-color: var(--tvl-coral);
+  color: var(--tvl-coral);
+}
+
+.pax-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.pax-count {
+  min-width: 16px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.pax-divider {
+  border-top: 1px dashed rgba(44, 42, 40, 0.2);
+  margin: 8px 0 14px;
+}
+
+.pax-class-group {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.pax-class-btn {
+  border: 1px solid rgba(44, 42, 40, 0.18);
+  background: #fff;
+  border-radius: 8px;
+  padding: 9px 6px;
+  font-size: 12.5px;
+  cursor: pointer;
+  color: var(--tvl-ink);
+}
+
+.pax-class-btn.active {
+  background: var(--tvl-navy);
+  border-color: var(--tvl-navy);
+  color: #fff;
+}
+
+.pax-apply-btn {
+  width: 100%;
   background: var(--tvl-coral);
   color: #fff;
   border: none;
   border-radius: 8px;
-  padding: 10px 22px;
+  padding: 11px;
   font-family: 'Space Mono', monospace;
   font-size: 12px;
   letter-spacing: 1px;
@@ -6716,127 +6760,12 @@ body.mobile-nav-active #mobile-nav-toggle {
   transition: background 0.2s ease;
 }
 
-.tvl-cal-done:hover {
+.pax-apply-btn:hover {
   background: var(--tvl-coral-dark);
 }
 
-/* ---------- Passenger popup ---------- */
-.tvl-pax-popup {
-  width: 320px;
-  padding: 18px 20px;
-}
-
-.tvl-pax-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 0;
-  border-bottom: 1px dashed rgba(44, 42, 40, 0.15);
-}
-
-.tvl-pax-row:last-of-type {
-  border-bottom: none;
-}
-
-.tvl-pax-row-label strong {
-  display: block;
-  font-size: 14px;
-  color: var(--tvl-ink);
-}
-
-.tvl-pax-row-label span {
-  font-size: 12px;
-  color: var(--tvl-ink-soft);
-}
-
-.tvl-counter {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.tvl-counter-btn {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  border: 1px solid rgba(44, 42, 40, 0.2);
-  background: #fff;
-  color: var(--tvl-ink);
-  font-size: 16px;
-  line-height: 1;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s ease, color 0.2s ease, opacity 0.2s ease;
-}
-
-.tvl-counter-btn:hover:not(:disabled) {
-  background: var(--tvl-teal);
-  color: #fff;
-  border-color: var(--tvl-teal);
-}
-
-.tvl-counter-btn:disabled {
-  opacity: 0.35;
-  cursor: not-allowed;
-}
-
-.tvl-counter-val {
-  min-width: 16px;
-  text-align: center;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--tvl-ink);
-}
-
-.tvl-pax-class {
-  padding-top: 14px;
-}
-
-.tvl-pax-class-title {
-  display: block;
-  font-size: 13px;
-  color: var(--tvl-ink);
-  margin-bottom: 10px;
-}
-
-.tvl-pax-class-options {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-
-.tvl-pax-radio {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  border: 1px solid rgba(44, 42, 40, 0.15);
-  border-radius: 8px;
-  padding: 8px 10px;
-  font-size: 13px;
-  color: var(--tvl-ink-soft);
-  cursor: pointer;
-  transition: border-color 0.2s ease, color 0.2s ease;
-}
-
-.tvl-pax-radio input {
-  accent-color: var(--tvl-coral);
-}
-
-.tvl-pax-radio:has(input:checked) {
-  border-color: var(--tvl-coral);
-  color: var(--tvl-ink);
-}
-
-.tvl-pax-popup .tvl-cal-done {
-  width: 100%;
-  margin-top: 16px;
-}
-
-/* ---------- Search button ---------- */
-.tvl-search-btn {
-  position: relative;
+/* ---------- Submit button ---------- */
+.hero-search-submit {
   width: 100%;
   background: var(--tvl-coral);
   color: #fff;
@@ -6844,189 +6773,130 @@ body.mobile-nav-active #mobile-nav-toggle {
   border-radius: 10px;
   padding: 16px;
   font-family: 'Space Mono', monospace;
-  font-size: 13.5px;
+  font-size: 14px;
   letter-spacing: 1.5px;
   text-transform: uppercase;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
   transition: background 0.2s ease, transform 0.15s ease;
 }
 
-.tvl-search-btn:hover {
+.hero-search-submit:hover {
   background: var(--tvl-coral-dark);
   transform: translateY(-2px);
 }
 
-.tvl-search-btn:active {
-  transform: translateY(0);
+.hero-search-submit:disabled {
+  opacity: 0.75;
+  cursor: progress;
+  transform: none;
 }
 
-.tvl-search-btn.tvl-loading .tvl-btn-label {
-  opacity: 0.6;
-}
-
-.tvl-spinner {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.4);
-  border-top-color: #fff;
-  animation: tvlSpin 0.7s linear infinite;
-}
-
-@keyframes tvlSpin {
-  to { transform: rotate(360deg); }
-}
-
-/* ---------- AI planner promo ---------- */
-.tvl-ai-promo {
-  margin-top: 22px;
+.hero-search-submit .btn-loading {
   display: inline-flex;
   align-items: center;
-  gap: 14px;
-  background: rgba(241, 231, 214, 0.1);
-  border: 1px dashed rgba(241, 231, 214, 0.4);
-  border-radius: 14px;
-  padding: 14px 22px;
-  text-decoration: none;
-  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  gap: 8px;
 }
 
-.tvl-ai-promo:hover {
-  background: rgba(241, 231, 214, 0.16);
-  border-color: var(--tvl-coral);
+/* ---------- AI promo strip ---------- */
+.hero-ai-strip {
+  max-width: 980px;
+  margin: 20px auto 0;
+  background: rgba(241, 231, 214, 0.08);
+  border: 1px dashed rgba(241, 231, 214, 0.35);
+  border-radius: 16px;
+  padding: 18px 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.hero-ai-badge {
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--tvl-coral);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.hero-ai-copy p {
+  color: rgba(241, 231, 214, 0.85);
+  font-size: 14px;
+  margin: 0;
+}
+
+.hero-ai-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--tvl-teal);
+  color: #fff;
+  text-decoration: none;
+  font-family: 'Space Mono', monospace;
+  font-size: 12.5px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 12px 20px;
+  border-radius: 30px;
+  white-space: nowrap;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.hero-ai-btn:hover {
+  background: #14615f;
+  color: #fff;
   transform: translateY(-2px);
 }
 
-.tvl-ai-icon {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: var(--tvl-coral);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+@keyframes hsfPopIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.tvl-ai-text {
-  color: var(--tvl-paper);
-  font-size: 13.5px;
-  text-align: left;
-}
-
-.tvl-ai-text strong {
-  display: block;
-  color: #fff;
-  font-family: 'Fraunces', serif;
-  font-size: 15px;
-  margin-bottom: 2px;
-}
-
-.tvl-ai-arrow {
-  color: var(--tvl-coral);
-  flex-shrink: 0;
-}
-
-/* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
-  .tvl-panel,
-  .tvl-search-btn,
-  .tvl-ai-promo,
-  .tvl-reverse-btn {
-    animation: none !important;
-    transition: none !important;
+  .hsf-suggestions,
+  .hsf-calendar-popup,
+  .hsf-passenger-popup {
+    animation: none;
+  }
+  .hsf-reverse-btn.is-swapping {
+    transform: none;
   }
 }
 
-/* ==========================================================================
-   Responsive
-   ========================================================================== */
-
+/* ---------- Responsive ---------- */
 @media (max-width: 991px) {
-  .tvl-hero {
-    padding: 130px 0 60px;
-    min-height: auto;
-  }
-
-  .tvl-calendar-popup {
-    width: 340px;
-  }
-
-  .tvl-calendar-grids {
-    grid-template-columns: 1fr;
-  }
-
-  .tvl-cal-grid-b {
-    display: none;
-  }
-
-  .tvl-cal-months .tvl-cal-month-b {
-    display: none;
-  }
+  .hero-search-area { padding: 160px 0 70px; }
+  .hsf-secondary-row { grid-template-columns: 1fr; }
+  .hsf-passenger-popup { right: auto; left: 0; }
 }
 
 @media (max-width: 767px) {
-  .tvl-panels {
-    padding: 22px 18px 26px;
-  }
-
-  .tvl-row-od {
+  .hero-search-area { padding: 140px 0 60px; }
+  .hero-tab span { display: none; }
+  .hero-tab { padding: 16px 10px; }
+  .hsf-locations {
     grid-template-columns: 1fr;
+    gap: 10px;
   }
-
-  .tvl-reverse-btn {
+  .hsf-reverse-btn {
     justify-self: center;
     transform: rotate(90deg);
-    margin: -4px 0;
   }
-
-  .tvl-reverse-btn.tvl-flip {
+  .hsf-reverse-btn.is-swapping {
     transform: rotate(270deg);
   }
-
-  .tvl-row-dates {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .tvl-tab {
-    font-size: 11px;
-    padding: 14px 8px;
-  }
-
-  .tvl-tab span {
-    display: none;
-  }
-
-  .tvl-tab i {
-    font-size: 16px;
-  }
-
-  .tvl-search-btn {
-    padding: 18px;
-    font-size: 14px;
-  }
-
-  .tvl-ai-promo {
-    display: flex;
-    text-align: left;
-  }
+  .hero-search-form { padding: 22px 18px 26px; }
+  .hero-ai-strip { justify-content: center; text-align: center; }
 }
 
 @media (max-width: 480px) {
-  .tvl-row-dates {
-    grid-template-columns: 1fr;
-  }
-
-  .tvl-hero-title {
-    font-size: 28px;
-  }
+  .hero-search-heading { font-size: 26px; }
 }
 
 /* ==========================================================================
-   >>> END: TRAVELISTA — HERO SEARCH BLOCK <<<
+   >>> END: TRAVELISTA — HOME HERO SEARCH BLOCK <<<
    ========================================================================== */
