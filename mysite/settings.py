@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'blog',
     'packages',
     'hotel',
-    'help_center'
+    'help_center',
+    'flight',
 ]
 
 MIDDLEWARE = [

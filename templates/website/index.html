@@ -10,23 +10,22 @@
   <div class="container hero-search-inner">
 
     <div class="hero-search-intro">
-      <span class="contact-eyebrow">✈ Travelista</span>
-      <h1 class="hero-search-heading">Where to, next?</h1>
-      <p class="hero-search-sub">Search flights, stays, trains, buses and tours — all in one boarding pass.</p>
+       <span class="contact-eyebrow">✈ Travelista — Domestic</span>
+        <h1 class="hero-search-heading">Fly within the country</h1>
+      <p class="hero-search-sub">Quick domestic hops, no passport needed — just pick your dates and go.</p>
     </div>
 
     <div class="hero-search-card" id="heroSearchCard">
 
       <!-- ---------- Mode tabs (real navigation, no JS routing) ---------- -->
       <nav class="hero-tabs" role="tablist" aria-label="Search mode">
-        <a href="{% url 'website:index' %}" class="hero-tab active" data-mode="flights" role="tab" aria-selected="false">
-          <i class="fa-solid fa-plane" aria-hidden="true"></i><span>International Flight</span>
+        <a href="{% url 'website:index' %}" class="hero-tab active" data-mode="domestic-flight" role="tab" aria-selected="true">
+          <i class="fa-solid fa-plane" aria-hidden="true"></i><span>Domestic</span>
         </a>
 
-        <a href="{% url 'website:index' %}" class="hero-tab active" data-mode="flights" role="tab" aria-selected="false">
-          <i class="fa-solid fa-plane" aria-hidden="true"></i><span>Domestic Flight</span>
+       <a href="/flights/international/" class="hero-tab" data-mode="international-flight" role="tab" aria-selected="false">
+          <i class="fa-solid fa-earth-americas" aria-hidden="true"></i><span>International</span>
         </a>
-
         <a href="/hotels/" class="hero-tab" data-mode="hotels" role="tab" aria-selected="false">
           <i class="fa-solid fa-bed" aria-hidden="true"></i><span>Hotels</span>
         </a>
