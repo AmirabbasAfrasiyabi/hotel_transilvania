@@ -5266,7 +5266,7 @@ body.mobile-nav-active #mobile-nav-toggle {
   pointer-events: none;
 }
 
-/* --- GRAPHIC 1 of 2: flight-path + plane trail (inline SVG, top-right) --- */
+/* --- GRAPHIC 1 of 2: transport-path + plane trail (inline SVG, top-right) --- */
 .contact-page-area::after {
   content: "";
   position: absolute;
@@ -5581,7 +5581,7 @@ body.mobile-nav-active #mobile-nav-toggle {
 
 @media (max-width: 767px) {
   .contact-page-area { padding-top: 60px; padding-bottom: 70px; }
-  .contact-page-area::after { display: none; } /* flight-path: too crowded on mobile */
+  .contact-page-area::after { display: none; } /* transport-path: too crowded on mobile */
   .contact-heading { font-size: 26px; margin-bottom: 34px; }
   .stub-ticket { padding: 26px 22px 4px 22px; }
   .contact-form-stub { padding: 32px 22px; }

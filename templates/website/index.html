@@ -19,24 +19,24 @@
 
       <!-- ---------- Mode tabs (real navigation, no JS routing) ---------- -->
       <nav class="hero-tabs" role="tablist" aria-label="Search mode">
-        <a href="{% url 'flight:domestic' %}" class="hero-tab active" data-mode="domestic-flight" role="tab" aria-selected="true">
+        <a href="{% url 'website:index' %}" class="hero-tab active" data-mode="domestic-flight" role="tab" aria-selected="true">
           <i class="fa-solid fa-plane" aria-hidden="true"></i><span>Domestic</span>
         </a>
 
-       <a href="{% url 'flight:international' %}" class="hero-tab" data-mode="international-flight" role="tab" aria-selected="false">
+       <a href="{% url 'transport:out' %}" class="hero-tab" data-mode="international-flight" role="tab" aria-selected="false">
           <i class="fa-solid fa-earth-americas" aria-hidden="true"></i><span>International</span>
         </a>
-        <a href="{% url 'hotel:index' %}" class="hero-tab" data-mode="hotels" role="tab" aria-selected="false">
+        <a href="#" class="hero-tab" data-mode="hotels" role="tab" aria-selected="false">
           <i class="fa-solid fa-bed" aria-hidden="true"></i><span>Hotels</span>
         </a>
 
-        <a href="{% url 'website:train' %}" class="hero-tab" data-mode="train" role="tab" aria-selected="false">
+        <a href="{% url 'transport:train' %}" class="hero-tab" data-mode="train" role="tab" aria-selected="false">
           <i class="fa-solid fa-train" aria-hidden="true"></i><span>Train</span>
         </a>
-        <a href="/bus/" class="hero-tab" data-mode="bus" role="tab" aria-selected="false">
+        <a href="{% url 'transport:bus' %}" class="hero-tab" data-mode="bus" role="tab" aria-selected="false">
           <i class="fa-solid fa-bus" aria-hidden="true"></i><span>Bus</span>
         </a>
-        <a href="/tour/" class="hero-tab" data-mode="tour" role="tab" aria-selected="false">
+        <a href="#" class="hero-tab" data-mode="tour" role="tab" aria-selected="false">
           <i class="fa-solid fa-suitcase-rolling" aria-hidden="true"></i><span>Tours</span>
         </a>
       </nav>

@@ -59,19 +59,19 @@
             <i class="fa fa-plane"></i> Flight
           </a>
           <ul class="submenu">
-            <li><a href="{% url 'flight:domestic' %}">Domestic Flight</a></li>
-            <li><a href="{% url 'flight:international' %}">International Flight</a></li>
+            <li><a href="{% url 'website:index' %}">Domestic Flight</a></li>
+            <li><a href="{% url 'transport:out' %}">International Flight</a></li>
           </ul>
         </li>
 
         <li>
-          <a href="#">
+          <a href="{% url 'transport:train' %}">
             <i class="fa fa-train"></i> Train
           </a>
         </li>
 
         <li>
-          <a href="#">
+          <a href="{% url 'transport:bus' %}">
             <i class="fa fa-bus"></i> Bus
           </a>
         </li>
@@ -81,7 +81,7 @@
             <i class="fa fa-bed"></i> residence
           </a>
           <ul class="submenu">
-            <li><a href="{% url 'hotel:index' %}">Hotel</a></li>
+            <li><a href="#">Hotel</a></li>
             <li><a href="#">Village</a></li>
             <li><a href="#">House</a></li>
           </ul>

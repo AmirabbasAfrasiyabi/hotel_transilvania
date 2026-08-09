@@ -374,7 +374,7 @@
 
   /* ------------------------------------------------------------------
      6. FORM SUBMIT — mocked loading state
-     TODO(backend): replace with a real submit to the flight search
+     TODO(backend): replace with a real submit to the transport search
      results endpoint/view once it exists.
      ------------------------------------------------------------------ */
   var submitBtn = document.getElementById('heroSearchSubmit');
