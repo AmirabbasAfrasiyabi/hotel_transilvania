@@ -1,157 +1,152 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<section class="about-banner relative">
-<div class="overlay overlay-bg"></div>
-<div class="container">
-<div class="row d-flex align-items-center justify-content-center">
-<div class="about-content col-lg-12">
-<h1 class="text-white">
-Tour Packages
-</h1>
-<p class="text-white link-nav"><a href="{% url 'website:index' %}">Home </a> <span class="lnr lnr-arrow-right"></span> <a href="{% url 'packages:index' %}"> Tour Packages</a></p>
-</div>
-</div>
-</div>
-</section>
 
+<section class="hero-search-area relative">
+  <img class="hero-search-bg" src="{% static 'img/hero-bg.jpg' %}" alt="">
+  <div class="hero-search-overlay"></div>
 
-<section class="hot-deal-area section-gap">
-<div class="container">
-<div class="row d-flex justify-content-center">
-<div class="menu-content pb-70 col-lg-8">
-<div class="title text-center">
-<h1 class="mb-10">Today’s Hot Deals</h1>
-<p>We all live in an age that belongs to the young at heart. Life that is becoming extremely fast, day to.</p>
-</div>
-</div>
-</div>
-<div class="row justify-content-center">
-<div class="col-lg-10 active-hot-deal-carusel">
-<div class="single-carusel">
-<div class="thumb relative">
-<div class="overlay overlay-bg"></div>
-<img class="img-fluid" src="{% static 'img/packages/hot-deal.jpg' %}" alt>
-</div>
-<div class="price-detials">
-<a href="#" class="price-btn">Starting From <span>$250</span></a>
-</div>
-<div class="details">
-<h4 class="text-white">Ancient Architecture</h4>
-<p class="text-white">
-Cairo, Egypt
-</p>
-</div>
-</div>
-<div class="single-carusel">
-<div class="thumb relative">
-<div class="overlay overlay-bg"></div>
-<img class="img-fluid" src="{% static 'img/packages/hot-deal.jpg' %}" alt>
-</div>
-<div class="price-detials">
-<a href="#" class="price-btn">Starting From <span>$250</span></a>
-</div>
-<div class="details">
-<h4 class="text-white">Ancient Architecture</h4>
-<p class="text-white">
-Cairo, Egypt
-</p>
-</div>
-</div>
-<div class="single-carusel">
-<div class="thumb relative">
-<div class="overlay overlay-bg"></div>
-<img class="img-fluid" src="{% static 'img/packages/hot-deal.jpg' %}" alt>
-</div>
-<div class="price-detials">
-<a href="#" class="price-btn">Starting From <span>$250</span></a>
-</div>
-<div class="details">
-<h4 class="text-white">Ancient Architecture</h4>
-<p class="text-white">
-Cairo, Egypt
-</p>
-</div>
-</div>
-</div>
-</div>
-</div>
-</section>
+  <div class="container hero-search-inner">
 
+    <div class="hero-search-intro">
+      <span class="contact-eyebrow">🎒 Travelista</span>
+      <h1 class="hero-search-heading">Pick your next tour</h1>
+      <p class="hero-search-sub">Guided packages and getaways, built for the way you like to travel.</p>
+    </div>
 
+       <div class="hero-search-card" id="heroSearchCard">
 
+            <nav class="hero-tabs" role="tablist" aria-label="Search mode">
+        <a href="{% url 'website:index' %}" class="hero-tab" data-mode="domestic-flight" role="tab" aria-selected="false">
+          <i class="fa-solid fa-plane" aria-hidden="true"></i><span>Domestic</span>
+        </a>
+        <a href="{% url 'transport:out' %}" class="hero-tab" data-mode="international-flight" role="tab" aria-selected="false">
+          <i class="fa-solid fa-earth-americas" aria-hidden="true"></i><span>International</span>
+        </a>
+        <a href="{% url 'residence:hotel' %}" class="hero-tab" data-mode="hotels" role="tab" aria-selected="false">
+          <i class="fa-solid fa-bed" aria-hidden="true"></i><span>Hotels</span>
+        </a>
 
-<section class="destinations-area section-gap">
-<div class="container">
-<div class="row d-flex justify-content-center">
-<div class="menu-content pb-40 col-lg-8">
-<div class="title text-center">
-<h1 class="mb-10">Popular Destinations</h1>
-<p>We all live in an age that belongs to the young at heart. Life that is becoming extremely fast, day to.</p>
-</div>
-</div>
-</div>
-<div class="row">
-<div class="col-lg-4">
-<div class="single-destinations">
-<div class="thumb">
-<img src="{% static 'img/packages/d1.jpg' %}" alt>
-</div>
-<div class="details">
-<h4>Holiday Sea beach Blue Ocean</h4>
-<p>
-United staes of America
-</p>
-<ul class="package-list">
-<li class="d-flex justify-content-between align-items-center">
-<span>Duration</span>
-<span>06 days and 7 nights</span>
-</li>
-<li class="d-flex justify-content-between align-items-center">
-<span>Date</span>
-<span>18.04.2018</span>
-</li>
-<li class="d-flex justify-content-between align-items-center">
-<span>Airport</span>
-<span>Changi</span>
-</li>
-<li class="d-flex justify-content-between align-items-center">
-<span>Extras</span>
-<span>All Inclusive</span>
-</li>
-<li class="d-flex justify-content-between align-items-center">
-<span>Price per person</span>
-<a href="#" class="price-btn">$250</a>
-</li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</section>
+              <a href="{% url 'residence:village' %}" class="hero-tab" data-mode="hotels" role="tab" aria-selected="false">
+          <i class="fa-solid fa-bed" aria-hidden="true"></i><span>village</span>
+        </a>
+        <a href="{% url 'transport:train' %}" class="hero-tab" data-mode="train" role="tab" aria-selected="false">
+          <i class="fa-solid fa-train" aria-hidden="true"></i><span>Train</span>
+        </a>
+        <a href="{% url 'transport:bus' %}" class="hero-tab active" data-mode="bus" role="tab" aria-selected="true">
+          <i class="fa-solid fa-bus" aria-hidden="true"></i><span>Bus</span>
+        </a>
+        <a href="{% url 'packages:index' %}" class="hero-tab" data-mode="tour" role="tab" aria-selected="false">
+          <i class="fa-solid fa-suitcase-rolling" aria-hidden="true"></i><span>Tours</span>
+        </a>
+      </nav>
 
+      <form class="hero-search-form" id="heroSearchForm" autocomplete="off">
 
-<section class="home-about-area">
-<div class="container-fluid">
-<div class="row align-items-center justify-content-end">
-<div class="col-lg-6 col-md-12 home-about-left">
-<h1>
-Did not find your Package? <br>
-Feel free to ask us. <br>
-We‘ll make it for you
-</h1>
-<p>
-inappropriate behavior is often laughed off as “boys will be boys,” women face higher conduct standards especially in the workplace. That’s why it’s crucial that, as women, our behavior on the job is beyond reproach. inappropriate behavior is often laughed.
-</p>
-<a href="#" class="primary-btn text-uppercase">request custom price</a>
-</div>
-<div class="col-lg-6 col-md-12 home-about-right no-padding">
-<img class="img-fluid" src="{% static 'img/packages/about-img.jpg' %}" alt>
-</div>
-</div>
-</div>
+        <div class="hsf-locations">
+          <div class="hsf-field" id="originField">
+            <span class="hsf-label">From</span>
+            <input type="text" class="hsf-input" id="originInput" name="origin" placeholder="Departure stop or city" aria-expanded="false" aria-controls="originSuggestions">
+            <div class="hsf-suggestions" id="originSuggestions" role="listbox" hidden></div>
+          </div>
+
+          <button type="button" class="hsf-reverse-btn" id="reverseBtn" aria-label="Swap origin and destination">
+            <i class="fa-solid fa-arrow-right-arrow-left" aria-hidden="true"></i>
+          </button>
+
+          <div class="hsf-field" id="destField">
+            <span class="hsf-label">To</span>
+            <input type="text" class="hsf-input" id="destInput" name="destination" placeholder="Arrival stop or city" aria-expanded="false" aria-controls="destSuggestions">
+            <div class="hsf-suggestions" id="destSuggestions" role="listbox" hidden></div>
+          </div>
+        </div>
+
+        <div class="hsf-secondary-row">
+          <div class="hsf-field hsf-date-field" id="dateField">
+            <span class="hsf-label">Travel date</span>
+            <button type="button" class="hsf-date-trigger" id="dateTrigger">
+              <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+              <span id="dateTriggerText">Select a date</span>
+            </button>
+
+            <div class="hsf-calendar-popup" id="calendarPopup" hidden>
+              <div class="cal-months" id="calMonths"></div>
+              <div class="cal-footer">
+                <span class="cal-range-hint" id="calRangeHint">Select a travel date</span>
+                <button type="button" class="cal-done-btn" id="calDoneBtn">Done</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="hsf-field hsf-passenger-field" id="passengerField">
+            <span class="hsf-label">Passengers &amp; Class</span>
+            <button type="button" class="hsf-date-trigger" id="passengerTrigger" aria-expanded="false" aria-controls="passengerPopup">
+              <i class="fa-solid fa-user" aria-hidden="true"></i>
+              <span id="passengerTriggerText">1 Passenger, Standard</span>
+            </button>
+
+            <div class="hsf-passenger-popup" id="passengerPopup" hidden>
+              <div class="pax-row">
+                <div class="pax-copy">
+                  <strong>Adults</strong>
+                  <span>12+ years</span>
+                </div>
+                <div class="pax-stepper" data-pax="adults" data-min="1" data-max="9">
+                  <button type="button" class="pax-btn" data-action="dec" aria-label="Decrease adults">−</button>
+                  <span class="pax-count" data-count="adults">1</span>
+                  <button type="button" class="pax-btn" data-action="inc" aria-label="Increase adults">+</button>
+                </div>
+              </div>
+              <div class="pax-row">
+                <div class="pax-copy">
+                  <strong>Children</strong>
+                  <span>2–11 years</span>
+                </div>
+                <div class="pax-stepper" data-pax="children" data-min="0" data-max="8">
+                  <button type="button" class="pax-btn" data-action="dec" aria-label="Decrease children">−</button>
+                  <span class="pax-count" data-count="children">0</span>
+                  <button type="button" class="pax-btn" data-action="inc" aria-label="Increase children">+</button>
+                </div>
+              </div>
+
+              <div class="pax-divider"></div>
+
+              <div class="pax-class-group" role="radiogroup" aria-label="Seat class">
+                <button type="button" class="pax-class-btn active" data-class="Standard">Standard</button>
+                <button type="button" class="pax-class-btn" data-class="VIP">VIP</button>
+              </div>
+
+              <button type="button" class="pax-apply-btn" id="paxApplyBtn">Apply</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TODO(backend): wire these to the real bus search view -->
+        <input type="hidden" name="travel_date" id="departDateHidden">
+        <input type="hidden" name="return_date" id="returnDateHidden">
+        <input type="hidden" name="adults" id="adultsHidden" value="1">
+        <input type="hidden" name="children" id="childrenHidden" value="0">
+        <input type="hidden" name="infants" id="infantsHidden" value="0">
+        <input type="hidden" name="seat_class" id="cabinClassHidden" value="Standard">
+
+        <button type="submit" class="hero-search-submit" id="heroSearchSubmit">
+          <span class="btn-label">Search buses</span>
+          <span class="btn-loading" hidden>
+            <i class="fa-solid fa-circle-notch fa-spin" aria-hidden="true"></i> Searching…
+          </span>
+        </button>
+      </form>
+    </div>
+
+    <div class="hero-ai-strip">
+      <div class="hero-ai-copy">
+        <span class="hero-ai-badge">✨ AI Mode</span>
+        <p>Not sure where to go yet? Tell our AI planner your budget and vibe — it'll build the trip.</p>
+      </div>
+      <a href="#" class="hero-ai-btn">Try AI Travel Planner <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+    </div>
+
+  </div>
 </section>
 
 {% endblock %}

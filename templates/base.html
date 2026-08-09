@@ -170,10 +170,10 @@
     <div>
       <p class="ft-col-title">Services</p>
       <ul class="ft-nav-list">
-        <li><a href="#"><i class="fa fa-plane"></i>Flights</a></li>
-        <li><a href="#"><i class="fa fa-train"></i>Train</a></li>
-        <li><a href="#"><i class="fa fa-bus"></i>Bus</a></li>
-        <li><a href="#"><i class="fa fa-bed"></i>Residence</a></li>
+        <li><a href="{% url 'website:index' %}"><i class="fa fa-plane"></i>Domestic Flight</a></li>
+        <li><a href="{% url 'transport:out' %}"><i class="fa fa-plane"></i>International Flight</a></li>
+        <li><a href="{% url 'transport:train' %}"><i class="fa fa-train"></i>Train</a></li>
+        <li><a href="{% url 'transport:bus' %}"><i class="fa fa-bus"></i>Bus</a></li>
       </ul>
     </div>
 
