@@ -26,6 +26,7 @@ urlpatterns = [
     path('hotel/', include('hotel.urls')),
     path('packages/', include('packages.urls')),
     path('help_center/', include('help_center.urls')),
+    path('', include('flight.urls')),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

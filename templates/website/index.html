@@ -19,11 +19,11 @@
 
       <!-- ---------- Mode tabs (real navigation, no JS routing) ---------- -->
       <nav class="hero-tabs" role="tablist" aria-label="Search mode">
-        <a href="{% url 'website:index' %}" class="hero-tab active" data-mode="domestic-flight" role="tab" aria-selected="true">
+        <a href="{% url 'flight:domestic' %}" class="hero-tab active" data-mode="domestic-flight" role="tab" aria-selected="true">
           <i class="fa-solid fa-plane" aria-hidden="true"></i><span>Domestic</span>
         </a>
 
-       <a href="/flights/international/" class="hero-tab" data-mode="international-flight" role="tab" aria-selected="false">
+       <a href="{% url 'flight:international' %}" class="hero-tab" data-mode="international-flight" role="tab" aria-selected="false">
           <i class="fa-solid fa-earth-americas" aria-hidden="true"></i><span>International</span>
         </a>
         <a href="/hotels/" class="hero-tab" data-mode="hotels" role="tab" aria-selected="false">
