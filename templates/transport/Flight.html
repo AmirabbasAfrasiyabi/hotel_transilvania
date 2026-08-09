@@ -23,9 +23,16 @@
         <a href="{% url 'transport:out' %}" class="hero-tab active" data-mode="international-flight" role="tab" aria-selected="true">
           <i class="fa-solid fa-earth-americas" aria-hidden="true"></i><span>International</span>
         </a>
-        <a href="#" class="hero-tab" data-mode="hotels" role="tab" aria-selected="false">
+        <a href="{% url 'residence:hotel' %}" class="hero-tab" data-mode="hotels" role="tab" aria-selected="false">
           <i class="fa-solid fa-bed" aria-hidden="true"></i><span>Hotels</span>
         </a>
+
+
+        <a href="{% url 'residence:village' %}" class="hero-tab" data-mode="hotels" role="tab" aria-selected="false">
+          <i class="fa-solid fa-bed" aria-hidden="true"></i><span>village</span>
+        </a>
+
+
         <a href="{% url 'transport:train' %}" class="hero-tab" data-mode="train" role="tab" aria-selected="false">
           <i class="fa-solid fa-train" aria-hidden="true"></i><span>Train</span>
         </a>
