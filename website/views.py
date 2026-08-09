@@ -14,3 +14,6 @@ def contact_view(request):
 
 def Why_view(request):
     return render(request,'website/why_Mine.html')
+
+def train_view(request):
+    return render(request,'website/train_view.html')
