@@ -6236,6 +6236,7 @@ body.mobile-nav-active #mobile-nav-toggle {
   .hero-search-title { font-size: 26px; margin-bottom: 20px; }
 }
 
+
 /* ==========================================================================
    >>> START: TRAVELISTA — HOME HERO SEARCH BLOCK <<<
    کپی این کل بلوک را در انتهای main.css بچسبان (بعد از بلوک "WHY TRAVELISTA").
@@ -6246,7 +6247,6 @@ body.mobile-nav-active #mobile-nav-toggle {
    ========================================================================== */
 
 .hero-search-area {
-  overflow: hidden;
   padding: 190px 0 90px;
 }
 
@@ -6454,7 +6454,7 @@ body.mobile-nav-active #mobile-nav-toggle {
   border-radius: 12px;
   box-shadow: 0 20px 40px -10px rgba(18, 41, 61, 0.28);
   padding: 10px;
-  z-index: 20;
+  z-index: 60;
   max-height: 320px;
   overflow-y: auto;
   animation: hsfPopIn 0.15s ease both;
@@ -6526,7 +6526,7 @@ body.mobile-nav-active #mobile-nav-toggle {
   border-radius: 14px;
   box-shadow: 0 25px 50px -12px rgba(18, 41, 61, 0.32);
   padding: 20px;
-  z-index: 30;
+  z-index: 70;
   width: min(620px, 90vw);
   animation: hsfPopIn 0.18s ease both;
 }
@@ -6656,7 +6656,7 @@ body.mobile-nav-active #mobile-nav-toggle {
   border-radius: 14px;
   box-shadow: 0 25px 50px -12px rgba(18, 41, 61, 0.32);
   padding: 20px;
-  z-index: 30;
+  z-index: 70;
   width: min(320px, 90vw);
   animation: hsfPopIn 0.18s ease both;
 }
@@ -6795,6 +6795,107 @@ body.mobile-nav-active #mobile-nav-toggle {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+}
+
+/* ---------- Toolbar row (top-right pill dropdowns: Trip type, Cabin class, etc.) ---------- */
+.hsf-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+/* ---------- Pill dropdown select (Trip type / Cabin class / Compartment / Gender) ---------- */
+.hsf-select {
+  position: relative;
+}
+
+.hsf-select-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: #fff;
+  border: 1px solid rgba(44, 42, 40, 0.16);
+  border-radius: 999px;
+  padding: 10px 18px;
+  font-size: 13.5px;
+  color: var(--tvl-ink);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hsf-select-trigger:hover {
+  border-color: var(--tvl-coral);
+}
+
+.hsf-select-trigger:focus-visible {
+  outline: none;
+  border-color: var(--tvl-coral);
+  box-shadow: 0 0 0 3px rgba(255, 111, 89, 0.16);
+}
+
+.hsf-select-trigger .hsf-select-chevron {
+  font-size: 10px;
+  color: var(--tvl-ink-soft);
+  transition: transform 0.2s ease;
+}
+
+.hsf-select-trigger[aria-expanded="true"] .hsf-select-chevron {
+  transform: rotate(180deg);
+}
+
+.hsf-select-popup {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 190px;
+  max-height: 230px;
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px -10px rgba(18, 41, 61, 0.28);
+  padding: 8px;
+  z-index: 80;
+  animation: hsfPopIn 0.15s ease both;
+}
+
+.hsf-select-popup[hidden] {
+  display: none;
+}
+
+.hsf-select-option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: none;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  color: var(--tvl-ink);
+  cursor: pointer;
+}
+
+.hsf-select-option:hover {
+  background: rgba(255, 111, 89, 0.08);
+}
+
+.hsf-select-option.active {
+  background: rgba(255, 111, 89, 0.14);
+  color: var(--tvl-coral-dark);
+  font-weight: 600;
+}
+
+@media (max-width: 480px) {
+  .hsf-toolbar {
+    justify-content: flex-start;
+  }
+  .hsf-select-popup {
+    right: auto;
+    left: 0;
+  }
 }
 
 /* ---------- AI promo strip ---------- */

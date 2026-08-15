@@ -1,88 +1,84 @@
-/* ==========================================================================
-   TRAVELISTA — hero-search.js
-   Drives the homepage Hero search card: location autocomplete + search
-   history, departure/return calendar range picker, passenger & class
-   selector, and the reverse (swap origin/destination) button.
-
-   Everything here is FRONTEND-ONLY / MOCKED for the build phase.
-   Every spot that should eventually talk to the backend is marked
-   with a // TODO(backend) comment.
-   ========================================================================== */
-
 (function () {
   'use strict';
 
   var form = document.getElementById('heroSearchForm');
   if (!form) return; // Hero not present on this page — nothing to do.
 
-  /* ------------------------------------------------------------------
-     1. MOCK DATA
-     TODO(backend): replace with a real /api/locations/?q= endpoint and
-     a real /api/search-history/ endpoint (scoped to the logged-in user).
-     ------------------------------------------------------------------ */
-  var LOCATIONS = [
-    { city: 'Dubai', code: 'DXB', country: 'United Arab Emirates', type: 'Airport' },
-    { city: 'Istanbul', code: 'IST', country: 'Türkiye', type: 'Airport' },
-    { city: 'Paris', code: 'CDG', country: 'France', type: 'Airport' },
-    { city: 'London', code: 'LHR', country: 'United Kingdom', type: 'Airport' },
-    { city: 'Tokyo', code: 'HND', country: 'Japan', type: 'Airport' },
-    { city: 'New York', code: 'JFK', country: 'United States', type: 'Airport' },
-    { city: 'Rome', code: 'FCO', country: 'Italy', type: 'Airport' },
-    { city: 'Barcelona', code: 'BCN', country: 'Spain', type: 'Airport' },
-    { city: 'Bangkok', code: 'BKK', country: 'Thailand', type: 'Airport' },
-    { city: 'Berlin', code: 'BER', country: 'Germany', type: 'Airport' },
-    { city: 'Tehran', code: 'IKA', country: 'Iran', type: 'Airport' },
-    { city: 'Amsterdam', code: 'AMS', country: 'Netherlands', type: 'Airport' },
-    { city: 'Vienna', code: 'VIE', country: 'Austria', type: 'Airport' },
-    { city: 'Cairo', code: 'CAI', country: 'Egypt', type: 'Airport' },
-    { city: 'Kuala Lumpur', code: 'KUL', country: 'Malaysia', type: 'Airport' }
+
+  var IRAN_CITIES = [
+    { city: 'Tehran', region: 'Tehran Province' },
+    { city: 'Mashhad', region: 'Razavi Khorasan' },
+    { city: 'Isfahan', region: 'Isfahan Province' },
+    { city: 'Shiraz', region: 'Fars Province' },
+    { city: 'Tabriz', region: 'East Azerbaijan' },
+    { city: 'Ahvaz', region: 'Khuzestan' },
+    { city: 'Kish Island', region: 'Hormozgan' },
+    { city: 'Qeshm', region: 'Hormozgan' },
+    { city: 'Bandar Abbas', region: 'Hormozgan' },
+    { city: 'Kerman', region: 'Kerman Province' },
+    { city: 'Rasht', region: 'Gilan' },
+    { city: 'Yazd', region: 'Yazd Province' },
+    { city: 'Kermanshah', region: 'Kermanshah Province' },
+    { city: 'Urmia', region: 'West Azerbaijan' },
+    { city: 'Zahedan', region: 'Sistan & Baluchestan' },
+    { city: 'Qom', region: 'Qom Province' },
+    { city: 'Sari', region: 'Mazandaran' }
   ];
 
-  var SEARCH_HISTORY = [
+  var INTL_CITIES = [
+    { city: 'Dubai', region: 'United Arab Emirates' },
+    { city: 'Istanbul', region: 'Türkiye' },
+    { city: 'Paris', region: 'France' },
+    { city: 'London', region: 'United Kingdom' },
+    { city: 'Tokyo', region: 'Japan' },
+    { city: 'New York', region: 'United States' },
+    { city: 'Rome', region: 'Italy' },
+    { city: 'Barcelona', region: 'Spain' },
+    { city: 'Bangkok', region: 'Thailand' },
+    { city: 'Berlin', region: 'Germany' },
+    { city: 'Amsterdam', region: 'Netherlands' },
+    { city: 'Vienna', region: 'Austria' },
+    { city: 'Cairo', region: 'Egypt' },
+    { city: 'Kuala Lumpur', region: 'Malaysia' }
+  ];
+
+  var IRAN_HISTORY = [
+    { from: 'Tehran', to: 'Mashhad' },
+    { from: 'Shiraz', to: 'Isfahan' },
+    { from: 'Tabriz', to: 'Tehran' }
+  ];
+
+  var INTL_HISTORY = [
     { from: 'Tehran', to: 'Dubai' },
     { from: 'Berlin', to: 'Paris' },
     { from: 'Istanbul', to: 'London' }
   ];
 
+  var scope = form.getAttribute('data-location-scope') || 'international';
+  var LOCATIONS = scope === 'domestic' ? IRAN_CITIES : INTL_CITIES;
+  var HISTORY = scope === 'domestic' ? IRAN_HISTORY : INTL_HISTORY;
+  var LOCATION_UNIT = form.getAttribute('data-location-unit') || 'City';
+
   /* ------------------------------------------------------------------
-     2. AUTOCOMPLETE (origin + destination)
+     2. AUTOCOMPLETE (origin + destination), history fills BOTH fields
      ------------------------------------------------------------------ */
-  function setupAutocomplete(inputId, panelId) {
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  function setupAutocomplete(inputId, panelId, pairInputId, isOrigin) {
     var input = document.getElementById(inputId);
     var panel = document.getElementById(panelId);
+    var pairInput = pairInputId ? document.getElementById(pairInputId) : null;
     if (!input || !panel) return;
 
-    function renderHistory() {
-      var html = '<div class="hsf-group-label">Recent searches</div>';
-      SEARCH_HISTORY.forEach(function (h) {
-        html += suggestionRow('fa-solid fa-clock-rotate-left', h.from + ' \u2192 ' + h.to, '', h.from);
-      });
-      html += '<div class="hsf-group-label">Popular destinations</div>';
-      LOCATIONS.slice(0, 6).forEach(function (loc) {
-        html += suggestionRow('fa-solid fa-location-dot', loc.city, loc.code + ' \u2022 ' + loc.country, loc.city);
-      });
-      panel.innerHTML = html;
-    }
-
-    function renderMatches(query) {
-      var q = query.trim().toLowerCase();
-      var matches = LOCATIONS.filter(function (loc) {
-        return loc.city.toLowerCase().indexOf(q) === 0 || loc.code.toLowerCase().indexOf(q) === 0;
-      });
-      if (!matches.length) {
-        panel.innerHTML = '<div class="hsf-group-label">No matches — try another city or airport code</div>';
-        return;
-      }
-      var html = '<div class="hsf-group-label">Cities & airports</div>';
-      matches.forEach(function (loc) {
-        html += suggestionRow('fa-solid fa-plane-departure', loc.city, loc.code + ' \u2022 ' + loc.type, loc.city);
-      });
-      panel.innerHTML = html;
-    }
-
-    function suggestionRow(icon, title, detail, value) {
+    function suggestionRow(icon, title, detail, data) {
+      var attrs = 'data-value="' + escapeHtml(data.value) + '"';
+      if (data.from !== undefined) attrs += ' data-from="' + escapeHtml(data.from) + '" data-to="' + escapeHtml(data.to) + '"';
       return (
-        '<button type="button" class="hsf-suggestion-item" role="option" data-value="' + escapeHtml(value) + '">' +
+        '<button type="button" class="hsf-suggestion-item" role="option" ' + attrs + '>' +
         '<i class="' + icon + '" aria-hidden="true"></i>' +
         '<span><span class="sugg-city">' + escapeHtml(title) + '</span>' +
         (detail ? '<span class="sugg-detail">' + escapeHtml(detail) + '</span>' : '') +
@@ -90,31 +86,53 @@
       );
     }
 
+    function renderHistory() {
+      var html = '<div class="hsf-group-label">Recent searches</div>';
+      HISTORY.forEach(function (h) {
+        html += suggestionRow('fa-solid fa-clock-rotate-left', h.from + ' \u2192 ' + h.to, '', { value: isOrigin ? h.from : h.to, from: h.from, to: h.to });
+      });
+      html += '<div class="hsf-group-label">Popular ' + LOCATION_UNIT + ' options</div>';
+      LOCATIONS.slice(0, 6).forEach(function (loc) {
+        html += suggestionRow('fa-solid fa-location-dot', loc.city, loc.region, { value: loc.city });
+      });
+      panel.innerHTML = html;
+    }
+
+    function renderMatches(query) {
+      var q = query.trim().toLowerCase();
+      var matches = LOCATIONS.filter(function (loc) {
+        return loc.city.toLowerCase().indexOf(q) === 0;
+      });
+      if (!matches.length) {
+        panel.innerHTML = '<div class="hsf-group-label">No matches — try another city</div>';
+        return;
+      }
+      var html = '<div class="hsf-group-label">' + LOCATION_UNIT + ' options</div>';
+      matches.forEach(function (loc) {
+        html += suggestionRow('fa-solid fa-location-dot', loc.city, loc.region, { value: loc.city });
+      });
+      panel.innerHTML = html;
+    }
+
     function openPanel() {
       panel.hidden = false;
+      panel.style.display = 'block'; // belt-and-suspenders vs any conflicting global CSS
       input.setAttribute('aria-expanded', 'true');
     }
 
     function closePanel() {
       panel.hidden = true;
+      panel.style.display = 'none';
       input.setAttribute('aria-expanded', 'false');
     }
 
     input.addEventListener('focus', function () {
-      if (input.value.trim() === '') {
-        renderHistory();
-      } else {
-        renderMatches(input.value);
-      }
+      input.value.trim() === '' ? renderHistory() : renderMatches(input.value);
       openPanel();
     });
 
     input.addEventListener('input', function () {
-      if (input.value.trim() === '') {
-        renderHistory();
-      } else {
-        renderMatches(input.value);
-      }
+      input.value.trim() === '' ? renderHistory() : renderMatches(input.value);
       openPanel();
     });
 
@@ -122,13 +140,18 @@
       var item = e.target.closest('.hsf-suggestion-item');
       if (!item) return;
       input.value = item.getAttribute('data-value');
+      // Recent-search rows carry both ends of the route — fill the paired
+      // field too so one click sets up the whole trip.
+      var from = item.getAttribute('data-from');
+      var to = item.getAttribute('data-to');
+      if (pairInput && from !== null && to !== null) {
+        pairInput.value = isOrigin ? to : from;
+      }
       closePanel();
     });
 
     document.addEventListener('click', function (e) {
-      if (e.target !== input && !panel.contains(e.target)) {
-        closePanel();
-      }
+      if (e.target !== input && !panel.contains(e.target)) closePanel();
     });
 
     input.addEventListener('keydown', function (e) {
@@ -136,14 +159,8 @@
     });
   }
 
-  function escapeHtml(str) {
-    return String(str).replace(/[&<>"']/g, function (c) {
-      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
-    });
-  }
-
-  setupAutocomplete('originInput', 'originSuggestions');
-  setupAutocomplete('destInput', 'destSuggestions');
+  setupAutocomplete('originInput', 'originSuggestions', 'destInput', true);
+  setupAutocomplete('destInput', 'destSuggestions', 'originInput', false);
 
   /* ------------------------------------------------------------------
      3. REVERSE (swap origin / destination)
@@ -157,17 +174,68 @@
       var tmp = originInput.value;
       originInput.value = destInput.value;
       destInput.value = tmp;
-
       reverseBtn.classList.add('is-swapping');
-      window.setTimeout(function () {
-        reverseBtn.classList.remove('is-swapping');
-      }, 350);
+      window.setTimeout(function () { reverseBtn.classList.remove('is-swapping'); }, 350);
     });
   }
 
   /* ------------------------------------------------------------------
-     4. CALENDAR RANGE PICKER (depart / return)
+     4. GENERIC PILL DROPDOWN SELECT
+     Powers: Trip type (One-way/Round-trip), Cabin class, Compartment
+     type, Gender — any <div class="hsf-select" data-target="id"> with
+     a .hsf-select-trigger button and a scrollable .hsf-select-popup
+     list of .hsf-select-option buttons.
      ------------------------------------------------------------------ */
+  var selects = document.querySelectorAll('.hsf-select');
+  selects.forEach(function (select) {
+    var trigger = select.querySelector('.hsf-select-trigger');
+    var label = select.querySelector('.hsf-select-label');
+    var popup = select.querySelector('.hsf-select-popup');
+    var targetId = select.getAttribute('data-target');
+    var targetInput = targetId ? document.getElementById(targetId) : null;
+    if (!trigger || !popup) return;
+
+    function openSelect() {
+      popup.hidden = false;
+      popup.style.display = 'block'; // belt-and-suspenders vs any conflicting global CSS
+      trigger.setAttribute('aria-expanded', 'true');
+    }
+    function closeSelect() {
+      popup.hidden = true;
+      popup.style.display = 'none';
+      trigger.setAttribute('aria-expanded', 'false');
+    }
+
+    trigger.addEventListener('click', function () {
+      popup.hidden ? openSelect() : closeSelect();
+    });
+
+    popup.addEventListener('click', function (e) {
+      var opt = e.target.closest('.hsf-select-option');
+      if (!opt) return;
+      popup.querySelectorAll('.hsf-select-option').forEach(function (o) { o.classList.remove('active'); });
+      opt.classList.add('active');
+      if (label) label.textContent = opt.textContent;
+      if (targetInput) targetInput.value = opt.getAttribute('data-value');
+      select.dispatchEvent(new CustomEvent('hsfselectchange', { detail: { value: opt.getAttribute('data-value') }, bubbles: true }));
+      closeSelect();
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!popup.hidden && !select.contains(e.target)) closeSelect();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeSelect();
+    });
+  });
+
+  /* ------------------------------------------------------------------
+     5. CALENDAR (range picker that can also run in single-date mode,
+     used when Trip type = One-way)
+     ------------------------------------------------------------------ */
+  var dateField = document.getElementById('dateField');
+  var dateLabel = dateField ? dateField.querySelector('.hsf-label') : null;
   var dateTrigger = document.getElementById('dateTrigger');
   var dateTriggerText = document.getElementById('dateTriggerText');
   var calendarPopup = document.getElementById('calendarPopup');
@@ -186,6 +254,7 @@
   var visibleMonth = new Date(today.getFullYear(), today.getMonth(), 1);
   var rangeStart = null;
   var rangeEnd = null;
+  var isRangeMode = true; // false when Trip type = One-way
 
   function formatShort(date) {
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
@@ -195,7 +264,11 @@
     return date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0');
   }
 
-  function buildMonthTable(monthDate, monthIndexOffset) {
+  function sameDay(a, b) {
+    return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+  }
+
+  function buildMonthTable(monthDate, offset) {
     var year = monthDate.getFullYear();
     var month = monthDate.getMonth();
     var firstDow = new Date(year, month, 1).getDay();
@@ -203,16 +276,12 @@
 
     var html = '<div class="cal-month">';
     html += '<div class="cal-month-head">';
-    html += '<button type="button" class="cal-nav-btn" data-nav="prev" ' + (monthIndexOffset === 0 ? '' : 'style="visibility:hidden"') + ' aria-label="Previous month">&lsaquo;</button>';
+    html += '<button type="button" class="cal-nav-btn" data-nav="prev" ' + (offset === 0 ? '' : 'style="visibility:hidden"') + ' aria-label="Previous month">&lsaquo;</button>';
     html += '<h6>' + MONTH_NAMES[month] + ' ' + year + '</h6>';
-    html += '<button type="button" class="cal-nav-btn" data-nav="next" ' + (monthIndexOffset === 1 ? '' : 'style="visibility:hidden"') + ' aria-label="Next month">&rsaquo;</button>';
-    html += '</div>';
-    html += '<div class="cal-grid">';
+    html += '<button type="button" class="cal-nav-btn" data-nav="next" ' + (offset === 1 ? '' : 'style="visibility:hidden"') + ' aria-label="Next month">&rsaquo;</button>';
+    html += '</div><div class="cal-grid">';
     DOW_LABELS.forEach(function (d) { html += '<div class="cal-dow">' + d + '</div>'; });
-
-    for (var i = 0; i < firstDow; i++) {
-      html += '<div></div>';
-    }
+    for (var i = 0; i < firstDow; i++) html += '<div></div>';
     for (var d = 1; d <= daysInMonth; d++) {
       var thisDate = new Date(year, month, d);
       var isPast = thisDate < today;
@@ -226,30 +295,59 @@
     return html;
   }
 
-  function sameDay(a, b) {
-    return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+  function updateTriggerAndHidden() {
+    if (departHiddenInput) departHiddenInput.value = rangeStart ? formatISO(rangeStart) : '';
+    if (returnHiddenInput) returnHiddenInput.value = rangeEnd ? formatISO(rangeEnd) : '';
+
+    if (!dateTriggerText) return;
+    if (!rangeStart) {
+      dateTriggerText.textContent = isRangeMode ? 'Select dates' : 'Select a date';
+    } else if (isRangeMode && !rangeEnd) {
+      dateTriggerText.textContent = formatShort(rangeStart) + ' \u2192 Return?';
+    } else if (isRangeMode) {
+      dateTriggerText.textContent = formatShort(rangeStart) + ' \u2192 ' + formatShort(rangeEnd);
+    } else {
+      dateTriggerText.textContent = formatShort(rangeStart);
+    }
   }
 
   function renderCalendar() {
     var nextMonth = new Date(visibleMonth.getFullYear(), visibleMonth.getMonth() + 1, 1);
     calMonths.innerHTML = buildMonthTable(visibleMonth, 0) + buildMonthTable(nextMonth, 1);
 
-    if (!rangeStart) {
-      calRangeHint.textContent = 'Select a departure date';
-    } else if (rangeStart && !rangeEnd) {
-      calRangeHint.textContent = 'Departing ' + formatShort(rangeStart) + ' — now pick a return date';
-    } else {
-      calRangeHint.textContent = formatShort(rangeStart) + ' \u2192 ' + formatShort(rangeEnd);
+    if (calRangeHint) {
+      if (!isRangeMode) {
+        calRangeHint.textContent = rangeStart ? 'Departing ' + formatShort(rangeStart) : 'Select your travel date';
+      } else if (!rangeStart) {
+        calRangeHint.textContent = 'Select a departure date';
+      } else if (!rangeEnd) {
+        calRangeHint.textContent = 'Departing ' + formatShort(rangeStart) + ' — now pick a return date';
+      } else {
+        calRangeHint.textContent = formatShort(rangeStart) + ' \u2192 ' + formatShort(rangeEnd);
+      }
     }
+    updateTriggerAndHidden();
   }
 
   function openCalendar() {
+    if (!calendarPopup) return;
     calendarPopup.hidden = false;
+    calendarPopup.style.display = 'block'; // belt-and-suspenders vs any conflicting global CSS
     renderCalendar();
   }
 
   function closeCalendar() {
+    if (!calendarPopup) return;
     calendarPopup.hidden = true;
+    calendarPopup.style.display = 'none';
+  }
+
+  function setRangeMode(rangeMode) {
+    isRangeMode = rangeMode;
+    rangeStart = null;
+    rangeEnd = null;
+    if (dateLabel) dateLabel.textContent = isRangeMode ? 'Depart — Return' : 'Departure date';
+    updateTriggerAndHidden();
   }
 
   if (dateTrigger && calendarPopup) {
@@ -270,6 +368,14 @@
       if (!dayBtn || dayBtn.disabled) return;
       var picked = new Date(dayBtn.getAttribute('data-date') + 'T00:00:00');
 
+      if (!isRangeMode) {
+        rangeStart = picked;
+        rangeEnd = null;
+        renderCalendar();
+        window.setTimeout(closeCalendar, 250);
+        return;
+      }
+
       if (!rangeStart || (rangeStart && rangeEnd)) {
         rangeStart = picked;
         rangeEnd = null;
@@ -279,20 +385,14 @@
         rangeEnd = picked;
       }
       renderCalendar();
+      if (rangeStart && rangeEnd) {
+        window.setTimeout(closeCalendar, 350);
+      }
     });
 
-    calDoneBtn.addEventListener('click', function () {
-      if (rangeStart) {
-        departHiddenInput.value = formatISO(rangeStart);
-        dateTriggerText.textContent = rangeEnd
-          ? formatShort(rangeStart) + ' \u2192 ' + formatShort(rangeEnd)
-          : formatShort(rangeStart) + ' \u2192 Return?';
-      }
-      if (rangeEnd) {
-        returnHiddenInput.value = formatISO(rangeEnd);
-      }
-      closeCalendar();
-    });
+    if (calDoneBtn) {
+      calDoneBtn.addEventListener('click', closeCalendar);
+    }
 
     document.addEventListener('click', function (e) {
       if (!calendarPopup.hidden && !calendarPopup.contains(e.target) && e.target !== dateTrigger && !dateTrigger.contains(e.target)) {
@@ -305,8 +405,21 @@
     });
   }
 
+  // Hook the Trip type select (if present on this page) into the calendar,
+  // and sync to whichever option starts active (pages can default differently).
+  var tripTypeGroup = document.getElementById('tripTypeGroup');
+  if (tripTypeGroup && dateTrigger) {
+    var initialOption = tripTypeGroup.querySelector('.hsf-select-option.active');
+    if (initialOption) setRangeMode(initialOption.getAttribute('data-value') !== 'oneway');
+
+    tripTypeGroup.addEventListener('hsfselectchange', function (e) {
+      setRangeMode(e.detail.value !== 'oneway');
+    });
+  }
+
   /* ------------------------------------------------------------------
-     5. PASSENGER & CLASS SELECTOR
+     6. PASSENGER SELECTOR (Adults / Children / Infants — class now
+     lives in its own standalone chip-group, handled in section 4)
      ------------------------------------------------------------------ */
   var passengerTrigger = document.getElementById('passengerTrigger');
   var passengerTriggerText = document.getElementById('passengerTriggerText');
@@ -314,16 +427,32 @@
   var paxApplyBtn = document.getElementById('paxApplyBtn');
 
   var paxCounts = { adults: 1, children: 0, infants: 0 };
-  var cabinClass = 'Economy';
+  document.querySelectorAll('.pax-stepper').forEach(function (stepper) {
+    var key = stepper.getAttribute('data-pax');
+    var startVal = parseInt(stepper.querySelector('.pax-count').textContent, 10);
+    if (key && !isNaN(startVal)) paxCounts[key] = startVal;
+  });
 
   function openPassengerPopup() {
+    if (!passengerPopup) return;
     passengerPopup.hidden = false;
-    passengerTrigger.setAttribute('aria-expanded', 'true');
+    passengerPopup.style.display = 'block'; // belt-and-suspenders vs any conflicting global CSS
+    if (passengerTrigger) passengerTrigger.setAttribute('aria-expanded', 'true');
   }
 
   function closePassengerPopup() {
+    if (!passengerPopup) return;
     passengerPopup.hidden = true;
-    passengerTrigger.setAttribute('aria-expanded', 'false');
+    passengerPopup.style.display = 'none';
+    if (passengerTrigger) passengerTrigger.setAttribute('aria-expanded', 'false');
+  }
+
+  function paxSummaryText() {
+    var keys = Object.keys(paxCounts).filter(function (k) {
+      return document.querySelector('.pax-stepper[data-pax="' + k + '"]');
+    });
+    var total = keys.reduce(function (sum, k) { return sum + paxCounts[k]; }, 0);
+    return total + (total === 1 ? ' Traveler' : ' Travelers');
   }
 
   if (passengerTrigger && passengerPopup) {
@@ -341,29 +470,35 @@
         var delta = stepBtn.getAttribute('data-action') === 'inc' ? 1 : -1;
         paxCounts[key] = Math.min(max, Math.max(min, paxCounts[key] + delta));
         stepper.querySelector('.pax-count').textContent = paxCounts[key];
+        // Live-update the trigger label too, no need to wait for Apply.
+        if (passengerTriggerText) passengerTriggerText.textContent = paxSummaryText();
         return;
       }
 
+      // Backward-compat: hotels.html/tour.html still nest their Room
+      // type / Travel style options inside this popup (old .pax-class-btn
+      // pattern) rather than using the newer standalone .hsf-chip-group.
       var classBtn = e.target.closest('.pax-class-btn');
       if (classBtn) {
-        passengerPopup.querySelectorAll('.pax-class-btn').forEach(function (b) {
-          b.classList.remove('active');
-        });
+        passengerPopup.querySelectorAll('.pax-class-btn').forEach(function (b) { b.classList.remove('active'); });
         classBtn.classList.add('active');
-        cabinClass = classBtn.getAttribute('data-class');
+        var classHidden = document.getElementById('cabinClassHidden');
+        if (classHidden) classHidden.value = classBtn.getAttribute('data-class');
       }
     });
 
-    paxApplyBtn.addEventListener('click', function () {
-      document.getElementById('adultsHidden').value = paxCounts.adults;
-      document.getElementById('childrenHidden').value = paxCounts.children;
-      document.getElementById('infantsHidden').value = paxCounts.infants;
-      document.getElementById('cabinClassHidden').value = cabinClass;
-
-      var totalPax = paxCounts.adults + paxCounts.children + paxCounts.infants;
-      passengerTriggerText.textContent = totalPax + (totalPax === 1 ? ' Traveler, ' : ' Travelers, ') + cabinClass;
-      closePassengerPopup();
-    });
+    if (paxApplyBtn) {
+      paxApplyBtn.addEventListener('click', function () {
+        var adultsHidden = document.getElementById('adultsHidden');
+        var childrenHidden = document.getElementById('childrenHidden');
+        var infantsHidden = document.getElementById('infantsHidden');
+        if (adultsHidden) adultsHidden.value = paxCounts.adults;
+        if (childrenHidden) childrenHidden.value = paxCounts.children;
+        if (infantsHidden) infantsHidden.value = paxCounts.infants;
+        if (passengerTriggerText) passengerTriggerText.textContent = paxSummaryText();
+        closePassengerPopup();
+      });
+    }
 
     document.addEventListener('click', function (e) {
       if (!passengerPopup.hidden && !passengerPopup.contains(e.target) && e.target !== passengerTrigger && !passengerTrigger.contains(e.target)) {
@@ -372,26 +507,23 @@
     });
   }
 
-  /* ------------------------------------------------------------------
-     6. FORM SUBMIT — mocked loading state
-     TODO(backend): replace with a real submit to the transport search
-     results endpoint/view once it exists.
-     ------------------------------------------------------------------ */
+
   var submitBtn = document.getElementById('heroSearchSubmit');
 
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     if (!submitBtn) return;
-
-    submitBtn.querySelector('.btn-label').hidden = true;
-    submitBtn.querySelector('.btn-loading').hidden = false;
+    var label = submitBtn.querySelector('.btn-label');
+    var loading = submitBtn.querySelector('.btn-loading');
+    if (label) label.hidden = true;
+    if (loading) loading.hidden = false;
     submitBtn.disabled = true;
 
     // TODO(backend): swap this timeout for the real fetch/redirect once
     // the search results endpoint exists.
     window.setTimeout(function () {
-      submitBtn.querySelector('.btn-label').hidden = false;
-      submitBtn.querySelector('.btn-loading').hidden = true;
+      if (label) label.hidden = false;
+      if (loading) loading.hidden = true;
       submitBtn.disabled = false;
     }, 900);
   });

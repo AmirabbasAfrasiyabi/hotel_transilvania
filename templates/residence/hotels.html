@@ -41,59 +41,66 @@
         </a>
       </nav>
 
-      <form class="hero-search-form" id="heroSearchForm" autocomplete="off">
+ <form class="hero-search-form" id="heroSearchForm" autocomplete="off" data-location-scope="mixed" data-location-unit="City" data-hide-history="true">
 
-        <div class="hsf-locations">
+        <!-- FIX (row-1 alignment): empty spacer, same height as the
+             toolbar on Flights/Train/Bus, so the Destination field
+             below starts at the same Y position on every tab. Hotels
+             has no Trip type / Cabin class pills, so this stays empty
+             on purpose — it is NOT an extra form row, just spacing. -->
+        <div class="hsf-toolbar" aria-hidden="true"></div>
+
+        <div class="hsf-locations" style="grid-template-columns: 1fr;">
           <div class="hsf-field" id="originField">
-            <span class="hsf-label">From</span>
-            <input type="text" class="hsf-input" id="originInput" name="origin" placeholder="Departure stop or city" aria-expanded="false" aria-controls="originSuggestions">
+            <span class="hsf-label">Destination</span>
+            <input type="text" class="hsf-input" id="originInput" name="destination" placeholder="City, neighborhood or hotel name" aria-expanded="false" aria-controls="originSuggestions">
             <div class="hsf-suggestions" id="originSuggestions" role="listbox" hidden></div>
-          </div>
-
-          <button type="button" class="hsf-reverse-btn" id="reverseBtn" aria-label="Swap origin and destination">
-            <i class="fa-solid fa-arrow-right-arrow-left" aria-hidden="true"></i>
-          </button>
-
-          <div class="hsf-field" id="destField">
-            <span class="hsf-label">To</span>
-            <input type="text" class="hsf-input" id="destInput" name="destination" placeholder="Arrival stop or city" aria-expanded="false" aria-controls="destSuggestions">
-            <div class="hsf-suggestions" id="destSuggestions" role="listbox" hidden></div>
           </div>
         </div>
 
         <div class="hsf-secondary-row">
-          <div class="hsf-field hsf-date-field" id="dateField">
-            <span class="hsf-label">Travel date</span>
-            <button type="button" class="hsf-date-trigger" id="dateTrigger">
-              <i class="fa-regular fa-calendar" aria-hidden="true"></i>
-              <span id="dateTriggerText">Select a date</span>
-            </button>
+          <div class="hsf-date-group">
+            <div class="hsf-field hsf-date-field" id="departField">
+              <span class="hsf-label">Check-in</span>
+              <button type="button" class="hsf-date-trigger" id="departTrigger">
+                <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+                <span id="departTriggerText">Select date</span>
+              </button>
+            </div>
+
+            <div class="hsf-field hsf-date-field" id="returnField">
+              <span class="hsf-label">Check-out</span>
+              <button type="button" class="hsf-date-trigger" id="returnTrigger">
+                <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+                <span id="returnTriggerText">Select date</span>
+              </button>
+            </div>
 
             <div class="hsf-calendar-popup" id="calendarPopup" hidden>
               <div class="cal-months" id="calMonths"></div>
               <div class="cal-footer">
-                <span class="cal-range-hint" id="calRangeHint">Select a travel date</span>
+                <span class="cal-range-hint" id="calRangeHint">Select a check-in date</span>
                 <button type="button" class="cal-done-btn" id="calDoneBtn">Done</button>
               </div>
             </div>
           </div>
 
           <div class="hsf-field hsf-passenger-field" id="passengerField">
-            <span class="hsf-label">Passengers &amp; Class</span>
+            <span class="hsf-label">Guests &amp; Rooms</span>
             <button type="button" class="hsf-date-trigger" id="passengerTrigger" aria-expanded="false" aria-controls="passengerPopup">
-              <i class="fa-solid fa-user" aria-hidden="true"></i>
-              <span id="passengerTriggerText">1 Passenger, Standard</span>
+              <i class="fa-solid fa-user-group" aria-hidden="true"></i>
+              <span id="passengerTriggerText">2 Guests, 1 Room</span>
             </button>
 
             <div class="hsf-passenger-popup" id="passengerPopup" hidden>
               <div class="pax-row">
                 <div class="pax-copy">
                   <strong>Adults</strong>
-                  <span>12+ years</span>
+                  <span>Guests 12+ years</span>
                 </div>
-                <div class="pax-stepper" data-pax="adults" data-min="1" data-max="9">
+                <div class="pax-stepper" data-pax="adults" data-min="1" data-max="12">
                   <button type="button" class="pax-btn" data-action="dec" aria-label="Decrease adults">−</button>
-                  <span class="pax-count" data-count="adults">1</span>
+                  <span class="pax-count" data-count="adults">2</span>
                   <button type="button" class="pax-btn" data-action="inc" aria-label="Increase adults">+</button>
                 </div>
               </div>
@@ -108,29 +115,34 @@
                   <button type="button" class="pax-btn" data-action="inc" aria-label="Increase children">+</button>
                 </div>
               </div>
+              <div class="pax-row">
+                <div class="pax-copy">
+                  <strong>Rooms</strong>
+                  <span>How many rooms</span>
+                </div>
+                <div class="pax-stepper" data-pax="infants" data-min="1" data-max="6">
+                  <button type="button" class="pax-btn" data-action="dec" aria-label="Decrease rooms">−</button>
+                  <span class="pax-count" data-count="infants">1</span>
+                  <button type="button" class="pax-btn" data-action="inc" aria-label="Increase rooms">+</button>
+                </div>
+              </div>
 
               <div class="pax-divider"></div>
-
-              <div class="pax-class-group" role="radiogroup" aria-label="Seat class">
-                <button type="button" class="pax-class-btn active" data-class="Standard">Standard</button>
-                <button type="button" class="pax-class-btn" data-class="VIP">VIP</button>
-              </div>
 
               <button type="button" class="pax-apply-btn" id="paxApplyBtn">Apply</button>
             </div>
           </div>
         </div>
 
-        <!-- TODO(backend): wire these to the real bus search view -->
-        <input type="hidden" name="travel_date" id="departDateHidden">
-        <input type="hidden" name="return_date" id="returnDateHidden">
-        <input type="hidden" name="adults" id="adultsHidden" value="1">
+        <!-- TODO(backend): wire these to the real hotel search view -->
+        <input type="hidden" name="checkin_date" id="departDateHidden">
+        <input type="hidden" name="checkout_date" id="returnDateHidden">
+        <input type="hidden" name="adults" id="adultsHidden" value="2">
         <input type="hidden" name="children" id="childrenHidden" value="0">
-        <input type="hidden" name="infants" id="infantsHidden" value="0">
-        <input type="hidden" name="seat_class" id="cabinClassHidden" value="Standard">
+        <input type="hidden" name="rooms" id="infantsHidden" value="1">
 
         <button type="submit" class="hero-search-submit" id="heroSearchSubmit">
-          <span class="btn-label">Search buses</span>
+          <span class="btn-label">Search hotels</span>
           <span class="btn-loading" hidden>
             <i class="fa-solid fa-circle-notch fa-spin" aria-hidden="true"></i> Searching…
           </span>

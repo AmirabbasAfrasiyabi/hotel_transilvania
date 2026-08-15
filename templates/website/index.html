@@ -10,29 +10,29 @@
   <div class="container hero-search-inner">
 
     <div class="hero-search-intro">
-       <span class="contact-eyebrow">✈ Travelista — Domestic</span>
-        <h1 class="hero-search-heading">Fly within the country</h1>
+      <span class="contact-eyebrow">✈ Travelista — Domestic</span>
+      <h1 class="hero-search-heading">Fly within the country</h1>
       <p class="hero-search-sub">Quick domestic hops, no passport needed — just pick your dates and go.</p>
     </div>
 
     <div class="hero-search-card" id="heroSearchCard">
 
-      <!-- ---------- Mode tabs (real navigation, no JS routing) ---------- -->
       <nav class="hero-tabs" role="tablist" aria-label="Search mode">
-        <a href="{% url 'website:index' %}" class="hero-tab active" data-mode="domestic-flight" role="tab" aria-selected="true">
+        <a href="{% url 'website:index' %}" class="hero-tab" data-mode="domestic-flight" role="tab" aria-selected="false">
           <i class="fa-solid fa-plane" aria-hidden="true"></i><span>Domestic</span>
         </a>
-
-       <a href="{% url 'transport:out' %}" class="hero-tab" data-mode="international-flight" role="tab" aria-selected="false">
+        <a href="{% url 'transport:out' %}" class="hero-tab active" data-mode="international-flight" role="tab" aria-selected="true">
           <i class="fa-solid fa-earth-americas" aria-hidden="true"></i><span>International</span>
         </a>
         <a href="{% url 'residence:hotel' %}" class="hero-tab" data-mode="hotels" role="tab" aria-selected="false">
           <i class="fa-solid fa-bed" aria-hidden="true"></i><span>Hotels</span>
         </a>
 
+
         <a href="{% url 'residence:village' %}" class="hero-tab" data-mode="hotels" role="tab" aria-selected="false">
           <i class="fa-solid fa-bed" aria-hidden="true"></i><span>village</span>
         </a>
+
 
         <a href="{% url 'transport:train' %}" class="hero-tab" data-mode="train" role="tab" aria-selected="false">
           <i class="fa-solid fa-train" aria-hidden="true"></i><span>Train</span>
@@ -45,8 +45,37 @@
         </a>
       </nav>
 
-      <!-- ---------- Search form (Flights fields) ---------- -->
-      <form class="hero-search-form" id="heroSearchForm" autocomplete="off">
+      <form class="hero-search-form" id="heroSearchForm" autocomplete="off" data-location-scope="domestic" data-location-unit="Airport">
+
+        <!-- Toolbar: Trip type + Cabin class as pill dropdowns (top-right,
+             scrollable option list). Fixed min-height in CSS (.hsf-toolbar)
+             is what keeps the locations row below starting at the same Y
+             position as every other tab (Hotels/Villa/Tour render an
+             EMPTY .hsf-toolbar spacer for the same reason). -->
+        <div class="hsf-toolbar">
+          <div class="hsf-select" id="tripTypeGroup" data-target="tripTypeHidden">
+            <button type="button" class="hsf-select-trigger" aria-expanded="false" aria-haspopup="listbox">
+              <i class="fa-solid fa-chevron-down hsf-select-chevron" aria-hidden="true"></i>
+              <span class="hsf-select-label">Round-trip</span>
+            </button>
+            <div class="hsf-select-popup" role="listbox" hidden>
+              <button type="button" class="hsf-select-option active" data-value="roundtrip" role="option">Round-trip</button>
+              <button type="button" class="hsf-select-option" data-value="oneway" role="option">One-way</button>
+            </div>
+          </div>
+          <input type="hidden" name="trip_type" id="tripTypeHidden" value="roundtrip">
+
+          <div class="hsf-select" data-target="cabinClassHidden">
+            <button type="button" class="hsf-select-trigger" aria-expanded="false" aria-haspopup="listbox">
+              <i class="fa-solid fa-chevron-down hsf-select-chevron" aria-hidden="true"></i>
+              <span class="hsf-select-label">Economy</span>
+            </button>
+            <div class="hsf-select-popup" role="listbox" hidden>
+              <button type="button" class="hsf-select-option active" data-value="Economy" role="option">Economy</button>
+              <button type="button" class="hsf-select-option" data-value="Business" role="option">Business</button>
+            </div>
+          </div>
+        </div>
 
         <div class="hsf-locations">
           <div class="hsf-field" id="originField">
@@ -67,12 +96,22 @@
         </div>
 
         <div class="hsf-secondary-row">
-          <div class="hsf-field hsf-date-field" id="dateField">
-            <span class="hsf-label">Depart — Return</span>
-            <button type="button" class="hsf-date-trigger" id="dateTrigger">
-              <i class="fa-regular fa-calendar" aria-hidden="true"></i>
-              <span id="dateTriggerText">Select dates</span>
-            </button>
+          <div class="hsf-date-group">
+            <div class="hsf-field hsf-date-field" id="departField">
+              <span class="hsf-label">Departure</span>
+              <button type="button" class="hsf-date-trigger" id="departTrigger">
+                <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+                <span id="departTriggerText">Select date</span>
+              </button>
+            </div>
+
+            <div class="hsf-field hsf-date-field" id="returnField">
+              <span class="hsf-label">Return</span>
+              <button type="button" class="hsf-date-trigger" id="returnTrigger">
+                <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+                <span id="returnTriggerText">Select date</span>
+              </button>
+            </div>
 
             <div class="hsf-calendar-popup" id="calendarPopup" hidden>
               <div class="cal-months" id="calMonths"></div>
@@ -84,10 +123,10 @@
           </div>
 
           <div class="hsf-field hsf-passenger-field" id="passengerField">
-            <span class="hsf-label">Travelers &amp; Class</span>
+            <span class="hsf-label">Travelers</span>
             <button type="button" class="hsf-date-trigger" id="passengerTrigger" aria-expanded="false" aria-controls="passengerPopup">
               <i class="fa-solid fa-user" aria-hidden="true"></i>
-              <span id="passengerTriggerText">1 Adult, Economy</span>
+              <span id="passengerTriggerText">1 Traveler</span>
             </button>
 
             <div class="hsf-passenger-popup" id="passengerPopup" hidden>
@@ -127,13 +166,6 @@
 
               <div class="pax-divider"></div>
 
-              <div class="pax-class-group" role="radiogroup" aria-label="Cabin class">
-                <button type="button" class="pax-class-btn active" data-class="Economy">Economy</button>
-                <button type="button" class="pax-class-btn" data-class="Premium">Premium</button>
-                <button type="button" class="pax-class-btn" data-class="Business">Business</button>
-                <button type="button" class="pax-class-btn" data-class="First">First</button>
-              </div>
-
               <button type="button" class="pax-apply-btn" id="paxApplyBtn">Apply</button>
             </div>
           </div>
@@ -148,7 +180,7 @@
         <input type="hidden" name="cabin_class" id="cabinClassHidden" value="Economy">
 
         <button type="submit" class="hero-search-submit" id="heroSearchSubmit">
-          <span class="btn-label">Search flights</span>
+          <span class="btn-label">Search domestic flights</span>
           <span class="btn-loading" hidden>
             <i class="fa-solid fa-circle-notch fa-spin" aria-hidden="true"></i> Searching…
           </span>

@@ -43,7 +43,24 @@
         </a>
       </nav>
 
-      <form class="hero-search-form" id="heroSearchForm" autocomplete="off">
+      <form class="hero-search-form" id="heroSearchForm" autocomplete="off" data-location-scope="domestic" data-location-unit="Terminal">
+
+        <!-- Toolbar: Trip type as a pill dropdown (top-right, scrollable
+             option list) — new addition, Bus previously had no category
+             toggle at all. -->
+        <div class="hsf-toolbar">
+          <div class="hsf-select" id="tripTypeGroup" data-target="tripTypeHidden">
+            <button type="button" class="hsf-select-trigger" aria-expanded="false" aria-haspopup="listbox">
+              <i class="fa-solid fa-chevron-down hsf-select-chevron" aria-hidden="true"></i>
+              <span class="hsf-select-label">One-way</span>
+            </button>
+            <div class="hsf-select-popup" role="listbox" hidden>
+              <button type="button" class="hsf-select-option active" data-value="oneway" role="option">One-way</button>
+              <button type="button" class="hsf-select-option" data-value="roundtrip" role="option">Round-trip</button>
+            </div>
+          </div>
+          <input type="hidden" name="trip_type" id="tripTypeHidden" value="oneway">
+        </div>
 
         <div class="hsf-locations">
           <div class="hsf-field" id="originField">
@@ -81,10 +98,10 @@
           </div>
 
           <div class="hsf-field hsf-passenger-field" id="passengerField">
-            <span class="hsf-label">Passengers &amp; Class</span>
+            <span class="hsf-label">Passengers</span>
             <button type="button" class="hsf-date-trigger" id="passengerTrigger" aria-expanded="false" aria-controls="passengerPopup">
               <i class="fa-solid fa-user" aria-hidden="true"></i>
-              <span id="passengerTriggerText">1 Passenger, Standard</span>
+              <span id="passengerTriggerText">1 Passenger</span>
             </button>
 
             <div class="hsf-passenger-popup" id="passengerPopup" hidden>
@@ -113,11 +130,6 @@
 
               <div class="pax-divider"></div>
 
-              <div class="pax-class-group" role="radiogroup" aria-label="Seat class">
-                <button type="button" class="pax-class-btn active" data-class="Standard">Standard</button>
-                <button type="button" class="pax-class-btn" data-class="VIP">VIP</button>
-              </div>
-
               <button type="button" class="pax-apply-btn" id="paxApplyBtn">Apply</button>
             </div>
           </div>
@@ -129,7 +141,6 @@
         <input type="hidden" name="adults" id="adultsHidden" value="1">
         <input type="hidden" name="children" id="childrenHidden" value="0">
         <input type="hidden" name="infants" id="infantsHidden" value="0">
-        <input type="hidden" name="seat_class" id="cabinClassHidden" value="Standard">
 
         <button type="submit" class="hero-search-submit" id="heroSearchSubmit">
           <span class="btn-label">Search buses</span>
