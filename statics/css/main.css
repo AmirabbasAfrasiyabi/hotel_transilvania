@@ -7001,3 +7001,201 @@ body.mobile-nav-active #mobile-nav-toggle {
 /* ==========================================================================
    >>> END: TRAVELISTA — HOME HERO SEARCH BLOCK <<<
    ========================================================================== */
+
+/* ==========================================================================
+   >>> START: HERO SEARCH — ROOMS MANAGER + FORM ERROR BOX <<<
+   Added for the Hotel/Villa "Guests & Rooms" redesign: a per-room
+   Adults/Children breakdown (max 4 guests/room) and a shared inline
+   validation message above the Search button. Uses the existing
+   --tvl-* tokens only, no new colors introduced.
+   ========================================================================== */
+
+.hsf-rooms-popup {
+  width: min(340px, 92vw);
+}
+
+.hsf-rooms-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-height: 320px;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+.hsf-room-card {
+  border: 1px solid rgba(44, 42, 40, 0.14);
+  border-radius: 12px;
+  padding: 14px 16px 6px;
+}
+
+.hsf-room-card + .hsf-room-card {
+  margin-top: 0;
+}
+
+.hsf-room-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.hsf-room-card-head strong {
+  font-size: 13.5px;
+  color: var(--tvl-navy);
+  font-family: 'Space Mono', monospace;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.hsf-remove-room-btn {
+  border: none;
+  background: none;
+  color: var(--tvl-ink-soft);
+  cursor: pointer;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.hsf-remove-room-btn:hover {
+  background: rgba(255, 111, 89, 0.12);
+  color: var(--tvl-coral-dark);
+}
+
+.hsf-room-limit-msg {
+  margin: 4px 0 8px;
+  font-size: 12px;
+  color: var(--tvl-coral-dark);
+}
+
+.hsf-room-limit-msg[hidden] {
+  display: none;
+}
+
+.hsf-add-room-btn {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 10px;
+  border: 1px dashed rgba(27, 122, 120, 0.45);
+  border-radius: 10px;
+  background: rgba(27, 122, 120, 0.06);
+  color: var(--tvl-teal);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.hsf-add-room-btn:hover:not(:disabled) {
+  background: rgba(27, 122, 120, 0.12);
+  border-color: var(--tvl-teal);
+}
+
+.hsf-add-room-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* ---------- Shared inline validation banner (Requirement #18) ---------- */
+.hsf-form-error {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 111, 89, 0.12);
+  border: 1px solid rgba(255, 111, 89, 0.4);
+  color: var(--tvl-coral-dark);
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 13.5px;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.hsf-form-error[hidden] {
+  display: none;
+}
+
+.hsf-form-error i {
+  flex-shrink: 0;
+  font-size: 15px;
+}
+
+@media (max-width: 480px) {
+  .hsf-rooms-popup {
+    width: 88vw;
+  }
+}
+
+/* ==========================================================================
+   >>> END: HERO SEARCH — ROOMS MANAGER + FORM ERROR BOX <<<
+   ========================================================================== */
+
+
+/* ==========================================================================
+   >>> START: HERO SEARCH — BUGFIXES (row-2 layout, popup gap, button width) <<<
+   Fixes reported after first Hotel/Villa review:
+   1) Check-in/Check-out were stacking instead of sitting side by side
+      because .hsf-date-group had no layout rule at all.
+   2) Because .hsf-date-group wasn't a positioning context, the calendar
+      popup anchored to a distant ancestor instead of sitting right under
+      the fields, causing a large visual gap.
+   3) The Search button spanned the full row instead of sitting on the left
+      (Requirement #6: Search button LEFT, extra options RIGHT).
+   ========================================================================== */
+
+.hsf-date-group {
+  display: flex;
+  gap: 14px;
+  position: relative; /* anchors .hsf-calendar-popup right under the fields */
+}
+
+.hsf-date-group .hsf-field {
+  flex: 1;
+}
+
+.hsf-calendar-popup {
+  /* was inheriting position from a distant ancestor; now anchored
+     directly under .hsf-date-group with a tight, consistent gap */
+  top: calc(100% + 6px);
+}
+
+/* ---------- Row 3: Search button on the left, not full width ---------- */
+.hsf-actions-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.hsf-actions-row .hero-search-submit {
+  width: auto;
+  min-width: 220px;
+}
+
+@media (max-width: 480px) {
+  .hsf-actions-row .hero-search-submit {
+    width: 100%;
+  }
+}
+
+@media (max-width: 767px) {
+  /* On mobile the date fields already stack per the global responsive
+     rules below — keep that, just don't fight it with flex here. */
+  .hsf-date-group {
+    flex-direction: column;
+  }
+}
+
+/* ==========================================================================
+   >>> END: HERO SEARCH — BUGFIXES <<<
+   ========================================================================== */

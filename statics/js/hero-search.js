@@ -74,6 +74,11 @@
     var pairInput = pairInputId ? document.getElementById(pairInputId) : null;
     if (!input || !panel) return;
 
+    // Hotels/Villas have a single Destination field with no matching
+    // Origin/Destination pair on the page — showing "Tehran → Mashhad"
+    // style route history there is confusing, so it's skipped for them.
+    var isSingleField = !pairInput;
+
     function suggestionRow(icon, title, detail, data) {
       var attrs = 'data-value="' + escapeHtml(data.value) + '"';
       if (data.from !== undefined) attrs += ' data-from="' + escapeHtml(data.from) + '" data-to="' + escapeHtml(data.to) + '"';
@@ -87,10 +92,13 @@
     }
 
     function renderHistory() {
-      var html = '<div class="hsf-group-label">Recent searches</div>';
-      HISTORY.forEach(function (h) {
-        html += suggestionRow('fa-solid fa-clock-rotate-left', h.from + ' \u2192 ' + h.to, '', { value: isOrigin ? h.from : h.to, from: h.from, to: h.to });
-      });
+      var html = '';
+      if (!isSingleField) {
+        html += '<div class="hsf-group-label">Recent searches</div>';
+        HISTORY.forEach(function (h) {
+          html += suggestionRow('fa-solid fa-clock-rotate-left', h.from + ' \u2192 ' + h.to, '', { value: isOrigin ? h.from : h.to, from: h.from, to: h.to });
+        });
+      }
       html += '<div class="hsf-group-label">Popular ' + LOCATION_UNIT + ' options</div>';
       LOCATIONS.slice(0, 6).forEach(function (loc) {
         html += suggestionRow('fa-solid fa-location-dot', loc.city, loc.region, { value: loc.city });
@@ -231,19 +239,40 @@
   });
 
   /* ------------------------------------------------------------------
-     5. CALENDAR (range picker that can also run in single-date mode,
-     used when Trip type = One-way)
+     5. CALENDAR
+     Supports two layouts that exist across the project:
+       a) SINGLE trigger  (#dateTrigger)      -> Train / Bus
+       b) DUAL triggers   (#departTrigger +
+                            #returnTrigger)    -> Hotels / Villas /
+                                                   Flights (domestic &
+                                                   international)
+     Both share one popup/grid renderer. In DUAL mode the two ends of
+     the range are always required (Check-in must be < Check-out), and
+     the calendar itself disables any "checkout" date that is not
+     strictly after the chosen "checkin" date — this is what enforces
+     Requirement #3 (date validation) at the UI level.
      ------------------------------------------------------------------ */
   var dateField = document.getElementById('dateField');
   var dateLabel = dateField ? dateField.querySelector('.hsf-label') : null;
   var dateTrigger = document.getElementById('dateTrigger');
   var dateTriggerText = document.getElementById('dateTriggerText');
+
+  var departTrigger = document.getElementById('departTrigger');
+  var departTriggerText = document.getElementById('departTriggerText');
+  var returnTrigger = document.getElementById('returnTrigger');
+  var returnTriggerText = document.getElementById('returnTriggerText');
+  var isDualTriggerMode = !!(departTrigger && returnTrigger);
+
   var calendarPopup = document.getElementById('calendarPopup');
   var calMonths = document.getElementById('calMonths');
   var calRangeHint = document.getElementById('calRangeHint');
   var calDoneBtn = document.getElementById('calDoneBtn');
   var departHiddenInput = document.getElementById('departDateHidden');
   var returnHiddenInput = document.getElementById('returnDateHidden');
+
+  // Which end of the range the next calendar click should set. Only
+  // meaningful in DUAL trigger mode.
+  var pendingField = 'start';
 
   var MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'];
@@ -285,11 +314,17 @@
     for (var d = 1; d <= daysInMonth; d++) {
       var thisDate = new Date(year, month, d);
       var isPast = thisDate < today;
+      // While picking the "end" date (Check-out / Return), any date that
+      // is not strictly AFTER the chosen "start" date is invalid and gets
+      // disabled — this is what makes "Check-out must be after check-in"
+      // impossible to violate from the calendar itself.
+      var isInvalidEnd = isDualTriggerMode && isRangeMode && pendingField === 'end' && rangeStart && thisDate <= rangeStart;
+      var isDisabled = isPast || isInvalidEnd;
       var classes = ['cal-day'];
       if (rangeStart && sameDay(thisDate, rangeStart)) classes.push('is-selected');
       if (rangeEnd && sameDay(thisDate, rangeEnd)) classes.push('is-selected');
       if (rangeStart && rangeEnd && thisDate > rangeStart && thisDate < rangeEnd) classes.push('is-in-range');
-      html += '<button type="button" class="' + classes.join(' ') + '" data-date="' + formatISO(thisDate) + '" ' + (isPast ? 'disabled' : '') + '>' + d + '</button>';
+      html += '<button type="button" class="' + classes.join(' ') + '" data-date="' + formatISO(thisDate) + '" ' + (isDisabled ? 'disabled' : '') + '>' + d + '</button>';
     }
     html += '</div></div>';
     return html;
@@ -298,6 +333,12 @@
   function updateTriggerAndHidden() {
     if (departHiddenInput) departHiddenInput.value = rangeStart ? formatISO(rangeStart) : '';
     if (returnHiddenInput) returnHiddenInput.value = rangeEnd ? formatISO(rangeEnd) : '';
+
+    if (isDualTriggerMode) {
+      if (departTriggerText) departTriggerText.textContent = rangeStart ? formatShort(rangeStart) : 'Select date';
+      if (returnTriggerText) returnTriggerText.textContent = rangeEnd ? formatShort(rangeEnd) : 'Select date';
+      return;
+    }
 
     if (!dateTriggerText) return;
     if (!rangeStart) {
@@ -316,7 +357,15 @@
     calMonths.innerHTML = buildMonthTable(visibleMonth, 0) + buildMonthTable(nextMonth, 1);
 
     if (calRangeHint) {
-      if (!isRangeMode) {
+      if (isDualTriggerMode) {
+        if (!rangeStart) {
+          calRangeHint.textContent = 'Select a check-in date';
+        } else if (!rangeEnd) {
+          calRangeHint.textContent = 'Check-in ' + formatShort(rangeStart) + ' — now pick a check-out date';
+        } else {
+          calRangeHint.textContent = formatShort(rangeStart) + ' \u2192 ' + formatShort(rangeEnd);
+        }
+      } else if (!isRangeMode) {
         calRangeHint.textContent = rangeStart ? 'Departing ' + formatShort(rangeStart) : 'Select your travel date';
       } else if (!rangeStart) {
         calRangeHint.textContent = 'Select a departure date';
@@ -350,10 +399,39 @@
     updateTriggerAndHidden();
   }
 
-  if (dateTrigger && calendarPopup) {
-    dateTrigger.addEventListener('click', function () {
-      calendarPopup.hidden ? openCalendar() : closeCalendar();
-    });
+  // Any trigger button that can open this shared calendar popup — used
+  // for the "click outside to close" check below, regardless of mode.
+  var allDateTriggers = [dateTrigger, departTrigger, returnTrigger].filter(Boolean);
+
+  function calendarClickedOutside(e) {
+    if (calendarPopup.hidden) return false;
+    if (calendarPopup.contains(e.target)) return false;
+    return allDateTriggers.every(function (t) { return e.target !== t && !t.contains(e.target); });
+  }
+
+  if (calendarPopup && (dateTrigger || isDualTriggerMode)) {
+
+    if (dateTrigger) {
+      // SINGLE trigger mode (Train / Bus): unchanged behavior.
+      dateTrigger.addEventListener('click', function () {
+        pendingField = 'start';
+        calendarPopup.hidden ? openCalendar() : closeCalendar();
+      });
+    }
+
+    if (isDualTriggerMode) {
+      // DUAL trigger mode (Hotels / Villas / Flights): clicking
+      // "Check-in" always (re)starts the range; clicking "Check-out"
+      // keeps the existing check-in and only asks for the end date.
+      departTrigger.addEventListener('click', function () {
+        pendingField = 'start';
+        calendarPopup.hidden ? openCalendar() : renderCalendar();
+      });
+      returnTrigger.addEventListener('click', function () {
+        pendingField = rangeStart ? 'end' : 'start';
+        calendarPopup.hidden ? openCalendar() : renderCalendar();
+      });
+    }
 
     calMonths.addEventListener('click', function (e) {
       var navBtn = e.target.closest('.cal-nav-btn');
@@ -367,6 +445,23 @@
       var dayBtn = e.target.closest('.cal-day');
       if (!dayBtn || dayBtn.disabled) return;
       var picked = new Date(dayBtn.getAttribute('data-date') + 'T00:00:00');
+
+      if (isDualTriggerMode) {
+        // Check-out (pendingField "end") is only accepted if it's
+        // strictly after Check-in — the calendar already disables
+        // anything else, this is just a safety net.
+        if (pendingField === 'end' && rangeStart && picked > rangeStart) {
+          rangeEnd = picked;
+          renderCalendar();
+          window.setTimeout(closeCalendar, 300);
+        } else {
+          rangeStart = picked;
+          rangeEnd = null;
+          pendingField = 'end';
+          renderCalendar(); // stay open so the user can immediately pick check-out
+        }
+        return;
+      }
 
       if (!isRangeMode) {
         rangeStart = picked;
@@ -395,9 +490,7 @@
     }
 
     document.addEventListener('click', function (e) {
-      if (!calendarPopup.hidden && !calendarPopup.contains(e.target) && e.target !== dateTrigger && !dateTrigger.contains(e.target)) {
-        closeCalendar();
-      }
+      if (calendarClickedOutside(e)) closeCalendar();
     });
 
     document.addEventListener('keydown', function (e) {
@@ -407,6 +500,8 @@
 
   // Hook the Trip type select (if present on this page) into the calendar,
   // and sync to whichever option starts active (pages can default differently).
+  // Only relevant in SINGLE trigger mode today (Train/Bus); Hotels/Villas
+  // have no trip-type toggle so isRangeMode simply stays true for them.
   var tripTypeGroup = document.getElementById('tripTypeGroup');
   if (tripTypeGroup && dateTrigger) {
     var initialOption = tripTypeGroup.querySelector('.hsf-select-option.active');
@@ -455,7 +550,7 @@
     return total + (total === 1 ? ' Traveler' : ' Travelers');
   }
 
-  if (passengerTrigger && passengerPopup) {
+  if (passengerTrigger && passengerPopup && !document.getElementById('roomsList')) {
     passengerTrigger.addEventListener('click', function () {
       passengerPopup.hidden ? openPassengerPopup() : closePassengerPopup();
     });
@@ -508,10 +603,210 @@
   }
 
 
+  /* ------------------------------------------------------------------
+     6b. ROOMS MANAGER (Hotels & Villas) — replaces the old single
+     "Rooms" stepper with a real per-room Adults/Children breakdown.
+     Each room is capped at MAX_PER_ROOM (4) guests, per Requirement #4.
+     ------------------------------------------------------------------ */
+  var roomsList = document.getElementById('roomsList');
+  var MAX_PER_ROOM = 4;
+
+  if (roomsList) {
+    // BUGFIX: in rooms mode the old open/close click handler on
+    // passengerTrigger was skipped entirely (it's gated to the legacy
+    // stepper branch above), so the popup never opened. Wire it here.
+    if (passengerTrigger && passengerPopup) {
+      passengerTrigger.addEventListener('click', function () {
+        passengerPopup.hidden ? openPassengerPopup() : closePassengerPopup();
+      });
+    }
+
+    var addRoomBtn = document.getElementById('addRoomBtn');
+    var maxRooms = parseInt(roomsList.getAttribute('data-max-rooms'), 10) || 8;
+    var roomNoun = /bedroom/i.test((document.getElementById('infantsHidden') || {}).name || '') ? 'Bedroom' : 'Room';
+
+    // Seed initial state from the two rooms that used to live in the old
+    // single-room markup (adults/children hidden inputs), so a page that
+    // still has adults=2/children=0 defaults keeps behaving the same.
+    var seedAdults = parseInt((document.getElementById('adultsHidden') || {}).value, 10) || 2;
+    var seedChildren = parseInt((document.getElementById('childrenHidden') || {}).value, 10) || 0;
+    var rooms = [{ adults: Math.min(seedAdults, MAX_PER_ROOM), children: Math.min(seedChildren, MAX_PER_ROOM - Math.min(seedAdults, MAX_PER_ROOM)) }];
+
+    function roomCard(room, index) {
+      var adultsMax = MAX_PER_ROOM - room.children;
+      var childrenMax = MAX_PER_ROOM - room.adults;
+      return (
+        '<div class="hsf-room-card" data-room-index="' + index + '">' +
+          '<div class="hsf-room-card-head">' +
+            '<strong>' + roomNoun + ' ' + (index + 1) + '</strong>' +
+            (rooms.length > 1 ? '<button type="button" class="hsf-remove-room-btn" data-action="remove-room" aria-label="Remove room"><i class="fa-solid fa-trash" aria-hidden="true"></i></button>' : '') +
+          '</div>' +
+          '<div class="pax-row">' +
+            '<div class="pax-copy"><strong>Adults</strong><span>Guests 12+ years</span></div>' +
+            '<div class="pax-stepper" data-room-pax="adults" data-min="1" data-max="' + adultsMax + '">' +
+              '<button type="button" class="pax-btn" data-action="dec" aria-label="Decrease adults">\u2212</button>' +
+              '<span class="pax-count">' + room.adults + '</span>' +
+              '<button type="button" class="pax-btn" data-action="inc" aria-label="Increase adults">+</button>' +
+            '</div>' +
+          '</div>' +
+          '<div class="pax-row">' +
+            '<div class="pax-copy"><strong>Children</strong><span>2\u201311 years</span></div>' +
+            '<div class="pax-stepper" data-room-pax="children" data-min="0" data-max="' + childrenMax + '">' +
+              '<button type="button" class="pax-btn" data-action="dec" aria-label="Decrease children">\u2212</button>' +
+              '<span class="pax-count">' + room.children + '</span>' +
+              '<button type="button" class="pax-btn" data-action="inc" aria-label="Increase children">+</button>' +
+            '</div>' +
+          '</div>' +
+          '<p class="hsf-room-limit-msg" ' + (room.adults + room.children >= MAX_PER_ROOM ? '' : 'hidden') + '>Maximum ' + MAX_PER_ROOM + ' guests are allowed per room.</p>' +
+        '</div>'
+      );
+    }
+
+    function renderRooms() {
+      roomsList.innerHTML = rooms.map(roomCard).join('');
+      if (addRoomBtn) addRoomBtn.disabled = rooms.length >= maxRooms;
+      updateRoomsSummary();
+    }
+
+    function updateRoomsSummary() {
+      var totalAdults = 0, totalChildren = 0;
+      rooms.forEach(function (r) { totalAdults += r.adults; totalChildren += r.children; });
+      var totalGuests = totalAdults + totalChildren;
+
+      var adultsHidden = document.getElementById('adultsHidden');
+      var childrenHidden = document.getElementById('childrenHidden');
+      var roomsCountHidden = document.getElementById('infantsHidden'); // legacy id, holds room/bedroom count
+      var roomsDetailHidden = document.getElementById('roomsDetailHidden');
+      if (adultsHidden) adultsHidden.value = totalAdults;
+      if (childrenHidden) childrenHidden.value = totalChildren;
+      if (roomsCountHidden) roomsCountHidden.value = rooms.length;
+      if (roomsDetailHidden) roomsDetailHidden.value = JSON.stringify(rooms);
+
+      if (passengerTriggerText) {
+        passengerTriggerText.textContent = rooms.length + ' ' + roomNoun + (rooms.length === 1 ? '' : 's') + ', ' + totalGuests + ' Guest' + (totalGuests === 1 ? '' : 's');
+      }
+    }
+
+    renderRooms();
+
+    if (addRoomBtn) {
+      addRoomBtn.addEventListener('click', function () {
+        if (rooms.length >= maxRooms) return;
+        rooms.push({ adults: 1, children: 0 });
+        renderRooms();
+      });
+    }
+
+    roomsList.addEventListener('click', function (e) {
+      var removeBtn = e.target.closest('[data-action="remove-room"]');
+      if (removeBtn) {
+        var idx = parseInt(removeBtn.closest('.hsf-room-card').getAttribute('data-room-index'), 10);
+        if (rooms.length > 1) rooms.splice(idx, 1);
+        renderRooms();
+        return;
+      }
+
+      var stepBtn = e.target.closest('.pax-btn');
+      if (!stepBtn) return;
+      var card = stepBtn.closest('.hsf-room-card');
+      var idx2 = parseInt(card.getAttribute('data-room-index'), 10);
+      var stepper = stepBtn.closest('.pax-stepper');
+      var key = stepper.getAttribute('data-room-pax');
+      var delta = stepBtn.getAttribute('data-action') === 'inc' ? 1 : -1;
+      var room = rooms[idx2];
+      var nextVal = room[key] + delta;
+      var otherKey = key === 'adults' ? 'children' : 'adults';
+      var floor = key === 'adults' ? 1 : 0;
+
+      if (nextVal < floor) return; // respect the minimum (1 adult, 0 children)
+      if (nextVal + room[otherKey] > MAX_PER_ROOM) return; // respect the 4-guests-per-room cap
+
+      room[key] = nextVal;
+      renderRooms();
+    });
+
+    if (paxApplyBtn) {
+      paxApplyBtn.addEventListener('click', function () {
+        updateRoomsSummary();
+        closePassengerPopup();
+      });
+    }
+
+    document.addEventListener('click', function (e) {
+      if (!passengerPopup.hidden && !passengerPopup.contains(e.target) && e.target !== passengerTrigger && !passengerTrigger.contains(e.target)) {
+        closePassengerPopup();
+      }
+    });
+  }
+
+  /* ------------------------------------------------------------------
+     7. FORM VALIDATION (Requirement #18)
+     Currently implemented for the Hotel / Villa layout (detected via
+     the checkin_date/checkout_date field names both pages share).
+     Shows/hides the shared #formErrorBox above the Search button and
+     blocks submission until every rule passes.
+     ------------------------------------------------------------------ */
+  var formErrorBox = document.getElementById('formErrorBox');
+  var formErrorText = document.getElementById('formErrorText');
+
+  function showFormError(message) {
+    if (!formErrorBox || !formErrorText) { window.alert(message); return; }
+    formErrorText.textContent = message;
+    formErrorBox.hidden = false;
+  }
+
+  function clearFormError() {
+    if (formErrorBox) formErrorBox.hidden = true;
+  }
+
+  function validateHotelVillaForm() {
+    var destinationInput = document.getElementById('originInput');
+    if (!destinationInput || !destinationInput.value.trim()) {
+      showFormError('Please select a destination.');
+      if (destinationInput) destinationInput.focus();
+      return false;
+    }
+    if (!departHiddenInput || !departHiddenInput.value) {
+      showFormError('Please select a check-in date.');
+      if (departTrigger) departTrigger.focus();
+      return false;
+    }
+    if (!returnHiddenInput || !returnHiddenInput.value) {
+      showFormError('Please select a check-out date.');
+      if (returnTrigger) returnTrigger.focus();
+      return false;
+    }
+    if (new Date(returnHiddenInput.value) <= new Date(departHiddenInput.value)) {
+      showFormError('Check-out date must be after the check-in date.');
+      return false;
+    }
+    if (roomsList) {
+      var roomsDetailHidden = document.getElementById('roomsDetailHidden');
+      var savedRooms = roomsDetailHidden && roomsDetailHidden.value ? JSON.parse(roomsDetailHidden.value) : [];
+      var overLimit = savedRooms.some(function (r) { return (r.adults + r.children) > MAX_PER_ROOM; });
+      if (overLimit) {
+        showFormError('Maximum ' + MAX_PER_ROOM + ' guests are allowed per room.');
+        return false;
+      }
+    }
+    clearFormError();
+    return true;
+  }
+
+  // This page uses the Hotel/Villa field set when it has named
+  // checkin_date/checkout_date inputs — that's the only reliable,
+  // markup-based signal shared by hotels.html and village.html.
+  var isHotelVillaForm = !!(form.querySelector('[name="checkin_date"]') && form.querySelector('[name="checkout_date"]'));
+
   var submitBtn = document.getElementById('heroSearchSubmit');
 
   form.addEventListener('submit', function (e) {
     e.preventDefault();
+
+    if (isHotelVillaForm && !validateHotelVillaForm()) {
+      return; // stop here — error box is already showing the reason
+    }
+
     if (!submitBtn) return;
     var label = submitBtn.querySelector('.btn-label');
     var loading = submitBtn.querySelector('.btn-loading');
