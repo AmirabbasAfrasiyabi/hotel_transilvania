@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+{% load blog_tags %}
 <section class="banner-area relative blog-home-banner" id="home">
 <img class="blog-hero-img" src="{% static 'img/blog/blog-home-banner.jpg' %}" alt="">
 <div class="overlay overlay-bg"></div>
@@ -138,8 +139,8 @@
 <div class="col-lg-4 sidebar-widgets">
 <div class="widget-wrap">
 {% include 'blog/blog_search.html' %}
-{% include 'blog/blog_popular_post.html' %}
-{% include 'blog/blog_post_category.html' %}
+{% latest_posts %}
+{% post_category %}
 {% include 'blog/blog_tags.html' %}
 </div>
 </div>

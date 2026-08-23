@@ -1,7 +1,7 @@
 from django import template
 
 from blog.models import Post
-
+from blog.models import Category
 register = template.Library()
 
 
@@ -19,7 +19,21 @@ def total_posts():
 def snippets(value,args=20):
     return value[:args]
 
-@register.inclusion_tag('PopularPosts.html')
-def popular_posts():
-    posts = Post.objects.filter(status=1).order_by('published_date')[:2]
+@register.inclusion_tag('blog/blog_popular_post.html')
+def latest_posts(args=3):
+    posts = Post.objects.filter(status=1).order_by('published_date')[:args]
     return {'posts': posts}
+
+
+@register.inclusion_tag('blog/blog_post_category.html')
+
+def post_category():
+    posts = Post.objects.filter(status=1)
+    categories = Category.objects.all()
+    cat_dict = {}
+
+    for name in categories:
+        cat_dict[name] = Post.objects.filter(category=name).count()
+
+    return {'categories': cat_dict}
+
