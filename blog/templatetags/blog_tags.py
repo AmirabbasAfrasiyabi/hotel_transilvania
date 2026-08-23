@@ -21,5 +21,5 @@ def snippets(value,args=20):
 
 @register.inclusion_tag('PopularPosts.html')
 def popular_posts():
-    posts = Post.objects.filter(status=1).order_by('published_date')[:20]
+    posts = Post.objects.filter(status=1).order_by('published_date')[:2]
     return {'posts': posts}
