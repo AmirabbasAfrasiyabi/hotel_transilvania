@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
-from django.db.models import F
+from django.db.models import F, Q
 
 from blog.models import Post
 
@@ -11,8 +11,8 @@ def blog_view(request,**kwargs):
     )
     if kwargs.get('cat_name'):
         posts = posts.filter(
-            category__name=kwargs['cat_name'],
-    )
+            category__name__iexact=kwargs['cat_name']
+        )
 
     if kwargs.get('author_username'):
         posts = posts.filter(
@@ -61,6 +61,23 @@ def blog_category(request, cat_name):
         category__name=cat_name,
         published_date__lte=timezone.now()
     )
+
+    context = {'posts': posts}
+    return render(request, 'blog/blog-home.html', context)
+
+def blog_search(request):
+    posts = Post.objects.filter(
+        status=1,
+        published_date__lte=timezone.now()
+    )
+
+    search = request.GET.get('search')
+
+    if search:
+        posts = posts.filter(
+            Q(title__icontains=search) |
+            Q(content__icontains=search)
+        )
 
     context = {'posts': posts}
     return render(request, 'blog/blog-home.html', context)
