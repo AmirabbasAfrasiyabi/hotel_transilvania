@@ -4,15 +4,20 @@ from django.db.models import F
 
 from blog.models import Post
 
-def blog_view(request,cat_name=None):
+def blog_view(request,**kwargs):
     posts = Post.objects.filter(
         status=1,
         published_date__lte=timezone.now()
     )
-    if cat_name:
+    if kwargs.get('cat_name'):
         posts = posts.filter(
-            category__name=cat_name
+            category__name=kwargs['cat_name'],
     )
+
+    if kwargs.get('author_username'):
+        posts = posts.filter(
+            author__username=kwargs['author_username']
+        )
 
     context = {'posts': posts}
     return render(request, 'blog/blog-home.html', context)
