@@ -1,3 +1,5 @@
+from datetime import timezone
+
 from django import template
 
 from blog.models import Post
@@ -37,3 +39,11 @@ def post_category():
 
     return {'categories': cat_dict}
 
+@register.inclusion_tag('blog/index_tags/index_latest_post.html')
+def home_latest_posts(count=6):
+    posts = Post.objects.filter(
+        status=1,
+
+    ).order_by('published_date')[:count]
+
+    return {'posts': posts}
