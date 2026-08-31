@@ -40,31 +40,38 @@
         </a>
       </nav>
 
-        <form class="hero-search-form" id="heroSearchForm" autocomplete="off">
+          <form class="hero-search-form" id="heroSearchForm" autocomplete="off" data-location-scope="villa" data-location-unit="City" data-hide-history="true">
 
-        <div class="hsf-locations" style="grid-template-columns: 1fr;">
-          <div class="hsf-field hsf-select hsf-select--field" data-target="villaTypeHidden">
-            <span class="hsf-label">Villa type</span>
-            <button type="button" class="hsf-select-trigger hsf-select-trigger--field" aria-expanded="false" aria-haspopup="listbox">
-              <span class="hsf-select-label">Coastal</span>
-              <i class="fa-solid fa-chevron-down hsf-select-chevron" aria-hidden="true"></i>
+        <div class="hsf-search-row hsf-search-row--destination">
+          <div class="hsf-field" id="originField">
+            <span class="hsf-label">Destination</span>
+            <input type="text" class="hsf-input" id="originInput" name="destination" placeholder="City, region or villa name" aria-expanded="false" aria-controls="originSuggestions">
+            <div class="hsf-suggestions" id="originSuggestions" role="listbox" hidden></div>
+          </div>
+
+          <div class="hsf-field hsf-passenger-field" id="passengerField">
+            <span class="hsf-label">Guests &amp; Rooms</span>
+            <button type="button" class="hsf-date-trigger" id="passengerTrigger" aria-expanded="false" aria-controls="passengerPopup">
+              <i class="fa-solid fa-user-group" aria-hidden="true"></i>
+              <span id="passengerTriggerText">1 Room, 2 Guests</span>
             </button>
-            <div class="hsf-select-popup" role="listbox" hidden>
-              <button type="button" class="hsf-select-option active" data-value="coastal" role="option">Coastal</button>
-              <button type="button" class="hsf-select-option" data-value="forest" role="option">Forest</button>
-              <button type="button" class="hsf-select-option" data-value="mountain" role="option">Mountain / Cold climate</button>
-              <button type="button" class="hsf-select-option" data-value="desert" role="option">Desert / Hot climate</button>
-              <button type="button" class="hsf-select-option" data-value="traditional" role="option">Traditional</button>
-              <button type="button" class="hsf-select-option" data-value="lakeside" role="option">Lakeside</button>
-              <button type="button" class="hsf-select-option" data-value="countryside" role="option">Countryside / Farm</button>
-              <button type="button" class="hsf-select-option" data-value="modern" role="option">Modern</button>
+
+            <!-- Per-room guest manager: each room has its own Adults/Children
+                 steppers, capped at 4 guests/room (see hero-search.js). -->
+            <div class="hsf-passenger-popup hsf-rooms-popup" id="passengerPopup" hidden>
+              <div class="hsf-rooms-list" id="roomsList" data-max-rooms="8"></div>
+
+              <button type="button" class="hsf-add-room-btn" id="addRoomBtn">
+                <i class="fa-solid fa-plus" aria-hidden="true"></i> Add another room
+              </button>
+
+              <div class="pax-divider"></div>
+
+              <button type="button" class="pax-apply-btn" id="paxApplyBtn">Apply</button>
             </div>
           </div>
-        </div>
-        <input type="hidden" name="villa_type" id="villaTypeHidden" value="coastal">
 
-        <div class="hsf-secondary-row">
-          <div class="hsf-date-group">
+          <div class="hsf-date-group" id="dateField" data-date-context="stay">
             <div class="hsf-field hsf-date-field" id="departField">
               <span class="hsf-label">Check-in</span>
               <button type="button" class="hsf-date-trigger" id="departTrigger">
@@ -89,28 +96,6 @@
               </div>
             </div>
           </div>
-
-          <div class="hsf-field hsf-passenger-field" id="passengerField">
-            <span class="hsf-label">Guests &amp; Rooms</span>
-            <button type="button" class="hsf-date-trigger" id="passengerTrigger" aria-expanded="false" aria-controls="passengerPopup">
-              <i class="fa-solid fa-user-group" aria-hidden="true"></i>
-              <span id="passengerTriggerText">1 Room, 2 Guests</span>
-            </button>
-
-            <!-- Per-room guest manager: each room has its own Adults/Children
-                 steppers, capped at 4 guests/room (see hero-search.js). -->
-            <div class="hsf-passenger-popup hsf-rooms-popup" id="passengerPopup" hidden>
-              <div class="hsf-rooms-list" id="roomsList" data-max-rooms="8"></div>
-
-              <button type="button" class="hsf-add-room-btn" id="addRoomBtn">
-                <i class="fa-solid fa-plus" aria-hidden="true"></i> Add another room
-              </button>
-
-              <div class="pax-divider"></div>
-
-              <button type="button" class="pax-apply-btn" id="paxApplyBtn">Apply</button>
-            </div>
-          </div>
         </div>
 
         <!-- Central validation error box (Requirement #18) -->
@@ -128,24 +113,36 @@
         <input type="hidden" name="children" id="childrenHidden" value="0">
         <input type="hidden" name="bedrooms" id="infantsHidden" value="1">
         <input type="hidden" name="rooms_detail" id="roomsDetailHidden" value="">
+        <input type="hidden" name="villa_type" id="villaTypeHidden" value="coastal">
 
         <div class="hsf-actions-row">
           <button type="submit" class="hero-search-submit" id="heroSearchSubmit">
-            <span class="btn-label">Search villas</span>
+            <span class="btn-label">Search</span>
             <span class="btn-loading" hidden>
               <i class="fa-solid fa-circle-notch fa-spin" aria-hidden="true"></i> Searching…
             </span>
           </button>
+
+          <div class="hsf-toolbar">
+            <div class="hsf-select" data-target="villaTypeHidden">
+              <button type="button" class="hsf-select-trigger" aria-expanded="false" aria-haspopup="listbox">
+                <i class="fa-solid fa-chevron-down hsf-select-chevron" aria-hidden="true"></i>
+                <span class="hsf-select-label">Coastal</span>
+              </button>
+              <div class="hsf-select-popup" role="listbox" hidden>
+                <button type="button" class="hsf-select-option active" data-value="coastal" role="option">Coastal</button>
+                <button type="button" class="hsf-select-option" data-value="forest" role="option">Forest</button>
+                <button type="button" class="hsf-select-option" data-value="mountain" role="option">Mountain / Cold climate</button>
+                <button type="button" class="hsf-select-option" data-value="desert" role="option">Desert / Hot climate</button>
+                <button type="button" class="hsf-select-option" data-value="traditional" role="option">Traditional</button>
+                <button type="button" class="hsf-select-option" data-value="lakeside" role="option">Lakeside</button>
+                <button type="button" class="hsf-select-option" data-value="countryside" role="option">Countryside / Farm</button>
+                <button type="button" class="hsf-select-option" data-value="modern" role="option">Modern</button>
+              </div>
+            </div>
+          </div>
         </div>
       </form>
-    </div>
-
-    <div class="hero-ai-strip">
-      <div class="hero-ai-copy">
-        <span class="hero-ai-badge">✨ AI Mode</span>
-        <p>Not sure where to go yet? Tell our AI planner your budget and vibe — it'll build the trip.</p>
-      </div>
-      <a href="#" class="hero-ai-btn">Try AI Travel Planner <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
     </div>
 
   </div>

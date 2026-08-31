@@ -40,26 +40,38 @@
           <i class="fa-solid fa-suitcase-rolling" aria-hidden="true"></i><span>Tours</span>
         </a>
       </nav>
+        <form class="hero-search-form" id="heroSearchForm" autocomplete="off" data-location-scope="mixed" data-location-unit="City" data-hide-history="true">
 
- <form class="hero-search-form" id="heroSearchForm" autocomplete="off" data-location-scope="mixed" data-location-unit="City" data-hide-history="true">
-
-        <!-- FIX (row-1 alignment): empty spacer, same height as the
-             toolbar on Flights/Train/Bus, so the Destination field
-             below starts at the same Y position on every tab. Hotels
-             has no Trip type / Cabin class pills, so this stays empty
-             on purpose — it is NOT an extra form row, just spacing. -->
-        <div class="hsf-toolbar" aria-hidden="true"></div>
-
-        <div class="hsf-locations" style="grid-template-columns: 1fr;">
+        <div class="hsf-search-row hsf-search-row--destination">
           <div class="hsf-field" id="originField">
             <span class="hsf-label">Destination</span>
             <input type="text" class="hsf-input" id="originInput" name="destination" placeholder="City, neighborhood or hotel name" aria-expanded="false" aria-controls="originSuggestions">
             <div class="hsf-suggestions" id="originSuggestions" role="listbox" hidden></div>
           </div>
-        </div>
 
-        <div class="hsf-secondary-row">
-          <div class="hsf-date-group">
+          <div class="hsf-field hsf-passenger-field" id="passengerField">
+            <span class="hsf-label">Guests &amp; Rooms</span>
+            <button type="button" class="hsf-date-trigger" id="passengerTrigger" aria-expanded="false" aria-controls="passengerPopup">
+              <i class="fa-solid fa-user-group" aria-hidden="true"></i>
+              <span id="passengerTriggerText">1 Room, 2 Guests</span>
+            </button>
+
+            <!-- Per-room guest manager: each room has its own Adults/Children
+                 steppers, capped at 4 guests/room (see hero-search.js). -->
+            <div class="hsf-passenger-popup hsf-rooms-popup" id="passengerPopup" hidden>
+              <div class="hsf-rooms-list" id="roomsList" data-max-rooms="6"></div>
+
+              <button type="button" class="hsf-add-room-btn" id="addRoomBtn">
+                <i class="fa-solid fa-plus" aria-hidden="true"></i> Add another room
+              </button>
+
+              <div class="pax-divider"></div>
+
+              <button type="button" class="pax-apply-btn" id="paxApplyBtn">Apply</button>
+            </div>
+          </div>
+
+          <div class="hsf-date-group" id="dateField" data-date-context="stay">
             <div class="hsf-field hsf-date-field" id="departField">
               <span class="hsf-label">Check-in</span>
               <button type="button" class="hsf-date-trigger" id="departTrigger">
@@ -84,28 +96,6 @@
               </div>
             </div>
           </div>
-
-          <div class="hsf-field hsf-passenger-field" id="passengerField">
-            <span class="hsf-label">Guests &amp; Rooms</span>
-            <button type="button" class="hsf-date-trigger" id="passengerTrigger" aria-expanded="false" aria-controls="passengerPopup">
-              <i class="fa-solid fa-user-group" aria-hidden="true"></i>
-              <span id="passengerTriggerText">1 Room, 2 Guests</span>
-            </button>
-
-            <!-- Per-room guest manager: each room has its own Adults/Children
-                 steppers, capped at 4 guests/room (see hero-search.js). -->
-            <div class="hsf-passenger-popup hsf-rooms-popup" id="passengerPopup" hidden>
-              <div class="hsf-rooms-list" id="roomsList" data-max-rooms="6"></div>
-
-              <button type="button" class="hsf-add-room-btn" id="addRoomBtn">
-                <i class="fa-solid fa-plus" aria-hidden="true"></i> Add another room
-              </button>
-
-              <div class="pax-divider"></div>
-
-              <button type="button" class="pax-apply-btn" id="paxApplyBtn">Apply</button>
-            </div>
-          </div>
         </div>
 
         <!-- Central validation error box (Requirement #18) -->
@@ -126,21 +116,13 @@
 
         <div class="hsf-actions-row">
           <button type="submit" class="hero-search-submit" id="heroSearchSubmit">
-            <span class="btn-label">Search hotels</span>
+            <span class="btn-label">Search</span>
             <span class="btn-loading" hidden>
               <i class="fa-solid fa-circle-notch fa-spin" aria-hidden="true"></i> Searching…
             </span>
           </button>
         </div>
       </form>
-    </div>
-
-    <div class="hero-ai-strip">
-      <div class="hero-ai-copy">
-        <span class="hero-ai-badge">✨ AI Mode</span>
-        <p>Not sure where to go yet? Tell our AI planner your budget and vibe — it'll build the trip.</p>
-      </div>
-      <a href="#" class="hero-ai-btn">Try AI Travel Planner <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
     </div>
 
   </div>

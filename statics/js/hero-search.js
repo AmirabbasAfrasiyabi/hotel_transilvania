@@ -28,6 +28,8 @@
   var INTL_CITIES = [
     { city: 'Dubai', region: 'United Arab Emirates' },
     { city: 'Istanbul', region: 'Türkiye' },
+    { city: 'Antalya', region: 'Türkiye' },
+    { city: 'Antalya', region: 'Türkiye' },
     { city: 'Paris', region: 'France' },
     { city: 'London', region: 'United Kingdom' },
     { city: 'Tokyo', region: 'Japan' },
@@ -40,6 +42,29 @@
     { city: 'Vienna', region: 'Austria' },
     { city: 'Cairo', region: 'Egypt' },
     { city: 'Kuala Lumpur', region: 'Malaysia' }
+  ];
+
+  // Requirement (Hotel): both Iran AND international destinations, so
+  // Hotel search gets the union of both lists.
+  var MIXED_CITIES = IRAN_CITIES.concat(INTL_CITIES);
+
+  // Requirement (Villa): Iran ONLY, and specifically resort/vacation
+  // towns rather than the airport-oriented city list used by
+  // Flight/Bus/Train — kept as its own list so it never mixes with the
+  // Hotel destination system.
+  var IRAN_VILLA_DESTINATIONS = [
+    { city: 'Tehran', region: 'Tehran Province' },
+    { city: 'Ramsar', region: 'Mazandaran' },
+    { city: 'Chalus', region: 'Mazandaran' },
+    { city: 'Kelardasht', region: 'Mazandaran' },
+    { city: 'Sari', region: 'Mazandaran' },
+    { city: 'Lahijan', region: 'Gilan' },
+    { city: 'Rasht', region: 'Gilan' },
+    { city: 'Masal', region: 'Gilan' },
+    { city: 'Kish Island', region: 'Hormozgan' },
+    { city: 'Qeshm', region: 'Hormozgan' },
+    { city: 'Shiraz', region: 'Fars Province' },
+    { city: 'Isfahan', region: 'Isfahan Province' }
   ];
 
   var IRAN_HISTORY = [
@@ -55,7 +80,10 @@
   ];
 
   var scope = form.getAttribute('data-location-scope') || 'international';
-  var LOCATIONS = scope === 'domestic' ? IRAN_CITIES : INTL_CITIES;
+  var LOCATIONS = scope === 'domestic' ? IRAN_CITIES
+    : scope === 'villa' ? IRAN_VILLA_DESTINATIONS
+    : scope === 'mixed' ? MIXED_CITIES
+    : INTL_CITIES;
   var HISTORY = scope === 'domestic' ? IRAN_HISTORY : INTL_HISTORY;
   var LOCATION_UNIT = form.getAttribute('data-location-unit') || 'City';
 
@@ -270,6 +298,14 @@
   var departHiddenInput = document.getElementById('departDateHidden');
   var returnHiddenInput = document.getElementById('returnDateHidden');
 
+  // Requirement (merged row): wording adapts to context via
+  // data-date-context="stay" (Hotels/Villas) vs the default "flight"
+  // (Flight/Bus/Train) wording, without needing separate code paths.
+  var dateContext = dateField ? (dateField.getAttribute('data-date-context') || 'flight') : 'flight';
+  var DATE_WORDS = dateContext === 'stay'
+    ? { start: 'check-in', end: 'check-out', startCap: 'Check-in', endCap: 'Check-out', singlePrefix: 'Check-in ' }
+    : { start: 'departure', end: 'return', startCap: 'Departure', endCap: 'Return', singlePrefix: 'Departing ' };
+
   // Which end of the range the next calendar click should set. Only
   // meaningful in DUAL trigger mode.
   var pendingField = 'start';
@@ -359,18 +395,18 @@
     if (calRangeHint) {
       if (isDualTriggerMode) {
         if (!rangeStart) {
-          calRangeHint.textContent = 'Select a check-in date';
+          calRangeHint.textContent = 'Select a ' + DATE_WORDS.start + ' date';
         } else if (!rangeEnd) {
-          calRangeHint.textContent = 'Check-in ' + formatShort(rangeStart) + ' — now pick a check-out date';
+          calRangeHint.textContent = DATE_WORDS.startCap + ' ' + formatShort(rangeStart) + ' — now pick a ' + DATE_WORDS.end + ' date';
         } else {
           calRangeHint.textContent = formatShort(rangeStart) + ' \u2192 ' + formatShort(rangeEnd);
         }
       } else if (!isRangeMode) {
-        calRangeHint.textContent = rangeStart ? 'Departing ' + formatShort(rangeStart) : 'Select your travel date';
+        calRangeHint.textContent = rangeStart ? DATE_WORDS.startCap + 'd ' + formatShort(rangeStart) : 'Select your travel date';
       } else if (!rangeStart) {
-        calRangeHint.textContent = 'Select a departure date';
+        calRangeHint.textContent = 'Select a ' + DATE_WORDS.start + ' date';
       } else if (!rangeEnd) {
-        calRangeHint.textContent = 'Departing ' + formatShort(rangeStart) + ' — now pick a return date';
+        calRangeHint.textContent = DATE_WORDS.startCap + ' ' + formatShort(rangeStart) + ' — now pick a ' + DATE_WORDS.end + ' date';
       } else {
         calRangeHint.textContent = formatShort(rangeStart) + ' \u2192 ' + formatShort(rangeEnd);
       }
@@ -382,8 +418,40 @@
     if (!calendarPopup) return;
     calendarPopup.hidden = false;
     calendarPopup.style.display = 'block'; // belt-and-suspenders vs any conflicting global CSS
+    // Reset any previous flip/clamp before recalculating.
+    calendarPopup.style.left = '';
+    calendarPopup.style.right = '';
     renderCalendar();
+    keepCalendarInViewport();
   }
+
+  // Requirement #6: the calendar must stay fully inside the visible
+  // viewport (and, in practice, inside the search card) instead of
+  // spilling off the right edge — which is what happens by default once
+  // the date fields sit in the rightmost column of the merged row.
+  function keepCalendarInViewport() {
+    if (!calendarPopup || calendarPopup.hidden) return;
+    requestAnimationFrame(function () {
+      var viewportWidth = document.documentElement.clientWidth;
+      var margin = 8;
+      var rect = calendarPopup.getBoundingClientRect();
+
+      if (rect.right > viewportWidth - margin) {
+        calendarPopup.style.left = 'auto';
+        calendarPopup.style.right = '0';
+      }
+
+      var rectAfterFlip = calendarPopup.getBoundingClientRect();
+      if (rectAfterFlip.left < margin) {
+        // Still doesn't fit either side (very narrow screen) — pin it to
+        // a fixed inset from the left instead of letting it run off.
+        calendarPopup.style.left = margin + 'px';
+        calendarPopup.style.right = 'auto';
+      }
+    });
+  }
+
+  window.addEventListener('resize', keepCalendarInViewport);
 
   function closeCalendar() {
     if (!calendarPopup) return;
@@ -395,7 +463,7 @@
     isRangeMode = rangeMode;
     rangeStart = null;
     rangeEnd = null;
-    if (dateLabel) dateLabel.textContent = isRangeMode ? 'Depart — Return' : 'Departure date';
+    if (dateLabel) dateLabel.textContent = isRangeMode ? (DATE_WORDS.startCap + ' — ' + DATE_WORDS.endCap) : (DATE_WORDS.startCap + ' date');
     updateTriggerAndHidden();
   }
 
@@ -500,15 +568,38 @@
 
   // Hook the Trip type select (if present on this page) into the calendar,
   // and sync to whichever option starts active (pages can default differently).
-  // Only relevant in SINGLE trigger mode today (Train/Bus); Hotels/Villas
-  // have no trip-type toggle so isRangeMode simply stays true for them.
   var tripTypeGroup = document.getElementById('tripTypeGroup');
+  var returnFieldEl = document.getElementById('returnField');
+
+  // Requirement #7/#9: One-way hides/disables the Return field entirely;
+  // Round-trip brings it back. Clears any previously chosen return date.
+  function setReturnFieldVisible(showReturn) {
+    if (returnFieldEl) returnFieldEl.style.display = showReturn ? '' : 'none';
+    if (!showReturn) {
+      rangeEnd = null;
+      pendingField = 'start';
+      if (returnHiddenInput) returnHiddenInput.value = '';
+      updateTriggerAndHidden();
+    }
+  }
+
   if (tripTypeGroup && dateTrigger) {
+    // SINGLE trigger mode (kept for backward compatibility — no page
+    // currently uses it, since Bus/Train were upgraded to dual fields).
     var initialOption = tripTypeGroup.querySelector('.hsf-select-option.active');
     if (initialOption) setRangeMode(initialOption.getAttribute('data-value') !== 'oneway');
 
     tripTypeGroup.addEventListener('hsfselectchange', function (e) {
       setRangeMode(e.detail.value !== 'oneway');
+    });
+  }
+
+  if (tripTypeGroup && isDualTriggerMode) {
+    var initialOptionDual = tripTypeGroup.querySelector('.hsf-select-option.active');
+    if (initialOptionDual) setReturnFieldVisible(initialOptionDual.getAttribute('data-value') !== 'oneway');
+
+    tripTypeGroup.addEventListener('hsfselectchange', function (e) {
+      setReturnFieldVisible(e.detail.value !== 'oneway');
     });
   }
 
@@ -768,12 +859,12 @@
     }
     if (!departHiddenInput || !departHiddenInput.value) {
       showFormError('Please select a check-in date.');
-      if (departTrigger) departTrigger.focus();
+      if (departTrigger) departTrigger.focus(); else if (dateTrigger) dateTrigger.focus();
       return false;
     }
     if (!returnHiddenInput || !returnHiddenInput.value) {
       showFormError('Please select a check-out date.');
-      if (returnTrigger) returnTrigger.focus();
+      if (returnTrigger) returnTrigger.focus(); else if (dateTrigger) dateTrigger.focus();
       return false;
     }
     if (new Date(returnHiddenInput.value) <= new Date(departHiddenInput.value)) {
@@ -793,10 +884,60 @@
     return true;
   }
 
+  // Validation for Flight (domestic/international), Bus and Train — all
+  // share the Origin/Destination + Departure/Return field set.
+  function validateOriginDestinationForm() {
+    var originInputEl = document.getElementById('originInput');
+    var destInputEl = document.getElementById('destInput');
+
+    if (!originInputEl || !originInputEl.value.trim()) {
+      showFormError('Please select an origin.');
+      if (originInputEl) originInputEl.focus();
+      return false;
+    }
+    if (!destInputEl || !destInputEl.value.trim()) {
+      showFormError('Please select a destination.');
+      if (destInputEl) destInputEl.focus();
+      return false;
+    }
+    if (originInputEl.value.trim().toLowerCase() === destInputEl.value.trim().toLowerCase()) {
+      showFormError('Origin and destination cannot be the same.');
+      return false;
+    }
+    if (!departHiddenInput || !departHiddenInput.value) {
+      showFormError('Please select a departure date.');
+      if (departTrigger) departTrigger.focus(); else if (dateTrigger) dateTrigger.focus();
+      return false;
+    }
+
+    // Return date is only required while the Return field is actually
+    // visible — i.e. Trip type = Round-trip. One-way hides #returnField
+    // entirely (see setReturnFieldVisible), so its own display state is
+    // the source of truth here.
+    var returnRequired = !returnFieldEl || returnFieldEl.style.display !== 'none';
+    if (returnRequired) {
+      if (!returnHiddenInput || !returnHiddenInput.value) {
+        showFormError('Please select a return date.');
+        if (returnTrigger) returnTrigger.focus(); else if (dateTrigger) dateTrigger.focus();
+        return false;
+      }
+      if (new Date(returnHiddenInput.value) <= new Date(departHiddenInput.value)) {
+        showFormError('Return date must be after the departure date.');
+        return false;
+      }
+    }
+
+    clearFormError();
+    return true;
+  }
+
   // This page uses the Hotel/Villa field set when it has named
   // checkin_date/checkout_date inputs — that's the only reliable,
   // markup-based signal shared by hotels.html and village.html.
   var isHotelVillaForm = !!(form.querySelector('[name="checkin_date"]') && form.querySelector('[name="checkout_date"]'));
+
+  // Flight/Bus/Train all share Origin + Destination named fields.
+  var isOriginDestinationForm = !!(form.querySelector('[name="origin"]') && form.querySelector('[name="destination"]'));
 
   var submitBtn = document.getElementById('heroSearchSubmit');
 
@@ -804,6 +945,9 @@
     e.preventDefault();
 
     if (isHotelVillaForm && !validateHotelVillaForm()) {
+      return; // stop here — error box is already showing the reason
+    }
+    if (isOriginDestinationForm && !validateOriginDestinationForm()) {
       return; // stop here — error box is already showing the reason
     }
 

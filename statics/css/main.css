@@ -1538,15 +1538,24 @@ b, sup, sub, u, del {
 
   .main-menu .row {
     flex-wrap: nowrap;
+    /* FIX (Navbar icons on the left): was space-between, which let the
+       nav-menu float wherever the 3-item math landed it. flex-start pins
+       it snugly after the logo; the auto margin below pushes the
+       Sign Up group to the far right with a guaranteed, standard gap
+       instead of letting it butt up against the menu. */
+    justify-content: flex-start;
   }
 
   .main-menu #nav-menu-container {
     flex-shrink: 0;
     padding-right: 0;
+    margin-left: 32px;
   }
 
   .main-menu .header-account-actions {
     flex-shrink: 0;
+    margin-left: auto; /* standard, guaranteed gap from the nav-menu icons */
+    padding-left: 24px;
   }
 }
 
@@ -3210,7 +3219,6 @@ body.mobile-nav-active #mobile-nav-toggle {
 
 .widget-wrap .popular-post-widget .popular-post-list .thumb img {
   width: 100%;
-  max-width: 100px;
 }
 
 .widget-wrap .popular-post-widget .single-post-list {
@@ -6378,6 +6386,51 @@ body.mobile-nav-active #mobile-nav-toggle {
   margin-bottom: 16px;
 }
 
+/* ==========================================================================
+   >>> START: HERO SEARCH — MERGED ROW (Origin/Swap/Destination/Travelers/Date) <<<
+   Replaces the old two-row layout (locations row + dates/travelers row)
+   with a single row, per the latest request. Two variants:
+     .hsf-search-row--route        -> Flight / Bus / Train (has Origin+Swap)
+     .hsf-search-row--destination  -> Hotel / Villa (Destination only)
+   ========================================================================== */
+.hsf-search-row {
+  display: grid;
+  align-items: end;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.hsf-search-row--route {
+  grid-template-columns: 1fr 44px 1fr 1fr 1.7fr;
+}
+
+.hsf-search-row--destination {
+  grid-template-columns: 1.1fr 1fr 1.5fr;
+}
+
+@media (max-width: 991px) {
+  .hsf-search-row--route {
+    grid-template-columns: 1fr 44px 1fr;
+  }
+  .hsf-search-row--route .hsf-passenger-field,
+  .hsf-search-row--route .hsf-date-field {
+    grid-column: span 1;
+  }
+}
+
+@media (max-width: 767px) {
+  .hsf-search-row {
+    grid-template-columns: 1fr !important;
+  }
+  .hsf-search-row .hsf-reverse-btn {
+    justify-self: center;
+    transform: rotate(90deg);
+  }
+}
+/* ==========================================================================
+   >>> END: HERO SEARCH — MERGED ROW <<<
+   ========================================================================== */
+
 .hsf-field {
   position: relative;
 }
@@ -6385,6 +6438,8 @@ body.mobile-nav-active #mobile-nav-toggle {
 .hsf-input,
 .hsf-date-trigger {
   width: 100%;
+  box-sizing: border-box;
+  min-height: 50px;
   background: #fff;
   border: 1px solid rgba(44, 42, 40, 0.15);
   border-radius: 10px;
@@ -6529,6 +6584,8 @@ body.mobile-nav-active #mobile-nav-toggle {
   padding: 20px;
   z-index: 70;
   width: min(620px, 90vw);
+  max-width: calc(100vw - 16px);
+  box-sizing: border-box;
   animation: hsfPopIn 0.18s ease both;
 }
 
@@ -6768,6 +6825,8 @@ body.mobile-nav-active #mobile-nav-toggle {
 /* ---------- Submit button ---------- */
 .hero-search-submit {
   width: 100%;
+  box-sizing: border-box;
+  min-height: 50px;
   background: var(--tvl-coral);
   color: #fff;
   border: none;
@@ -6815,6 +6874,8 @@ body.mobile-nav-active #mobile-nav-toggle {
 .hsf-select-trigger {
   display: inline-flex;
   align-items: center;
+  box-sizing: border-box;
+  min-height: 42px;
   gap: 9px;
   background: #fff;
   border: 1px solid rgba(44, 42, 40, 0.16);
@@ -7169,11 +7230,11 @@ body.mobile-nav-active #mobile-nav-toggle {
   top: calc(100% + 6px);
 }
 
-/* ---------- Row 3: Search button on the left, not full width ---------- */
+/* ---------- Row 3: Search button on the left, extra options on the right ---------- */
 .hsf-actions-row {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
   flex-wrap: wrap;
   gap: 14px;
 }
@@ -7183,9 +7244,20 @@ body.mobile-nav-active #mobile-nav-toggle {
   min-width: 220px;
 }
 
+.hsf-actions-row .hsf-toolbar {
+  margin-bottom: 0;
+}
+
 @media (max-width: 480px) {
   .hsf-actions-row .hero-search-submit {
     width: 100%;
+  }
+  .hsf-actions-row {
+    justify-content: flex-start;
+  }
+  .hsf-actions-row .hsf-toolbar {
+    width: 100%;
+    justify-content: flex-start;
   }
 }
 

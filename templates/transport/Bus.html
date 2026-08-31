@@ -43,29 +43,12 @@
         </a>
       </nav>
 
-      <form class="hero-search-form" id="heroSearchForm" autocomplete="off" data-location-scope="domestic" data-location-unit="Terminal">
+       <form class="hero-search-form" id="heroSearchForm" autocomplete="off" data-location-scope="domestic" data-location-unit="Terminal">
 
-        <!-- Toolbar: Trip type as a pill dropdown (top-right, scrollable
-             option list) — new addition, Bus previously had no category
-             toggle at all. -->
-        <div class="hsf-toolbar">
-          <div class="hsf-select" id="tripTypeGroup" data-target="tripTypeHidden">
-            <button type="button" class="hsf-select-trigger" aria-expanded="false" aria-haspopup="listbox">
-              <i class="fa-solid fa-chevron-down hsf-select-chevron" aria-hidden="true"></i>
-              <span class="hsf-select-label">One-way</span>
-            </button>
-            <div class="hsf-select-popup" role="listbox" hidden>
-              <button type="button" class="hsf-select-option active" data-value="oneway" role="option">One-way</button>
-              <button type="button" class="hsf-select-option" data-value="roundtrip" role="option">Round-trip</button>
-            </div>
-          </div>
-          <input type="hidden" name="trip_type" id="tripTypeHidden" value="oneway">
-        </div>
-
-        <div class="hsf-locations">
+        <div class="hsf-search-row hsf-search-row--route">
           <div class="hsf-field" id="originField">
             <span class="hsf-label">From</span>
-            <input type="text" class="hsf-input" id="originInput" name="origin" placeholder="Departure stop or city" aria-expanded="false" aria-controls="originSuggestions">
+            <input type="text" class="hsf-input" id="originInput" name="origin" placeholder="From" aria-expanded="false" aria-controls="originSuggestions">
             <div class="hsf-suggestions" id="originSuggestions" role="listbox" hidden></div>
           </div>
 
@@ -75,26 +58,8 @@
 
           <div class="hsf-field" id="destField">
             <span class="hsf-label">To</span>
-            <input type="text" class="hsf-input" id="destInput" name="destination" placeholder="Arrival stop or city" aria-expanded="false" aria-controls="destSuggestions">
+            <input type="text" class="hsf-input" id="destInput" name="destination" placeholder="To" aria-expanded="false" aria-controls="destSuggestions">
             <div class="hsf-suggestions" id="destSuggestions" role="listbox" hidden></div>
-          </div>
-        </div>
-
-        <div class="hsf-secondary-row">
-          <div class="hsf-field hsf-date-field" id="dateField">
-            <span class="hsf-label">Travel date</span>
-            <button type="button" class="hsf-date-trigger" id="dateTrigger">
-              <i class="fa-regular fa-calendar" aria-hidden="true"></i>
-              <span id="dateTriggerText">Select a date</span>
-            </button>
-
-            <div class="hsf-calendar-popup" id="calendarPopup" hidden>
-              <div class="cal-months" id="calMonths"></div>
-              <div class="cal-footer">
-                <span class="cal-range-hint" id="calRangeHint">Select a travel date</span>
-                <button type="button" class="cal-done-btn" id="calDoneBtn">Done</button>
-              </div>
-            </div>
           </div>
 
           <div class="hsf-field hsf-passenger-field" id="passengerField">
@@ -133,6 +98,38 @@
               <button type="button" class="pax-apply-btn" id="paxApplyBtn">Apply</button>
             </div>
           </div>
+
+          <div class="hsf-date-group" id="dateField" data-date-context="flight">
+            <div class="hsf-field hsf-date-field" id="departField">
+              <span class="hsf-label">Departure</span>
+              <button type="button" class="hsf-date-trigger" id="departTrigger">
+                <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+                <span id="departTriggerText">Select date</span>
+              </button>
+            </div>
+
+            <div class="hsf-field hsf-date-field" id="returnField">
+              <span class="hsf-label">Return</span>
+              <button type="button" class="hsf-date-trigger" id="returnTrigger">
+                <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+                <span id="returnTriggerText">Select date</span>
+              </button>
+            </div>
+
+            <div class="hsf-calendar-popup" id="calendarPopup" hidden>
+              <div class="cal-months" id="calMonths"></div>
+              <div class="cal-footer">
+                <span class="cal-range-hint" id="calRangeHint">Select a travel date</span>
+                <button type="button" class="cal-done-btn" id="calDoneBtn">Done</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Central validation error box (Requirement #18) -->
+        <div class="hsf-form-error" id="formErrorBox" hidden>
+          <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+          <span id="formErrorText"></span>
         </div>
 
         <!-- TODO(backend): wire these to the real bus search view -->
@@ -141,22 +138,31 @@
         <input type="hidden" name="adults" id="adultsHidden" value="1">
         <input type="hidden" name="children" id="childrenHidden" value="0">
         <input type="hidden" name="infants" id="infantsHidden" value="0">
+        <input type="hidden" name="trip_type" id="tripTypeHidden" value="oneway">
 
-        <button type="submit" class="hero-search-submit" id="heroSearchSubmit">
-          <span class="btn-label">Search buses</span>
-          <span class="btn-loading" hidden>
-            <i class="fa-solid fa-circle-notch fa-spin" aria-hidden="true"></i> Searching…
-          </span>
-        </button>
+        <!-- Row 3: Search button on the LEFT, category options on the RIGHT -->
+        <div class="hsf-actions-row">
+          <button type="submit" class="hero-search-submit" id="heroSearchSubmit">
+            <span class="btn-label">Search</span>
+            <span class="btn-loading" hidden>
+              <i class="fa-solid fa-circle-notch fa-spin" aria-hidden="true"></i> Searching…
+            </span>
+          </button>
+
+          <div class="hsf-toolbar">
+            <div class="hsf-select" id="tripTypeGroup" data-target="tripTypeHidden">
+              <button type="button" class="hsf-select-trigger" aria-expanded="false" aria-haspopup="listbox">
+                <i class="fa-solid fa-chevron-down hsf-select-chevron" aria-hidden="true"></i>
+                <span class="hsf-select-label">One-way</span>
+              </button>
+              <div class="hsf-select-popup" role="listbox" hidden>
+                <button type="button" class="hsf-select-option active" data-value="oneway" role="option">One-way</button>
+                <button type="button" class="hsf-select-option" data-value="roundtrip" role="option">Round-trip</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </form>
-    </div>
-
-    <div class="hero-ai-strip">
-      <div class="hero-ai-copy">
-        <span class="hero-ai-badge">✨ AI Mode</span>
-        <p>Not sure where to go yet? Tell our AI planner your budget and vibe — it'll build the trip.</p>
-      </div>
-      <a href="#" class="hero-ai-btn">Try AI Travel Planner <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
     </div>
 
   </div>

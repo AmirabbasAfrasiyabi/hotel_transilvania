@@ -6,7 +6,7 @@
   <img class="hero-search-bg" src="{% static 'img/hero-bg.jpg' %}" alt="">
   <div class="hero-search-overlay"></div>
 
-  <div class="container hero-search-inner">
+  لهف<div class="container hero-search-inner">
 
     <div class="hero-search-intro">
       <span class="contact-eyebrow">🎒 Travelista</span>
@@ -33,55 +33,31 @@
         <a href="{% url 'transport:train' %}" class="hero-tab" data-mode="train" role="tab" aria-selected="false">
           <i class="fa-solid fa-train" aria-hidden="true"></i><span>Train</span>
         </a>
-        <a href="{% url 'transport:bus' %}" class="hero-tab active" data-mode="bus" role="tab" aria-selected="true">
+        <a href="{% url 'transport:bus' %}" class="hero-tab" data-mode="bus" role="tab" aria-selected="false">
           <i class="fa-solid fa-bus" aria-hidden="true"></i><span>Bus</span>
         </a>
-        <a href="{% url 'packages:index' %}" class="hero-tab" data-mode="tour" role="tab" aria-selected="false">
+        <a href="{% url 'packages:index' %}" class="hero-tab active" data-mode="tour" role="tab" aria-selected="true">
           <i class="fa-solid fa-suitcase-rolling" aria-hidden="true"></i><span>Tours</span>
         </a>
       </nav>
 
         <form class="hero-search-form" id="heroSearchForm" autocomplete="off" data-location-scope="mixed" data-location-unit="City">
 
-        <div class="hsf-locations" style="grid-template-columns: 1fr 1fr;">
+        <div class="hsf-search-row hsf-search-row--route">
           <div class="hsf-field" id="originField">
-            <span class="hsf-label">Departing from</span>
-            <input type="text" class="hsf-input" id="originInput" name="origin" placeholder="Your city in Iran" data-scope="domestic" aria-expanded="false" aria-controls="originSuggestions">
+            <span class="hsf-label">From</span>
+            <input type="text" class="hsf-input" id="originInput" name="origin" placeholder="From" aria-expanded="false" aria-controls="originSuggestions">
             <div class="hsf-suggestions" id="originSuggestions" role="listbox" hidden></div>
           </div>
 
+          <button type="button" class="hsf-reverse-btn" id="reverseBtn" aria-label="Swap origin and destination">
+            <i class="fa-solid fa-arrow-right-arrow-left" aria-hidden="true"></i>
+          </button>
+
           <div class="hsf-field" id="destField">
-            <span class="hsf-label">Tour destination</span>
-            <input type="text" class="hsf-input" id="destInput" name="destination" placeholder="Where do you want to go?" aria-expanded="false" aria-controls="destSuggestions">
+            <span class="hsf-label">To</span>
+            <input type="text" class="hsf-input" id="destInput" name="destination" placeholder="To" aria-expanded="false" aria-controls="destSuggestions">
             <div class="hsf-suggestions" id="destSuggestions" role="listbox" hidden></div>
-          </div>
-        </div>
-
-        <div class="hsf-secondary-row">
-          <div class="hsf-date-group">
-            <div class="hsf-field hsf-date-field" id="departField">
-              <span class="hsf-label">Trip start</span>
-              <button type="button" class="hsf-date-trigger" id="departTrigger">
-                <i class="fa-regular fa-calendar" aria-hidden="true"></i>
-                <span id="departTriggerText">Select date</span>
-              </button>
-            </div>
-
-            <div class="hsf-field hsf-date-field" id="returnField">
-              <span class="hsf-label">Trip end</span>
-              <button type="button" class="hsf-date-trigger" id="returnTrigger">
-                <i class="fa-regular fa-calendar" aria-hidden="true"></i>
-                <span id="returnTriggerText">Select date</span>
-              </button>
-            </div>
-
-            <div class="hsf-calendar-popup" id="calendarPopup" hidden>
-              <div class="cal-months" id="calMonths"></div>
-              <div class="cal-footer">
-                <span class="cal-range-hint" id="calRangeHint">Select a start date</span>
-                <button type="button" class="cal-done-btn" id="calDoneBtn">Done</button>
-              </div>
-            </div>
           </div>
 
           <div class="hsf-field hsf-passenger-field" id="passengerField">
@@ -120,6 +96,38 @@
               <button type="button" class="pax-apply-btn" id="paxApplyBtn">Apply</button>
             </div>
           </div>
+
+          <div class="hsf-date-group" id="dateField" data-date-context="flight">
+            <div class="hsf-field hsf-date-field" id="departField">
+              <span class="hsf-label">Departure</span>
+              <button type="button" class="hsf-date-trigger" id="departTrigger">
+                <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+                <span id="departTriggerText">Select date</span>
+              </button>
+            </div>
+
+            <div class="hsf-field hsf-date-field" id="returnField">
+              <span class="hsf-label">Return</span>
+              <button type="button" class="hsf-date-trigger" id="returnTrigger">
+                <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+                <span id="returnTriggerText">Select date</span>
+              </button>
+            </div>
+
+            <div class="hsf-calendar-popup" id="calendarPopup" hidden>
+              <div class="cal-months" id="calMonths"></div>
+              <div class="cal-footer">
+                <span class="cal-range-hint" id="calRangeHint">Select a departure date</span>
+                <button type="button" class="cal-done-btn" id="calDoneBtn">Done</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Central validation error box (Requirement #18) -->
+        <div class="hsf-form-error" id="formErrorBox" hidden>
+          <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+          <span id="formErrorText"></span>
         </div>
 
         <!-- TODO(backend): wire these to the real tour search view -->
@@ -129,12 +137,14 @@
         <input type="hidden" name="children" id="childrenHidden" value="0">
         <input type="hidden" name="infants" id="infantsHidden" value="0">
 
-        <button type="submit" class="hero-search-submit" id="heroSearchSubmit">
-          <span class="btn-label">Search tours</span>
-          <span class="btn-loading" hidden>
-            <i class="fa-solid fa-circle-notch fa-spin" aria-hidden="true"></i> Searching…
-          </span>
-        </button>
+        <div class="hsf-actions-row">
+          <button type="submit" class="hero-search-submit" id="heroSearchSubmit">
+            <span class="btn-label">Search</span>
+            <span class="btn-loading" hidden>
+              <i class="fa-solid fa-circle-notch fa-spin" aria-hidden="true"></i> Searching…
+            </span>
+          </button>
+        </div>
       </form>
     </div>
 
