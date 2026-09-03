@@ -195,237 +195,70 @@
 </section>
 
 
-<section class="other-issue-area section-gap">
-<div class="container">
-<div class="row d-flex justify-content-center">
-<div class="menu-content pb-70 col-lg-9">
-<div class="title text-center">
-<h1 class="mb-10">Other issues we can help you with</h1>
-<p>We all live in an age that belongs to the young at heart. Life that is.</p>
-</div>
-</div>
-</div>
-<div class="row">
-<div class="col-lg-3 col-md-6">
-<div class="single-other-issue">
-<div class="thumb">
-<img class="img-fluid" src="{% static 'img/o1.jpg' %}" alt>
-</div>
-<a href="#">
-<h4>Rent a Car</h4>
-</a>
-<p>
-The preservation of human life is the ultimate value, a pillar of ethics and the foundation.
-</p>
-</div>
-</div>
-<div class="col-lg-3 col-md-6">
-<div class="single-other-issue">
-<div class="thumb">
-<img class="img-fluid" src="{% static 'img/o2.jpg' %}" alt>
-</div>
-<a href="#">
-<h4>Cruise Booking</h4>
-</a>
-<p>
-I was always somebody who felt quite sorry for myself, what I had not got compared.
-</p>
-</div>
-</div>
-<div class="col-lg-3 col-md-6">
-<div class="single-other-issue">
-<div class="thumb">
-<img class="img-fluid" src="{% static 'img/o3.jpg' %}" alt>
-</div>
-<a href="#">
-<h4>To Do List</h4>
-</a>
-<p>
-The following article covers a topic that has recently moved to center stage–at least it seems.
-</p>
-</div>
-</div>
-<div class="col-lg-3 col-md-6">
-<div class="single-other-issue">
-<div class="thumb">
-<img class="img-fluid" src="{% static 'img/o4.jpg' %}" alt>
-</div>
-<a href="#">
-<h4>Food Features</h4>
-</a>
-<p>
-There are many kinds of narratives and organizing principles. Science is driven by evidence.
-</p>
-</div>
-</div>
-</div>
-</div>
+<!-- ========== START: POPULAR DESTINATIONS (جدید) ========== -->
+{% if popular_destinations %}
+<section class="popular-destinations-area section-gap">
+  <div class="container">
+    <div class="row d-flex justify-content-center">
+      <div class="menu-content pb-40 col-lg-8">
+        <div class="title text-center">
+          <h1 class="mb-10">Popular Destinations</h1>
+          <p>Handpicked cities our travelers love the most — tap one to start your search.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="pd-carousel-wrap">
+
+      <!-- تنها یک جفت فلش سراسری برای کل ردیف (نه داخل هر کارت) -->
+      <button type="button" class="pd-nav pd-nav-prev" id="pdPrevBtn" aria-label="مقصد قبلی">
+        <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+      </button>
+
+      <div class="pd-track" id="pdTrack" role="listbox" aria-label="مقصدهای محبوب" tabindex="0">
+        {% for destination in popular_destinations %}
+          <button type="button"
+                  class="pd-card item"
+                  data-destination-card
+                  data-destination="{{ destination.name }}"
+                  role="option"
+                  aria-label="Search flights to {{ destination.name }}">
+
+            {% if destination.image %}
+              <img class="pd-card-img" src="{{ destination.image.url }}" alt="Flights to {{ destination.name }}" loading="lazy">
+            {% else %}
+              <img class="pd-card-img" src="{% static 'img/hero-bg.jpg' %}" alt="Flights to {{ destination.name }}" loading="lazy">
+            {% endif %}
+
+            <span class="pd-card-overlay" aria-hidden="true"></span>
+            <span class="pd-card-badge" aria-hidden="true">{{ forloop.counter|stringformat:"02d" }}</span>
+
+            <span class="pd-card-bottom">
+              <span class="pd-card-text">
+                <span class="pd-card-name">{{ destination.name }}</span>
+                {% if destination.country %}
+                  <span class="pd-card-subtitle">{{ destination.country }}</span>
+                {% endif %}
+              </span>
+            </span>
+
+          </button>
+        {% endfor %}
+      </div>
+
+      <button type="button" class="pd-nav pd-nav-next" id="pdNextBtn" aria-label="مقصد بعدی">
+        <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <!-- اسکرول‌بار سفارشی زیبا (به‌جای dots قبلی) -->
+    <div class="pd-scrollbar" id="pdScrollbar" aria-hidden="true">
+      <div class="pd-scrollbar-thumb" id="pdScrollbarThumb"></div>
+    </div>
+
+  </div>
 </section>
+{% endif %}
+<!-- ========== END: POPULAR DESTINATIONS ========== -->
 
-
-<section class="testimonial-area section-gap">
-<div class="container">
-<div class="row d-flex justify-content-center">
-<div class="menu-content pb-70 col-lg-8">
-<div class="title text-center">
-<h1 class="mb-10">Testimonial from our Clients</h1>
-<p>The French Revolution constituted for the conscience of the dominant aristocratic class a fall from </p>
-</div>
-</div>
-</div>
-<div class="row">
-<div class="active-testimonial">
-<div class="single-testimonial item d-flex flex-row">
-<div class="thumb">
-<img class="img-fluid" src="{% static 'img/elements/user1.png' %}" alt>
-</div>
-<div class="desc">
-<p>
-Do you want to be even more successful? Learn to love learning and growth. The more effort you put into improving your skills, the bigger the payoff you.
-</p>
-<h4>Harriet Maxwell</h4>
-<div class="star">
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star"></span>
-</div>
-</div>
-</div>
-<div class="single-testimonial item d-flex flex-row">
-<div class="thumb">
-<img class="img-fluid" src="{% static 'img/elements/user2.png' %}" alt>
-</div>
-<div class="desc">
-<p>
-A purpose is the eternal condition for success. Every former smoker can tell you just how hard it is to stop smoking cigarettes. However.
-</p>
-<h4>Carolyn Craig</h4>
-<div class="star">
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star"></span>
-<span class="fa fa-star"></span>
-</div>
-</div>
-</div>
-<div class="single-testimonial item d-flex flex-row">
-<div class="thumb">
-<img class="img-fluid" src="{% static 'img/elements/user1.png' %}" alt>
-</div>
-<div class="desc">
-<p>
-Do you want to be even more successful? Learn to love learning and growth. The more effort you put into improving your skills, the bigger the payoff you.
-</p>
-<h4>Harriet Maxwell</h4>
-<div class="star">
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star"></span>
-</div>
-</div>
-</div>
-<div class="single-testimonial item d-flex flex-row">
-<div class="thumb">
-<img class="img-fluid" src="{% static 'img/elements/user2.png' %}" alt>
-</div>
-<div class="desc">
-<p>
-A purpose is the eternal condition for success. Every former smoker can tell you just how hard it is to stop smoking cigarettes. However.
-</p>
-<h4>Carolyn Craig</h4>
-<div class="star">
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star"></span>
-<span class="fa fa-star"></span>
-</div>
-</div>
-</div>
-<div class="single-testimonial item d-flex flex-row">
-<div class="thumb">
-<img class="img-fluid" src="{% static 'img/elements/user1.png' %}" alt>
-</div>
-<div class="desc">
-<p>
-Do you want to be even more successful? Learn to love learning and growth. The more effort you put into improving your skills, the bigger the payoff you.
-</p>
-<h4>Harriet Maxwell</h4>
-<div class="star">
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star"></span>
-</div>
-</div>
-</div>
-<div class="single-testimonial item d-flex flex-row">
-<div class="thumb">
-<img class="img-fluid" src="{% static 'img/elements/user2.png' %}" alt>
-</div>
-<div class="desc">
-<p>
-A purpose is the eternal condition for success. Every former smoker can tell you just how hard it is to stop smoking cigarettes. However.
-</p>
-<h4>Carolyn Craig</h4>
-<div class="star">
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star"></span>
-<span class="fa fa-star"></span>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</section>
-
-
-<section class="home-about-area">
-<div class="container-fluid">
-<div class="row align-items-center justify-content-end">
-<div class="col-lg-6 col-md-12 home-about-left">
-<h1>
-Did not find your Package? <br>
-Feel free to ask us. <br>
-We‘ll make it for you
-</h1>
-<p>
-inappropriate behavior is often laughed off as “boys will be boys,” women face higher conduct standards especially in the workplace. That’s why it’s crucial that, as women, our behavior on the job is beyond reproach. inappropriate behavior is often laughed.
-</p>
-<a href="#" class="primary-btn text-uppercase">request custom price</a>
-</div>
-<div class="col-lg-6 col-md-12 home-about-right no-padding">
-<img class="img-fluid" src="{% static 'img/about-img.jpg' %}" alt>
-</div>
-</div>
-</div>
-</section>
-
-
-<section class="recent-blog-area section-gap">
-<div class="container">
-<div class="row d-flex justify-content-center">
-<div class="menu-content pb-60 col-lg-9">
-<div class="title text-center">
-<h1 class="mb-10">Latest from Our Blog</h1>
-<p>With the exception of Nietzsche, no other madman has contributed so much to human sanity as has.</p>
-</div>
-</div>
-</div>
-<div class="row">
-<div class="active-recent-blog-carusel">
-{% home_latest_posts %}
-</div>
-</div>
-</div>
-</section>
 {% endblock %}

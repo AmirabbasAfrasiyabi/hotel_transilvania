@@ -115,7 +115,32 @@ $(document).ready(function() {
                     items: 3,
                 }
             }
-        }); 
+        });
+
+                $('.active-recent-blog-carusel').owlCarousel({
+            items: 3,
+            loop: true,
+            margin: 30,
+            dots: true,
+            autoplayHoverPause: true,
+            smartSpeed:500,
+            autoplay: true,
+            responsive: {
+                0: {
+                    items: 1
+                },
+                480: {
+                    items: 1,
+                },
+                768: {
+                    items: 2,
+                },
+                961: {
+                    items: 3,
+                }
+            }
+        });
+
 
     //------- Mobile Nav  js --------//  
 

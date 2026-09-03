@@ -958,12 +958,149 @@
     if (loading) loading.hidden = false;
     submitBtn.disabled = true;
 
-    // TODO(backend): swap this timeout for the real fetch/redirect once
-    // the search results endpoint exists.
     window.setTimeout(function () {
       if (label) label.hidden = false;
       if (loading) loading.hidden = true;
       submitBtn.disabled = false;
     }, 900);
   });
+
+/* ------------------------------------------------------------------
+   7. POPULAR DESTINATIONS — Native Scroll-Snap Carousel
+   (بدون وابستگی به Owl Carousel) + اتصال به سرچ‌بار
+   ------------------------------------------------------------------ */
+(function () {
+  var track = document.getElementById('pdTrack');
+  if (!track) return; // این بخش در این صفحه وجود ندارد
+
+  var prevBtn = document.getElementById('pdPrevBtn');
+  var nextBtn = document.getElementById('pdNextBtn');
+  var scrollbar = document.getElementById('pdScrollbar');
+  var thumb = document.getElementById('pdScrollbarThumb');
+
+  // یک "قدم" ورق‌زدن = عرض یک کارت + gap
+  function cardStep() {
+    var card = track.querySelector('.pd-card');
+    if (!card) return 200;
+    var trackStyle = window.getComputedStyle(track);
+    var gap = parseFloat(trackStyle.columnGap || trackStyle.gap) || 18;
+    return card.getBoundingClientRect().width + gap;
+  }
+
+  function maxScroll() {
+    return track.scrollWidth - track.clientWidth;
+  }
+
+  function updateNavState() {
+    if (!prevBtn || !nextBtn) return;
+    var max = maxScroll();
+    prevBtn.disabled = track.scrollLeft <= 2;
+    nextBtn.disabled = track.scrollLeft >= max - 2;
+  }
+
+  function updateScrollbar() {
+    if (!thumb || !scrollbar) return;
+    var max = maxScroll();
+    var trackWidth = scrollbar.clientWidth;
+    var visibleRatio = track.clientWidth / track.scrollWidth;
+    var thumbWidth = Math.max(36, visibleRatio * trackWidth);
+    var maxThumbLeft = trackWidth - thumbWidth;
+    var ratio = max > 0 ? track.scrollLeft / max : 0;
+
+    thumb.style.width = thumbWidth + 'px';
+    thumb.style.transform = 'translateX(' + (ratio * maxThumbLeft) + 'px)';
+  }
+
+  function onScroll() {
+    updateNavState();
+    updateScrollbar();
+  }
+
+  if (prevBtn) {
+    prevBtn.addEventListener('click', function () {
+      track.scrollBy({ left: -cardStep(), behavior: 'smooth' });
+    });
+  }
+  if (nextBtn) {
+    nextBtn.addEventListener('click', function () {
+      track.scrollBy({ left: cardStep(), behavior: 'smooth' });
+    });
+  }
+
+  track.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+
+  // امکان کشیدن (drag) مستقیم روی خود اسکرول‌بار سفارشی
+  if (thumb && scrollbar) {
+    var isDragging = false, startX = 0, startScrollLeft = 0;
+
+    thumb.addEventListener('mousedown', function (e) {
+      isDragging = true;
+      startX = e.clientX;
+      startScrollLeft = track.scrollLeft;
+      document.body.style.userSelect = 'none';
+    });
+
+    document.addEventListener('mousemove', function (e) {
+      if (!isDragging) return;
+      var max = maxScroll();
+      var trackWidth = scrollbar.clientWidth;
+      var thumbWidth = thumb.offsetWidth;
+      var maxThumbLeft = trackWidth - thumbWidth;
+      var deltaRatio = maxThumbLeft > 0 ? (e.clientX - startX) / maxThumbLeft : 0;
+      track.scrollLeft = startScrollLeft + deltaRatio * max;
+    });
+
+    document.addEventListener('mouseup', function () {
+      isDragging = false;
+      document.body.style.userSelect = '';
+    });
+
+    // کلیک روی خط اسکرول‌بار (نه خود thumb) هم بپرد به همان نقطه
+    scrollbar.addEventListener('click', function (e) {
+      if (e.target === thumb) return;
+      var rect = scrollbar.getBoundingClientRect();
+      var clickRatio = (e.clientX - rect.left) / rect.width;
+      track.scrollLeft = clickRatio * maxScroll();
+    });
+  }
+
+  // ناوبری با کیبورد وقتی خود ردیف فوکوس دارد
+  track.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight') { track.scrollBy({ left: cardStep(), behavior: 'smooth' }); e.preventDefault(); }
+    if (e.key === 'ArrowLeft') { track.scrollBy({ left: -cardStep(), behavior: 'smooth' }); e.preventDefault(); }
+  });
+
+  updateNavState();
+  updateScrollbar();
+
+  // ---------- اتصال کلیک روی کارت مقصد به input مقصد سرچ‌بار ----------
+  var destinationCards = track.querySelectorAll('[data-destination-card]');
+  var destInput = document.getElementById('destInput');
+
+  if (destinationCards.length && destInput) {
+    var destSuggestPanel = document.getElementById('destSuggestions');
+
+    destinationCards.forEach(function (card) {
+      card.addEventListener('click', function () {
+        var cityName = card.getAttribute('data-destination');
+        if (!cityName) return;
+
+        destInput.value = cityName;
+
+        if (destSuggestPanel) {
+          destSuggestPanel.hidden = true;
+          destSuggestPanel.style.display = 'none';
+        }
+        destInput.setAttribute('aria-expanded', 'false');
+
+        destinationCards.forEach(function (c) { c.classList.remove('is-selected'); });
+        card.classList.add('is-selected');
+
+        destInput.dispatchEvent(new Event('change', { bubbles: true }));
+      });
+    });
+  }
+})();
+
 })();

@@ -7272,3 +7272,244 @@ body.mobile-nav-active #mobile-nav-toggle {
 /* ==========================================================================
    >>> END: HERO SEARCH — BUGFIXES <<<
    ========================================================================== */
+/* ==========================================================================
+   >>> START: TRAVELISTA — POPULAR DESTINATIONS (Native Scroll-Snap Carousel) <
+   بدون وابستگی به Owl Carousel — یک ردیف، یک جفت فلش سراسری، اسکرول‌بار سفارشی
+   ========================================================================== */
+
+.popular-destinations-area {
+  /* پالت مجزا و تیره، دقیقاً هم‌راستا با عکس رفرنس */
+  --pd-bg: rgba(245, 166, 35, 0.1);
+  --pd-card-bg: #ffffff;
+  --pd-accent: #f5a623;
+  --pd-accent-soft: rgba(245, 166, 35, 0.9);
+  --pd-text: #222222;
+  --pd-text-soft: #6b6560;
+
+  background: var(--pd-bg);
+  padding: 70px 0 60px;
+  position: relative;
+  overflow: hidden;
+}
+
+.popular-destinations-area .title h1 {
+  color: var(--pd-text);
+}
+
+.popular-destinations-area .title p {
+  color: var(--pd-text-soft);
+}
+
+/* ---------- کادر بیرونی: فلش‌ها + ردیف کارت‌ها ---------- */
+.pd-carousel-wrap {
+  max-width: 1040px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ---------- ردیف کارت‌ها (Scroll-Snap) ---------- */
+.pd-track {
+  flex: 1;
+  display: flex;
+  gap: 18px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding: 10px 4px 4px;
+  /* اسکرول‌بار پیش‌فرض مرورگر مخفی می‌شود، چون اسکرول‌بار سفارشی خودمان را زیر آن می‌سازیم */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.pd-track::-webkit-scrollbar {
+  display: none;
+}
+
+.pd-track:focus-visible {
+  outline: 2px solid var(--pd-accent);
+  outline-offset: 4px;
+  border-radius: 12px;
+}
+
+/* ---------- کارت مقصد ---------- */
+.pd-card {
+  position: relative;
+  flex: 0 0 auto;
+  width: 150px;
+  height: 220px;
+  border: none;
+  padding: 0;
+  border-radius: 18px;
+  overflow: hidden;
+  cursor: pointer;
+   background: var(--pd-card-bg);
+  box-shadow: 0 10px 24px -12px rgba(18, 41, 61, 0.18);
+  scroll-snap-align: start;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+@media (min-width: 480px) {
+  .pd-card { width: 165px; height: 235px; }
+}
+
+@media (min-width: 992px) {
+  .pd-card { width: 175px; height: 250px; }
+}
+
+.pd-card:hover,
+.pd-card:focus-visible {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 34px -14px rgba(245, 166, 35, 0.35);
+}
+
+.pd-card:focus-visible {
+  outline: 2px solid var(--pd-accent);
+  outline-offset: 2px;
+}
+
+.pd-card.is-selected {
+  box-shadow: 0 0 0 3px var(--pd-accent), 0 14px 30px -12px rgba(0, 0, 0, 0.5);
+}
+
+.pd-card-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.pd-card:hover .pd-card-img {
+  transform: scale(1.08);
+}
+
+/* ---- کنتراست متن روی تصاویر روشن ---- */
+.pd-card-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg,
+      rgba(4, 5, 20, 0.55) 0%,
+      rgba(4, 5, 20, 0)    28%,
+      rgba(4, 5, 20, 0)    50%,
+      rgba(4, 5, 20, 0.65) 75%,
+      rgba(4, 5, 20, 0.95) 100%);
+}
+
+.pd-card-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: var(--pd-accent-soft);
+  color: #fff;
+  font-family: 'Space Mono', monospace, var(--font-primary);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.pd-card-bottom {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 14px;
+  z-index: 2;
+}
+
+.pd-card-name {
+  display: block;
+  color: #fff;
+  font-family: var(--font-primary);
+  font-weight: 600;
+  font-size: var(--text-size);
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.55);
+}
+
+.pd-card-subtitle {
+  display: block;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: var(--text-size-small);
+  margin-top: 2px;
+}
+
+/* ---------- فلش‌های سراسری (تنها یک جفت، بیرون کارت‌ها) ---------- */
+.pd-nav {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: #ffffff;
+  color: var(--tvl-navy, #12293D);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  cursor: pointer;
+  box-shadow: 0 8px 20px -8px rgba(18, 41, 61, 0.25);
+  transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+
+.pd-nav:hover:not(:disabled) {
+  background: var(--pd-accent);
+  color: #fff;
+}
+
+.pd-nav:active:not(:disabled) {
+  transform: scale(0.94);
+}
+
+.pd-nav:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+@media (max-width: 575px) {
+  .pd-nav { display: none; } /* روی موبایل خیلی کوچک، swipe جای فلش را می‌گیرد */
+  .pd-carousel-wrap { gap: 0; }
+}
+
+/* ---------- اسکرول‌بار سفارشی زیبا ---------- */
+.pd-scrollbar {
+  max-width: 1040px;
+  margin: 22px auto 0;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(18, 41, 61, 0.08);
+  position: relative;
+  cursor: pointer;
+}
+
+.pd-scrollbar-thumb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--pd-accent);
+  transition: background 0.2s ease;
+}
+
+.pd-scrollbar:hover .pd-scrollbar-thumb {
+  background: #8177f5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pd-track { scroll-behavior: auto; }
+  .pd-card, .pd-card-img, .pd-nav { transition: none; }
+}
+
+/* ==========================================================================
+   >>> END: TRAVELISTA — POPULAR DESTINATIONS <
+   ========================================================================== */
