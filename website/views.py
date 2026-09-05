@@ -1,6 +1,8 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from .models import *
+from website.forms import *
+from django.contrib import messages
 # Create your views here.
 
 def index_view(request):
@@ -14,7 +16,17 @@ def about_view(request):
     return render(request,'website/about.html')
 
 def contact_view(request):
-    return render(request,'website/contact.html')
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your ticket submitted successfully')
+            return redirect('website:contact')
+        # اگه invalid بود، form با خطاهاش می‌مونه (چون reassign نمی‌کنیم)
+    else:
+        form = ContactForm()
+
+    return render(request, 'website/contact.html', {'form': form})
 
 def Why_view(request):
     return render(request,'website/why_Mine.html')

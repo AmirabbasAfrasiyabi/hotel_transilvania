@@ -66,8 +66,16 @@
   <div class="contact-form-stub">
     <span class="form-eyebrow">Boarding pass — message</span>
     <h2>Tell us where it's going wrong (or right)</h2>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li class="alert alert-{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <form class="contact-form"  action="{% url 'website:contact'%}" method="post">
 
-    <form class="contact-form" id="myForm" action="mail.php" method="post">
+      {% csrf_token %}
       <input name="name" placeholder="Enter your name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter your name'" class="form-control" required type="text">
       <input name="email" placeholder="Enter email address" pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter email address'" class="form-control" required type="email">
       <input name="subject" placeholder="Enter subject" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter subject'" class="form-control" required type="text">
@@ -77,6 +85,7 @@
       <button class="genric-btn" type="submit">Send Message</button>
     </form>
   </div>
+
 
 </div>
 
