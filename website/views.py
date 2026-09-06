@@ -19,10 +19,11 @@ def contact_view(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
-            form.save()
+            contact = form.save(commit=False)
+            contact.name = "none"
+            contact.save()
             messages.success(request, 'Your ticket submitted successfully')
             return redirect('website:contact')
-        # اگه invalid بود، form با خطاهاش می‌مونه (چون reassign نمی‌کنیم)
     else:
         form = ContactForm()
 

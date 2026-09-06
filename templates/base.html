@@ -34,8 +34,87 @@
 <link rel="stylesheet" href="{% static 'css/animate.min.css' %}">
 <link rel="stylesheet" href="{% static 'css/owl.carousel.css' %}">
 <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+<!-- FIXED: Toast notification popup styles for Django messages framework.
+     Vanilla CSS (not tied to the site's Bootstrap version) so it never
+     conflicts with bootstrap.min.js already loaded on the page. -->
+<style>
+    .tvl-toast-container {
+        position: fixed;
+        top: 90px; /* below the fixed/sticky header */
+        right: 20px;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        max-width: 350px;
+    }
+
+    .tvl-toast {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 16px;
+        border-radius: 8px;
+        color: #fff;
+        font-family: 'Poppins', sans-serif;
+        font-size: 14px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        animation: tvl-slide-in 0.35s ease forwards;
+    }
+
+    .tvl-toast--success { background-color: #28a745; }
+    .tvl-toast--error   { background-color: #dc3545; }
+    .tvl-toast--warning { background-color: #ffc107; color: #212529; }
+    .tvl-toast--info,
+    .tvl-toast--debug   { background-color: #17a2b8; }
+
+    .tvl-toast__icon { font-size: 18px; }
+    .tvl-toast__text { flex: 1; }
+
+    .tvl-toast__close {
+        background: none;
+        border: none;
+        color: inherit;
+        font-size: 18px;
+        cursor: pointer;
+        line-height: 1;
+        opacity: 0.8;
+    }
+    .tvl-toast__close:hover { opacity: 1; }
+
+    @keyframes tvl-slide-in {
+        from { transform: translateX(120%); opacity: 0; }
+        to   { transform: translateX(0);   opacity: 1; }
+    }
+
+    @keyframes tvl-fade-out {
+        from { opacity: 1; }
+        to   { opacity: 0; transform: translateX(20px); }
+    }
+</style>
 </head>
 <body>
+
+<!-- ================= Toast Notification Popup (Django Messages) ================= -->
+{% if messages %}
+<div id="toast-container" class="tvl-toast-container">
+    {% for message in messages %}
+    <div class="tvl-toast tvl-toast--{{ message.tags }}">
+        <span class="tvl-toast__icon">
+            {% if message.tags == 'success' %}<i class="fa-solid fa-circle-check"></i>
+            {% elif message.tags == 'error' %}<i class="fa-solid fa-circle-xmark"></i>
+            {% elif message.tags == 'warning' %}<i class="fa-solid fa-triangle-exclamation"></i>
+            {% else %}<i class="fa-solid fa-circle-info"></i>{% endif %}
+        </span>
+        <span class="tvl-toast__text">{{ message }}</span>
+        <button type="button" class="tvl-toast__close" onclick="this.parentElement.remove()">&times;</button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+<!-- ================================================================================ -->
+
 <header id="header">
 <div class="header-top">
 <div class="container">
@@ -223,6 +302,19 @@
      selector, reverse button). Safe to load site-wide — it no-ops on any
      page that doesn't have #heroSearchForm. -->
 <script src="{% static 'js/hero-search.js' %}"></script>
+
+<!-- FIXED: Auto-dismiss toast notifications after 4 seconds -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var toasts = document.querySelectorAll('.tvl-toast');
+        toasts.forEach(function (toast) {
+            setTimeout(function () {
+                toast.style.animation = 'tvl-fade-out 0.35s ease forwards';
+                setTimeout(function () { toast.remove(); }, 350);
+            }, 4000); // auto-dismiss after 4 seconds
+        });
+    });
+</script>
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"></script>
 <script>
