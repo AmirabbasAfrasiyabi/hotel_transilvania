@@ -1104,3 +1104,104 @@
 })();
 
 })();
+/* ==========================================================================
+   TRAVELISTA — INLINE FAQ (Domestic Flights) — Accordion + Client Search
+   --------------------------------------------------------------------------
+   این بلوک را در انتهای hero-search.js اضافه کن، اما نکته‌ی مهم:
+   بیرون از IIFE اصلی فایل (یعنی بعد از })(); آخر فایل) قرارش بده،
+   نه داخلش.
+
+   چرا؟ چون IIFE اصلی فایل با این شرط شروع می‌شود:
+       var form = document.getElementById('heroSearchForm');
+       if (!form) return;
+   یعنی هر چیزی که *داخل* آن IIFE باشد فقط در صفحاتی اجرا می‌شود که
+   فرم جستجوی Hero را دارند. الان صفحه‌ی پروازهای داخلی هم آن فرم را
+   دارد، پس فعلاً مشکلی نیست — ولی اگر فردا بخواهی همین FAQ را در یک
+   صفحه‌ی بدون Hero Search (مثلاً یک صفحه‌ی مستقل «راهنما») هم استفاده
+   کنی، اگر داخل آن IIFE باشد اصلاً اجرا نمی‌شود. برای همین این بخش را
+   کاملاً مستقل (IIFE جدا با guard خودش روی #faqiList) نوشته‌ام.
+   ========================================================================== */
+(function () {
+  'use strict';
+
+  var list = document.getElementById('faqiList');
+  if (!list) return; // این بخش در این صفحه وجود ندارد — کاری نکن
+
+  var items = Array.prototype.slice.call(list.querySelectorAll('[data-faqi-item]'));
+
+  /* ------------------------------------------------------------------
+     1. ACCORDION (باز/بسته با Animation نرم مبتنی بر scrollHeight)
+     ------------------------------------------------------------------ */
+  function openItem(item) {
+    var btn = item.querySelector('[data-faqi-toggle]');
+    var answer = item.querySelector('.faqi-answer');
+
+    item.classList.add('is-open');
+    btn.setAttribute('aria-expanded', 'true');
+    answer.hidden = false;
+    // ارتفاع واقعی محتوا را اندازه می‌گیریم تا Animation برای پاسخ‌های
+    // کوتاه و بلند هر دو درست کار کند (به‌جای یک عدد ثابت دلخواه).
+    answer.style.maxHeight = answer.scrollHeight + 'px';
+  }
+
+  function closeItem(item) {
+    var btn = item.querySelector('[data-faqi-toggle]');
+    var answer = item.querySelector('.faqi-answer');
+
+    item.classList.remove('is-open');
+    btn.setAttribute('aria-expanded', 'false');
+    answer.style.maxHeight = '0px';
+
+    // بعد از پایان Transition واقعاً hidden کن (برای Tab order/Accessibility؛
+    // وگرنه محتوای بسته هم در مسیر Tab کیبورد باقی می‌ماند).
+    window.setTimeout(function () {
+      if (!item.classList.contains('is-open')) answer.hidden = true;
+    }, 350);
+  }
+
+  items.forEach(function (item) {
+    var btn = item.querySelector('[data-faqi-toggle]');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      var isOpen = item.classList.contains('is-open');
+      isOpen ? closeItem(item) : openItem(item);
+    });
+  });
+
+  // اگر عرض صفحه تغییر کند (چرخش موبایل و غیره)، ارتفاع آیتم بازشده را
+  // دوباره محاسبه کن — وگرنه ممکن است پاسخ نصفه دیده شود.
+  window.addEventListener('resize', function () {
+    items.forEach(function (item) {
+      if (!item.classList.contains('is-open')) return;
+      var answer = item.querySelector('.faqi-answer');
+      answer.style.maxHeight = answer.scrollHeight + 'px';
+    });
+  });
+
+  /* ------------------------------------------------------------------
+     2. FEEDBACK (👍 / 👎)
+     فعلاً هیچ endpoint یا مدلی برای ذخیره‌ی Feedback در پروژه پیدا
+     نشد؛ طبق دستور «بدون ساختن API غیرضروری»، فقط وضعیت بصری (انتخاب/
+     عدم انتخاب دکمه) پیاده شده. جای دقیق اتصال به بک‌اند در آینده،
+     همین‌جا با TODO مشخص شده.
+     ------------------------------------------------------------------ */
+  list.addEventListener('click', function (e) {
+    var fbBtn = e.target.closest('[data-faqi-feedback]');
+    if (!fbBtn) return;
+
+    var group = fbBtn.closest('.faqi-feedback-btns');
+    group.querySelectorAll('[data-faqi-feedback]').forEach(function (b) {
+      b.classList.remove('is-selected');
+    });
+    fbBtn.classList.add('is-selected');
+
+    // TODO(backend): وقتی مدل/Endpoint ذخیره‌ی Feedback آماده شد:
+    // var faqItem = fbBtn.closest('[data-faqi-item]');
+    // var faqId = faqItem.querySelector('[data-faqi-toggle]').id.replace('faqiQ', '');
+    // fetch('/help-center/faq/' + faqId + '/feedback/', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({ vote: fbBtn.getAttribute('data-faqi-feedback') })
+    // });
+  });
+})();

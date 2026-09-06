@@ -261,4 +261,65 @@
 {% endif %}
 <!-- ========== END: POPULAR DESTINATIONS ========== -->
 
+
+<!-- ========== START: FAQ — پرسش‌های متداول (پرواز داخلی) ========== -->
+{% if domestic_faqs %}
+<section class="faq-inline-area section-gap" dir="rtl">
+  <div class="container">
+    <div class="row d-flex justify-content-center">
+      <div class="menu-content pb-40 col-lg-8">
+        <div class="title text-center">
+          <h1 class="mb-10">Frequently Asked Questions</h1>
+          <p>Find answers to common questions about domestic flights.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="faqi-wrap">
+
+      <!-- Accordion list -->
+      <div class="faqi-list" id="faqiList">
+        {% for faq in domestic_faqs %}
+        <div class="faqi-item" data-faqi-item>
+          <h3 class="faqi-question-wrap">
+            <button type="button"
+                    class="faqi-question"
+                    id="faqiQ{{ faq.id }}"
+                    aria-expanded="false"
+                    aria-controls="faqiA{{ faq.id }}"
+                    data-faqi-toggle>
+              <span class="faqi-question-text" data-faqi-question>{{ faq.question }}</span>
+              <span class="faqi-icon" aria-hidden="true"><i class="fa-solid fa-chevron-down"></i></span>
+            </button>
+          </h3>
+          <div class="faqi-answer"
+               id="faqiA{{ faq.id }}"
+               role="region"
+               aria-labelledby="faqiQ{{ faq.id }}"
+               hidden>
+            <div class="faqi-answer-inner">
+              <p data-faqi-answer>{{ faq.answer|linebreaksbr }}</p>
+              <div class="faqi-feedback">
+                <span class="faqi-feedback-label">Was this answer helpful?</span>
+                <div class="faqi-feedback-btns">
+                  <button type="button" class="faqi-fb-btn faqi-fb-up" data-faqi-feedback="up" aria-label="Mark this answer as helpful">
+                    <i class="fa-regular fa-thumbs-up" aria-hidden="true"></i>
+                  </button>
+                  <button type="button" class="faqi-fb-btn faqi-fb-down" data-faqi-feedback="down" aria-label="Mark this answer as not helpful">
+                    <i class="fa-regular fa-thumbs-down" aria-hidden="true"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+    </div>
+  </div>
+</section>
+{% endif %}
+<!-- ========== END: FAQ ========== -->
+
 {% endblock %}
