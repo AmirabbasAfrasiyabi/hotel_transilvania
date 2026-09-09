@@ -3,12 +3,11 @@ from django.shortcuts import render,redirect
 from .models import *
 from website.forms import *
 from django.contrib import messages
-from help_center.models import FAQ, FAQCategory
+from help_center.models import  FAQCategory
 from help_center.services import get_service_content
 # Create your views here.
 
 def index_view(request):
-    # FAQ و Popular Destinations مربوط به «پرواز داخلی» از سرویس مشترک help_center می‌آید.
     context = get_service_content(FAQCategory.DOMESTIC_FLIGHT)
 
     return render(request, 'website/index.html', context)

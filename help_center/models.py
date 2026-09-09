@@ -1,6 +1,7 @@
 from django.db import models
 
 class ServiceContentManager(models.Manager):
+
     def for_category(self, category, active_only=True):
         qs = self.get_queryset().filter(category=category)
         if active_only:
@@ -19,8 +20,8 @@ class FAQCategory(models.TextChoices):
     GENERAL = 'general',
 
 
-class FAQManager(models.Manager):
-   pass
+class FAQManager(ServiceContentManager):
+    pass
 
 class FAQ(models.Model):
     category = models.CharField(
