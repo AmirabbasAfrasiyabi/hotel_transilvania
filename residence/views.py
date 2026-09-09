@@ -1,11 +1,14 @@
 from django.shortcuts import render
-from pip._internal import req
+from help_center.models import FAQCategory
+from help_center.services import get_service_content
 
 
 # Create your views here.
 
 def hotel_view(request):
-    return render(request,'residence/hotels.html')
+    context = get_service_content(FAQCategory.HOTEL)
+    return render(request,'residence/hotels.html',context)
 
 def village_view(request):
-    return render(request,'residence/village.html')
+    context = get_service_content(FAQCategory.VILLA)
+    return render(request,'residence/village.html',context)
