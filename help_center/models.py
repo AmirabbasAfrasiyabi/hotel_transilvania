@@ -1,5 +1,5 @@
 from django.db import models
-
+from ckeditor.fields import RichTextField
 class ServiceContentManager(models.Manager):
 
     def for_category(self, category, active_only=True):
@@ -29,10 +29,10 @@ class FAQ(models.Model):
         choices=FAQCategory.choices,
         default=FAQCategory.DOMESTIC_FLIGHT,
         db_index=True,
-        verbose_name='دسته‌بندی',
+        verbose_name='Category',
     )
     question = models.CharField(max_length=300, verbose_name='question')
-    answer = models.TextField(verbose_name='answer')
+    answer = RichTextField(verbose_name='answer')
     is_active = models.BooleanField(default=True, verbose_name='is_active')
     display_order = models.PositiveIntegerField(default=0, verbose_name='display_order')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='created_at')

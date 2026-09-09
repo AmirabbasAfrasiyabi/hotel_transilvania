@@ -34,7 +34,7 @@
                aria-labelledby="faqiQ{{ faq.id }}"
                hidden>
             <div class="faqi-answer-inner">
-              <p data-faqi-answer>{{ faq.answer|linebreaksbr }}</p>
+              <div class="faqi-answer-rich" data-faqi-answer>{{ faq.answer|safe }}</div>
               <div class="faqi-feedback">
                 <span class="faqi-feedback-label">Was this answer helpful?</span>
                 <div class="faqi-feedback-btns">

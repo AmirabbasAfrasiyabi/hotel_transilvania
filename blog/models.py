@@ -1,12 +1,14 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.text import Truncator
+from django.utils.html import strip_tags
+from ckeditor_uploader.fields import RichTextUploadingField
 
 # Create your models here.
 
 class Post(models.Model):
     title = models.CharField(max_length=200)
-    content = models.TextField(max_length=500)
+    content = RichTextUploadingField()
     image = models.ImageField(upload_to='blog', default='blog/default.jpg')
     author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     category = models.ManyToManyField('Category', related_name='category', blank=True, null=True)
@@ -25,8 +27,7 @@ class Post(models.Model):
         return "{} - {}".format(self.id, self.title)
 
     def excerpt(self, word_count=20):
-
-        return Truncator(self.content).words(word_count, truncate=' ...')
+        return Truncator(strip_tags(self.content)).words(word_count, truncate=' ...')
 
 
 class Category(models.Model):
