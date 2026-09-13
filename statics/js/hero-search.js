@@ -979,8 +979,11 @@
   var thumb = document.getElementById('pdScrollbarThumb');
 
   // یک "قدم" ورق‌زدن = عرض یک کارت + gap
+  // نکته: از اولین کارت *قابل‌مشاهده* استفاده می‌کنیم، چون وقتی تب
+  // داخلی/خارجی فعال است، کارت‌های گروه دیگر با [hidden] پنهان می‌شوند
+  // و اندازه‌شان صفر است.
   function cardStep() {
-    var card = track.querySelector('.pd-card');
+    var card = track.querySelector('.pd-card:not([hidden])') || track.querySelector('.pd-card');
     if (!card) return 200;
     var trackStyle = window.getComputedStyle(track);
     var gap = parseFloat(trackStyle.columnGap || trackStyle.gap) || 18;
@@ -1073,6 +1076,44 @@
 
   updateNavState();
   updateScrollbar();
+
+  // ------------------------------------------------------------------
+  // تب داخلی/خارجی (فقط صفحه‌ی هتل، وقتی widget این تب‌ها را رندر کرده باشد)
+  // بدون Reload: فقط کارت‌های گروه غیرفعال را [hidden] می‌کنیم، اسکرول را
+  // به ابتدا برمی‌گردانیم و وضعیت فلش‌ها/اسکرول‌بار سفارشی را دوباره
+  // محاسبه می‌کنیم. برای صفحاتی که این تب‌ها را ندارند، این بلوک هیچ
+  // اثری ندارد.
+  // ------------------------------------------------------------------
+  var pdTabsWrap = document.querySelector('[data-pd-tabs]');
+  if (pdTabsWrap) {
+    var pdTabButtons = pdTabsWrap.querySelectorAll('[data-pd-tab]');
+    var pdGroupedCards = track.querySelectorAll('[data-pd-group]');
+
+    var applyPdTab = function (group) {
+      pdGroupedCards.forEach(function (card) {
+        card.hidden = card.getAttribute('data-pd-group') !== group;
+      });
+      track.scrollLeft = 0;
+      updateNavState();
+      updateScrollbar();
+    };
+
+    pdTabButtons.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        if (btn.classList.contains('active')) return;
+        pdTabButtons.forEach(function (b) {
+          b.classList.remove('active');
+          b.setAttribute('aria-selected', 'false');
+        });
+        btn.classList.add('active');
+        btn.setAttribute('aria-selected', 'true');
+        applyPdTab(btn.getAttribute('data-pd-tab'));
+      });
+    });
+
+    var pdInitialTab = pdTabsWrap.querySelector('.pd-tab.active') || pdTabButtons[0];
+    if (pdInitialTab) applyPdTab(pdInitialTab.getAttribute('data-pd-tab'));
+  }
 
   // ---------- اتصال کلیک روی کارت مقصد به input مقصد سرچ‌بار ----------
   var destinationCards = track.querySelectorAll('[data-destination-card]');

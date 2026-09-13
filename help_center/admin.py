@@ -15,18 +15,14 @@ class FAQAdmin(admin.ModelAdmin):
 
 @admin.register(Destination)
 class DestinationAdmin(admin.ModelAdmin):
-    """
-    یک Admin برای Destination های همه‌ی سرویس‌ها. مدیر سایت با فیلتر
-    'category' مشخص می‌کند این مقصد برای کدام صفحه (پرواز داخلی/خارجی،
-    قطار، اتوبوس، هتل، ویلا، تور) نمایش داده شود.
-    """
-    list_display = ('image_preview', 'name', 'category', 'is_active', 'display_order', 'updated_at')
+
+    list_display = ('image_preview', 'name', 'category', 'is_domestic' ,'is_active', 'display_order', 'updated_at')
     list_display_links = ('name',)
     list_editable = ('is_active', 'display_order')
-    list_filter = ('category', 'is_active')
+    list_filter = ('category', 'is_domestic' ,'is_active')
     search_fields = ('name', 'country')
     ordering = ('category', 'display_order', 'name')
-    fields = ('category', 'name', 'country', 'image', 'image_preview', 'is_active', 'display_order')
+    fields = ('category', 'name', 'country','is_domestic', 'image', 'image_preview', 'is_active', 'display_order')
     readonly_fields = ('image_preview',)
 
     @admin.display(description='preview')

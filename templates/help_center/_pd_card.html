@@ -1,0 +1,28 @@
+{% load static %}
+<button type="button"
+        class="pd-card item"
+        data-destination-card
+        data-destination="{{ destination.name }}"
+        {% if pd_group %}data-pd-group="{{ pd_group }}"{% endif %}
+        role="option"
+        aria-label="Search flights to {{ destination.name }}">
+
+  {% if destination.image %}
+    <img class="pd-card-img" src="{{ destination.image.url }}" alt="Flights to {{ destination.name }}" loading="lazy">
+  {% else %}
+    <img class="pd-card-img" src="{% static 'img/hero-bg.jpg' %}" alt="Flights to {{ destination.name }}" loading="lazy">
+  {% endif %}
+
+  <span class="pd-card-overlay" aria-hidden="true"></span>
+  <span class="pd-card-badge" aria-hidden="true">{{ counter|stringformat:"02d" }}</span>
+
+  <span class="pd-card-bottom">
+    <span class="pd-card-text">
+      <span class="pd-card-name">{{ destination.name }}</span>
+      {% if destination.country %}
+        <span class="pd-card-subtitle">{{ destination.country }}</span>
+      {% endif %}
+    </span>
+  </span>
+
+</button>
