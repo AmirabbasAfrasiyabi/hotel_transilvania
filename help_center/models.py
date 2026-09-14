@@ -3,7 +3,10 @@ from ckeditor.fields import RichTextField
 class ServiceContentManager(models.Manager):
 
     def for_category(self, category, active_only=True):
-        qs = self.get_queryset().filter(category=category)
+        if isinstance(category, (list, tuple, set)):
+            qs = self.get_queryset().filter(category__in=category)
+        else:
+            qs = self.get_queryset().filter(category=category)
         if active_only:
             qs = qs.filter(is_active=True)
         return qs

@@ -79,12 +79,24 @@
     { from: 'Istanbul', to: 'London' }
   ];
 
+  // Change 1: "Flight" is now a single merged search entry point instead
+  // of two separate Domestic/International pages, so its scope offers
+  // BOTH city lists together (same underlying data as "mixed", kept as
+  // its own named scope so this stays independent from the Hotel form
+  // if the two ever need to diverge later) and merges recent-search
+  // history from both.
+  var FLIGHT_HISTORY = IRAN_HISTORY.concat(INTL_HISTORY);
+  var IRAN_CITY_NAMES = IRAN_CITIES.map(function (loc) { return loc.city; });
+
   var scope = form.getAttribute('data-location-scope') || 'international';
   var LOCATIONS = scope === 'domestic' ? IRAN_CITIES
+    : scope === 'flight' ? MIXED_CITIES
     : scope === 'villa' ? IRAN_VILLA_DESTINATIONS
     : scope === 'mixed' ? MIXED_CITIES
     : INTL_CITIES;
-  var HISTORY = scope === 'domestic' ? IRAN_HISTORY : INTL_HISTORY;
+  var HISTORY = scope === 'domestic' ? IRAN_HISTORY
+    : scope === 'flight' ? FLIGHT_HISTORY
+    : INTL_HISTORY;
   var LOCATION_UNIT = form.getAttribute('data-location-unit') || 'City';
 
   /* ------------------------------------------------------------------
@@ -941,8 +953,29 @@
 
   var submitBtn = document.getElementById('heroSearchSubmit');
 
+  // Change 1: the merged "Flight" page no longer lets the user pick
+  // Domestic vs International directly — that distinction is derived
+  // automatically from the chosen airports and written to a hidden
+  // field, so it still reaches the backend/search-logic layer exactly
+  // like before, just without a second top-level UI option.
+  var tripScopeHidden = document.getElementById('tripScopeHidden');
+  function computeTripScope() {
+    var originVal = (originInput && originInput.value || '').trim();
+    var destVal = (destInput && destInput.value || '').trim();
+    var originIsDomestic = IRAN_CITY_NAMES.indexOf(originVal) !== -1;
+    var destIsDomestic = IRAN_CITY_NAMES.indexOf(destVal) !== -1;
+    return (originIsDomestic && destIsDomestic) ? 'domestic' : 'international';
+  }
+  if (tripScopeHidden) {
+    var updateTripScope = function () { tripScopeHidden.value = computeTripScope(); };
+    if (originInput) originInput.addEventListener('change', updateTripScope);
+    if (destInput) destInput.addEventListener('change', updateTripScope);
+  }
+
   form.addEventListener('submit', function (e) {
     e.preventDefault();
+
+    if (tripScopeHidden) tripScopeHidden.value = computeTripScope();
 
     if (isHotelVillaForm && !validateHotelVillaForm()) {
       return; // stop here — error box is already showing the reason

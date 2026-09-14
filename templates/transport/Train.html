@@ -16,33 +16,7 @@
 
     <div class="hero-search-card" id="heroSearchCard">
 
-            <nav class="hero-tabs" role="tablist" aria-label="Search mode">
-        <a href="{% url 'website:index' %}" class="hero-tab" data-mode="domestic-flight" role="tab" aria-selected="false">
-          <i class="fa-solid fa-plane" aria-hidden="true"></i><span>Domestic</span>
-        </a>
-
-        <a href="{% url 'transport:out' %}" class="hero-tab" data-mode="international-flight" role="tab" aria-selected="false">
-          <i class="fa-solid fa-earth-americas" aria-hidden="true"></i><span>International</span>
-        </a>
-        <a href="{% url 'residence:hotel' %}" class="hero-tab" data-mode="hotels" role="tab" aria-selected="false">
-          <i class="fa-solid fa-bed" aria-hidden="true"></i><span>Hotels</span>
-        </a>
-
-              <a href="{% url 'residence:village' %}" class="hero-tab" data-mode="hotels" role="tab" aria-selected="false">
-          <i class="fa-solid fa-bed" aria-hidden="true"></i><span>village</span>
-        </a>
-
-
-        <a href="{% url 'transport:train' %}" class="hero-tab active" data-mode="train" role="tab" aria-selected="true">
-          <i class="fa-solid fa-train" aria-hidden="true"></i><span>Train</span>
-        </a>
-        <a href="{% url 'transport:bus' %}" class="hero-tab" data-mode="bus" role="tab" aria-selected="false">
-          <i class="fa-solid fa-bus" aria-hidden="true"></i><span>Bus</span>
-        </a>
-        <a href="{% url 'packages:index' %}" class="hero-tab" data-mode="tour" role="tab" aria-selected="false">
-          <i class="fa-solid fa-suitcase-rolling" aria-hidden="true"></i><span>Tours</span>
-        </a>
-      </nav>
+            {% include "website/_hero_tabs.html" %}
 
        <form class="hero-search-form" id="heroSearchForm" autocomplete="off" data-location-scope="domestic" data-location-unit="Station">
 

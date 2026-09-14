@@ -1,0 +1,49 @@
+{% comment %}
+Shared Search Bar service tabs — included by every hero-search page
+(Flight / Hotels / Villa / Train / Bus / Tours) so all six use the exact
+same markup, order, icons and "active tab" logic instead of duplicating
+this nav six times.
+
+Change 1: Domestic Flight + International Flight are merged into a
+single "Flight" tab (plane icon) that always points to website:index,
+which now renders both domestic and international content together.
+
+Active-tab detection is centralized here via request.resolver_match,
+which also fixes a pre-existing bug where a couple of pages (hotels,
+village, train, bus, tour) had the WRONG tab hardcoded as .active
+(e.g. hotels.html highlighted "Bus").
+{% endcomment %}
+{% with current=request.resolver_match.view_name %}
+<nav class="hero-tabs" role="tablist" aria-label="Search mode">
+  <a href="{% url 'website:index' %}"
+     class="hero-tab{% if current == 'website:index' %} active{% endif %}"
+     data-mode="flight" role="tab" aria-selected="{% if current == 'website:index' %}true{% else %}false{% endif %}">
+    <i class="fa-solid fa-plane" aria-hidden="true"></i><span>Flight</span>
+  </a>
+  <a href="{% url 'residence:hotel' %}"
+     class="hero-tab{% if current == 'residence:hotel' %} active{% endif %}"
+     data-mode="hotels" role="tab" aria-selected="{% if current == 'residence:hotel' %}true{% else %}false{% endif %}">
+    <i class="fa-solid fa-bed" aria-hidden="true"></i><span>Hotels</span>
+  </a>
+  <a href="{% url 'residence:village' %}"
+     class="hero-tab{% if current == 'residence:village' %} active{% endif %}"
+     data-mode="villa" role="tab" aria-selected="{% if current == 'residence:village' %}true{% else %}false{% endif %}">
+    <i class="fa-solid fa-house-chimney" aria-hidden="true"></i><span>Villa</span>
+  </a>
+  <a href="{% url 'transport:train' %}"
+     class="hero-tab{% if current == 'transport:train' %} active{% endif %}"
+     data-mode="train" role="tab" aria-selected="{% if current == 'transport:train' %}true{% else %}false{% endif %}">
+    <i class="fa-solid fa-train" aria-hidden="true"></i><span>Train</span>
+  </a>
+  <a href="{% url 'transport:bus' %}"
+     class="hero-tab{% if current == 'transport:bus' %} active{% endif %}"
+     data-mode="bus" role="tab" aria-selected="{% if current == 'transport:bus' %}true{% else %}false{% endif %}">
+    <i class="fa-solid fa-bus" aria-hidden="true"></i><span>Bus</span>
+  </a>
+  <a href="{% url 'packages:index' %}"
+     class="hero-tab{% if current == 'packages:index' %} active{% endif %}"
+     data-mode="tour" role="tab" aria-selected="{% if current == 'packages:index' %}true{% else %}false{% endif %}">
+    <i class="fa-solid fa-suitcase-rolling" aria-hidden="true"></i><span>Tours</span>
+  </a>
+</nav>
+{% endwith %}
