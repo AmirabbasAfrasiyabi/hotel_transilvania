@@ -1,290 +1,15 @@
-```html
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Login - Hotel Transilvania</title>
-
-    <style>
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-
-        body {
-            min-height: 100vh;
-            background: linear-gradient(
-                135deg,
-                #111827,
-                #1e3a5f
-            );
-        }
-
-
-        /* =========================
-           Main Container
-        ========================= */
-
-        .auth-container {
-            min-height: 100vh;
-
-            display: flex;
-            justify-content: center;
-            align-items: center;
-
-            padding: 30px 15px;
-        }
-
-
-        /* =========================
-           Login Card
-        ========================= */
-
-        .auth-card {
-            width: 100%;
-            max-width: 430px;
-
-            background: #ffffff;
-
-            padding: 40px;
-
-            border-radius: 20px;
-
-            box-shadow:
-                0 20px 50px rgba(0, 0, 0, 0.35);
-        }
-
-
-        /* =========================
-           Title
-        ========================= */
-
-        .auth-card h1 {
-            text-align: center;
-
-            color: #1e293b;
-
-            margin-bottom: 8px;
-
-            font-size: 30px;
-        }
-
-
-        .auth-subtitle {
-            text-align: center;
-
-            color: #64748b;
-
-            margin-bottom: 30px;
-
-            font-size: 15px;
-        }
-
-
-        /* =========================
-           Django form.as_p
-        ========================= */
-
-        .django-form p {
-            margin-bottom: 20px;
-        }
-
-
-        /* Labels */
-
-        .django-form label {
-            display: block;
-
-            margin-bottom: 7px;
-
-            color: #334155;
-
-            font-weight: bold;
-
-            font-size: 15px;
-        }
-
-
-        /* Inputs */
-
-        .django-form input {
-            width: 100%;
-
-            padding: 13px 15px;
-
-            border: 1px solid #cbd5e1;
-
-            border-radius: 10px;
-
-            font-size: 15px;
-
-            outline: none;
-
-            transition: 0.3s;
-
-            background: #ffffff;
-        }
-
-
-        .django-form input:focus {
-            border-color: #2563eb;
-
-            box-shadow:
-                0 0 0 3px rgba(
-                    37,
-                    99,
-                    235,
-                    0.12
-                );
-        }
-
-
-        /* =========================
-           Error Messages
-        ========================= */
-
-        .django-form ul.errorlist {
-            list-style: none;
-
-            padding: 0;
-
-            margin: 0 0 8px 0;
-
-            color: #dc2626;
-
-            font-size: 13px;
-        }
-
-
-        .django-form ul.errorlist li {
-            margin-bottom: 4px;
-        }
-
-
-        /* Non Field Errors */
-
-        .message {
-            padding: 10px 12px;
-
-            margin-bottom: 20px;
-
-            border-radius: 8px;
-
-            background: #fee2e2;
-
-            color: #991b1b;
-
-            text-align: center;
-
-            font-size: 14px;
-        }
-
-
-        /* =========================
-           Help Text
-        ========================= */
-
-        .django-form .helptext {
-            display: block;
-
-            margin-top: 6px;
-
-            color: #64748b;
-
-            font-size: 12px;
-        }
-
-
-        /* =========================
-           Login Button
-        ========================= */
-
-        .auth-btn {
-            width: 100%;
-
-            padding: 14px;
-
-            border: none;
-
-            border-radius: 10px;
-
-            background: #2563eb;
-
-            color: white;
-
-            font-size: 16px;
-
-            font-weight: bold;
-
-            cursor: pointer;
-
-            transition: 0.3s;
-        }
-
-
-        .auth-btn:hover {
-            background: #1d4ed8;
-
-            transform: translateY(-2px);
-        }
-
-
-        /* =========================
-           Bottom Text
-        ========================= */
-
-        .bottom-text {
-            text-align: center;
-
-            margin-top: 25px;
-
-            color: #64748b;
-
-            font-size: 14px;
-        }
-
-
-        .bottom-text a {
-            color: #2563eb;
-
-            text-decoration: none;
-
-            font-weight: bold;
-        }
-
-
-        .bottom-text a:hover {
-            text-decoration: underline;
-        }
-
-
-        /* =========================
-           Mobile
-        ========================= */
-
-        @media (max-width: 480px) {
-
-            .auth-card {
-                padding: 30px 20px;
-            }
-
-            .auth-card h1 {
-                font-size: 26px;
-            }
-
-        }
-
-    </style>
-
+     <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
 
-
-<body>
+<body class="auth-page">
 
 
 <div class="auth-container">
@@ -292,12 +17,11 @@
 
     <div class="auth-card">
 
+        <div class="auth-brand">
+            <i class="fa-solid fa-hotel"></i>
+        </div>
 
-        <!-- Title -->
-
-        <h1>
-            Welcome Back
-        </h1>
+        <h1>Welcome Back</h1>
 
 
         <p class="auth-subtitle">
@@ -322,8 +46,6 @@
 
         {% endif %}
 
-
-
         <!-- =========================
              Authentication Form Errors
         ========================= -->
@@ -339,7 +61,6 @@
             {% endfor %}
 
         {% endif %}
-
 
 
         <!-- =========================
@@ -370,8 +91,6 @@
 
         </form>
 
-
-
         <!-- =========================
              Sign Up
         ========================= -->
@@ -395,4 +114,3 @@
 
 </body>
 </html>
-```

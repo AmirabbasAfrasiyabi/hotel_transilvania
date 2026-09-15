@@ -7823,3 +7823,332 @@ body.mobile-nav-active #mobile-nav-toggle {
 /* ==========================================================================
    >>> END: TRAVELISTA — INLINE FAQ <<<
    ========================================================================== */
+/* ==========================================================================
+   >>> START: HOTEL TRANSILVANIA — AUTH PAGES (Login / Signup)
+   استایل صفحات لاگین و ثبت‌نام که قبلاً به‌صورت inline داخل خود فایل‌های
+   login.html و signup.html بود، به اینجا منتقل شد تا:
+   ۱) کل استایل پروژه در main.css متمرکز باشد (طبق درخواست)
+   ۲) بشود بین دو صفحه (لاگین/ثبت‌نام) کد را به اشتراک گذاشت
+   ۳) چک‌لیست رنگی شرایط پسورد و چند طرح گرافیکی هم به همین بخش اضافه شد
+   ========================================================================== */
+
+.auth-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #111827, #1e3a5f);
+  position: relative;
+  /* FIX: قبلاً overflow: hidden بود که وقتی محتوای فرم (مخصوصاً در
+     صفحه‌ی signup با چک‌لیست پسورد) از ارتفاع صفحه بلندتر می‌شد،
+     اجازه‌ی اسکرول عمودی را نمی‌داد و بخش پایینی فرم دیده نمی‌شد.
+     فقط overflow-x مهار می‌شود تا حباب‌های گرافیکی از عرض صفحه
+     بیرون نزنند؛ overflow-y آزاد است تا صفحه به‌صورت طبیعی اسکرول شود. */
+  overflow-x: hidden;
+  overflow-y: visible;
+  font-family: Arial, sans-serif;
+}
+
+/* ---------- طرح گرافیکی ۱: حباب‌های نوری متحرک پشت زمینه ---------- */
+.auth-page::before,
+.auth-page::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(10px);
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.auth-page::before {
+  width: 380px;
+  height: 380px;
+  background: radial-gradient(circle at 30% 30%, #2563eb, transparent 70%);
+  top: -120px;
+  left: -100px;
+  animation: auth-float-1 9s ease-in-out infinite;
+}
+
+.auth-page::after {
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle at 70% 70%, #f8b600, transparent 70%);
+  bottom: -100px;
+  right: -80px;
+  animation: auth-float-2 11s ease-in-out infinite;
+}
+
+@keyframes auth-float-1 {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(30px, 25px); }
+}
+
+@keyframes auth-float-2 {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(-25px, -20px); }
+}
+
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* کوچک‌تر شد تا فرم بدون نیاز به اسکرول در صفحه جا شود */
+  padding: 16px 15px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- طرح گرافیکی ۲: نشان (badge) برند بالای کارت ---------- */
+.auth-brand {
+  width: 46px;
+  height: 46px;
+  margin: 0 auto 10px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #2563eb, #1e3a5f);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 25px -8px rgba(37, 99, 235, 0.6);
+}
+
+.auth-brand i,
+.auth-brand svg {
+  color: #ffffff;
+  font-size: 20px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 430px;
+  /* حداکثر ارتفاع مجاز کارت = ارتفاع صفحه منهای کمی حاشیه؛ اگر محتوا
+     بازهم بیشتر بود (مثلاً روی موبایل خیلی کوتاه)، فقط خودِ کارت
+     اسکرول داخلی می‌گیرد، نه کل صفحه، تا برند/عنوان همیشه ثابت بمانند. */
+  max-height: calc(100vh - 24px);
+  overflow-y: auto;
+  background: #ffffff;
+  padding: 22px 32px;
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+  position: relative;
+  /* طرح گرافیکی ۳: نوار رنگی بالای کارت */
+  border-top: 4px solid #2563eb;
+  animation: auth-card-in 0.5s ease;
+}
+
+@keyframes auth-card-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.auth-card h1 {
+  text-align: center;
+  color: #1e293b;
+  margin-bottom: 4px;
+  font-size: 22px;
+}
+
+.auth-subtitle {
+  text-align: center;
+  color: #64748b;
+  margin-bottom: 14px;
+  font-size: 13px;
+}
+
+/* ---------- فرم جنگو (form.as_p) ---------- */
+.django-form p,
+.auth-card form p {
+  margin-bottom: 10px;
+}
+
+.django-form label,
+.auth-card form label {
+  display: block;
+  margin-bottom: 4px;
+  color: #334155;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.django-form input,
+.auth-card form input {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: 0.3s;
+  background: #ffffff;
+}
+
+.django-form input:focus,
+.auth-card form input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.django-form ul.errorlist,
+.auth-card form .errorlist {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 6px 0;
+  color: #dc2626;
+  font-size: 12px;
+}
+
+.django-form ul.errorlist li,
+.auth-card form .errorlist li {
+  margin-bottom: 2px;
+}
+
+.message {
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  background: #fee2e2;
+  color: #991b1b;
+  text-align: center;
+  font-size: 13px;
+}
+
+.django-form .helptext,
+.auth-card form .helptext {
+  display: block;
+  margin-top: 3px;
+  color: #64748b;
+  font-size: 11px;
+}
+
+.auth-btn {
+  width: 100%;
+  padding: 11px;
+  border: none;
+  border-radius: 10px;
+  background: #2563eb;
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.auth-btn:hover:not(:disabled) {
+  background: #1d4ed8;
+  transform: translateY(-2px);
+}
+
+/* FIX: قبلاً دکمه غیرفعال هم مثل حالت عادی رنگی و کلیک‌پذیر به نظر می‌رسید */
+.auth-btn:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+  transform: none;
+  opacity: 0.8;
+}
+
+.bottom-text {
+  text-align: center;
+  margin-top: 12px;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.bottom-text a {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.bottom-text a:hover {
+  text-decoration: underline;
+}
+
+/* ---------- چک‌لیست رنگی شرایط پسورد (سبز/قرمز) ---------- */
+.password-rules {
+  list-style: none;
+  margin: -4px 0 10px 0;
+  padding: 8px 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rule-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #94a3b8;
+  transition: color 0.25s ease;
+}
+
+.rule-icon {
+  flex-shrink: 0;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  line-height: 1;
+  color: #ffffff;
+  background: #cbd5e1;
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+
+.rule-icon::after {
+  content: "\2715"; /* × */
+}
+
+/* شرط رعایت نشده = قرمز */
+.rule-item.rule-invalid {
+  color: #dc2626;
+}
+
+.rule-item.rule-invalid .rule-icon {
+  background: #dc2626;
+}
+
+/* شرط رعایت شده = سبز */
+.rule-item.rule-valid {
+  color: #16a34a;
+}
+
+.rule-item.rule-valid .rule-icon {
+  background: #16a34a;
+  transform: scale(1.1);
+}
+
+.rule-item.rule-valid .rule-icon::after {
+  content: "\2713"; /* ✓ */
+}
+
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 20px 18px;
+  }
+
+  .auth-card h1 {
+    font-size: 20px;
+  }
+}
+
+/* روی نمایشگرهای خیلی کوتاه (مثلاً لپ‌تاپ با نوار مرورگر/بوکمارک زیاد)
+   کارت کمی جمع‌وجورتر می‌شود تا همچنان بدون اسکرول کامل دیده شود */
+@media (max-height: 700px) {
+  .auth-container { padding: 10px 15px; }
+  .auth-brand { width: 38px; height: 38px; margin-bottom: 6px; }
+  .auth-brand i { font-size: 16px; }
+  .auth-card { padding: 16px 28px; }
+  .auth-card h1 { font-size: 19px; margin-bottom: 2px; }
+  .auth-subtitle { margin-bottom: 8px; }
+  .django-form p, .auth-card form p { margin-bottom: 7px; }
+  .password-rules { padding: 6px 10px; gap: 3px; margin-bottom: 7px; }
+  .bottom-text { margin-top: 8px; }
+}
+
+/* ==========================================================================
+   >>> END: HOTEL TRANSILVANIA — AUTH PAGES
+   ========================================================================== */

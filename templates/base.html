@@ -144,10 +144,9 @@
 
         <a href="#" class="account-action-link">
             <i class="fa-solid fa-user"></i>
-            <span>{{ request.user.username }}</span>
+           <span>{{ request.user.get_full_name|default:request.user.username }}</span>
         </a>
 
-        <!-- ADDED: ظاهر دکمه لاگ‌اوت — فعلاً بدون منطق سمت سرور (href="#") -->
         <a href="{% url 'account:logout' %}" class="account-action-link">
             <i class="fa-solid fa-right-from-bracket"></i>
             <span>Logout</span>
