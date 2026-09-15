@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login , logout
 from django.contrib.auth.forms import AuthenticationForm
-
+from django.contrib.auth.decorators import login_required
 # =========================
 # Login
 # =========================
@@ -23,9 +23,9 @@ def login_view(request):
 # Logout
 # =========================
 
+@login_required(login_url='/accounts/login/')
 def logout_view(request):
-    if request.user.is_authenticated:
-        logout(request)
+    logout(request)
     return redirect('website:index')
 
 
