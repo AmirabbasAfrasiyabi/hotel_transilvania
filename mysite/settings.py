@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'residence',
     'help_center',
     'transport',
+    'account',
     'ckeditor',
     'ckeditor_uploader',
 ]
