@@ -5,6 +5,8 @@ from .forms import CustomUserCreationForm, CustomAuthenticationForm
 
 
 def login_view(request):
+    if request.user.is_authenticated:
+        return redirect('website:index')
     if request.method == 'POST':
         form = CustomAuthenticationForm(request=request, data=request.POST)
         if form.is_valid():
@@ -24,6 +26,8 @@ def logout_view(request):
 
 
 def signup_view(request):
+    if request.user.is_authenticated:
+        return redirect('website:index')
     if request.method == "POST":
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():

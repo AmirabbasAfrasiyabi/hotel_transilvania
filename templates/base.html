@@ -127,40 +127,40 @@
       </ul>
     </nav>
 
-<!-- دکمه‌های حساب کاربری: سفرهای من / پرداخت / ورود -->
-<div class="header-account-actions">
 
-    <a href="#" class="account-action-link">
-        <i class="fa-solid fa-suitcase-rolling"></i>
-        <span>My Travel</span>
-    </a>
-
-    <a href="#" class="account-action-link">
-        <i class="fa-solid fa-credit-card"></i>
-        <span>Payment</span>
-    </a>
-
+    <div class="header-account-actions">
+  <ul class="nav-menu">
     {% if request.user.is_authenticated %}
-
-        <a href="#" class="account-action-link">
-            <i class="fa-solid fa-user"></i>
-           <span>{{ request.user.get_full_name|default:request.user.username }}</span>
-        </a>
-
-        <a href="{% url 'account:logout' %}" class="account-action-link">
-            <i class="fa-solid fa-right-from-bracket"></i>
-            <span>Logout</span>
-        </a>
-
+    <li class="dropdown">
+      <a href="#">
+        <span>{{ request.user.get_full_name|default:request.user.username }}</span>
+      </a>
+      <ul class="submenu">
+        <li>
+          <a href="#">
+             My Travel
+          </a>
+        </li>
+        <li>
+          <a href="#">
+             Payment
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'account:logout' %}">
+             Logout
+          </a>
+        </li>
+      </ul>
+    </li>
     {% else %}
-
-        <a href="{% url 'account:login' %}" class="account-action-link">
-            <i class="fa-solid fa-user-plus"></i>
-            <span>Login</span>
-        </a>
-
+    <li>
+      <a href="{% url 'account:login' %}">
+        <i class="fa-solid fa-user"></i> Login / Register
+      </a>
+    </li>
     {% endif %}
-
+  </ul>
 </div>
 
   </div>
