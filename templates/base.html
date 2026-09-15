@@ -1,1070 +1,289 @@
-```html
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="zxx" class="no-js">
-
 <head>
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Favicon -->
-    <link rel="shortcut icon"
-          href="{% static 'img/logo.png' %}">
-
-    <meta name="author" content="colorlib">
-
-    <meta name="description"
-          content="{% block meta_description %}Book flights, trains, buses, hotels and tour packages all in one place.{% endblock %}">
-
-    <meta name="keywords" content="">
-
-    <meta charset="UTF-8">
-
-    <title>
-        {% block title %}Travel{% endblock %}
-    </title>
-
-
-    <!-- =========================
-         Google Fonts
-    ========================== -->
-
-    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700"
-          rel="stylesheet">
-
-
-    <link rel="preconnect"
-          href="https://fonts.googleapis.com">
-
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Space+Mono:wght@400;700&display=swap"
-          rel="stylesheet">
-
-
-    <!-- =========================
-         Linearicons
-    ========================== -->
-
-    <link rel="stylesheet"
-          href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
-
-
-    <!-- =========================
-         Font Awesome
-    ========================== -->
-
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-
-
-    <!-- =========================
-         CSS
-    ========================== -->
-
-    <link rel="stylesheet"
-          href="{% static 'css/bootstrap.css' %}">
-
-    <link rel="stylesheet"
-          href="{% static 'css/magnific-popup.css' %}">
-
-    <link rel="stylesheet"
-          href="{% static 'css/jquery-ui.css' %}">
-
-    <link rel="stylesheet"
-          href="{% static 'css/nice-select.css' %}">
-
-    <link rel="stylesheet"
-          href="{% static 'css/animate.min.css' %}">
-
-    <link rel="stylesheet"
-          href="{% static 'css/owl.carousel.css' %}">
-
-    <link rel="stylesheet"
-          href="{% static 'css/main.css' %}">
-
-
-    <!-- =========================
-         Toast Notification CSS
-    ========================== -->
-
-    <style>
-
-        .tvl-toast-container {
-
-            position: fixed;
-
-            top: 90px;
-
-            right: 20px;
-
-            z-index: 9999;
-
-            display: flex;
-
-            flex-direction: column;
-
-            gap: 10px;
-
-            max-width: 350px;
-        }
-
-
-        .tvl-toast {
-
-            display: flex;
-
-            align-items: center;
-
-            gap: 10px;
-
-            padding: 14px 16px;
-
-            border-radius: 8px;
-
-            color: #fff;
-
-            font-family: 'Poppins', sans-serif;
-
-            font-size: 14px;
-
-            box-shadow:
-                0 4px 12px rgba(0,0,0,0.15);
-
-            animation:
-                tvl-slide-in 0.35s ease forwards;
-        }
-
-
-        .tvl-toast--success {
-            background-color: #28a745;
-        }
-
-
-        .tvl-toast--error {
-            background-color: #dc3545;
-        }
-
-
-        .tvl-toast--warning {
-            background-color: #ffc107;
-            color: #212529;
-        }
-
-
-        .tvl-toast--info,
-        .tvl-toast--debug {
-            background-color: #17a2b8;
-        }
-
-
-        .tvl-toast__icon {
-            font-size: 18px;
-        }
-
-
-        .tvl-toast__text {
-            flex: 1;
-        }
-
-
-        .tvl-toast__close {
-
-            background: none;
-
-            border: none;
-
-            color: inherit;
-
-            font-size: 18px;
-
-            cursor: pointer;
-
-            line-height: 1;
-
-            opacity: 0.8;
-        }
-
-
-        .tvl-toast__close:hover {
-            opacity: 1;
-        }
-
-
-        @keyframes tvl-slide-in {
-
-            from {
-
-                transform: translateX(120%);
-
-                opacity: 0;
-            }
-
-            to {
-
-                transform: translateX(0);
-
-                opacity: 1;
-            }
-
-        }
-
-
-        @keyframes tvl-fade-out {
-
-            from {
-
-                opacity: 1;
-            }
-
-            to {
-
-                opacity: 0;
-
-                transform: translateX(20px);
-            }
-
-        }
-
-
-        /* =========================
-           Logout Form
-        ========================== */
-
-        .logout-form {
-
-            margin: 0;
-
-            padding: 0;
-
-            display: inline-block;
-        }
-
-
-        .logout-form button {
-
-            border: none;
-
-            outline: none;
-
-            font-family: inherit;
-
-            cursor: pointer;
-        }
-
-
-        .logout-btn {
-
-            text-decoration: none;
-        }
-
-
-        .logout-btn:hover {
-
-            text-decoration: none;
-        }
-
-    </style>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<!-- FIXED: fav.png replaced with logo.png to avoid 404 -->
+<link rel="shortcut icon" href="{% static 'img/logo.png' %}">
+
+<meta name="author" content="colorlib">
+<meta name="description" content="{% block meta_description %}Book flights, trains, buses, hotels and tour packages all in one place.{% endblock %}">
+<meta name="keywords" content>
+<meta charset="UTF-8">
+
+<title>{% block title %}Travel{% endblock %}</title>
+<link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet">
+
+<!-- FIXED: Fraunces + Space Mono, used by the --tvl-* "boarding pass" design
+     system (Contact page, Why Travelista page, and now the Hero search). -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<!-- FIXED: Linearicons via CDN to avoid 404 font files -->
+<link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
+
+<!-- FIXED: Font Awesome via CDN to avoid 404 font files -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+<link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+<link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
+<link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}">
+<link rel="stylesheet" href="{% static 'css/nice-select.css' %}">
+<link rel="stylesheet" href="{% static 'css/animate.min.css' %}">
+<link rel="stylesheet" href="{% static 'css/owl.carousel.css' %}">
+<link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+<!-- FIXED: Toast notification popup styles for Django messages framework.
+     Vanilla CSS (not tied to the site's Bootstrap version) so it never
+     conflicts with bootstrap.min.js already loaded on the page. -->
 
 </head>
-
-
 <body>
 
-
-<!-- =====================================================
-     Django Toast Messages
-===================================================== -->
-
+<!-- ================= Toast Notification Popup (Django Messages) ================= -->
 {% if messages %}
-
-    <div id="toast-container"
-         class="tvl-toast-container">
-
-        {% for message in messages %}
-
-            <div class="tvl-toast tvl-toast--{{ message.tags }}">
-
-                <span class="tvl-toast__icon">
-
-                    {% if message.tags == 'success' %}
-
-                        <i class="fa-solid fa-circle-check"></i>
-
-                    {% elif message.tags == 'error' %}
-
-                        <i class="fa-solid fa-circle-xmark"></i>
-
-                    {% elif message.tags == 'warning' %}
-
-                        <i class="fa-solid fa-triangle-exclamation"></i>
-
-                    {% else %}
-
-                        <i class="fa-solid fa-circle-info"></i>
-
-                    {% endif %}
-
-                </span>
-
-
-                <span class="tvl-toast__text">
-
-                    {{ message }}
-
-                </span>
-
-
-                <button type="button"
-                        class="tvl-toast__close"
-                        onclick="this.parentElement.remove()">
-
-                    &times;
-
-                </button>
-
-            </div>
-
-        {% endfor %}
-
+<div id="toast-container" class="tvl-toast-container">
+    {% for message in messages %}
+    <div class="tvl-toast tvl-toast--{{ message.tags }}">
+        <span class="tvl-toast__icon">
+            {% if message.tags == 'success' %}<i class="fa-solid fa-circle-check"></i>
+            {% elif message.tags == 'error' %}<i class="fa-solid fa-circle-xmark"></i>
+            {% elif message.tags == 'warning' %}<i class="fa-solid fa-triangle-exclamation"></i>
+            {% else %}<i class="fa-solid fa-circle-info"></i>{% endif %}
+        </span>
+        <span class="tvl-toast__text">{{ message }}</span>
+        <button type="button" class="tvl-toast__close" onclick="this.parentElement.remove()">&times;</button>
     </div>
-
+    {% endfor %}
+</div>
 {% endif %}
-
-
-<!-- =====================================================
-     HEADER
-===================================================== -->
+<!-- ================================================================================ -->
 
 <header id="header">
-
-
-    <!-- Header Top -->
-
-    <div class="header-top">
-
-        <div class="container">
-
-            <div class="row align-items-center">
-
-                <div class="col-lg-6 col-sm-6 col-6 header-top-right">
-                </div>
-
-            </div>
-
-        </div>
-
+<div class="header-top">
+<div class="container">
+<div class="row align-items-center">
+<div class="col-lg-6 col-sm-6 col-6 header-top-right">
+</div>
+</div>
+</div>
+</div>
+<div class="container main-menu">
+  <div class="row align-items-center justify-content-between d-flex">
+    <div id="logo">
+      <a href="{% url 'website:index' %}"><img src="{% static 'img/logo.png' %}" alt title /></a>
     </div>
 
-
-    <!-- =================================================
-         Main Menu
-    ================================================== -->
-
-    <div class="container main-menu">
-
-        <div class="row align-items-center justify-content-between d-flex">
-
-
-            <!-- =========================
-                 Logo
-            ========================== -->
-
-            <div id="logo">
-
-                <a href="{% url 'website:index' %}">
-
-                    <img src="{% static 'img/logo.png' %}"
-                         alt="Travelista Logo"
-                         title="Travelista">
-
-                </a>
-
-            </div>
-
-
-            <!-- =========================
-                 Navigation
-            ========================== -->
-
-            <nav id="nav-menu-container">
-
-                <ul class="nav-menu">
-
-
-                    <!-- Flight -->
-
-                    <li>
-
-                        <a href="{% url 'website:index' %}">
-
-                            <i class="fa fa-plane"></i>
-
-                            Flight
-
-                        </a>
-
-                    </li>
-
-
-                    <!-- Train -->
-
-                    <li>
-
-                        <a href="{% url 'transport:train' %}">
-
-                            <i class="fa fa-train"></i>
-
-                            Train
-
-                        </a>
-
-                    </li>
-
-
-                    <!-- Bus -->
-
-                    <li>
-
-                        <a href="{% url 'transport:bus' %}">
-
-                            <i class="fa fa-bus"></i>
-
-                            Bus
-
-                        </a>
-
-                    </li>
-
-
-                    <!-- Residence -->
-
-                    <li class="dropdown">
-
-                        <a href="#">
-
-                            <i class="fa fa-bed"></i>
-
-                            Residence
-
-                        </a>
-
-
-                        <ul class="submenu">
-
-                            <li>
-
-                                <a href="{% url 'residence:hotel' %}">
-                                    Hotel
-                                </a>
-
-                            </li>
-
-
-                            <li>
-
-                                <a href="{% url 'residence:village' %}">
-                                    Village
-                                </a>
-
-                            </li>
-
-                        </ul>
-
-                    </li>
-
-
-                    <!-- Tour Packages -->
-
-                    <li>
-
-                        <a href="{% url 'packages:index' %}">
-
-                            <i class="fa fa-suitcase"></i>
-
-                            Tour Packages
-
-                        </a>
-
-                    </li>
-
-
-                    <!-- About Us -->
-
-                    <li class="dropdown">
-
-                        <a href="#">
-
-                            <i class="fa-solid fa-book-open"></i>
-
-                            About Us
-
-                        </a>
-
-
-                        <ul class="submenu">
-
-                            <li>
-
-                                <a href="{% url 'website:about' %}">
-                                    Our Story
-                                </a>
-
-                            </li>
-
-
-                            <li>
-
-                                <a href="{% url 'website:contact' %}">
-                                    Contact
-                                </a>
-
-                            </li>
-
-
-                            <li>
-
-                                <a href="{% url 'blog:index' %}">
-                                    Blog
-                                </a>
-
-                            </li>
-
-                        </ul>
-
-                    </li>
-
-                </ul>
-
-            </nav>
-
-
-            <!-- =================================================
-                 ACCOUNT ACTIONS
-            ================================================== -->
-
-            <div class="header-account-actions">
-
-
-                <!-- My Travel -->
-
-                <a href="#"
-                   class="account-action-link">
-
-                    <i class="fa-solid fa-suitcase-rolling"></i>
-
-                    <span>
-                        My Travel
-                    </span>
-
-                </a>
-
-
-                <!-- Payment -->
-
-                <a href="#"
-                   class="account-action-link">
-
-                    <i class="fa-solid fa-credit-card"></i>
-
-                    <span>
-                        Payment
-                    </span>
-
-                </a>
-
-
-                {% if request.user.is_authenticated %}
-
-
-                    <!-- =========================
-                         Logged In User
-                    ========================== -->
-
-                    <a href="#"
-                       class="account-action-btn">
-
-                        <i class="fa-solid fa-user"></i>
-
-                        <span>
-                            {{ request.user.username }}
-                        </span>
-
-                    </a>
-
-
-                    <!-- =========================
-                         Logout
-                    ========================== -->
-
-                    <form method="POST"
-                          action="{% url 'account:logout' %}"
-                          class="logout-form">
-
-                        {% csrf_token %}
-
-                        <button type="submit"
-                                class="account-action-btn logout-btn">
-
-                            <i class="fa-solid fa-right-from-bracket"></i>
-
-                            <span>
-                                Logout
-                            </span>
-
-                        </button>
-
-                    </form>
-
-
-                {% else %}
-
-
-                    <!-- =========================
-                         Login
-                    ========================== -->
-
-                    <a href="{% url 'account:login' %}"
-                       class="account-action-btn">
-
-                        <i class="fa-solid fa-user-plus"></i>
-
-                        <span>
-                            Login
-                        </span>
-
-                    </a>
-
-
-                {% endif %}
-
-
-            </div>
-
-
-        </div>
-
-    </div>
-
+    <nav id="nav-menu-container">
+      <ul class="nav-menu">
+
+        <li>
+          <a href="{% url 'website:index' %}">
+            <i class="fa fa-plane"></i> Flight
+          </a>
+        </li>
+
+        <li>
+          <a href="{% url 'transport:train' %}">
+            <i class="fa fa-train"></i> Train
+          </a>
+        </li>
+
+        <li>
+          <a href="{% url 'transport:bus' %}">
+            <i class="fa fa-bus"></i> Bus
+          </a>
+        </li>
+
+        <li class="dropdown">
+          <a href="#">
+            <i class="fa fa-bed"></i> residence
+          </a>
+          <ul class="submenu">
+            <li><a href="{% url 'residence:hotel' %}">Hotel</a></li>
+            <li><a href="{% url 'residence:village' %}">Village</a></li>
+          </ul>
+        </li>
+
+        <li>
+          <a href="{% url 'packages:index' %}">
+            <i class="fa fa-suitcase"></i> Tour Packages
+          </a>
+        </li>
+
+        <li class="dropdown">
+          <a href="#">
+            <i class="fa-solid fa-book-open"></i> About Us
+          </a>
+          <ul class="submenu">
+            <li><a href="{% url 'website:about' %}">Our Story</a></li>
+            <li><a href="{% url 'website:contact' %}">Contact</a></li>
+            <li><a href="{% url 'blog:index' %}">Blog</a></li>
+          </ul>
+        </li>
+
+      </ul>
+    </nav>
+
+<!-- دکمه‌های حساب کاربری: سفرهای من / پرداخت / ورود -->
+<div class="header-account-actions">
+
+    <a href="#" class="account-action-link">
+        <i class="fa-solid fa-suitcase-rolling"></i>
+        <span>My Travel</span>
+    </a>
+
+    <a href="#" class="account-action-link">
+        <i class="fa-solid fa-credit-card"></i>
+        <span>Payment</span>
+    </a>
+
+    {% if request.user.is_authenticated %}
+
+        <a href="#" class="account-action-link">
+            <i class="fa-solid fa-user"></i>
+            <span>{{ request.user.username }}</span>
+        </a>
+
+        <!-- ADDED: ظاهر دکمه لاگ‌اوت — فعلاً بدون منطق سمت سرور (href="#") -->
+        <a href="{% url 'account:logout' %}" class="account-action-link">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span>Logout</span>
+        </a>
+
+    {% else %}
+
+        <a href="{% url 'account:login' %}" class="account-action-link">
+            <i class="fa-solid fa-user-plus"></i>
+            <span>Login</span>
+        </a>
+
+    {% endif %}
+
+</div>
+
+  </div>
+</div>
 </header>
-
-
-<!-- =====================================================
-     PAGE CONTENT
-===================================================== -->
 
 {% block content %}
 
 {% endblock %}
-
-
-<!-- =====================================================
-     FOOTER
-===================================================== -->
-
 <footer class="footer-area">
 
-
-    <div class="ft-container">
-
-
-        <div class="ft-grid">
-
-
-            <!-- =========================
-                 Socials
-            ========================== -->
-
-            <div class="ft-socials-col">
-
-
-                <!-- Logo -->
-
-                <div class="ft-footer-logo">
-
-                    <a href="{% url 'website:index' %}">
-
-                        <img src="{% static 'img/logo.png' %}"
-                             alt="Travelista Logo">
-
-                    </a>
-
-                </div>
-
-
-                <!-- Social Icons -->
-
-                <div class="ft-socials">
-
-
-                    <a href="https://t.me/amir_afrasiyabi"
-                       class="ft-social-btn">
-
-                        <i class="fa fa-paper-plane"></i>
-
-                    </a>
-
-
-                    <a href="https://github.com/AmirabbasAfrasiyabi"
-                       class="ft-social-btn">
-
-                        <i class="fa-brands fa-github"></i>
-
-                    </a>
-
-
-                    <a href="https://www.linkedin.com/in/amirabbas-afrasiyabi-a6a230259"
-                       class="ft-social-btn">
-
-                        <i class="fa-brands fa-linkedin"></i>
-
-                    </a>
-
-
-                    <a href="mailto:abb.afrasiyabi@gmail.com"
-                       class="ft-social-btn">
-
-                        <i class="fa fa-envelope"></i>
-
-                    </a>
-
-
-                </div>
-
-            </div>
-
-
-            <!-- =========================
-                 Services
-            ========================== -->
-
-            <div>
-
-                <p class="ft-col-title">
-                    Services
-                </p>
-
-
-                <ul class="ft-nav-list">
-
-
-                    <li>
-
-                        <a href="{% url 'website:index' %}">
-
-                            <i class="fa fa-plane"></i>
-
-                            Flight
-
-                        </a>
-
-                    </li>
-
-
-                    <li>
-
-                        <a href="{% url 'transport:train' %}">
-
-                            <i class="fa fa-train"></i>
-
-                            Train
-
-                        </a>
-
-                    </li>
-
-
-                    <li>
-
-                        <a href="{% url 'transport:bus' %}">
-
-                            <i class="fa fa-bus"></i>
-
-                            Bus
-
-                        </a>
-
-                    </li>
-
-
-                </ul>
-
-            </div>
-
-
-            <!-- =========================
-                 Company
-            ========================== -->
-
-            <div>
-
-                <p class="ft-col-title">
-                    About Us
-                </p>
-
-
-                <ul class="ft-nav-list">
-
-
-                    <li>
-
-                        <a href="{% url 'website:about' %}">
-
-                            <i class="fa-solid fa-book-open"></i>
-
-                            Our Story
-
-                        </a>
-
-                    </li>
-
-
-                    <li>
-
-                        <a href="{% url 'website:contact' %}">
-
-                            <i class="fa-solid fa-envelope"></i>
-
-                            Contact Us
-
-                        </a>
-
-                    </li>
-
-
-                    <li>
-
-                        <a href="{% url 'website:Why_Mine' %}">
-
-                            <i class="fa fa-question-circle"></i>
-
-                            Why Mine
-
-                        </a>
-
-                    </li>
-
-
-                    <li>
-
-                        <a href="{% url 'blog:index' %}">
-
-                            <i class="fa-solid fa-file-lines"></i>
-
-                            Blog
-
-                        </a>
-
-                    </li>
-
-
-                </ul>
-
-            </div>
-
-
-            <!-- =========================
-                 Legal
-            ========================== -->
-
-            <div>
-
-                <p class="ft-col-title">
-                    Legal
-                </p>
-
-
-                <ul class="ft-nav-list">
-
-
-                    <li>
-
-                        <a href="{% url 'help_center:FAQ' %}">
-
-                            <i class="fa fa-question-circle"></i>
-
-                            FAQ
-
-                        </a>
-
-                    </li>
-
-
-                    <li>
-
-                        <a href="{% url 'help_center:Terms_and_Conditions' %}">
-
-                            <i class="fa-solid fa-scale-balanced"></i>
-
-                            Terms & Conditions
-
-                        </a>
-
-                    </li>
-
-
-                    <li>
-
-                        <a href="{% url 'help_center:Buying_Guide' %}">
-
-                            <i class="fa-solid fa-cart-shopping"></i>
-
-                            Buying Guide
-
-                        </a>
-
-                    </li>
-
-
-                    <li>
-
-                        <a href="{% url 'help_center:Refound_Guide' %}">
-
-                            <i class="fa-solid fa-money-bill-transfer"></i>
-
-                            Refund Guide
-
-                        </a>
-
-                    </li>
-
-
-                </ul>
-
-            </div>
-
-
-        </div>
-
-
-        <hr class="ft-divider">
-
-
+<div class="ft-container">
+  <div class="ft-grid">
+
+    <!-- Socials -->
+    <div class="ft-socials-col">
+        <!-- Logo -->
+  <div class="ft-footer-logo">
+    <a href="{% url 'website:index' %}">
+      <img src="{% static 'img/logo.png' %}" alt="Travelista Logo">
+    </a>
+  </div>
+
+  <!-- Social Icons -->
+
+      <div class="ft-socials">
+
+<a href="https://t.me/amir_afrasiyabi" class="ft-social-btn">
+    <i class="fa fa-paper-plane"></i>
+</a>
+
+<a href="https://github.com/AmirabbasAfrasiyabi" class="ft-social-btn">
+    <i class="fa-brands fa-github"></i>
+</a>
+
+<a href="https://www.linkedin.com/in/amirabbas-afrasiyabi-a6a230259" class="ft-social-btn">
+    <i class="fa-brands fa-linkedin"></i>
+</a>
+
+<a href="mailto:abb.afrasiyabi@gmail.com" class="ft-social-btn">
+    <i class="fa fa-envelope"></i>
+</a>
+
+</div>
     </div>
+
+    <!-- Services -->
+    <div>
+      <p class="ft-col-title">Services</p>
+      <ul class="ft-nav-list">
+        <li><a href="{% url 'website:index' %}"><i class="fa fa-plane"></i>Flight</a></li>
+        <li><a href="{% url 'transport:train' %}"><i class="fa fa-train"></i>Train</a></li>
+        <li><a href="{% url 'transport:bus' %}"><i class="fa fa-bus"></i>Bus</a></li>
+      </ul>
+    </div>
+
+    <!-- Company -->
+    <div>
+      <p class="ft-col-title">About Us</p>
+      <ul class="ft-nav-list">
+        <li><a href="{% url 'website:about' %}"><i class="fa-solid fa-book-open"></i>Our Story</a></li>
+        <li><a href="{% url 'website:contact' %}"><i class="fa-solid fa-envelope"></i>Contact Us</a></li>
+        <li><a href="{% url 'website:Why_Mine' %}"><i class="fa fa-question-circle"></i>Why Mine</a></li>
+        <li><a href="{% url 'blog:index' %}"><i class="fa-solid fa-file-lines"></i>Blog</a></li>
+      </ul>
+    </div>
+
+    <!-- Legal -->
+    <div>
+      <p class="ft-col-title">Legal</p>
+      <ul class="ft-nav-list">
+        <li><a href="{% url 'help_center:FAQ' %}"><i class="fa fa-question-circle"></i>Faq</a></li>
+        <li><a href="{% url 'help_center:Terms_and_Conditions' %}"><i class="fa-solid fa-scale-balanced"></i> Terms & Conditions</a></li>
+        <li><a href="{% url 'help_center:Buying_Guide' %}"><i class="fa-solid fa-cart-shopping"></i> Buying Guide</a></li>
+        <li><a href="{% url 'help_center:Refound_Guide' %}"><i class="fa-solid fa-money-bill-transfer"></i> Refund Guide</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <hr class="ft-divider">
 
 </footer>
 
-
-<!-- =====================================================
-     JAVASCRIPT
-===================================================== -->
-
 <script src="{% static 'js/vendor/jquery-2.2.4.min.js' %}"></script>
-
 <script src="{% static 'js/popper.min.js' %}"></script>
-
 <script src="{% static 'js/vendor/bootstrap.min.js' %}"></script>
-
-
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhOdIF3Y9382fqJYt5I_sswSrEw5eihAA"></script>
-
-
 <script src="{% static 'js/jquery-ui.js' %}"></script>
-
 <script src="{% static 'js/easing.min.js' %}"></script>
-
 <script src="{% static 'js/hoverIntent.js' %}"></script>
-
 <script src="{% static 'js/superfish.min.js' %}"></script>
-
 <script src="{% static 'js/jquery.ajaxchimp.min.js' %}"></script>
-
 <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
-
 <script src="{% static 'js/jquery.nice-select.min.js' %}"></script>
-
 <script src="{% static 'js/owl.carousel.min.js' %}"></script>
-
 <script src="{% static 'js/mail-script.js' %}"></script>
-
 <script src="{% static 'js/main.js' %}"></script>
-
-
-<!-- Hero Search -->
-
+<!-- FIXED: Hero search hub behavior (autocomplete, calendar, passenger
+     selector, reverse button). Safe to load site-wide — it no-ops on any
+     page that doesn't have #heroSearchForm. -->
 <script src="{% static 'js/hero-search.js' %}"></script>
 
-
-<!-- =====================================================
-     Toast Auto Dismiss
-===================================================== -->
-
+<!-- FIXED: Auto-dismiss toast notifications after 4 seconds -->
 <script>
-
-    document.addEventListener(
-        'DOMContentLoaded',
-        function () {
-
-            var toasts =
-                document.querySelectorAll('.tvl-toast');
-
-
-            toasts.forEach(
-                function (toast) {
-
-                    setTimeout(
-                        function () {
-
-                            toast.style.animation =
-                                'tvl-fade-out 0.35s ease forwards';
-
-
-                            setTimeout(
-                                function () {
-
-                                    toast.remove();
-
-                                },
-                                350
-                            );
-
-                        },
-                        4000
-                    );
-
-                }
-            );
-
-        }
-    );
-
+    document.addEventListener('DOMContentLoaded', function () {
+        var toasts = document.querySelectorAll('.tvl-toast');
+        toasts.forEach(function (toast) {
+            setTimeout(function () {
+                toast.style.animation = 'tvl-fade-out 0.35s ease forwards';
+                setTimeout(function () { toast.remove(); }, 350);
+            }, 4000); // auto-dismiss after 4 seconds
+        });
+    });
 </script>
 
-
-<!-- =====================================================
-     Google Analytics
-===================================================== -->
-
-<script async
-        src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13">
-</script>
-
-
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"></script>
 <script>
-
-    window.dataLayer =
-        window.dataLayer || [];
-
-
-    function gtag() {
-        dataLayer.push(arguments);
-    }
-
-
-    gtag(
-        'js',
-        new Date()
-    );
-
-
-    gtag('config',
-        'UA-23581568-13'
-    );
-
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-23581568-13');
 </script>
-
-
 </body>
-
 </html>
-```
