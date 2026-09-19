@@ -18,8 +18,10 @@ from django.contrib import admin
 from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
+from account.views import admin_login_bridge
 
 urlpatterns = [
+    path('admin/login/', admin_login_bridge, name='admin_login_bridge'),
     path('admin/', admin.site.urls),
     path('', include('website.urls')),
     path('', include('transport.urls')),
@@ -28,7 +30,7 @@ urlpatterns = [
     path('packages/', include('packages.urls')),
     path('account/', include('account.urls')),
     path('help_center/', include('help_center.urls')),
-path('ckeditor/', include('ckeditor_uploader.urls')),
+    path('ckeditor/', include('ckeditor_uploader.urls')),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

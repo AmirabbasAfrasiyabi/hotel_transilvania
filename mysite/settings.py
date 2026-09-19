@@ -158,6 +158,14 @@ CKEDITOR_CONFIGS = {
     },
 }
 
+LOGIN_URL = '/account/login'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 14  # 14 days
+SESSION_SAVE_EVERY_REQUEST = True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

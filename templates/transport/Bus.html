@@ -75,20 +75,30 @@
           </div>
 
           <div class="hsf-date-group" id="dateField" data-date-context="flight">
-            <div class="hsf-field hsf-date-field" id="departField">
-              <span class="hsf-label">Departure</span>
-              <button type="button" class="hsf-date-trigger" id="departTrigger">
-                <i class="fa-regular fa-calendar" aria-hidden="true"></i>
-                <span id="departTriggerText">Select date</span>
-              </button>
-            </div>
-
-            <div class="hsf-field hsf-date-field" id="returnField">
-              <span class="hsf-label">Return</span>
-              <button type="button" class="hsf-date-trigger" id="returnTrigger">
-                <i class="fa-regular fa-calendar" aria-hidden="true"></i>
-                <span id="returnTriggerText">Select date</span>
-              </button>
+            <div class="hsf-date-box">
+              <div class="hsf-date-segment" id="departField">
+                <span class="hsf-label">Departure</span>
+                <div class="hsf-date-row">
+                  <button type="button" class="hsf-date-nudge" data-nudge="depart" data-dir="-1" aria-label="Previous day">‹</button>
+                  <button type="button" class="hsf-date-trigger" id="departTrigger">
+                    <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+                    <span id="departTriggerText">Select date</span>
+                  </button>
+                  <button type="button" class="hsf-date-nudge" data-nudge="depart" data-dir="1" aria-label="Next day">›</button>
+                </div>
+              </div>
+              <div class="hsf-date-divider" aria-hidden="true"></div>
+              <div class="hsf-date-segment" id="returnField">
+                <span class="hsf-label">Return</span>
+                <div class="hsf-date-row">
+                  <button type="button" class="hsf-date-nudge" data-nudge="return" data-dir="-1" aria-label="Previous day">‹</button>
+                  <button type="button" class="hsf-date-trigger" id="returnTrigger">
+                    <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+                    <span id="returnTriggerText">Select date</span>
+                  </button>
+                  <button type="button" class="hsf-date-nudge" data-nudge="return" data-dir="1" aria-label="Next day">›</button>
+                </div>
+              </div>
             </div>
 
             <div class="hsf-calendar-popup" id="calendarPopup" hidden>

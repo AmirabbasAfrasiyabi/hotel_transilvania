@@ -8,7 +8,7 @@ from help_center.services import get_service_content
 # Create your views here.
 
 def index_view(request):
-    context = get_service_content(FAQCategory.DOMESTIC_FLIGHT)
+    context = get_service_content(FAQCategory.FLIGHT)
 
     return render(request, 'website/index.html', context)
 

@@ -530,10 +530,14 @@
         // Check-out (pendingField "end") is only accepted if it's
         // strictly after Check-in — the calendar already disables
         // anything else, this is just a safety net.
+        // Google Flights behaviour: calendar STAYS OPEN until both
+        // dates are chosen (or user hits Done). Never auto-close
+        // after picking only one end of the range.
         if (pendingField === 'end' && rangeStart && picked > rangeStart) {
           rangeEnd = picked;
           renderCalendar();
-          window.setTimeout(closeCalendar, 300);
+          // stay open — user closes via Done or outside-click only
+          // after both ends exist
         } else {
           rangeStart = picked;
           rangeEnd = null;
@@ -554,29 +558,84 @@
       if (!rangeStart || (rangeStart && rangeEnd)) {
         rangeStart = picked;
         rangeEnd = null;
+        pendingField = 'end';
       } else if (picked < rangeStart) {
         rangeStart = picked;
+        rangeEnd = null;
+        pendingField = 'end';
       } else {
         rangeEnd = picked;
       }
       renderCalendar();
-      if (rangeStart && rangeEnd) {
-        window.setTimeout(closeCalendar, 350);
-      }
+      // Range mode: do NOT auto-close. User confirms with Done.
     });
 
     if (calDoneBtn) {
-      calDoneBtn.addEventListener('click', closeCalendar);
+      calDoneBtn.addEventListener('click', function () {
+        // Only allow Done to close when the required ends are set
+        if (isRangeMode && isDualTriggerMode) {
+          if (!rangeStart || !rangeEnd) return; // keep open until both chosen
+        }
+        closeCalendar();
+      });
     }
 
     document.addEventListener('click', function (e) {
-      if (calendarClickedOutside(e)) closeCalendar();
+      // Outside-click closes only when both ends of a range are set
+      // (or one-way / single-date mode). Otherwise the calendar stays open
+      // so the user can finish picking departure + return.
+      if (!calendarClickedOutside(e)) return;
+      if (isRangeMode && isDualTriggerMode && (!rangeStart || !rangeEnd)) return;
+      closeCalendar();
     });
 
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') closeCalendar();
     });
   }
+
+  /* ------------------------------------------------------------------
+     Date nudge arrows (±1 day) — Google Flights style
+     ------------------------------------------------------------------ */
+  function nudgeDate(which, dir) {
+    var base = which === 'depart' ? rangeStart : rangeEnd;
+    if (!base) {
+      // If nothing selected yet, start from today (or tomorrow for return)
+      base = new Date(today);
+      if (which === 'return' && rangeStart) base = new Date(rangeStart);
+      base.setDate(base.getDate() + (which === 'return' ? 1 : 0));
+    }
+    var next = new Date(base);
+    next.setDate(next.getDate() + dir);
+    if (next < today) return; // never before today
+
+    if (which === 'depart') {
+      rangeStart = next;
+      // Keep return strictly after depart
+      if (rangeEnd && rangeEnd <= rangeStart) {
+        rangeEnd = new Date(rangeStart);
+        rangeEnd.setDate(rangeEnd.getDate() + 1);
+      }
+      pendingField = rangeEnd ? 'start' : 'end';
+    } else {
+      // return
+      if (rangeStart && next <= rangeStart) return; // cannot be <= depart
+      rangeEnd = next;
+    }
+    updateTriggerAndHidden();
+    if (calendarPopup && !calendarPopup.hidden) renderCalendar();
+  }
+
+  document.querySelectorAll('.hsf-date-nudge').forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var which = btn.getAttribute('data-nudge');
+      var dir = parseInt(btn.getAttribute('data-dir'), 10) || 0;
+      if (!which || !dir) return;
+      nudgeDate(which, dir);
+    });
+  });
 
   // Hook the Trip type select (if present on this page) into the calendar,
   // and sync to whichever option starts active (pages can default differently).
@@ -650,6 +709,10 @@
       return document.querySelector('.pax-stepper[data-pax="' + k + '"]');
     });
     var total = keys.reduce(function (sum, k) { return sum + paxCounts[k]; }, 0);
+    // Google Flights style in top toolbar: just the number
+    if (passengerTrigger && passengerTrigger.closest('.hsf-toolbar')) {
+      return String(total);
+    }
     return total + (total === 1 ? ' Traveler' : ' Travelers');
   }
 

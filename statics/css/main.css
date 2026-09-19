@@ -6365,7 +6365,8 @@ body.mobile-nav-active #mobile-nav-toggle {
 
 /* ---------- Search form ---------- */
 .hero-search-form {
-  padding: 30px 30px 34px;
+  padding: 20px 28px 28px;
+  position: relative;
 }
 
 .hsf-label {
@@ -6400,21 +6401,21 @@ body.mobile-nav-active #mobile-nav-toggle {
   margin-bottom: 16px;
 }
 
+/* Google Flights layout: From | swap | To | Dates — equal visual weight */
 .hsf-search-row--route {
-  grid-template-columns: 1fr 44px 1fr 1fr 1.7fr;
+  grid-template-columns: 1fr 44px 1fr 1.15fr;
 }
 
 .hsf-search-row--destination {
-  grid-template-columns: 1.1fr 1fr 1.5fr;
+  grid-template-columns: 1.1fr 1fr 1.15fr;
 }
 
 @media (max-width: 991px) {
   .hsf-search-row--route {
     grid-template-columns: 1fr 44px 1fr;
   }
-  .hsf-search-row--route .hsf-passenger-field,
-  .hsf-search-row--route .hsf-date-field {
-    grid-column: span 1;
+  .hsf-search-row--route .hsf-date-group {
+    grid-column: 1 / -1;
   }
 }
 
@@ -6857,16 +6858,33 @@ body.mobile-nav-active #mobile-nav-toggle {
   gap: 8px;
 }
 
-/* ---------- Toolbar row (top-right pill dropdowns: Trip type, Cabin class, etc.) ---------- */
+/* ---------- Toolbar (Google Flights): trip type · passengers · cabin at top ---------- */
 .hsf-toolbar {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 20px;
+  align-items: center;
+  gap: 4px 12px;
+  margin-bottom: 16px;
 }
 
-/* ---------- Pill dropdown select (Trip type / Cabin class / Compartment / Gender) ---------- */
+.hsf-toolbar--top {
+  justify-content: flex-start;
+}
+
+.hsf-passenger-field--toolbar {
+  position: relative;
+}
+
+.hsf-passenger-field--toolbar .hsf-passenger-popup {
+  left: 0;
+  right: auto;
+  top: calc(100% + 8px);
+  min-width: 280px;
+}
+
+/* ---------- Google-Flights-style dropdown (Trip type / Cabin / Compartment / Gender)
+   No pill/border — just clean text + chevron, matching google.com/travel/flights ---------- */
 .hsf-select {
   position: relative;
 }
@@ -6875,33 +6893,35 @@ body.mobile-nav-active #mobile-nav-toggle {
   display: inline-flex;
   align-items: center;
   box-sizing: border-box;
-  min-height: 42px;
-  gap: 9px;
-  background: #fff;
-  border: 1px solid rgba(44, 42, 40, 0.16);
-  border-radius: 999px;
-  padding: 10px 18px;
+  min-height: 32px;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 8px;
   font-size: 13.5px;
-  color: var(--tvl-ink);
+  font-weight: 500;
+  color: var(--tvl-ink, #222);
   cursor: pointer;
   white-space: nowrap;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
 .hsf-select-trigger:hover {
-  border-color: var(--tvl-coral);
+  background: rgba(18, 41, 61, 0.06);
 }
 
 .hsf-select-trigger:focus-visible {
   outline: none;
-  border-color: var(--tvl-coral);
-  box-shadow: 0 0 0 3px rgba(255, 111, 89, 0.16);
+  background: rgba(18, 41, 61, 0.08);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
 }
 
 .hsf-select-trigger .hsf-select-chevron {
-  font-size: 10px;
-  color: var(--tvl-ink-soft);
+  font-size: 9px;
+  color: var(--tvl-ink-soft, #6b6560);
   transition: transform 0.2s ease;
+  opacity: 0.75;
 }
 
 .hsf-select-trigger[aria-expanded="true"] .hsf-select-chevron {
@@ -7214,10 +7234,117 @@ body.mobile-nav-active #mobile-nav-toggle {
       (Requirement #6: Search button LEFT, extra options RIGHT).
    ========================================================================== */
 
+/* ---------- Unified Google-Flights-style date box ----------
+   One bordered container with Departure | Return side-by-side,
+   each side has its own ±1-day nudge arrows. Calendar anchors under it.
+   Same height as From/To inputs — not larger. */
 .hsf-date-group {
   display: flex;
-  gap: 14px;
+  gap: 0;
   position: relative; /* anchors .hsf-calendar-popup right under the fields */
+  min-width: 0;
+  align-self: end;
+}
+
+.hsf-date-box {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  background: #fff;
+  border: 1px solid rgba(44, 42, 40, 0.15);
+  border-radius: 10px;
+  overflow: hidden;
+  min-height: 50px; /* same as .hsf-input */
+  height: 50px;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hsf-date-box:focus-within {
+  border-color: var(--tvl-coral, #ff6f59);
+  box-shadow: 0 0 0 3px rgba(255, 111, 89, 0.16);
+}
+
+.hsf-date-segment {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 4px 6px 4px 10px;
+  min-width: 0;
+  position: relative;
+}
+
+.hsf-date-segment .hsf-label {
+  margin-bottom: 0;
+  line-height: 1.15;
+  font-size: 10px;
+  letter-spacing: 0.8px;
+}
+
+.hsf-date-row {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+}
+
+/* The trigger inside the unified box loses its own border */
+.hsf-date-box .hsf-date-trigger {
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  min-height: 28px;
+  padding: 2px 4px;
+  flex: 1;
+  min-width: 0;
+  border-radius: 6px;
+}
+
+.hsf-date-box .hsf-date-trigger:focus-visible {
+  box-shadow: none;
+  background: rgba(255, 111, 89, 0.08);
+}
+
+.hsf-date-box .hsf-date-trigger i {
+  font-size: 13px;
+}
+
+.hsf-date-divider {
+  width: 1px;
+  align-self: stretch;
+  background: rgba(44, 42, 40, 0.12);
+  margin: 8px 0;
+  flex-shrink: 0;
+}
+
+/* ±1 day nudge arrows (Google Flights style) */
+.hsf-date-nudge {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border: none;
+  background: transparent;
+  color: var(--tvl-ink-soft, #6b6560);
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  padding: 0;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.hsf-date-nudge:hover:not(:disabled) {
+  background: rgba(18, 41, 61, 0.08);
+  color: var(--tvl-ink, #222);
+}
+
+.hsf-date-nudge:disabled {
+  opacity: 0.25;
+  cursor: default;
 }
 
 .hsf-date-group .hsf-field {
@@ -7230,18 +7357,51 @@ body.mobile-nav-active #mobile-nav-toggle {
   top: calc(100% + 6px);
 }
 
-/* ---------- Row 3: Search button on the left, extra options on the right ---------- */
+@media (max-width: 767px) {
+  .hsf-date-box {
+    flex-direction: column;
+  }
+  .hsf-date-divider {
+    width: auto;
+    height: 1px;
+    margin: 0 10px;
+  }
+}
+
+/* ---------- Search actions: centered floating button (Google Flights style) ---------- */
 .hsf-actions-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   flex-wrap: wrap;
   gap: 14px;
+  margin-top: 8px;
+  margin-bottom: -10px; /* sits slightly on the card edge */
+  position: relative;
+  z-index: 2;
+}
+
+.hsf-actions-row--center {
+  justify-content: center;
 }
 
 .hsf-actions-row .hero-search-submit {
   width: auto;
-  min-width: 220px;
+  min-width: 140px;
+  border-radius: 999px; /* pill like Google */
+  padding: 12px 28px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 14px rgba(18, 41, 61, 0.18);
+}
+
+.hsf-actions-row .hero-search-submit .btn-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .hsf-actions-row .hsf-toolbar {
@@ -7251,13 +7411,10 @@ body.mobile-nav-active #mobile-nav-toggle {
 @media (max-width: 480px) {
   .hsf-actions-row .hero-search-submit {
     width: 100%;
+    border-radius: 12px;
   }
   .hsf-actions-row {
-    justify-content: flex-start;
-  }
-  .hsf-actions-row .hsf-toolbar {
-    width: 100%;
-    justify-content: flex-start;
+    justify-content: center;
   }
 }
 

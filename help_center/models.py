@@ -1,5 +1,6 @@
 from django.db import models
 from ckeditor.fields import RichTextField
+
 class ServiceContentManager(models.Manager):
 
     def for_category(self, category, active_only=True):
@@ -13,14 +14,13 @@ class ServiceContentManager(models.Manager):
 
 class FAQCategory(models.TextChoices):
 
-    DOMESTIC_FLIGHT = 'domestic_flight',
-    INTERNATIONAL_FLIGHT = 'international_flight',
-    TRAIN = 'train',
-    BUS = 'bus',
-    HOTEL = 'hotel',
-    VILLA = 'villa',
-    TOUR = 'tour',
-    GENERAL = 'general',
+    FLIGHT = 'flight', 'Flight'
+    TRAIN = 'train','Train'
+    BUS = 'bus','Bus'
+    HOTEL = 'hotel','Hotel'
+    VILLA = 'villa','Villa'
+    TOUR = 'tour','Tour'
+    GENERAL = 'general','General'
 
 
 class FAQManager(ServiceContentManager):
@@ -30,7 +30,7 @@ class FAQ(models.Model):
     category = models.CharField(
         max_length=30,
         choices=FAQCategory.choices,
-        default=FAQCategory.DOMESTIC_FLIGHT,
+        default=FAQCategory.FLIGHT,
         db_index=True,
         verbose_name='Category',
     )
@@ -61,7 +61,7 @@ class Destination(models.Model):
     category = models.CharField(
         max_length=30,
         choices=FAQCategory.choices,
-        default=FAQCategory.DOMESTIC_FLIGHT,
+        default=FAQCategory.FLIGHT,
         db_index=True,
         verbose_name='category',
     )

@@ -22,30 +22,26 @@
 
         <form class="hero-search-form" id="heroSearchForm" autocomplete="off" data-location-scope="flight" data-location-unit="Airport">
 
-        <div class="hsf-search-row hsf-search-row--route">
-          <div class="hsf-field" id="originField">
-            <span class="hsf-label">From</span>
-            <input type="text" class="hsf-input" id="originInput" name="origin" placeholder="From" aria-expanded="false" aria-controls="originSuggestions">
-            <div class="hsf-suggestions" id="originSuggestions" role="listbox" hidden></div>
-          </div>
-
-          <button type="button" class="hsf-reverse-btn" id="reverseBtn" aria-label="Swap origin and destination">
-            <i class="fa-solid fa-arrow-right-arrow-left" aria-hidden="true"></i>
-          </button>
-
-          <div class="hsf-field" id="destField">
-            <span class="hsf-label">To</span>
-            <input type="text" class="hsf-input" id="destInput" name="destination" placeholder="To" aria-expanded="false" aria-controls="destSuggestions">
-            <div class="hsf-suggestions" id="destSuggestions" role="listbox" hidden></div>
-          </div>
-
-          <div class="hsf-field hsf-passenger-field" id="passengerField">
-            <span class="hsf-label">Travelers</span>
-            <button type="button" class="hsf-date-trigger" id="passengerTrigger" aria-expanded="false" aria-controls="passengerPopup">
-              <i class="fa-solid fa-user" aria-hidden="true"></i>
-              <span id="passengerTriggerText">1 Traveler</span>
+        <!-- Top toolbar (Google Flights style): trip type · passengers · cabin -->
+        <div class="hsf-toolbar hsf-toolbar--top">
+          <div class="hsf-select" id="tripTypeGroup" data-target="tripTypeHidden">
+            <button type="button" class="hsf-select-trigger" aria-expanded="false" aria-haspopup="listbox">
+              <i class="fa-solid fa-arrow-right-arrow-left" aria-hidden="true"></i>
+              <span class="hsf-select-label">Round-trip</span>
+              <i class="fa-solid fa-chevron-down hsf-select-chevron" aria-hidden="true"></i>
             </button>
+            <div class="hsf-select-popup" role="listbox" hidden>
+              <button type="button" class="hsf-select-option active" data-value="roundtrip" role="option">Round-trip</button>
+              <button type="button" class="hsf-select-option" data-value="oneway" role="option">One-way</button>
+            </div>
+          </div>
 
+          <div class="hsf-field hsf-passenger-field hsf-passenger-field--toolbar" id="passengerField">
+            <button type="button" class="hsf-select-trigger" id="passengerTrigger" aria-expanded="false" aria-controls="passengerPopup">
+              <i class="fa-solid fa-user" aria-hidden="true"></i>
+              <span id="passengerTriggerText">1</span>
+              <i class="fa-solid fa-chevron-down hsf-select-chevron" aria-hidden="true"></i>
+            </button>
             <div class="hsf-passenger-popup" id="passengerPopup" hidden>
               <div class="pax-row">
                 <div class="pax-copy">
@@ -80,28 +76,68 @@
                   <button type="button" class="pax-btn" data-action="inc" aria-label="Increase infants">+</button>
                 </div>
               </div>
-
               <div class="pax-divider"></div>
-
               <button type="button" class="pax-apply-btn" id="paxApplyBtn">Apply</button>
             </div>
           </div>
 
-          <div class="hsf-date-group" id="dateField" data-date-context="flight">
-            <div class="hsf-field hsf-date-field" id="departField">
-              <span class="hsf-label">Departure</span>
-              <button type="button" class="hsf-date-trigger" id="departTrigger">
-                <i class="fa-regular fa-calendar" aria-hidden="true"></i>
-                <span id="departTriggerText">Select date</span>
-              </button>
+          <div class="hsf-select" data-target="cabinClassHidden">
+            <button type="button" class="hsf-select-trigger" aria-expanded="false" aria-haspopup="listbox">
+              <span class="hsf-select-label">Economy</span>
+              <i class="fa-solid fa-chevron-down hsf-select-chevron" aria-hidden="true"></i>
+            </button>
+            <div class="hsf-select-popup" role="listbox" hidden>
+              <button type="button" class="hsf-select-option active" data-value="Economy" role="option">Economy</button>
+              <button type="button" class="hsf-select-option" data-value="Premium Economy" role="option">Premium Economy</button>
+              <button type="button" class="hsf-select-option" data-value="Business" role="option">Business</button>
+              <button type="button" class="hsf-select-option" data-value="First Class" role="option">First Class</button>
             </div>
+          </div>
+        </div>
 
-            <div class="hsf-field hsf-date-field" id="returnField">
-              <span class="hsf-label">Return</span>
-              <button type="button" class="hsf-date-trigger" id="returnTrigger">
-                <i class="fa-regular fa-calendar" aria-hidden="true"></i>
-                <span id="returnTriggerText">Select date</span>
-              </button>
+        <!-- Main row: From | swap | To | Dates (equal weight, like Google Flights) -->
+        <div class="hsf-search-row hsf-search-row--route">
+          <div class="hsf-field" id="originField">
+            <span class="hsf-label">From</span>
+            <input type="text" class="hsf-input" id="originInput" name="origin" placeholder="From" aria-expanded="false" aria-controls="originSuggestions">
+            <div class="hsf-suggestions" id="originSuggestions" role="listbox" hidden></div>
+          </div>
+
+          <button type="button" class="hsf-reverse-btn" id="reverseBtn" aria-label="Swap origin and destination">
+            <i class="fa-solid fa-arrow-right-arrow-left" aria-hidden="true"></i>
+          </button>
+
+          <div class="hsf-field" id="destField">
+            <span class="hsf-label">To</span>
+            <input type="text" class="hsf-input" id="destInput" name="destination" placeholder="To" aria-expanded="false" aria-controls="destSuggestions">
+            <div class="hsf-suggestions" id="destSuggestions" role="listbox" hidden></div>
+          </div>
+
+          <div class="hsf-date-group" id="dateField" data-date-context="flight">
+            <div class="hsf-date-box">
+              <div class="hsf-date-segment" id="departField">
+                <span class="hsf-label">Departure</span>
+                <div class="hsf-date-row">
+                  <button type="button" class="hsf-date-nudge" data-nudge="depart" data-dir="-1" aria-label="Previous day">‹</button>
+                  <button type="button" class="hsf-date-trigger" id="departTrigger">
+                    <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+                    <span id="departTriggerText">Select date</span>
+                  </button>
+                  <button type="button" class="hsf-date-nudge" data-nudge="depart" data-dir="1" aria-label="Next day">›</button>
+                </div>
+              </div>
+              <div class="hsf-date-divider" aria-hidden="true"></div>
+              <div class="hsf-date-segment" id="returnField">
+                <span class="hsf-label">Return</span>
+                <div class="hsf-date-row">
+                  <button type="button" class="hsf-date-nudge" data-nudge="return" data-dir="-1" aria-label="Previous day">‹</button>
+                  <button type="button" class="hsf-date-trigger" id="returnTrigger">
+                    <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+                    <span id="returnTriggerText">Select date</span>
+                  </button>
+                  <button type="button" class="hsf-date-nudge" data-nudge="return" data-dir="1" aria-label="Next day">›</button>
+                </div>
+              </div>
             </div>
 
             <div class="hsf-calendar-popup" id="calendarPopup" hidden>
@@ -120,7 +156,6 @@
           <span id="formErrorText"></span>
         </div>
 
-        <!-- Hidden fields the backend will read — TODO(backend): wire to real search view -->
         <input type="hidden" name="depart_date" id="departDateHidden">
         <input type="hidden" name="return_date" id="returnDateHidden">
         <input type="hidden" name="adults" id="adultsHidden" value="1">
@@ -128,46 +163,16 @@
         <input type="hidden" name="infants" id="infantsHidden" value="0">
         <input type="hidden" name="cabin_class" id="cabinClassHidden" value="Economy">
         <input type="hidden" name="trip_type" id="tripTypeHidden" value="roundtrip">
-        <!-- Change 1: Domestic vs International is no longer a UI choice —
-             it's derived automatically from the chosen origin/destination
-             (see computeTripScope() in hero-search.js) so the backend/
-             search-logic distinction survives even though the tab is merged. -->
         <input type="hidden" name="trip_scope" id="tripScopeHidden" value="">
 
-        <!-- Row 3: Search button on the LEFT, category options on the RIGHT -->
-        <div class="hsf-actions-row">
+        <!-- Search button centered & floating (Google Flights style) -->
+        <div class="hsf-actions-row hsf-actions-row--center">
           <button type="submit" class="hero-search-submit" id="heroSearchSubmit">
-            <span class="btn-label">Search</span>
+            <span class="btn-label"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> Search</span>
             <span class="btn-loading" hidden>
               <i class="fa-solid fa-circle-notch fa-spin" aria-hidden="true"></i> Searching…
             </span>
           </button>
-
-          <div class="hsf-toolbar">
-            <div class="hsf-select" id="tripTypeGroup" data-target="tripTypeHidden">
-              <button type="button" class="hsf-select-trigger" aria-expanded="false" aria-haspopup="listbox">
-                <i class="fa-solid fa-chevron-down hsf-select-chevron" aria-hidden="true"></i>
-                <span class="hsf-select-label">Round-trip</span>
-              </button>
-              <div class="hsf-select-popup" role="listbox" hidden>
-                <button type="button" class="hsf-select-option active" data-value="roundtrip" role="option">Round-trip</button>
-                <button type="button" class="hsf-select-option" data-value="oneway" role="option">One-way</button>
-              </div>
-            </div>
-
-            <div class="hsf-select" data-target="cabinClassHidden">
-              <button type="button" class="hsf-select-trigger" aria-expanded="false" aria-haspopup="listbox">
-                <i class="fa-solid fa-chevron-down hsf-select-chevron" aria-hidden="true"></i>
-                <span class="hsf-select-label">Economy</span>
-              </button>
-              <div class="hsf-select-popup" role="listbox" hidden>
-                <button type="button" class="hsf-select-option active" data-value="Economy" role="option">Economy</button>
-                <button type="button" class="hsf-select-option" data-value="Premium Economy" role="option">Premium Economy</button>
-                <button type="button" class="hsf-select-option" data-value="Business" role="option">Business</button>
-                <button type="button" class="hsf-select-option" data-value="First Class" role="option">First Class</button>
-              </div>
-            </div>
-          </div>
         </div>
       </form>
     </div>
