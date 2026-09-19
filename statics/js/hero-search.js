@@ -383,8 +383,12 @@
     if (returnHiddenInput) returnHiddenInput.value = rangeEnd ? formatISO(rangeEnd) : '';
 
     if (isDualTriggerMode) {
-      if (departTriggerText) departTriggerText.textContent = rangeStart ? formatShort(rangeStart) : 'Select date';
-      if (returnTriggerText) returnTriggerText.textContent = rangeEnd ? formatShort(rangeEnd) : 'Select date';
+      // FIXED: متن 'Select date' حذف شد. برچسب Departure/Return بالای
+      // همین دکمه وجود دارد، پس این متن اضافی بود و در کادر باریک
+      // تاریخ سرریز می‌کرد. حالا تا انتخاب تاریخ، فقط آیکون تقویم
+      // دیده می‌شود (عرض حداقلی آن در CSS تضمین شده است).
+      if (departTriggerText) departTriggerText.textContent = rangeStart ? formatShort(rangeStart) : '';
+      if (returnTriggerText) returnTriggerText.textContent = rangeEnd ? formatShort(rangeEnd) : '';
       return;
     }
 
