@@ -8356,7 +8356,14 @@ body.mobile-nav-active #mobile-nav-toggle {
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
-  gap: clamp(2px, 0.6vw, 10px);
+  /* فاصله‌ی بین آیکن‌های نوبار (قبلاً clamp(2px, 0.6vw, 10px) بود).
+     فقط روی .nav-menu اعمال می‌شود؛ Search Bar (.hero-search-* / .hsf-*) اصلاً درگیر نیست. */
+  gap: 20px;
+}
+
+/* عرض‌های بزرگ: فاصله‌ی بیشتر */
+@media (min-width: 1600px) {
+  .main-menu-grid .nav-menu { gap: 24px; }
 }
 
 .main-menu-grid .nav-menu > li {
@@ -8391,6 +8398,7 @@ body.mobile-nav-active #mobile-nav-toggle {
 
 /* Tablet: منو فشرده‌تر، بدون overflow افقی */
 @media (min-width: 992px) and (max-width: 1199px) {
+  .main-menu-grid .nav-menu { gap: 16px; } /* تبلت */
   .main-menu-grid .nav-menu > li > a { font-size: var(--text-size-tiny); }
   .main-menu-grid .nav-menu > li > a i { font-size: var(--text-size-tiny); }
 }
@@ -8729,4 +8737,4 @@ img, svg, video, canvas { max-width: 100%; height: auto; }
 .django-form .helptext {
   line-height: var(--text-line-height-small);
 }
-.cal-range-hint { min-height: 1em; } 
+.cal-range-hint { min-height: 1em; }
