@@ -14,14 +14,26 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from types import MethodType
 from django.contrib import admin
-from django.urls import path,include
+from django.contrib.admin.sites import AdminSite
+from django.contrib.auth.views import redirect_to_login
+from django.shortcuts import render,resolve_url
+from django.urls import path,include,reverse
 from django.conf import settings
 from django.conf.urls.static import static
-from account.views import admin_login_bridge
 
+
+def _admin_login(self, request, extra_context=None):
+
+    if not request.user.is_authenticated:
+        next_url = request.GET.get("next") or resolve_url("admin:index")
+        return redirect_to_login(next_url, resolve_url("account:login"))
+    return AdminSite.login(self, request, extra_context)
+
+
+admin.site.login = MethodType(_admin_login, admin.site)
 urlpatterns = [
-    path('admin/login/', admin_login_bridge, name='admin_login_bridge'),
     path('admin/', admin.site.urls),
     path('', include('website.urls')),
     path('', include('transport.urls')),

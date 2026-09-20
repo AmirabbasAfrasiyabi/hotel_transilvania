@@ -6,45 +6,58 @@ from django.conf import settings
 from django.urls import reverse
 from django.utils.http import url_has_allowed_host_and_scheme
 from .forms import CustomUserCreationForm, CustomAuthenticationForm
+from django.views.decorators.cache import never_cache
+from django.views.decorators.csrf import csrf_protect
 
 
-def _safe_next(request, default='website:index'):
-    next_url = request.POST.get('next') or request.GET.get('next')
-    if next_url and url_has_allowed_host_and_scheme(
-        url=next_url,
+REDIRECT_FIELD_NAME = "next"
+
+
+def _safe_redirect_target(request, fallback="website:index"):
+
+    target = request.POST.get(REDIRECT_FIELD_NAME) or request.GET.get(REDIRECT_FIELD_NAME)
+
+    if target and url_has_allowed_host_and_scheme(
+        url=target,
         allowed_hosts={request.get_host()},
         require_https=request.is_secure(),
     ):
-        return next_url
-    return resolve_url(default)
+        return target
+
+    return resolve_url(fallback)
 
 
+@never_cache
+@csrf_protect
 def login_view(request):
+    redirect_to = _safe_redirect_target(request)
     if request.user.is_authenticated:
-        return redirect(_safe_next(request))
+        return redirect(redirect_to)
 
     if request.method == 'POST':
         form = CustomAuthenticationForm(request=request, data=request.POST)
         if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            return redirect('website:index')
+            login(request, form.get_user())
+            messages.success(request, "Welcome back!")
+            return redirect(redirect_to)
     else:
         form = CustomAuthenticationForm()
 
-    context = {'form': form, 'next': _safe_next(request)}
-    return render(request, 'account/login.html', context)
+    return render(request,"account/login.html",{"form": form, REDIRECT_FIELD_NAME: redirect_to},)
 
 
-@login_required(login_url='/accounts/login/')
+@never_cache
 def logout_view(request):
-    logout(request)
-    return redirect('website:index')
+    if request.user.is_authenticated:
+        logout(request)
+        messages.info(request, "You have been signed out.")
+    return redirect("website:index")
 
 
 def signup_view(request):
+    redirect_to = _safe_redirect_target(request)
     if request.user.is_authenticated:
-        return redirect(_safe_next(request))
+        return redirect(redirect_to)
 
     if request.method == "POST":
         form = CustomUserCreationForm(request.POST)
@@ -52,26 +65,14 @@ def signup_view(request):
             user = form.save()
 
             login(request, user)
-            return redirect(_safe_next(request))
+            messages.success(request, "Your account is ready.")
+            return redirect(redirect_to)
     else:
         form = CustomUserCreationForm()
 
-
-    return render(request, "account/signup.html",
-           {"form": form, "next": _safe_next(request)})
-
-
-def admin_login_bridge(request):
-    next_url = _safe_next(request, default='admin:index')
-
-    if not request.user.is_authenticated:
-        return redirect(f"{reverse('account:login')}?next={next_url}")
-
-    if request.user.is_active and request.user.is_staff:
-        return redirect(next_url)
-
-    messages.error(
+    return render(
         request,
-        "Your account is signed in, but it does not have admin panel access."
+        "account/signup.html",
+        {"form": form, REDIRECT_FIELD_NAME: redirect_to},
     )
-    return redirect('website:index')
+

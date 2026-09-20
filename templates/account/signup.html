@@ -30,7 +30,7 @@
             {% endfor %}
         {% endif %}
 
-        {# ADDED: خطاهای کلی فرم که به هیچ فیلد خاصی مربوط نیستن #}
+
         {% if form.non_field_errors %}
             {% for error in form.non_field_errors %}
                 <p class="message">{{ error }}</p>
@@ -39,7 +39,7 @@
 
         <form method="POST" id="signup-form" class="django-form" novalidate>
             {% csrf_token %}
-
+            <input type="hidden" name="next" value="{{ next }}">
 
             {% for field in form %}
                 <p>
@@ -135,7 +135,10 @@ document.addEventListener('DOMContentLoaded', function () {
         list.appendChild(item);
     });
 
-    var passwordWrapper = passwordField.closest('p') || passwordField.parentNode;
+    // چک‌لیست بعد از فیلد «تکرار رمز» درج می‌شود تا در حالت دو ستونه‌ی
+    // دسکتاپ، دو فیلد رمز کنار هم بمانند و چک‌لیست یک ردیف کامل بگیرد.
+    var anchorField = document.getElementById('id_password2') || passwordField;
+    var passwordWrapper = anchorField.closest('p') || anchorField.parentNode;
     passwordWrapper.insertAdjacentElement('afterend', list);
 
     function validatePassword() {

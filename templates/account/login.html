@@ -69,11 +69,10 @@
 
         <form
             method="POST"
-            action="{% url 'account:login' %}"
-        >
-
+            action="{% url 'account:login' %}">
+            
             {% csrf_token %}
-
+            <input type="hidden" name="next" value="{{ next }}">
 
             <div class="django-form">
 

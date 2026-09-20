@@ -16,10 +16,31 @@
 
     <div class="hero-search-card" id="heroSearchCard">
 
-            {% include "website/_hero_tabs.html" %}
+      {% include "website/_hero_tabs.html" %}
 
-          <form class="hero-search-form" id="heroSearchForm" autocomplete="off" data-location-scope="villa" data-location-unit="City" data-hide-history="true">
+      <form class="hero-search-form" id="heroSearchForm" autocomplete="off" data-location-scope="villa" data-location-unit="City" data-hide-history="true">
 
+        <!-- ردیف ۱: گزینه‌های سفر (Travel Options) -->
+        <div class="hsf-toolbar hsf-toolbar--top">
+          <div class="hsf-select" data-target="villaTypeHidden">
+            <button type="button" class="hsf-select-trigger" aria-expanded="false" aria-haspopup="listbox">
+              <i class="fa-solid fa-chevron-down hsf-select-chevron" aria-hidden="true"></i>
+              <span class="hsf-select-label">Coastal</span>
+            </button>
+            <div class="hsf-select-popup" role="listbox" hidden>
+              <button type="button" class="hsf-select-option active" data-value="coastal" role="option">Coastal</button>
+              <button type="button" class="hsf-select-option" data-value="forest" role="option">Forest</button>
+              <button type="button" class="hsf-select-option" data-value="mountain" role="option">Mountain / Cold climate</button>
+              <button type="button" class="hsf-select-option" data-value="desert" role="option">Desert / Hot climate</button>
+              <button type="button" class="hsf-select-option" data-value="traditional" role="option">Traditional</button>
+              <button type="button" class="hsf-select-option" data-value="lakeside" role="option">Lakeside</button>
+              <button type="button" class="hsf-select-option" data-value="countryside" role="option">Countryside / Farm</button>
+              <button type="button" class="hsf-select-option" data-value="modern" role="option">Modern</button>
+            </div>
+          </div><!-- /.hsf-select -->
+        </div><!-- /.hsf-toolbar -->
+
+        <!-- ردیف ۲: فیلدهای اصلی -->
         <div class="hsf-search-row hsf-search-row--destination">
           <div class="hsf-field" id="originField">
             <span class="hsf-label">Destination</span>
@@ -57,7 +78,7 @@
                   <button type="button" class="hsf-date-nudge" data-nudge="depart" data-dir="-1" aria-label="Previous day">‹</button>
                   <button type="button" class="hsf-date-trigger" id="departTrigger">
                     <i class="fa-regular fa-calendar" aria-hidden="true"></i>
-                    <span id="departTriggerText">Select date</span>
+                    <span id="departTriggerText">&mdash;</span>
                   </button>
                   <button type="button" class="hsf-date-nudge" data-nudge="depart" data-dir="1" aria-label="Next day">›</button>
                 </div>
@@ -69,7 +90,7 @@
                   <button type="button" class="hsf-date-nudge" data-nudge="return" data-dir="-1" aria-label="Previous day">‹</button>
                   <button type="button" class="hsf-date-trigger" id="returnTrigger">
                     <i class="fa-regular fa-calendar" aria-hidden="true"></i>
-                    <span id="returnTriggerText">Select date</span>
+                    <span id="returnTriggerText">&mdash;</span>
                   </button>
                   <button type="button" class="hsf-date-nudge" data-nudge="return" data-dir="1" aria-label="Next day">›</button>
                 </div>
@@ -79,12 +100,12 @@
             <div class="hsf-calendar-popup" id="calendarPopup" hidden>
               <div class="cal-months" id="calMonths"></div>
               <div class="cal-footer">
-                <span class="cal-range-hint" id="calRangeHint">Select a check-in date</span>
+                <span class="cal-range-hint" id="calRangeHint"></span>
                 <button type="button" class="cal-done-btn" id="calDoneBtn">Done</button>
               </div>
             </div>
           </div>
-        </div>
+        </div><!-- /.hsf-search-row -->
 
         <!-- Central validation error box (Requirement #18) -->
         <div class="hsf-form-error" id="formErrorBox" hidden>
@@ -103,33 +124,16 @@
         <input type="hidden" name="rooms_detail" id="roomsDetailHidden" value="">
         <input type="hidden" name="villa_type" id="villaTypeHidden" value="coastal">
 
-        <div class="hsf-actions-row">
+        <!-- ردیف ۳: دکمه جستجو -->
+        <div class="hsf-actions-row hsf-actions-row--center">
           <button type="submit" class="hero-search-submit" id="heroSearchSubmit">
             <span class="btn-label">Search</span>
             <span class="btn-loading" hidden>
               <i class="fa-solid fa-circle-notch fa-spin" aria-hidden="true"></i> Searching…
             </span>
           </button>
+        </div><!-- /.hsf-actions-row -->
 
-          <div class="hsf-toolbar">
-            <div class="hsf-select" data-target="villaTypeHidden">
-              <button type="button" class="hsf-select-trigger" aria-expanded="false" aria-haspopup="listbox">
-                <i class="fa-solid fa-chevron-down hsf-select-chevron" aria-hidden="true"></i>
-                <span class="hsf-select-label">Coastal</span>
-              </button>
-              <div class="hsf-select-popup" role="listbox" hidden>
-                <button type="button" class="hsf-select-option active" data-value="coastal" role="option">Coastal</button>
-                <button type="button" class="hsf-select-option" data-value="forest" role="option">Forest</button>
-                <button type="button" class="hsf-select-option" data-value="mountain" role="option">Mountain / Cold climate</button>
-                <button type="button" class="hsf-select-option" data-value="desert" role="option">Desert / Hot climate</button>
-                <button type="button" class="hsf-select-option" data-value="traditional" role="option">Traditional</button>
-                <button type="button" class="hsf-select-option" data-value="lakeside" role="option">Lakeside</button>
-                <button type="button" class="hsf-select-option" data-value="countryside" role="option">Countryside / Farm</button>
-                <button type="button" class="hsf-select-option" data-value="modern" role="option">Modern</button>
-              </div>
-            </div>
-          </div>
-        </div>
       </form>
     </div>
 

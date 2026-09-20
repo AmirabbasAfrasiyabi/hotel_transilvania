@@ -20,6 +20,20 @@
 
        <form class="hero-search-form" id="heroSearchForm" autocomplete="off" data-location-scope="domestic" data-location-unit="Terminal">
 
+        <!-- ردیف ۲: گزینه‌های سفر (Travel Options) -->
+        <div class="hsf-toolbar hsf-toolbar--top">
+            <div class="hsf-select" id="tripTypeGroup" data-target="tripTypeHidden">
+              <button type="button" class="hsf-select-trigger" aria-expanded="false" aria-haspopup="listbox">
+                <i class="fa-solid fa-chevron-down hsf-select-chevron" aria-hidden="true"></i>
+                <span class="hsf-select-label">One-way</span>
+              </button>
+              <div class="hsf-select-popup" role="listbox" hidden>
+                <button type="button" class="hsf-select-option active" data-value="oneway" role="option">One-way</button>
+                <button type="button" class="hsf-select-option" data-value="roundtrip" role="option">Round-trip</button>
+              </div>
+            </div>
+        </div>
+
         <div class="hsf-search-row hsf-search-row--route">
           <div class="hsf-field" id="originField">
             <span class="hsf-label">From</span>
@@ -82,7 +96,7 @@
                   <button type="button" class="hsf-date-nudge" data-nudge="depart" data-dir="-1" aria-label="Previous day">‹</button>
                   <button type="button" class="hsf-date-trigger" id="departTrigger">
                     <i class="fa-regular fa-calendar" aria-hidden="true"></i>
-                    <span id="departTriggerText">Select date</span>
+                    <span id="departTriggerText">&mdash;</span>
                   </button>
                   <button type="button" class="hsf-date-nudge" data-nudge="depart" data-dir="1" aria-label="Next day">›</button>
                 </div>
@@ -94,7 +108,7 @@
                   <button type="button" class="hsf-date-nudge" data-nudge="return" data-dir="-1" aria-label="Previous day">‹</button>
                   <button type="button" class="hsf-date-trigger" id="returnTrigger">
                     <i class="fa-regular fa-calendar" aria-hidden="true"></i>
-                    <span id="returnTriggerText">Select date</span>
+                    <span id="returnTriggerText">&mdash;</span>
                   </button>
                   <button type="button" class="hsf-date-nudge" data-nudge="return" data-dir="1" aria-label="Next day">›</button>
                 </div>
@@ -126,26 +140,14 @@
         <input type="hidden" name="trip_type" id="tripTypeHidden" value="oneway">
 
         <!-- Row 3: Search button on the LEFT, category options on the RIGHT -->
-        <div class="hsf-actions-row">
+        <!-- ردیف ۴: دکمه جستجو -->
+        <div class="hsf-actions-row hsf-actions-row--center">
           <button type="submit" class="hero-search-submit" id="heroSearchSubmit">
             <span class="btn-label">Search</span>
             <span class="btn-loading" hidden>
               <i class="fa-solid fa-circle-notch fa-spin" aria-hidden="true"></i> Searching…
             </span>
           </button>
-
-          <div class="hsf-toolbar">
-            <div class="hsf-select" id="tripTypeGroup" data-target="tripTypeHidden">
-              <button type="button" class="hsf-select-trigger" aria-expanded="false" aria-haspopup="listbox">
-                <i class="fa-solid fa-chevron-down hsf-select-chevron" aria-hidden="true"></i>
-                <span class="hsf-select-label">One-way</span>
-              </button>
-              <div class="hsf-select-popup" role="listbox" hidden>
-                <button type="button" class="hsf-select-option active" data-value="oneway" role="option">One-way</button>
-                <button type="button" class="hsf-select-option" data-value="roundtrip" role="option">Round-trip</button>
-              </div>
-            </div>
-          </div>
         </div>
       </form>
     </div>

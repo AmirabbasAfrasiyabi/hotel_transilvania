@@ -383,18 +383,14 @@
     if (returnHiddenInput) returnHiddenInput.value = rangeEnd ? formatISO(rangeEnd) : '';
 
     if (isDualTriggerMode) {
-      // FIXED: متن 'Select date' حذف شد. برچسب Departure/Return بالای
-      // همین دکمه وجود دارد، پس این متن اضافی بود و در کادر باریک
-      // تاریخ سرریز می‌کرد. حالا تا انتخاب تاریخ، فقط آیکون تقویم
-      // دیده می‌شود (عرض حداقلی آن در CSS تضمین شده است).
-      if (departTriggerText) departTriggerText.textContent = rangeStart ? formatShort(rangeStart) : '';
-      if (returnTriggerText) returnTriggerText.textContent = rangeEnd ? formatShort(rangeEnd) : '';
+      if (departTriggerText) departTriggerText.textContent = rangeStart ? formatShort(rangeStart) : '\u2014';
+      if (returnTriggerText) returnTriggerText.textContent = rangeEnd ? formatShort(rangeEnd) : '\u2014';
       return;
     }
 
     if (!dateTriggerText) return;
     if (!rangeStart) {
-      dateTriggerText.textContent = isRangeMode ? 'Select dates' : 'Select a date';
+      dateTriggerText.textContent = '\u2014';
     } else if (isRangeMode && !rangeEnd) {
       dateTriggerText.textContent = formatShort(rangeStart) + ' \u2192 Return?';
     } else if (isRangeMode) {
@@ -411,16 +407,16 @@
     if (calRangeHint) {
       if (isDualTriggerMode) {
         if (!rangeStart) {
-          calRangeHint.textContent = 'Select a ' + DATE_WORDS.start + ' date';
+          calRangeHint.textContent = '';
         } else if (!rangeEnd) {
           calRangeHint.textContent = DATE_WORDS.startCap + ' ' + formatShort(rangeStart) + ' — now pick a ' + DATE_WORDS.end + ' date';
         } else {
           calRangeHint.textContent = formatShort(rangeStart) + ' \u2192 ' + formatShort(rangeEnd);
         }
       } else if (!isRangeMode) {
-        calRangeHint.textContent = rangeStart ? DATE_WORDS.startCap + 'd ' + formatShort(rangeStart) : 'Select your travel date';
+        calRangeHint.textContent = rangeStart ? DATE_WORDS.startCap + 'd ' + formatShort(rangeStart) : '';
       } else if (!rangeStart) {
-        calRangeHint.textContent = 'Select a ' + DATE_WORDS.start + ' date';
+        calRangeHint.textContent = '';
       } else if (!rangeEnd) {
         calRangeHint.textContent = DATE_WORDS.startCap + ' ' + formatShort(rangeStart) + ' — now pick a ' + DATE_WORDS.end + ' date';
       } else {
