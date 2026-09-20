@@ -11,7 +11,7 @@ class Post(models.Model):
     content = RichTextUploadingField()
     image = models.ImageField(upload_to='blog', default='blog/default.jpg')
     author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    category = models.ManyToManyField('Category', related_name='category', blank=True, null=True)
+    category = models.ManyToManyField('Category', related_name='category', blank=True,)
     created_date = models.DateTimeField(auto_now_add=True)
     counted_views = models.IntegerField(default=0)
     status = models.BooleanField(default=False)
