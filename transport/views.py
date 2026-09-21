@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+from django.conf import settings
 from django.shortcuts import render
 from django.views.decorators.http import require_GET
 
@@ -7,7 +8,8 @@ from help_center.services import get_service_content
 from transport.flight_params import parse_search_params
 from transport.airport import city_to_iata
 from transport.duffel_client import DuffelError, search_offers
-
+from transport.flight_mapper import simplify_offers
+MAX_RESULTS = 30
 # Create your views here.
 
 def Flight_view(request):
@@ -56,5 +58,6 @@ def flight_search_api(request):
         "airports": {"origin": origin_code, "destination": destination_code},
         "offer_request_id": offer_request.get("id"),
         "live_mode": offer_request.get("live_mode"),
-        "offers_count": len(offers),
+        "total_offers": len(offers),
+        "flights": simplify_offers(offers, limit=MAX_RESULTS),
     })
