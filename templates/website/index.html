@@ -9,16 +9,16 @@
   <div class="container hero-search-inner">
 
     <div class="hero-search-intro">
-      <span class="contact-eyebrow">🚆 Travelista</span>
-      <h1 class="hero-search-heading">Catch your train</h1>
-      <p class="hero-search-sub">Book rail tickets between cities, no station queues required.</p>
+      <span class="contact-eyebrow">✈️ Travelista</span>
+      <h1 class="hero-search-heading">Find your flight</h1>
+      <p class="hero-search-sub">Search flights between cities and compare fares in one place.</p>
     </div>
 
     <div class="hero-search-card" id="heroSearchCard">
 
       {% include "website/_hero_tabs.html" %}
 
-      <form class="hero-search-form" id="heroSearchForm" autocomplete="off" data-location-scope="domestic" data-location-unit="Station">
+      <form class="hero-search-form" id="heroSearchForm" autocomplete="off" data-location-scope="flight" data-location-unit="City" data-results-url="{% url 'transport:flight_results' %}">
 
         <!-- ردیف ۱: گزینه‌های سفر (Travel Options) -->
         <div class="hsf-toolbar hsf-toolbar--top">
@@ -33,29 +33,6 @@
               <button type="button" class="hsf-select-option" data-value="roundtrip" role="option">Round-trip</button>
             </div>
           </div><!-- /.hsf-select (trip type) -->
-
-          <div class="hsf-select" data-target="compartmentHidden">
-            <button type="button" class="hsf-select-trigger" aria-expanded="false" aria-haspopup="listbox">
-              <i class="fa-solid fa-chevron-down hsf-select-chevron" aria-hidden="true"></i>
-              <span class="hsf-select-label">Shared</span>
-            </button>
-            <div class="hsf-select-popup" role="listbox" hidden>
-              <button type="button" class="hsf-select-option active" data-value="shared" role="option">Shared</button>
-              <button type="button" class="hsf-select-option" data-value="private" role="option">Private (whole compartment)</button>
-            </div>
-          </div><!-- /.hsf-select (compartment) -->
-
-          <div class="hsf-select" data-target="genderHidden">
-            <button type="button" class="hsf-select-trigger" aria-expanded="false" aria-haspopup="listbox">
-              <i class="fa-solid fa-chevron-down hsf-select-chevron" aria-hidden="true"></i>
-              <span class="hsf-select-label">Mixed / Family</span>
-            </button>
-            <div class="hsf-select-popup" role="listbox" hidden>
-              <button type="button" class="hsf-select-option active" data-value="any" role="option">Mixed / Family</button>
-              <button type="button" class="hsf-select-option" data-value="male" role="option">Male</button>
-              <button type="button" class="hsf-select-option" data-value="female" role="option">Female</button>
-            </div>
-          </div><!-- /.hsf-select (gender) -->
 
         </div><!-- /.hsf-toolbar -->
 
@@ -164,8 +141,7 @@
         <input type="hidden" name="children" id="childrenHidden" value="0">
         <input type="hidden" name="infants" id="infantsHidden" value="0">
         <input type="hidden" name="trip_type" id="tripTypeHidden" value="oneway">
-        <input type="hidden" name="compartment_type" id="compartmentHidden" value="shared">
-        <input type="hidden" name="passenger_gender" id="genderHidden" value="any">
+
 
         <!-- ردیف ۳: دکمه جستجو -->
         <div class="hsf-actions-row hsf-actions-row--center">

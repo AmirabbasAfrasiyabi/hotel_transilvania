@@ -1035,6 +1035,26 @@
     if (destInput) destInput.addEventListener('change', updateTripScope);
   }
 
+  // Read a passenger counter from the popup. Works even if "Apply" was not clicked.
+  function readPaxCount(key, fallback) {
+    var el = document.querySelector('.pax-count[data-count="' + key + '"]');
+    var n = el ? parseInt(el.textContent, 10) : NaN;
+    return isNaN(n) ? fallback : n;
+  }
+
+  // Build the query string for the flight results page.
+  function buildFlightQuery() {
+    var query = new URLSearchParams();
+    query.set('origin', form.elements['origin'].value.trim());
+    query.set('destination', form.elements['destination'].value.trim());
+    query.set('travel_date', form.elements['travel_date'].value);
+    query.set('adults', readPaxCount('adults', 1));
+    query.set('children', readPaxCount('children', 0));
+    query.set('infants', readPaxCount('infants', 0));
+    query.set('trip_type', 'oneway');
+    return query;
+  }
+
   form.addEventListener('submit', function (e) {
     e.preventDefault();
 
@@ -1047,6 +1067,19 @@
       return; // stop here — error box is already showing the reason
     }
 
+    // Flight search: only forms that declare data-results-url are sent to the
+    // results page. Train / Bus / Hotel forms keep their old behaviour.
+    var resultsUrl = form.getAttribute('data-results-url');
+    var flightQuery = null;
+    if (resultsUrl) {
+      var tripTypeField = form.elements['trip_type'];
+      if (tripTypeField && tripTypeField.value !== 'oneway') {
+        showFormError('Round-trip search is coming soon. Please choose One-way for now.');
+        return;
+      }
+      flightQuery = buildFlightQuery();
+    }
+
     if (!submitBtn) return;
     var label = submitBtn.querySelector('.btn-label');
     var loading = submitBtn.querySelector('.btn-loading');
@@ -1054,11 +1087,26 @@
     if (loading) loading.hidden = false;
     submitBtn.disabled = true;
 
+    if (flightQuery) {
+      window.location.href = resultsUrl + '?' + flightQuery.toString();
+      return; // keep the "Searching…" state until the browser leaves this page
+    }
+
     window.setTimeout(function () {
       if (label) label.hidden = false;
       if (loading) loading.hidden = true;
       submitBtn.disabled = false;
     }, 900);
+  });
+
+  // If the user comes back with the browser's Back button, reset the button.
+  window.addEventListener('pageshow', function (event) {
+    if (!event.persisted || !submitBtn) return;
+    var backLabel = submitBtn.querySelector('.btn-label');
+    var backLoading = submitBtn.querySelector('.btn-loading');
+    if (backLabel) backLabel.hidden = false;
+    if (backLoading) backLoading.hidden = true;
+    submitBtn.disabled = false;
   });
 
 /* ------------------------------------------------------------------
