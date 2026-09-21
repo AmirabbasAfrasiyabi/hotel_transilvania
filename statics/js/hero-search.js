@@ -29,7 +29,6 @@
     { city: 'Dubai', region: 'United Arab Emirates' },
     { city: 'Istanbul', region: 'Türkiye' },
     { city: 'Antalya', region: 'Türkiye' },
-    { city: 'Antalya', region: 'Türkiye' },
     { city: 'Paris', region: 'France' },
     { city: 'London', region: 'United Kingdom' },
     { city: 'Tokyo', region: 'Japan' },
@@ -85,12 +84,17 @@
   // its own named scope so this stays independent from the Hotel form
   // if the two ever need to diverge later) and merges recent-search
   // history from both.
-  var FLIGHT_HISTORY = IRAN_HISTORY.concat(INTL_HISTORY);
   var IRAN_CITY_NAMES = IRAN_CITIES.map(function (loc) { return loc.city; });
+
+  // Flight search: NO city inside Iran, neither in the city list nor in the
+  // "Recent searches" list (INTL_HISTORY contains a Tehran route, so we filter it).
+  var FLIGHT_HISTORY = INTL_HISTORY.filter(function (h) {
+    return IRAN_CITY_NAMES.indexOf(h.from) === -1 && IRAN_CITY_NAMES.indexOf(h.to) === -1;
+  });
 
   var scope = form.getAttribute('data-location-scope') || 'international';
   var LOCATIONS = scope === 'domestic' ? IRAN_CITIES
-    : scope === 'flight' ? MIXED_CITIES
+    : scope === 'flight' ? INTL_CITIES
     : scope === 'villa' ? IRAN_VILLA_DESTINATIONS
     : scope === 'mixed' ? MIXED_CITIES
     : INTL_CITIES;
@@ -959,6 +963,11 @@
     return true;
   }
 
+  function isKnownLocation(text) {
+    var value = (text || '').trim().toLowerCase();
+    return LOCATIONS.some(function (loc) { return loc.city.toLowerCase() === value; });
+  }
+
   // Validation for Flight (domestic/international), Bus and Train — all
   // share the Origin/Destination + Departure/Return field set.
   function validateOriginDestinationForm() {
@@ -978,6 +987,20 @@
     if (originInputEl.value.trim().toLowerCase() === destInputEl.value.trim().toLowerCase()) {
       showFormError('Origin and destination cannot be the same.');
       return false;
+    }
+
+    // Flight only: the text must be one of the suggested cities (typing "Tehran" is not enough).
+    if (scope === 'flight') {
+      if (!isKnownLocation(originInputEl.value)) {
+        showFormError('Please choose an origin from the list.');
+        originInputEl.focus();
+        return false;
+      }
+      if (!isKnownLocation(destInputEl.value)) {
+        showFormError('Please choose a destination from the list.');
+        destInputEl.focus();
+        return false;
+      }
     }
     if (!departHiddenInput || !departHiddenInput.value) {
       showFormError('Please select a departure date.');
@@ -1051,7 +1074,11 @@
     query.set('adults', readPaxCount('adults', 1));
     query.set('children', readPaxCount('children', 0));
     query.set('infants', readPaxCount('infants', 0));
-    query.set('trip_type', 'oneway');
+    var tripType = form.elements['trip_type'].value;
+    query.set('trip_type', tripType);
+    if (tripType === 'roundtrip') {
+      query.set('return_date', form.elements['return_date'].value);
+    }
     return query;
   }
 
@@ -1072,11 +1099,6 @@
     var resultsUrl = form.getAttribute('data-results-url');
     var flightQuery = null;
     if (resultsUrl) {
-      var tripTypeField = form.elements['trip_type'];
-      if (tripTypeField && tripTypeField.value !== 'oneway') {
-        showFormError('Round-trip search is coming soon. Please choose One-way for now.');
-        return;
-      }
       flightQuery = buildFlightQuery();
     }
 

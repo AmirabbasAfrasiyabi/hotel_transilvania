@@ -10,6 +10,12 @@ from help_center.services import get_service_content
 def index_view(request):
     context = get_service_content(FAQCategory.FLIGHT)
 
+    context['popular_destinations'] = (
+        context['popular_destinations']
+        .exclude(is_domestic=True)
+        .exclude(country__icontains='iran')
+    )
+
     return render(request, 'website/index.html', context)
 
 

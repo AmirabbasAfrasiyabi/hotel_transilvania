@@ -21,11 +21,12 @@ def _build_passengers(adults, children, infants):
     return passengers
 
 
-def search_offers(origin, destination, travel_date,
+def search_offers(origin, destination, travel_date, return_date=None,
                   adults=1, children=0, infants=0, cabin_class="economy"):
     """
     Create an offer request on Duffel and return its `data` dictionary
     (it contains the list of offers under the key "offers").
+    If `return_date` is given, a second slice is added (round trip).
     """
     token = settings.DUFFEL_ACCESS_TOKEN
     if not token:
@@ -37,13 +38,23 @@ def search_offers(origin, destination, travel_date,
         "Accept": "application/json",
         "Content-Type": "application/json",
     }
+
+    slices = [{
+        "origin": origin,
+        "destination": destination,
+        "departure_date": travel_date,
+    }]
+    if return_date:
+        # Round trip: the second slice flies the same route backwards.
+        slices.append({
+            "origin": destination,
+            "destination": origin,
+            "departure_date": return_date,
+        })
+
     body = {
         "data": {
-            "slices": [{
-                "origin": origin,
-                "destination": destination,
-                "departure_date": travel_date,
-            }],
+            "slices": slices,
             "passengers": _build_passengers(adults, children, infants),
             "cabin_class": cabin_class,
         }

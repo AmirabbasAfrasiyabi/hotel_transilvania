@@ -1,5 +1,6 @@
-/* Flight results page (step 9).
-   Calls our own JSON API and draws one card per flight. Plain JavaScript (no jQuery). */
+/* Flight results page.
+   Calls our own JSON API and draws one card per flight (one row per direction).
+   Plain JavaScript (no jQuery). */
 (function () {
   "use strict";
 
@@ -27,6 +28,13 @@
     }
   }
 
+  // "2026-10-23" -> "Fri 23 Oct" (plain text, escape it where you use it).
+  function formatDay(isoDate) {
+    var d = new Date(isoDate + "T00:00:00");
+    if (isNaN(d)) { return isoDate; }
+    return d.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" });
+  }
+
   // Days between two YYYY-MM-DD strings (used for the "+1" next-day mark).
   function dayOffset(fromDate, toDate) {
     var ms = new Date(toDate) - new Date(fromDate);
@@ -41,58 +49,79 @@
     root.innerHTML = '<div class="fr-message ' + (extraClass || "") + '">' + html + "</div>";
   }
 
-  // ---------- one flight card ----------
-  function renderCard(f) {
-    var offset = dayOffset(f.departure.date, f.arrival.date);
-    var logo = safeLogo(f.airline.logo);
+  // ---------- one direction (a row inside the card) ----------
+  function renderSlice(slice, airline, isRound) {
+    var offset = dayOffset(slice.departure.date, slice.arrival.date);
+    var logo = safeLogo(airline.logo);
 
     var stopsText = "Direct";
     var stopsClass = "fr-stops fr-stops--direct";
-    if (f.stops > 0) {
-      var via = f.segments.slice(0, -1).map(function (s) { return s.to; }).join(", ");
-      stopsText = f.stops + (f.stops === 1 ? " stop" : " stops") + (via ? " &middot; " + esc(via) : "");
+    if (slice.stops > 0) {
+      var via = slice.segments.slice(0, -1).map(function (s) { return s.to; }).join(", ");
+      stopsText = slice.stops + (slice.stops === 1 ? " stop" : " stops") + (via ? " &middot; " + esc(via) : "");
       stopsClass = "fr-stops";
     }
 
     var operated = "";
-    if (f.operating_airline && f.operating_airline !== f.airline.name) {
-      operated = '<div class="fr-operated">Operated by ' + esc(f.operating_airline) + "</div>";
+    if (slice.operating_airline && slice.operating_airline !== airline.name) {
+      operated = '<div class="fr-operated">Operated by ' + esc(slice.operating_airline) + "</div>";
     }
+
+    var label = "";
+    if (isRound) {
+      label = '<div class="fr-slice-label">' +
+        (slice.direction === "return" ? "Return" : "Outbound") +
+        " &middot; " + esc(formatDay(slice.departure.date)) + "</div>";
+    }
+
+    return (
+      '<div class="fr-slice">' +
+        label +
+        '<div class="fr-airline">' +
+          (logo ? '<img class="fr-logo" src="' + esc(logo) + '" alt="">' : "") +
+          "<div>" +
+            '<div class="fr-airline-name">' + esc(airline.name) + "</div>" +
+            operated +
+            '<div class="fr-flightno">' + esc(slice.flight_number) + "</div>" +
+          "</div>" +
+        "</div>" +
+
+        '<div class="fr-route">' +
+          '<div class="fr-point">' +
+            '<div class="fr-time">' + esc(slice.departure.time) + "</div>" +
+            '<div class="fr-code">' + esc(slice.departure.airport) + " &middot; " + esc(slice.departure.city) + "</div>" +
+          "</div>" +
+          '<div class="fr-line">' +
+            "<div>" + esc(slice.duration_text) + "</div>" +
+            '<div class="fr-track"></div>' +
+            '<div class="' + stopsClass + '">' + stopsText + "</div>" +
+          "</div>" +
+          '<div class="fr-point">' +
+            '<div class="fr-time">' + esc(slice.arrival.time) +
+              (offset > 0 ? "<sup>+" + offset + "</sup>" : "") + "</div>" +
+            '<div class="fr-code">' + esc(slice.arrival.airport) + " &middot; " + esc(slice.arrival.city) + "</div>" +
+          "</div>" +
+        "</div>" +
+      "</div>"
+    );
+  }
+
+  // ---------- one flight card ----------
+  function renderCard(f) {
+    var isRound = f.slices.length > 1;
+    var rows = f.slices.map(function (slice) {
+      return renderSlice(slice, f.airline, isRound);
+    }).join("");
 
     var bags = '<span class="fr-chip">Checked bag &times; ' + esc(f.baggage.checked) + "</span>" +
                '<span class="fr-chip">Cabin bag &times; ' + esc(f.baggage.carry_on) + "</span>";
 
     return (
       '<article class="fr-card">' +
-        '<div class="fr-airline">' +
-          (logo ? '<img class="fr-logo" src="' + esc(logo) + '" alt="">' : "") +
-          "<div>" +
-            '<div class="fr-airline-name">' + esc(f.airline.name) + "</div>" +
-            operated +
-            '<div class="fr-flightno">' + esc(f.flight_number) + "</div>" +
-          "</div>" +
-        "</div>" +
-
-        '<div class="fr-route">' +
-          '<div class="fr-point">' +
-            '<div class="fr-time">' + esc(f.departure.time) + "</div>" +
-            '<div class="fr-code">' + esc(f.departure.airport) + " &middot; " + esc(f.departure.city) + "</div>" +
-          "</div>" +
-          '<div class="fr-line">' +
-            "<div>" + esc(f.duration_text) + "</div>" +
-            '<div class="fr-track"></div>' +
-            '<div class="' + stopsClass + '">' + stopsText + "</div>" +
-          "</div>" +
-          '<div class="fr-point">' +
-            '<div class="fr-time">' + esc(f.arrival.time) +
-              (offset > 0 ? "<sup>+" + offset + "</sup>" : "") + "</div>" +
-            '<div class="fr-code">' + esc(f.arrival.airport) + " &middot; " + esc(f.arrival.city) + "</div>" +
-          "</div>" +
-        "</div>" +
-
+        '<div class="fr-slices">' + rows + "</div>" +
         '<div class="fr-price-col">' +
           '<div class="fr-price">' + formatPrice(f.price.amount, f.price.currency) + "</div>" +
-          '<div class="fr-price-note">Total price</div>' +
+          '<div class="fr-price-note">' + (isRound ? "Total price &middot; round trip" : "Total price") + "</div>" +
           '<div class="fr-bags">' + bags + "</div>" +
         "</div>" +
       "</article>"
@@ -119,7 +148,7 @@
     }
 
     if (data.flights.length === 0) {
-      showMessage("<strong>No flights found</strong><p>Try another date or a different route.</p>");
+      showMessage("<strong>No flights found</strong><p>Try other dates or a different route.</p>");
       return;
     }
 

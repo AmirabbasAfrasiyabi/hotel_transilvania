@@ -44,6 +44,7 @@ def flight_search_api(request):
             origin=origin_code,
             destination=destination_code,
             travel_date=params["travel_date"],
+            return_date=params["return_date"] or None,
             adults=params["adults"],
             children=params["children"],
             infants=params["infants"],

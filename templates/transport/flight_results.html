@@ -13,11 +13,19 @@
       <div>
         {% if errors %}
           <h1 class="fr-title">Flight search</h1>
-        {% else %}
-          <h1 class="fr-title">{{ params.origin }} <span class="fr-arrow">&rarr;</span> {{ params.destination }}</h1>
+          {% else %}
+          <h1 class="fr-title">
+            {{ params.origin }}
+            <span class="fr-arrow">{% if params.trip_type == "roundtrip" %}&#8646;{% else %}&rarr;{% endif %}</span>
+            {{ params.destination }}
+          </h1>
           <p class="fr-sub">
-            {{ params.travel_date }} &middot; One way &middot;
-            {{ travellers }} traveller{{ travellers|pluralize }}
+            {% if params.trip_type == "roundtrip" %}
+              Round trip &middot; {{ params.travel_date }} &rarr; {{ params.return_date }}
+            {% else %}
+              One way &middot; {{ params.travel_date }}
+            {% endif %}
+            &middot; {{ travellers }} traveller{{ travellers|pluralize }}
           </p>
         {% endif %}
       </div>

@@ -1,4 +1,4 @@
-/* Flight results page (step 9). Uses the --tvl-* colours defined in main.css */
+/* Flight results page. Uses the --tvl-* colours defined in main.css */
 
 .fr-page {
   padding: 130px 0 70px;               /* top space: the site header is position:fixed */
@@ -49,17 +49,38 @@
 }
 @keyframes fr-spin { to { transform: rotate(360deg); } }
 
-/* ---------- flight card ---------- */
+/* ---------- flight card: [ direction rows | price ] ---------- */
 .fr-card {
   display: grid;
-  grid-template-columns: 190px 1fr 210px;
-  gap: 20px;
+  grid-template-columns: 1fr 210px;
+  gap: 24px;
   align-items: center;
   background: #fff;
   border-radius: var(--tvl-radius, 18px);
   padding: 20px 24px;
   margin-bottom: 14px;
   box-shadow: var(--tvl-shadow, 0 20px 45px -20px rgba(18, 41, 61, .35));
+}
+
+.fr-slices { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+
+.fr-slice {
+  display: grid;
+  grid-template-columns: 190px 1fr;
+  gap: 20px;
+  align-items: center;
+}
+.fr-slice + .fr-slice {
+  padding-top: 16px;
+  border-top: 1px dashed var(--tvl-paper-dark, #E7D9C2);
+}
+.fr-slice-label {
+  grid-column: 1 / -1;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--tvl-teal, #1B7A78);
 }
 
 .fr-airline { display: flex; align-items: center; gap: 12px; }
@@ -88,6 +109,7 @@
 
 @media (max-width: 767px) {
   .fr-card { grid-template-columns: 1fr; }
+  .fr-slice { grid-template-columns: 1fr; }
   .fr-price-col { text-align: left; }
   .fr-bags { justify-content: flex-start; }
 }

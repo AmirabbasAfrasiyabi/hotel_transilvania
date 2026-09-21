@@ -8738,3 +8738,18 @@ img, svg, video, canvas { max-width: 100%; height: auto; }
   line-height: var(--text-line-height-small);
 }
 .cal-range-hint { min-height: 1em; }
+
+
+/* ==========================================================================
+   FIX: date box text was cut ("Oc…"). Same grid, just a little more room.
+   ========================================================================== */
+@media (min-width: 1200px) {
+  .hsf-search-row--route {
+    grid-template-columns:
+      minmax(0, 0.9fr) 44px minmax(0, 0.9fr) minmax(0, 0.85fr) minmax(0, 1.6fr);
+  }
+}
+
+.hsf-date-segment { padding: 4px 4px 4px 8px; }
+.hsf-date-nudge { width: 22px; }
+.hsf-date-box .hsf-date-trigger { gap: 6px; padding: 2px; }

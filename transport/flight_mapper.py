@@ -65,14 +65,41 @@ def _flight_number(segment):
     return f"{code}{number}"
 
 
-def simplify_offer(offer):
-    """Convert ONE Duffel offer (one-way search) into a simple dictionary."""
-    flight_slice = offer["slices"][0]
+def _simplify_slice(flight_slice, direction):
+    """One direction of the trip (outbound or return)."""
     segments = flight_slice["segments"]
     first, last = segments[0], segments[-1]
-
     minutes = parse_duration_minutes(flight_slice.get("duration"))
-    first_passenger = (first.get("passengers") or [{}])[0]
+
+    return {
+        "direction": direction,
+        "departure": _place(first.get("origin"), first.get("departing_at")),
+        "arrival": _place(last.get("destination"), last.get("arriving_at")),
+        "duration_minutes": minutes,
+        "duration_text": format_duration(minutes),
+        "stops": len(segments) - 1,
+        "flight_number": _flight_number(first),
+        "operating_airline": _dig(first, "operating_carrier", "name"),
+        "aircraft": _dig(first, "aircraft", "name"),
+        "segments": [
+            {
+                "from": _dig(seg, "origin", "iata_code"),
+                "to": _dig(seg, "destination", "iata_code"),
+                "departing_at": seg.get("departing_at"),
+                "arriving_at": seg.get("arriving_at"),
+                "flight_number": _flight_number(seg),
+                "airline": _dig(seg, "operating_carrier", "name"),
+            }
+            for seg in segments
+        ],
+    }
+
+
+def simplify_offer(offer):
+    """Convert ONE Duffel offer (one-way or round trip) into a simple dictionary."""
+    slices = offer["slices"]
+    first_segment = slices[0]["segments"][0]
+    first_passenger = (first_segment.get("passengers") or [{}])[0]
 
     return {
         "id": offer["id"],
@@ -85,26 +112,11 @@ def simplify_offer(offer):
             "code": _dig(offer, "owner", "iata_code"),
             "logo": _dig(offer, "owner", "logo_symbol_url"),
         },
-        "operating_airline": _dig(first, "operating_carrier", "name"),
-        "departure": _place(first.get("origin"), first.get("departing_at")),
-        "arrival": _place(last.get("destination"), last.get("arriving_at")),
-        "duration_minutes": minutes,
-        "duration_text": format_duration(minutes),
-        "stops": len(segments) - 1,
-        "flight_number": _flight_number(first),
-        "aircraft": _dig(first, "aircraft", "name"),
         "cabin": first_passenger.get("cabin_class_marketing_name"),
-        "baggage": _baggage(first),
-        "segments": [
-            {
-                "from": _dig(seg, "origin", "iata_code"),
-                "to": _dig(seg, "destination", "iata_code"),
-                "departing_at": seg.get("departing_at"),
-                "arriving_at": seg.get("arriving_at"),
-                "flight_number": _flight_number(seg),
-                "airline": _dig(seg, "operating_carrier", "name"),
-            }
-            for seg in segments
+        "baggage": _baggage(first_segment),
+        "slices": [
+            _simplify_slice(s, "outbound" if index == 0 else "return")
+            for index, s in enumerate(slices)
         ],
         "expires_at": offer.get("expires_at"),
     }
