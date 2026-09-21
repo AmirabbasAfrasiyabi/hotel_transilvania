@@ -1,0 +1,93 @@
+/* Flight results page (step 9). Uses the --tvl-* colours defined in main.css */
+
+.fr-page {
+  padding: 130px 0 70px;               /* top space: the site header is position:fixed */
+  background: var(--tvl-paper, #F1E7D6);
+  min-height: 75vh;
+}
+
+.fr-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.fr-title { margin: 0; font-size: 28px; color: var(--tvl-navy, #12293D); }
+.fr-arrow { color: var(--tvl-coral, #FF6F59); }
+.fr-sub, .fr-count { margin: 6px 0 0; color: var(--tvl-ink-soft, #6B6560); }
+
+.fr-newsearch {
+  padding: 10px 20px;
+  border-radius: 999px;
+  background: var(--tvl-navy, #12293D);
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+}
+.fr-newsearch:hover { background: var(--tvl-coral, #FF6F59); color: #fff; }
+
+/* ---------- messages: loading / empty / error ---------- */
+.fr-message {
+  background: #fff;
+  border-radius: var(--tvl-radius, 18px);
+  padding: 30px;
+  text-align: center;
+  color: var(--tvl-ink, #2C2A28);
+  box-shadow: var(--tvl-shadow, 0 20px 45px -20px rgba(18, 41, 61, .35));
+}
+.fr-message--error { text-align: left; border-left: 6px solid var(--tvl-coral, #FF6F59); }
+.fr-message ul { margin: 10px 0 0 18px; padding: 0; }
+
+.fr-spinner {
+  width: 36px; height: 36px; margin: 0 auto 14px;
+  border: 4px solid var(--tvl-paper-dark, #E7D9C2);
+  border-top-color: var(--tvl-coral, #FF6F59);
+  border-radius: 50%;
+  animation: fr-spin .9s linear infinite;
+}
+@keyframes fr-spin { to { transform: rotate(360deg); } }
+
+/* ---------- flight card ---------- */
+.fr-card {
+  display: grid;
+  grid-template-columns: 190px 1fr 210px;
+  gap: 20px;
+  align-items: center;
+  background: #fff;
+  border-radius: var(--tvl-radius, 18px);
+  padding: 20px 24px;
+  margin-bottom: 14px;
+  box-shadow: var(--tvl-shadow, 0 20px 45px -20px rgba(18, 41, 61, .35));
+}
+
+.fr-airline { display: flex; align-items: center; gap: 12px; }
+.fr-logo { width: 40px; height: 40px; object-fit: contain; }
+.fr-airline-name { font-weight: 700; color: var(--tvl-navy, #12293D); }
+.fr-operated, .fr-flightno { font-size: 12px; color: var(--tvl-ink-soft, #6B6560); }
+
+.fr-route { display: flex; align-items: center; gap: 16px; }
+.fr-point { text-align: center; min-width: 80px; }
+.fr-time { font-size: 24px; font-weight: 700; color: var(--tvl-navy, #12293D); }
+.fr-time sup { font-size: 11px; color: var(--tvl-coral, #FF6F59); margin-left: 2px; }
+.fr-code { font-size: 13px; color: var(--tvl-ink-soft, #6B6560); }
+
+.fr-line { flex: 1; text-align: center; font-size: 12px; color: var(--tvl-ink-soft, #6B6560); }
+.fr-track { height: 2px; margin: 6px 0; background: var(--tvl-paper-dark, #E7D9C2); }
+.fr-stops--direct { color: var(--tvl-teal, #1B7A78); font-weight: 600; }
+
+.fr-price-col { text-align: right; }
+.fr-price { font-size: 26px; font-weight: 800; color: var(--tvl-coral-dark, #E85A45); }
+.fr-price-note { font-size: 12px; color: var(--tvl-ink-soft, #6B6560); }
+.fr-bags { margin-top: 8px; display: flex; gap: 6px; justify-content: flex-end; flex-wrap: wrap; }
+.fr-chip {
+  font-size: 11px; padding: 3px 9px; border-radius: 999px;
+  background: var(--tvl-paper, #F1E7D6); color: var(--tvl-ink, #2C2A28);
+}
+
+@media (max-width: 767px) {
+  .fr-card { grid-template-columns: 1fr; }
+  .fr-price-col { text-align: left; }
+  .fr-bags { justify-content: flex-start; }
+}

@@ -61,3 +61,13 @@ def flight_search_api(request):
         "total_offers": len(offers),
         "flights": simplify_offers(offers, limit=MAX_RESULTS),
     })
+
+def flight_results_view(request):
+    """Results page. It shows a loading state; the browser then calls the JSON API."""
+    params, errors = parse_search_params(request.GET)
+    context = {
+        "params": params,
+        "errors": errors,
+        "travellers": params["adults"] + params["children"] + params["infants"],
+    }
+    return render(request, "transport/flight_results.html", context)

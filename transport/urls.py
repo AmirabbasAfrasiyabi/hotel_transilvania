@@ -6,4 +6,5 @@ urlpatterns = [
     path('Train', Train_view, name='train'),
     path ("Bus" , Bus_view , name="bus"),
     path('api/flights/search/', flight_search_api, name='flight_search_api'),
+    path('flights/results/', flight_results_view, name='flight_results'),
 ]

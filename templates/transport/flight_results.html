@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Flights {{ params.origin }} to {{ params.destination }}{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/flight-results.css' %}">
+
+<section class="fr-page">
+  <div class="container">
+
+    <div class="fr-summary">
+      <div>
+        {% if errors %}
+          <h1 class="fr-title">Flight search</h1>
+        {% else %}
+          <h1 class="fr-title">{{ params.origin }} <span class="fr-arrow">&rarr;</span> {{ params.destination }}</h1>
+          <p class="fr-sub">
+            {{ params.travel_date }} &middot; One way &middot;
+            {{ travellers }} traveller{{ travellers|pluralize }}
+          </p>
+        {% endif %}
+      </div>
+      <a class="fr-newsearch" href="{% url 'website:index' %}">New search</a>
+    </div>
+
+    {% if errors %}
+      <div class="fr-message fr-message--error">
+        <strong>We could not start this search:</strong>
+        <ul>
+          {% for field, message in errors.items %}
+            <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% else %}
+      <div id="frResults" data-api-url="{% url 'transport:flight_search_api' %}">
+        <div class="fr-message">
+          <div class="fr-spinner"></div>
+          <p>Searching for the best fares&hellip; this can take up to 20 seconds.</p>
+        </div>
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+{% if not errors %}
+<script src="{% static 'js/flight-results.js' %}" defer></script>
+{% endif %}
+{% endblock %}
