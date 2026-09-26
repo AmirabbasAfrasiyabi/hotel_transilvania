@@ -95,6 +95,16 @@ def _simplify_slice(flight_slice, direction):
     }
 
 
+def _refund_policy(offer):
+    """Simplify Duffel's 'conditions.refund_before_departure' into a small dict."""
+    refund = _dig(offer, "conditions", "refund_before_departure") or {}
+    return {
+        "refundable": refund.get("allowed"),   # True / False / None (airline didn't say)
+        "penalty_amount": refund.get("penalty_amount"),
+        "penalty_currency": refund.get("penalty_currency"),
+    }
+
+
 def simplify_offer(offer):
     """Convert ONE Duffel offer (one-way or round trip) into a simple dictionary."""
     slices = offer["slices"]
@@ -103,10 +113,7 @@ def simplify_offer(offer):
 
     return {
         "id": offer["id"],
-        "price": {
-            "amount": offer.get("total_amount"),
-            "currency": offer.get("total_currency"),
-        },
+        "price": {"amount": offer.get("total_amount"), "currency": offer.get("total_currency")},
         "airline": {
             "name": _dig(offer, "owner", "name"),
             "code": _dig(offer, "owner", "iata_code"),
@@ -114,6 +121,7 @@ def simplify_offer(offer):
         },
         "cabin": first_passenger.get("cabin_class_marketing_name"),
         "baggage": _baggage(first_segment),
+        "refund_policy": _refund_policy(offer),
         "slices": [
             _simplify_slice(s, "outbound" if index == 0 else "return")
             for index, s in enumerate(slices)

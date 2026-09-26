@@ -176,3 +176,24 @@ class MapperTests(SimpleTestCase):
         with self.assertLogs("transport.flight_mapper", level="WARNING"):
             flights = simplify_offers(offers)
         self.assertEqual([f["id"] for f in flights], ["ok"])
+
+    class RefundPolicyTests(SimpleTestCase):
+        def test_refundable_offer(self):
+            offer = make_offer("r1", "100.00")
+            offer["conditions"] = {
+                "refund_before_departure": {"allowed": True, "penalty_amount": "20.00", "penalty_currency": "EUR"}}
+            flight = simplify_offer(offer)
+            self.assertEqual(flight["refund_policy"],
+                             {"refundable": True, "penalty_amount": "20.00", "penalty_currency": "EUR"})
+
+        def test_non_refundable_offer(self):
+            offer = make_offer("r2", "100.00")
+            offer["conditions"] = {
+                "refund_before_departure": {"allowed": False, "penalty_amount": None, "penalty_currency": None}}
+            flight = simplify_offer(offer)
+            self.assertFalse(flight["refund_policy"]["refundable"])
+
+        def test_missing_conditions_is_handled(self):
+            offer = make_offer("r3", "100.00")  # no "conditions" key at all
+            flight = simplify_offer(offer)
+            self.assertIsNone(flight["refund_policy"]["refundable"])

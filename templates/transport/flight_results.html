@@ -9,30 +9,11 @@
 <section class="fr-page">
   <div class="container">
 
-    <div class="fr-summary">
-      <div>
-        {% if errors %}
-          <h1 class="fr-title">Flight search</h1>
-          {% else %}
-          <h1 class="fr-title">
-            {{ params.origin }}
-            <span class="fr-arrow">{% if params.trip_type == "roundtrip" %}&#8646;{% else %}&rarr;{% endif %}</span>
-            {{ params.destination }}
-          </h1>
-          <p class="fr-sub">
-            {% if params.trip_type == "roundtrip" %}
-              Round trip &middot; {{ params.travel_date }} &rarr; {{ params.return_date }}
-            {% else %}
-              One way &middot; {{ params.travel_date }}
-            {% endif %}
-            &middot; {{ travellers }} traveller{{ travellers|pluralize }}
-          </p>
-        {% endif %}
-      </div>
-      <a class="fr-newsearch" href="{% url 'website:index' %}">New search</a>
-    </div>
-
     {% if errors %}
+      <div class="fr-summary">
+        <h1 class="fr-title">Flight search</h1>
+        <a class="fr-newsearch" href="{% url 'website:index' %}">New search</a>
+      </div>
       <div class="fr-message fr-message--error">
         <strong>We could not start this search:</strong>
         <ul>
@@ -42,12 +23,170 @@
         </ul>
       </div>
     {% else %}
-      <div id="frResults" data-api-url="{% url 'transport:flight_search_api' %}">
-        <div class="fr-message">
-          <div class="fr-spinner"></div>
-          <p>Searching for the best fares&hellip; this can take up to 20 seconds.</p>
+
+      <div class="frs-searchbar" id="frsSearchbar">
+        <button type="button" class="frs-pill" id="frsPillBtn" aria-expanded="false" aria-controls="frsEditor">
+          <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+          <span class="frs-pill-text" id="frsPillText">
+            {{ params.origin }} &rarr; {{ params.destination }} &middot; {{ params.travel_date }}{% if params.trip_type == "roundtrip" %} &ndash; {{ params.return_date }}{% endif %} &middot; {{ travellers }} traveller{{ travellers|pluralize }}
+          </span>
+          <i class="fa-solid fa-chevron-down frs-pill-chevron" aria-hidden="true"></i>
+        </button>
+
+        <div class="frs-editor" id="frsEditor" hidden>
+          <button type="button" class="frs-editor-close" id="frsEditorClose" aria-label="Close">&times;</button>
+
+          <form class="hero-search-form" id="heroSearchForm" autocomplete="off"
+                data-location-scope="flight" data-location-unit="City" data-inline-search="true">
+
+            <div class="hsf-toolbar hsf-toolbar--top">
+              <div class="hsf-select" id="tripTypeGroup" data-target="tripTypeHidden">
+                <button type="button" class="hsf-select-trigger" aria-expanded="false" aria-haspopup="listbox">
+                  <i class="fa-solid fa-chevron-down hsf-select-chevron" aria-hidden="true"></i>
+                  <span class="hsf-select-label">{% if params.trip_type == "roundtrip" %}Round-trip{% else %}One-way{% endif %}</span>
+                </button>
+                <div class="hsf-select-popup" role="listbox" hidden>
+                  <button type="button" class="hsf-select-option{% if params.trip_type != 'roundtrip' %} active{% endif %}" data-value="oneway" role="option">One-way</button>
+                  <button type="button" class="hsf-select-option{% if params.trip_type == 'roundtrip' %} active{% endif %}" data-value="roundtrip" role="option">Round-trip</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="hsf-search-row hsf-search-row--route">
+              <div class="hsf-field" id="originField">
+                <span class="hsf-label">From</span>
+                <input type="text" class="hsf-input" id="originInput" name="origin" placeholder="From" value="{{ params.origin }}" aria-expanded="false" aria-controls="originSuggestions">
+                <div class="hsf-suggestions" id="originSuggestions" role="listbox" hidden></div>
+              </div>
+
+              <button type="button" class="hsf-reverse-btn" id="reverseBtn" aria-label="Swap origin and destination">
+                <i class="fa-solid fa-arrow-right-arrow-left" aria-hidden="true"></i>
+              </button>
+
+              <div class="hsf-field" id="destField">
+                <span class="hsf-label">To</span>
+                <input type="text" class="hsf-input" id="destInput" name="destination" placeholder="To" value="{{ params.destination }}" aria-expanded="false" aria-controls="destSuggestions">
+                <div class="hsf-suggestions" id="destSuggestions" role="listbox" hidden></div>
+              </div>
+
+              <div class="hsf-field hsf-passenger-field" id="passengerField">
+                <span class="hsf-label">Passengers</span>
+                <button type="button" class="hsf-date-trigger" id="passengerTrigger" aria-expanded="false" aria-controls="passengerPopup">
+                  <i class="fa-solid fa-user" aria-hidden="true"></i>
+                  <span id="passengerTriggerText">{{ travellers }} Traveller{{ travellers|pluralize }}</span>
+                </button>
+
+                <div class="hsf-passenger-popup" id="passengerPopup" hidden>
+                  <div class="pax-row">
+                    <div class="pax-copy"><strong>Adults</strong><span>12+ years</span></div>
+                    <div class="pax-stepper" data-pax="adults" data-min="1" data-max="9">
+                      <button type="button" class="pax-btn" data-action="dec" aria-label="Decrease adults">&minus;</button>
+                      <span class="pax-count" data-count="adults">{{ params.adults }}</span>
+                      <button type="button" class="pax-btn" data-action="inc" aria-label="Increase adults">+</button>
+                    </div>
+                  </div>
+                  <div class="pax-row">
+                    <div class="pax-copy"><strong>Children</strong><span>2&ndash;11 years</span></div>
+                    <div class="pax-stepper" data-pax="children" data-min="0" data-max="8">
+                      <button type="button" class="pax-btn" data-action="dec" aria-label="Decrease children">&minus;</button>
+                      <span class="pax-count" data-count="children">{{ params.children }}</span>
+                      <button type="button" class="pax-btn" data-action="inc" aria-label="Increase children">+</button>
+                    </div>
+                  </div>
+                  <div class="pax-divider"></div>
+                  <button type="button" class="pax-apply-btn" id="paxApplyBtn">Apply</button>
+                </div>
+              </div>
+
+              <div class="hsf-date-group" id="dateField" data-date-context="flight">
+                <div class="hsf-date-box">
+                  <div class="hsf-date-segment" id="departField">
+                    <span class="hsf-label">Departure</span>
+                    <div class="hsf-date-row">
+                      <button type="button" class="hsf-date-nudge" data-nudge="depart" data-dir="-1" aria-label="Previous day">&lsaquo;</button>
+                      <button type="button" class="hsf-date-trigger" id="departTrigger">
+                        <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+                        <span id="departTriggerText">&mdash;</span>
+                      </button>
+                      <button type="button" class="hsf-date-nudge" data-nudge="depart" data-dir="1" aria-label="Next day">&rsaquo;</button>
+                    </div>
+                  </div>
+                  <div class="hsf-date-divider" aria-hidden="true"></div>
+                  <div class="hsf-date-segment" id="returnField" {% if params.trip_type != "roundtrip" %}style="display:none"{% endif %}>
+                    <span class="hsf-label">Return</span>
+                    <div class="hsf-date-row">
+                      <button type="button" class="hsf-date-nudge" data-nudge="return" data-dir="-1" aria-label="Previous day">&lsaquo;</button>
+                      <button type="button" class="hsf-date-trigger" id="returnTrigger">
+                        <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+                        <span id="returnTriggerText">&mdash;</span>
+                      </button>
+                      <button type="button" class="hsf-date-nudge" data-nudge="return" data-dir="1" aria-label="Next day">&rsaquo;</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="hsf-calendar-popup" id="calendarPopup" hidden>
+                  <div class="cal-months" id="calMonths"></div>
+                  <div class="cal-footer">
+                    <span class="cal-range-hint" id="calRangeHint"></span>
+                    <button type="button" class="cal-done-btn" id="calDoneBtn">Done</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="hsf-form-error" id="formErrorBox" hidden>
+              <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+              <span id="formErrorText"></span>
+            </div>
+
+            <input type="hidden" name="travel_date" id="departDateHidden" value="{{ params.travel_date }}">
+            <input type="hidden" name="return_date" id="returnDateHidden" value="{{ params.return_date }}">
+            <input type="hidden" name="adults" id="adultsHidden" value="{{ params.adults }}">
+            <input type="hidden" name="children" id="childrenHidden" value="{{ params.children }}">
+            <input type="hidden" name="infants" id="infantsHidden" value="{{ params.infants }}">
+            <input type="hidden" name="trip_type" id="tripTypeHidden" value="{{ params.trip_type }}">
+
+            <div class="hsf-actions-row hsf-actions-row--center">
+              <button type="submit" class="hero-search-submit" id="heroSearchSubmit">
+                <span class="btn-label">Update search</span>
+                <span class="btn-loading" hidden>
+                  <i class="fa-solid fa-circle-notch fa-spin" aria-hidden="true"></i> Searching&hellip;
+                </span>
+              </button>
+            </div>
+          </form>
         </div>
       </div>
+
+      <div class="fr-layout">
+        <div class="frs-datestrip" id="frsDateStrip" hidden>
+          <button type="button" class="frs-date-nav" id="frsDatePrev" aria-label="Earlier dates">&lsaquo;</button>
+          <div class="frs-datestrip-track" id="frsDateTrack"></div>
+          <button type="button" class="frs-date-nav" id="frsDateNext" aria-label="Later dates">&rsaquo;</button>
+        </div>
+
+        <div class="fr-toolbar" id="frToolbar" hidden>
+          <span class="fr-sort-label">Sort by:</span>
+          <div class="fr-sort-line" id="frSortLine">
+            <button type="button" class="fr-sort-btn is-active" data-sort="price">Cheapest</button>
+            <button type="button" class="fr-sort-btn" data-sort="price_desc">Priciest</button>
+            <button type="button" class="fr-sort-btn" data-sort="duration">Fastest</button>
+            <button type="button" class="fr-sort-btn" data-sort="departure">Earliest departure</button>
+            <button type="button" class="fr-sort-btn" data-sort="departure_desc">Latest departure</button>
+          </div>
+        </div>
+
+        <div id="frResults" data-api-url="{% url 'transport:flight_search_api' %}">
+          <div class="fr-message">
+            <div class="fr-spinner"></div>
+            <p>Searching for the best fares&hellip; this can take up to 20 seconds.</p>
+          </div>
+        </div>
+
+        <aside class="frs-filters" id="frFilters" hidden></aside>
+      </div>
+
     {% endif %}
 
   </div>

@@ -678,6 +678,21 @@
     });
   }
 
+
+  // If the departure/return hidden inputs already have a value when the page
+  // loads (the results-page inline search bar starts pre-filled with the
+  // current search), show that date instead of "—". On the homepage these
+  // hidden inputs start empty, so this has no effect there.
+  if (departHiddenInput && departHiddenInput.value) {
+    rangeStart = new Date(departHiddenInput.value + 'T00:00:00');
+  }
+  if (returnHiddenInput && returnHiddenInput.value) {
+    rangeEnd = new Date(returnHiddenInput.value + 'T00:00:00');
+  }
+  updateTriggerAndHidden();
+
+
+
   /* ------------------------------------------------------------------
      6. PASSENGER SELECTOR (Adults / Children / Infants — class now
      lives in its own standalone chip-group, handled in section 4)
@@ -1094,11 +1109,14 @@
       return; // stop here — error box is already showing the reason
     }
 
-    // Flight search: only forms that declare data-results-url are sent to the
-    // results page. Train / Bus / Hotel forms keep their old behaviour.
+    // Flight search on the home page (data-results-url) navigates to the
+    // results page. Flight search INSIDE the results page itself
+    // (data-inline-search) updates the current page instead — it just
+    // changes the URL and fires an event; flight-results.js listens for it.
     var resultsUrl = form.getAttribute('data-results-url');
+    var inlineSearch = form.hasAttribute('data-inline-search');
     var flightQuery = null;
-    if (resultsUrl) {
+    if (resultsUrl || inlineSearch) {
       flightQuery = buildFlightQuery();
     }
 
@@ -1108,6 +1126,15 @@
     if (label) label.hidden = true;
     if (loading) loading.hidden = false;
     submitBtn.disabled = true;
+
+    if (inlineSearch && flightQuery) {
+      window.history.pushState(null, '', window.location.pathname + '?' + flightQuery.toString());
+      document.dispatchEvent(new CustomEvent('flightsearch:update'));
+      if (label) label.hidden = false;
+      if (loading) loading.hidden = true;
+      submitBtn.disabled = false;
+      return;
+    }
 
     if (flightQuery) {
       window.location.href = resultsUrl + '?' + flightQuery.toString();
