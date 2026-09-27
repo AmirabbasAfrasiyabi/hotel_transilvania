@@ -62,9 +62,6 @@
     return typeof url === "string" && url.indexOf("https://") === 0 ? url : "";
   }
 
-  // NOTE: this no longer wipes dateStripEl's innerHTML — that would delete
-  // the fixed prev/next buttons and the #frsDateTrack container along with
-  // them, which is the bug that made the whole strip disappear permanently.
   function showMessage(html, extraClass) {
     root.innerHTML = '<div class="fr-message ' + (extraClass || "") + '">' + html + "</div>";
     if (toolbarEl) toolbarEl.hidden = true;
@@ -89,51 +86,47 @@
     var stopsClass = "fr-stops fr-stops--direct";
     if (slice.stops > 0) {
       var via = slice.segments.slice(0, -1).map(function (s) { return s.to; }).join(", ");
-      stopsText = slice.stops + (slice.stops === 1 ? " stop" : " stops") + (via ? " &middot; " + esc(via) : "");
+      stopsText = slice.stops + (slice.stops === 1 ? " stop" : " stops") + (via ? " · " + esc(via) : "");
       stopsClass = "fr-stops";
-    }
-
-    var operated = "";
-    if (slice.operating_airline && slice.operating_airline !== airline.name) {
-      operated = '<div class="fr-operated">Operated by ' + esc(slice.operating_airline) + "</div>";
     }
 
     var label = "";
     if (isRound) {
       label = '<div class="fr-slice-label">' +
         (slice.direction === "return" ? "Return" : "Outbound") +
-        " &middot; " + esc(formatDay(slice.departure.date)) + "</div>";
+        " · " + esc(formatDay(slice.departure.date)) + "</div>";
     }
 
     return (
       '<div class="fr-slice">' +
         label +
-        '<div class="fr-airline">' +
-          (logo ? '<img class="fr-logo" src="' + esc(logo) + '" alt="">' : "") +
-          "<div>" +
-            '<div class="fr-airline-name">' + esc(airline.name) + "</div>" +
-            operated +
-            '<div class="fr-flightno">' + esc(slice.flight_number) + "</div>" +
-          "</div>" +
-        "</div>" +
+        '<div class="fr-main-row">' +
+          '<div class="fr-airline">' +
+            (logo ? '<img class="fr-logo" src="' + esc(logo) + '" alt="">' : '') +
+            '<div>' +
+              '<div class="fr-airline-name">' + esc(airline.name) + '</div>' +
+              '<div class="fr-flightno">' + esc(slice.flight_number) + '</div>' +
+            '</div>' +
+          '</div>' +
 
-        '<div class="fr-route">' +
-          '<div class="fr-point">' +
-            '<div class="fr-time">' + esc(slice.departure.time) + "</div>" +
-            '<div class="fr-code">' + esc(slice.departure.airport) + " &middot; " + esc(slice.departure.city) + "</div>" +
-          "</div>" +
-          '<div class="fr-line">' +
-            "<div>" + esc(slice.duration_text) + "</div>" +
-            '<div class="fr-track"></div>' +
-            '<div class="' + stopsClass + '">' + stopsText + "</div>" +
-          "</div>" +
-          '<div class="fr-point">' +
-            '<div class="fr-time">' + esc(slice.arrival.time) +
-              (offset > 0 ? "<sup>+" + offset + "</sup>" : "") + "</div>" +
-            '<div class="fr-code">' + esc(slice.arrival.airport) + " &middot; " + esc(slice.arrival.city) + "</div>" +
-          "</div>" +
-        "</div>" +
-      "</div>"
+          '<div class="fr-route">' +
+            '<div class="fr-point">' +
+              '<div class="fr-time">' + esc(slice.departure.time) + '</div>' +
+              '<div class="fr-code">' + esc(slice.departure.airport) + ' · ' + esc(slice.departure.city) + '</div>' +
+            '</div>' +
+            '<div class="fr-line">' +
+              '<div>' + esc(slice.duration_text) + '</div>' +
+              '<div class="fr-track"></div>' +
+              '<div class="' + stopsClass + '">' + stopsText + '</div>' +
+            '</div>' +
+            '<div class="fr-point">' +
+              '<div class="fr-time">' + esc(slice.arrival.time) +
+                (offset > 0 ? '<sup>+' + offset + '</sup>' : '') + '</div>' +
+              '<div class="fr-code">' + esc(slice.arrival.airport) + ' · ' + esc(slice.arrival.city) + '</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>'
     );
   }
 
@@ -144,44 +137,42 @@
       return renderSlice(slice, f.airline, isRound);
     }).join("");
 
+    // tags
     var chips = "";
-    if (f.cabin) { chips += '<span class="fr-chip fr-chip--tag">' + esc(f.cabin) + "</span>"; }
+    if (f.cabin) chips += '<span class="fr-chip fr-chip--tag">' + esc(f.cabin) + '</span>';
     var aircraft = f.slices[0] && f.slices[0].aircraft;
-    if (aircraft) { chips += '<span class="fr-chip fr-chip--tag">' + esc(aircraft) + "</span>"; }
-    var chipsRow = chips ? '<div class="fr-chips-row">' + chips + "</div>" : "";
+    if (aircraft) chips += '<span class="fr-chip fr-chip--tag">' + esc(aircraft) + '</span>';
+    if (f.flight_type) chips += '<span class="fr-chip fr-chip--tag">' + esc(f.flight_type) + '</span>';
+    var chipsRow = chips ? '<div class="fr-chips-row">' + chips + '</div>' : '';
 
-    var bags = '<span class="fr-chip">Checked bag &times; ' + esc(f.baggage.checked) + "</span>" +
-               '<span class="fr-chip">Cabin bag &times; ' + esc(f.baggage.carry_on) + "</span>";
-
-    var refundText = "Refund policy not shown by airline";
-    var refundClass = "fr-refund";
-    var rp = f.refund_policy;
-    if (rp && rp.refundable === true) {
-      refundText = "Refundable";
-      if (rp.penalty_amount) { refundText += " (fee " + formatPrice(rp.penalty_amount, rp.penalty_currency) + ")"; }
-      refundClass += " fr-refund--yes";
-    } else if (rp && rp.refundable === false) {
-      refundText = "Non-refundable";
-      refundClass += " fr-refund--no";
+    // seats (اگر در داده وجود داشت)
+    var seatsHtml = "";
+    if (f.seats_left != null) {
+      seatsHtml = '<div class="fr-seats">' + esc(f.seats_left) + ' seats left</div>';
     }
 
     return (
       '<article class="fr-card">' +
-        chipsRow +
-        '<div class="fr-slices">' + rows + "</div>" +
+        '<div class="fr-left">' +
+          chipsRow +
+          '<div class="fr-slices">' + rows + '</div>' +
+          '<div class="fr-links">' +
+            '<a href="#" class="fr-link">Flight info</a>' +
+            '<a href="#" class="fr-link">Refund policy</a>' +
+          '</div>' +
+        '</div>' +
+
         '<div class="fr-price-col">' +
-          '<div class="fr-price">' + formatPrice(f.price.amount, f.price.currency) + "</div>" +
-          '<div class="fr-price-note">' + (isRound ? "Total price &middot; round trip" : "Total price") + "</div>" +
+          '<div class="fr-price">' + formatPrice(f.price.amount, f.price.currency) + '</div>' +
+          '<div class="fr-price-note">' + (isRound ? 'Total · round trip' : 'Total price') + '</div>' +
           '<button type="button" class="fr-select-btn" data-offer-id="' + esc(f.id) + '">Select flight</button>' +
-          '<div class="' + refundClass + '">' + refundText + "</div>" +
-          '<div class="fr-bags">' + bags + "</div>" +
-        "</div>" +
-      "</article>"
+          seatsHtml +
+        '</div>' +
+      '</article>'
     );
   }
 
   // "Select flight" is a placeholder until the booking-details page exists
-  // (a later step).
   root.addEventListener("click", function (e) {
     var btn = e.target.closest(".fr-select-btn");
     if (!btn) return;
@@ -341,7 +332,7 @@
       if (state.sort === "departure") return firstDepartureKey(a) < firstDepartureKey(b) ? -1 : 1;
       if (state.sort === "departure_desc") return firstDepartureKey(a) > firstDepartureKey(b) ? -1 : 1;
       if (state.sort === "price_desc") return Number(b.price.amount) - Number(a.price.amount);
-      return Number(a.price.amount) - Number(b.price.amount); // "price" (default = cheapest)
+      return Number(a.price.amount) - Number(b.price.amount);
     });
 
     return list;
@@ -393,8 +384,6 @@
     return dates;
   }
 
-  // NOTE: this targets #frsDateTrack (the scrollable inner strip), never the
-  // whole #frsDateStrip container — so the fixed prev/next arrows survive.
   function fetchStripPrice(date) {
     var q = new URLSearchParams(window.location.search);
     q.set("travel_date", date);
@@ -463,7 +452,7 @@
   if (stripPrevBtn) {
     stripPrevBtn.addEventListener("click", function () {
       var next = clampAnchor(isoPlusDays(stripAnchor, -1));
-      if (next === stripAnchor) { return; } // already at today, can't go earlier
+      if (next === stripAnchor) { return; }
       stripAnchor = next;
       paintStrip(state.params.travel_date);
     });
@@ -475,7 +464,7 @@
     });
   }
 
-  // ---------- inline search bar (collapse / expand + update-in-place) ----------
+  // ---------- inline search bar ----------
   var pillBtn = document.getElementById("frsPillBtn");
   var editor = document.getElementById("frsEditor");
   var closeBtn = document.getElementById("frsEditorClose");
@@ -507,8 +496,6 @@
     pillText.textContent = text;
   }
 
-  // hero-search.js fires this after a successful inline "Update search",
-  // and the date strip fires it too when another day is clicked.
   document.addEventListener("flightsearch:update", function () {
     closeEditor();
     apiUrl = root.dataset.apiUrl + window.location.search;
