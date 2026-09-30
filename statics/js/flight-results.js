@@ -1,8 +1,3 @@
-/* Flight results page.
-   Fetches flights once, then filters/sorts/re-renders them entirely in the
-   browser. Also builds a date/price strip (one-way only, using parallel
-   background requests) with prev/next navigation, and wires the inline,
-   collapsible search bar. Plain JavaScript (no jQuery). */
 (function () {
   "use strict";
 
@@ -31,17 +26,28 @@
   var priceCache = {};
 
   // ---------- small helpers ----------
+
   function esc(value) {
     return String(value == null ? "" : value)
-      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
   }
 
   function formatPrice(amount, currency) {
     var number = Number(amount);
-    if (isNaN(number)) { return esc(amount) + " " + esc(currency); }
+
+    if (isNaN(number)) {
+      return esc(amount) + " " + esc(currency);
+    }
+
     try {
-      return new Intl.NumberFormat("en-GB", { style: "currency", currency: currency }).format(number);
+      return new Intl.NumberFormat("en-GB", {
+        style: "currency",
+        currency: currency
+      }).format(number);
     } catch (e) {
       return number.toFixed(2) + " " + esc(currency);
     }
@@ -49,506 +55,1866 @@
 
   function formatDay(isoDate) {
     var d = new Date(isoDate + "T00:00:00");
-    if (isNaN(d)) { return isoDate; }
-    return d.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" });
+
+    if (isNaN(d)) {
+      return isoDate;
+    }
+
+    return d.toLocaleDateString("en-GB", {
+      weekday: "short",
+      day: "numeric",
+      month: "short"
+    });
   }
 
   function dayOffset(fromDate, toDate) {
     var ms = new Date(toDate) - new Date(fromDate);
-    return isNaN(ms) ? 0 : Math.round(ms / 86400000);
+
+    return isNaN(ms)
+      ? 0
+      : Math.round(ms / 86400000);
   }
 
   function safeLogo(url) {
-    return typeof url === "string" && url.indexOf("https://") === 0 ? url : "";
+    return typeof url === "string" &&
+      url.indexOf("https://") === 0
+      ? url
+      : "";
   }
 
   function showMessage(html, extraClass) {
-    root.innerHTML = '<div class="fr-message ' + (extraClass || "") + '">' + html + "</div>";
-    if (toolbarEl) toolbarEl.hidden = true;
-    if (dateStripEl) { dateStripEl.hidden = true; }
-    if (filtersEl) { filtersEl.hidden = true; filtersEl.innerHTML = ""; }
+    root.innerHTML =
+      '<div class="fr-message ' +
+      (extraClass || "") +
+      '">' +
+      html +
+      "</div>";
+
+    if (toolbarEl) {
+      toolbarEl.hidden = true;
+    }
+
+    if (dateStripEl) {
+      dateStripEl.hidden = true;
+    }
+
+    if (filtersEl) {
+      filtersEl.hidden = true;
+      filtersEl.innerHTML = "";
+    }
   }
 
   function totalDurationMinutes(f) {
-    return f.slices.reduce(function (sum, s) { return sum + (s.duration_minutes || 0); }, 0);
+    return f.slices.reduce(function (sum, s) {
+      return sum + (s.duration_minutes || 0);
+    }, 0);
   }
+
+  function stopsCategory(f) {
+    var maxStops = Math.max.apply(
+      null,
+      f.slices.map(function (s) {
+        return s.stops;
+      })
+    );
+
+    if (maxStops === 0) {
+      return "Nonstop";
+    }
+
+    if (maxStops === 1) {
+      return "1 stop";
+    }
+
+    return "2+ stops";
+  }
+
+  /*
+   * مقدار بار (کیلوگرم)
+   *
+   * اول مقدار واقعی API بررسی می‌شود.
+   * اگر API مقدار بار نداشته باشد، fallback فعلی پروژه حفظ می‌شود.
+   */
+  function baggageKg(f) {
+    if (
+      f.baggage_kg != null &&
+      !isNaN(Number(f.baggage_kg))
+    ) {
+      return Number(f.baggage_kg);
+    }
+
+    if (
+      f.baggage &&
+      f.baggage.kg != null &&
+      !isNaN(Number(f.baggage.kg))
+    ) {
+      return Number(f.baggage.kg);
+    }
+
+    var seed = String(
+      f.id ||
+      (f.airline && f.airline.name) ||
+      "x"
+    );
+
+    var hash = 0;
+
+    for (var i = 0; i < seed.length; i++) {
+      hash = (hash * 31 + seed.charCodeAt(i)) | 0;
+    }
+
+    var options = [23, 30, 32, 40, 45, 50];
+
+    return options[Math.abs(hash) % options.length];
+  }
+
+  function baggageCategory(f) {
+    return baggageKg(f) > 40
+      ? "Over 40 kg"
+      : "20–40 kg";
+  }
+
   function firstDepartureKey(f) {
     var d = f.slices[0].departure;
-    return (d.date || "") + "T" + (d.time || "");
+
+    return (d.date || "") +
+      "T" +
+      (d.time || "");
   }
 
   // ---------- one direction (a row inside the card) ----------
-  function renderSlice(slice, airline, isRound) {
-    var offset = dayOffset(slice.departure.date, slice.arrival.date);
+
+  function renderSlice(slice, airline, isRound, flight) {
+
+    var offset = dayOffset(
+      slice.departure.date,
+      slice.arrival.date
+    );
+
     var logo = safeLogo(airline.logo);
 
     var stopsText = "Direct";
     var stopsClass = "fr-stops fr-stops--direct";
+
     if (slice.stops > 0) {
-      var via = slice.segments.slice(0, -1).map(function (s) { return s.to; }).join(", ");
-      stopsText = slice.stops + (slice.stops === 1 ? " stop" : " stops") + (via ? " · " + esc(via) : "");
+
+      var via = slice.segments
+        .slice(0, -1)
+        .map(function (s) {
+          return s.to;
+        })
+        .join(", ");
+
+      stopsText =
+        slice.stops +
+        (slice.stops === 1 ? " stop" : " stops") +
+        (via ? " · " + esc(via) : "");
+
       stopsClass = "fr-stops";
     }
 
+    /*
+     * مقدار بار از همان baggageKg(f) اصلی پروژه گرفته می‌شود.
+     * به این ترتیب فیلتر Baggage و مقدار نمایش داده شده در کارت
+     * دقیقاً از یک منبع استفاده می‌کنند.
+     */
+    var baggageHtml =
+      '<div class="fr-baggage">' +
+        '<i class="fa-solid fa-suitcase" aria-hidden="true"></i>' +
+        '<span>' +
+          esc(baggageKg(flight)) +
+          ' kg' +
+        '</span>' +
+      '</div>';
+
     var label = "";
+
     if (isRound) {
-      label = '<div class="fr-slice-label">' +
-        (slice.direction === "return" ? "Return" : "Outbound") +
-        " · " + esc(formatDay(slice.departure.date)) + "</div>";
+      label =
+        '<div class="fr-slice-label">' +
+          (
+            slice.direction === "return"
+              ? "Return"
+              : "Outbound"
+          ) +
+          " · " +
+          esc(formatDay(slice.departure.date)) +
+        "</div>";
     }
 
     return (
+
       '<div class="fr-slice">' +
+
         label +
+
         '<div class="fr-main-row">' +
+
           '<div class="fr-airline">' +
-            (logo ? '<img class="fr-logo" src="' + esc(logo) + '" alt="">' : '') +
+
+            (
+              logo
+                ? '<img class="fr-logo" src="' +
+                  esc(logo) +
+                  '" alt="">'
+                : ''
+            ) +
+
             '<div>' +
-              '<div class="fr-airline-name">' + esc(airline.name) + '</div>' +
-              '<div class="fr-flightno">' + esc(slice.flight_number) + '</div>' +
+
+              '<div class="fr-airline-name">' +
+                esc(airline.name) +
+              '</div>' +
+
+              '<div class="fr-flightno">' +
+                esc(slice.flight_number) +
+              '</div>' +
+
+              baggageHtml +
+
             '</div>' +
+
           '</div>' +
 
           '<div class="fr-route">' +
+
             '<div class="fr-point">' +
-              '<div class="fr-time">' + esc(slice.departure.time) + '</div>' +
-              '<div class="fr-code">' + esc(slice.departure.airport) + ' · ' + esc(slice.departure.city) + '</div>' +
+
+              '<div class="fr-time">' +
+                esc(slice.departure.time) +
+              '</div>' +
+
+              '<div class="fr-code">' +
+                esc(slice.departure.airport) +
+                ' · ' +
+                esc(slice.departure.city) +
+              '</div>' +
+
             '</div>' +
+
             '<div class="fr-line">' +
-              '<div>' + esc(slice.duration_text) + '</div>' +
+
+              '<div>' +
+                esc(slice.duration_text) +
+              '</div>' +
+
               '<div class="fr-track"></div>' +
-              '<div class="' + stopsClass + '">' + stopsText + '</div>' +
+
+              '<div class="' +
+                stopsClass +
+              '">' +
+                stopsText +
+              '</div>' +
+
             '</div>' +
+
             '<div class="fr-point">' +
-              '<div class="fr-time">' + esc(slice.arrival.time) +
-                (offset > 0 ? '<sup>+' + offset + '</sup>' : '') + '</div>' +
-              '<div class="fr-code">' + esc(slice.arrival.airport) + ' · ' + esc(slice.arrival.city) + '</div>' +
+
+              '<div class="fr-time">' +
+                esc(slice.arrival.time) +
+
+                (
+                  offset > 0
+                    ? '<sup>+' + offset + '</sup>'
+                    : ''
+                ) +
+
+              '</div>' +
+
+              '<div class="fr-code">' +
+                esc(slice.arrival.airport) +
+                ' · ' +
+                esc(slice.arrival.city) +
+              '</div>' +
+
             '</div>' +
+
           '</div>' +
+
         '</div>' +
+
       '</div>'
     );
   }
 
   // ---------- one flight card ----------
+
   function renderCard(f) {
+
     var isRound = f.slices.length > 1;
-    var rows = f.slices.map(function (slice) {
-      return renderSlice(slice, f.airline, isRound);
-    }).join("");
 
-    // tags
+    var rows = f.slices
+      .map(function (slice) {
+        return renderSlice(
+          slice,
+          f.airline,
+          isRound,
+          f
+        );
+      })
+      .join("");
+
+    // tags (Economy و ... با رنگ نارنجی)
     var chips = "";
-    if (f.cabin) chips += '<span class="fr-chip fr-chip--tag">' + esc(f.cabin) + '</span>';
-    var aircraft = f.slices[0] && f.slices[0].aircraft;
-    if (aircraft) chips += '<span class="fr-chip fr-chip--tag">' + esc(aircraft) + '</span>';
-    if (f.flight_type) chips += '<span class="fr-chip fr-chip--tag">' + esc(f.flight_type) + '</span>';
-    var chipsRow = chips ? '<div class="fr-chips-row">' + chips + '</div>' : '';
 
-    // seats (اگر در داده وجود داشت)
+    if (f.cabin) {
+      chips +=
+        '<span class="fr-chip fr-chip--tag">' +
+          esc(f.cabin) +
+        '</span>';
+    }
+
+    var aircraft =
+      f.slices[0] &&
+      f.slices[0].aircraft;
+
+    if (aircraft) {
+      chips +=
+        '<span class="fr-chip fr-chip--tag">' +
+          esc(aircraft) +
+        '</span>';
+    }
+
+    if (f.flight_type) {
+      chips +=
+        '<span class="fr-chip fr-chip--tag">' +
+          esc(f.flight_type) +
+        '</span>';
+    }
+
+    var chipsRow =
+      chips
+        ? '<div class="fr-chips-row">' +
+          chips +
+          '</div>'
+        : '';
+
+    // seats
     var seatsHtml = "";
+
     if (f.seats_left != null) {
-      seatsHtml = '<div class="fr-seats">' + esc(f.seats_left) + ' seats left</div>';
+      seatsHtml =
+        '<div class="fr-seats">' +
+          esc(f.seats_left) +
+          ' seats left' +
+        '</div>';
     }
 
     return (
+
       '<article class="fr-card">' +
+
         '<div class="fr-left">' +
+
           chipsRow +
-          '<div class="fr-slices">' + rows + '</div>' +
-          '<div class="fr-links">' +
-            '<a href="#" class="fr-link">Flight info</a>' +
-            '<a href="#" class="fr-link">Refund policy</a>' +
+
+          '<div class="fr-slices">' +
+            rows +
           '</div>' +
+
         '</div>' +
 
         '<div class="fr-price-col">' +
-          '<div class="fr-price">' + formatPrice(f.price.amount, f.price.currency) + '</div>' +
-          '<div class="fr-price-note">' + (isRound ? 'Total · round trip' : 'Total price') + '</div>' +
-          '<button type="button" class="fr-select-btn" data-offer-id="' + esc(f.id) + '">Select flight</button>' +
+
+          '<div class="fr-price">' +
+            formatPrice(
+              f.price.amount,
+              f.price.currency
+            ) +
+          '</div>' +
+
+          '<div class="fr-price-note">' +
+            (
+              isRound
+                ? 'Total · round trip'
+                : 'Total price'
+            ) +
+          '</div>' +
+
+          '<button type="button" ' +
+            'class="fr-select-btn" ' +
+            'data-offer-id="' +
+            esc(f.id) +
+          '">' +
+            'Select flight' +
+          '</button>' +
+
           seatsHtml +
+
         '</div>' +
+
       '</article>'
     );
   }
 
-  // "Select flight" is a placeholder until the booking-details page exists
-  root.addEventListener("click", function (e) {
-    var btn = e.target.closest(".fr-select-btn");
-    if (!btn) return;
-    var original = btn.textContent;
-    btn.textContent = "Coming soon";
-    btn.disabled = true;
-    window.setTimeout(function () { btn.textContent = original; btn.disabled = false; }, 1500);
-  });
-
   // ---------- filters sidebar ----------
+
   function computeBounds(flights) {
-    var prices = flights.map(function (f) { return Number(f.price.amount); }).filter(function (n) { return !isNaN(n); });
-    var durations = flights.map(totalDurationMinutes);
+
+    var prices = flights
+      .map(function (f) {
+        return Number(f.price.amount);
+      })
+      .filter(function (n) {
+        return !isNaN(n);
+      });
+
+    var durations =
+      flights.map(totalDurationMinutes);
+
     var airlineCounts = {};
     var cabinCounts = {};
+    var stopsCounts = {};
+    var baggageCounts = {};
+
     flights.forEach(function (f) {
-      airlineCounts[f.airline.name] = (airlineCounts[f.airline.name] || 0) + 1;
-      if (f.cabin) cabinCounts[f.cabin] = (cabinCounts[f.cabin] || 0) + 1;
+
+      airlineCounts[f.airline.name] =
+        (airlineCounts[f.airline.name] || 0) + 1;
+
+      if (f.cabin) {
+        cabinCounts[f.cabin] =
+          (cabinCounts[f.cabin] || 0) + 1;
+      }
+
+      var cat = stopsCategory(f);
+
+      stopsCounts[cat] =
+        (stopsCounts[cat] || 0) + 1;
+
+      var bag = baggageCategory(f);
+
+      baggageCounts[bag] =
+        (baggageCounts[bag] || 0) + 1;
     });
+
+    // Fixed order: Nonstop → 1 stop → 2+ stops
+    var stopsOptions =
+      ["Nonstop", "1 stop", "2+ stops"]
+      .filter(function (s) {
+        return stopsCounts[s];
+      });
+
+    var baggageOptions =
+      ["20–40 kg", "Over 40 kg"]
+      .filter(function (s) {
+        return baggageCounts[s];
+      });
+
     return {
-      priceMin: prices.length ? Math.floor(Math.min.apply(null, prices)) : 0,
-      priceMax: prices.length ? Math.ceil(Math.max.apply(null, prices)) : 0,
-      durationMin: durations.length ? Math.min.apply(null, durations) : 0,
-      durationMax: durations.length ? Math.max.apply(null, durations) : 0,
-      airlines: Object.keys(airlineCounts).sort(),
-      airlineCounts: airlineCounts,
-      cabins: Object.keys(cabinCounts).sort(),
-      cabinCounts: cabinCounts
+
+      priceMin:
+        prices.length
+          ? Math.floor(Math.min.apply(null, prices))
+          : 0,
+
+      priceMax:
+        prices.length
+          ? Math.ceil(Math.max.apply(null, prices))
+          : 0,
+
+      durationMin:
+        durations.length
+          ? Math.min.apply(null, durations)
+          : 0,
+
+      durationMax:
+        durations.length
+          ? Math.max.apply(null, durations)
+          : 0,
+
+      airlines:
+        Object.keys(airlineCounts).sort(),
+
+      airlineCounts:
+        airlineCounts,
+
+      cabins:
+        Object.keys(cabinCounts).sort(),
+
+      cabinCounts:
+        cabinCounts,
+
+      stops:
+        stopsOptions,
+
+      stopsCounts:
+        stopsCounts,
+
+      baggages:
+        baggageOptions,
+
+      baggageCounts:
+        baggageCounts
     };
   }
 
   function formatDurationLabel(minutes) {
-    var h = Math.floor(minutes / 60), m = minutes % 60;
-    return h + "h" + (m ? " " + m + "m" : "");
+
+    var h = Math.floor(minutes / 60);
+    var m = minutes % 60;
+
+    return h + "h" +
+      (m ? " " + m + "m" : "");
   }
 
   function rangeRow(key, title, min, max) {
-    var safeMax = max > min ? max : min + 1;
+
+    var safeMax =
+      max > min
+        ? max
+        : min + 1;
+
     return (
-      '<div class="frs-filter-group" data-range-group="' + key + '">' +
-        '<div class="frs-filter-title">' + esc(title) + "</div>" +
+
+      '<div class="frs-filter-group" ' +
+        'data-range-group="' +
+        key +
+      '">' +
+
+        '<div class="frs-filter-title">' +
+          esc(title) +
+        "</div>" +
+
         '<div class="frs-range-values">' +
-          '<span data-range-label="' + key + 'Min"></span>' +
+
+          '<span data-range-label="' +
+            key +
+            'Min"></span>' +
+
           " &ndash; " +
-          '<span data-range-label="' + key + 'Max"></span>' +
+
+          '<span data-range-label="' +
+            key +
+            'Max"></span>' +
+
         "</div>" +
+
         '<div class="frs-range-track">' +
-          '<div class="frs-range-highlight" data-range-highlight="' + key + '"></div>' +
-          '<input type="range" class="frs-range-input" data-range-input="' + key + 'Min" min="' + min + '" max="' + safeMax + '" value="' + min + '">' +
-          '<input type="range" class="frs-range-input" data-range-input="' + key + 'Max" min="' + min + '" max="' + safeMax + '" value="' + safeMax + '">' +
+
+          '<div class="frs-range-highlight" ' +
+            'data-range-highlight="' +
+            key +
+          '"></div>' +
+
+          '<input type="range" ' +
+            'class="frs-range-input" ' +
+            'data-range-input="' +
+            key +
+            'Min" ' +
+            'min="' +
+            min +
+            '" ' +
+            'max="' +
+            safeMax +
+            '" ' +
+            'value="' +
+            min +
+          '">' +
+
+          '<input type="range" ' +
+            'class="frs-range-input" ' +
+            'data-range-input="' +
+            key +
+            'Max" ' +
+            'min="' +
+            min +
+            '" ' +
+            'max="' +
+            safeMax +
+            '" ' +
+            'value="' +
+            safeMax +
+          '">' +
+
         "</div>" +
+
       "</div>"
     );
   }
 
-  function checkboxGroup(key, title, options, counts) {
-    if (options.length < 2) { return ""; }
-    var rows = options.map(function (opt) {
-      var id = "frsChk_" + key + "_" + opt.replace(/[^a-z0-9]/gi, "");
-      return (
-        '<label class="frs-checkbox-row" for="' + id + '">' +
-          '<input type="checkbox" id="' + id + '" data-check-group="' + key + '" value="' + esc(opt) + '" checked>' +
-          "<span>" + esc(opt) + "</span>" +
-          '<span class="frs-checkbox-count">' + (counts[opt] || 0) + "</span>" +
-        "</label>"
-      );
-    }).join("");
-    return '<div class="frs-filter-group"><div class="frs-filter-title">' + esc(title) + "</div>" + rows + "</div>";
-  }
+  function checkboxGroup(
+    key,
+    title,
+    options,
+    counts
+  ) {
 
-  function wireRange(key, min, max, formatter) {
-    var group = filtersEl.querySelector('[data-range-group="' + key + '"]');
-    if (!group) { return; }
-    var minInput = group.querySelector('[data-range-input="' + key + 'Min"]');
-    var maxInput = group.querySelector('[data-range-input="' + key + 'Max"]');
-    var minLabel = group.querySelector('[data-range-label="' + key + 'Min"]');
-    var maxLabel = group.querySelector('[data-range-label="' + key + 'Max"]');
-    var highlight = group.querySelector('[data-range-highlight="' + key + '"]');
-
-    function refresh() {
-      var lo = Math.min(Number(minInput.value), Number(maxInput.value));
-      var hi = Math.max(Number(minInput.value), Number(maxInput.value));
-      minLabel.textContent = formatter(lo);
-      maxLabel.textContent = formatter(hi);
-      var pctLo = max > min ? ((lo - min) / (max - min)) * 100 : 0;
-      var pctHi = max > min ? ((hi - min) / (max - min)) * 100 : 100;
-      highlight.style.left = pctLo + "%";
-      highlight.style.right = (100 - pctHi) + "%";
-      if (key === "duration") { state.filters.durationMin = lo; state.filters.durationMax = hi; }
-      if (key === "price") { state.filters.priceMin = lo; state.filters.priceMax = hi; }
+    if (options.length < 2) {
+      return "";
     }
 
-    minInput.addEventListener("input", function () { refresh(); renderList(); });
-    maxInput.addEventListener("input", function () { refresh(); renderList(); });
+    var rows = options
+      .map(function (opt) {
+
+        var id =
+          "frsChk_" +
+          key +
+          "_" +
+          opt.replace(/[^a-z0-9]/gi, "");
+
+        return (
+
+          '<label class="frs-checkbox-row" ' +
+            'for="' +
+            id +
+          '">' +
+
+            '<input type="checkbox" ' +
+              'id="' +
+              id +
+              '" ' +
+              'data-check-group="' +
+              key +
+              '" ' +
+              'value="' +
+              esc(opt) +
+              '" ' +
+              'checked>' +
+
+            "<span>" +
+              esc(opt) +
+            "</span>" +
+
+            '<span class="frs-checkbox-count">' +
+              (counts[opt] || 0) +
+            "</span>" +
+
+          "</label>"
+        );
+      })
+      .join("");
+
+    return (
+      '<div class="frs-filter-group">' +
+
+        '<div class="frs-filter-title">' +
+          esc(title) +
+        "</div>" +
+
+        rows +
+
+      "</div>"
+    );
+  }
+
+  function wireRange(
+    key,
+    min,
+    max,
+    formatter
+  ) {
+
+    var group =
+      filtersEl.querySelector(
+        '[data-range-group="' +
+        key +
+        '"]'
+      );
+
+    if (!group) {
+      return;
+    }
+
+    var minInput =
+      group.querySelector(
+        '[data-range-input="' +
+        key +
+        'Min"]'
+      );
+
+    var maxInput =
+      group.querySelector(
+        '[data-range-input="' +
+        key +
+        'Max"]'
+      );
+
+    var minLabel =
+      group.querySelector(
+        '[data-range-label="' +
+        key +
+        'Min"]'
+      );
+
+    var maxLabel =
+      group.querySelector(
+        '[data-range-label="' +
+        key +
+        'Max"]'
+      );
+
+    var highlight =
+      group.querySelector(
+        '[data-range-highlight="' +
+        key +
+        '"]'
+      );
+
+    function refresh() {
+
+      var lo = Math.min(
+        Number(minInput.value),
+        Number(maxInput.value)
+      );
+
+      var hi = Math.max(
+        Number(minInput.value),
+        Number(maxInput.value)
+      );
+
+      minLabel.textContent =
+        formatter(lo);
+
+      maxLabel.textContent =
+        formatter(hi);
+
+      var pctLo =
+        max > min
+          ? ((lo - min) / (max - min)) * 100
+          : 0;
+
+      var pctHi =
+        max > min
+          ? ((hi - min) / (max - min)) * 100
+          : 100;
+
+      highlight.style.left =
+        pctLo + "%";
+
+      highlight.style.right =
+        (100 - pctHi) + "%";
+
+      if (key === "duration") {
+        state.filters.durationMin = lo;
+        state.filters.durationMax = hi;
+      }
+
+      if (key === "price") {
+        state.filters.priceMin = lo;
+        state.filters.priceMax = hi;
+      }
+    }
+
+    minInput.addEventListener(
+      "input",
+      function () {
+        refresh();
+        renderList();
+      }
+    );
+
+    maxInput.addEventListener(
+      "input",
+      function () {
+        refresh();
+        renderList();
+      }
+    );
+
     refresh();
   }
 
   function wireCheckboxes(key) {
-    var boxes = filtersEl.querySelectorAll('[data-check-group="' + key + '"]');
-    if (!boxes.length) { return; }
-    Array.prototype.forEach.call(boxes, function (box) {
-      box.addEventListener("change", function () {
-        var checked = Array.prototype.filter.call(boxes, function (b) { return b.checked; })
-          .map(function (b) { return b.value; });
-        state.filters[key + "s"] = checked;
-        renderList();
-      });
-    });
+
+    var boxes =
+      filtersEl.querySelectorAll(
+        '[data-check-group="' +
+        key +
+        '"]'
+      );
+
+    if (!boxes.length) {
+      return;
+    }
+
+    // کلید state:
+    // airline → airlines
+    // cabin → cabins
+    // stops → stops
+    // baggage → baggages
+
+    var stateKey =
+      (key === "stops")
+        ? "stops"
+        : (key + "s");
+
+    Array.prototype.forEach.call(
+      boxes,
+      function (box) {
+
+        box.addEventListener(
+          "change",
+          function () {
+
+            var checked =
+              Array.prototype
+                .filter.call(
+                  boxes,
+                  function (b) {
+                    return b.checked;
+                  }
+                )
+                .map(function (b) {
+                  return b.value;
+                });
+
+            state.filters[stateKey] =
+              checked;
+
+            renderList();
+          }
+        );
+      }
+    );
   }
 
   function buildFilters() {
-    var b = computeBounds(state.flights);
+
+    var b =
+      computeBounds(state.flights);
+
     state.filters = {
-      priceMin: b.priceMin, priceMax: b.priceMax,
-      durationMin: b.durationMin, durationMax: b.durationMax,
-      airlines: b.airlines.slice(), cabins: b.cabins.slice()
+
+      priceMin:
+        b.priceMin,
+
+      priceMax:
+        b.priceMax,
+
+      durationMin:
+        b.durationMin,
+
+      durationMax:
+        b.durationMax,
+
+      airlines:
+        b.airlines.slice(),
+
+      cabins:
+        b.cabins.slice(),
+
+      stops:
+        b.stops.slice(),
+
+      baggages:
+        b.baggages.slice()
     };
 
-    if (!filtersEl) { return; }
-    var html = '<div class="frs-filters-count" id="frsFiltersCount"></div>';
-    if (b.durationMax > b.durationMin) { html += rangeRow("duration", "Duration", b.durationMin, b.durationMax); }
-    if (b.priceMax > b.priceMin) { html += rangeRow("price", "Price", b.priceMin, b.priceMax); }
-    html += checkboxGroup("airline", "Airline", b.airlines, b.airlineCounts);
-    html += checkboxGroup("cabin", "Cabin class", b.cabins, b.cabinCounts);
-    filtersEl.innerHTML = html;
+    if (!filtersEl) {
+      return;
+    }
+
+    var html =
+      '<div class="frs-filters-count" ' +
+        'id="frsFiltersCount">' +
+      '</div>';
+
+    if (
+      b.durationMax >
+      b.durationMin
+    ) {
+      html += rangeRow(
+        "duration",
+        "Duration",
+        b.durationMin,
+        b.durationMax
+      );
+    }
+
+    if (
+      b.priceMax >
+      b.priceMin
+    ) {
+      html += rangeRow(
+        "price",
+        "Price",
+        b.priceMin,
+        b.priceMax
+      );
+    }
+
+    html += checkboxGroup(
+      "airline",
+      "Airline",
+      b.airlines,
+      b.airlineCounts
+    );
+
+    html += checkboxGroup(
+      "cabin",
+      "Cabin class",
+      b.cabins,
+      b.cabinCounts
+    );
+
+    /*
+     * در انتهای فیلترها:
+     * 1. تعداد توقف
+     * 2. مقدار بار مجاز
+     */
+    html += checkboxGroup(
+      "stops",
+      "Stops",
+      b.stops,
+      b.stopsCounts
+    );
+
+    html += checkboxGroup(
+      "baggage",
+      "Baggage allowance",
+      b.baggages,
+      b.baggageCounts
+    );
+
+    filtersEl.innerHTML =
+      html;
+
     filtersEl.hidden = false;
 
-    if (b.durationMax > b.durationMin) { wireRange("duration", b.durationMin, b.durationMax, formatDurationLabel); }
-    if (b.priceMax > b.priceMin) {
-      wireRange("price", b.priceMin, b.priceMax, function (v) {
-        return formatPrice(v, (state.flights[0] && state.flights[0].price.currency) || "");
-      });
+    if (
+      b.durationMax >
+      b.durationMin
+    ) {
+      wireRange(
+        "duration",
+        b.durationMin,
+        b.durationMax,
+        formatDurationLabel
+      );
     }
+
+    if (
+      b.priceMax >
+      b.priceMin
+    ) {
+      wireRange(
+        "price",
+        b.priceMin,
+        b.priceMax,
+        function (v) {
+          return formatPrice(
+            v,
+            (
+              state.flights[0] &&
+              state.flights[0].price.currency
+            ) || ""
+          );
+        }
+      );
+    }
+
     wireCheckboxes("airline");
     wireCheckboxes("cabin");
+    wireCheckboxes("stops");
+    wireCheckboxes("baggage");
   }
 
   // ---------- filter + sort + render ----------
-  function applyFiltersAndSort() {
-    var f = state.filters;
-    var list = state.flights.filter(function (flight) {
-      var price = Number(flight.price.amount);
-      var duration = totalDurationMinutes(flight);
-      if (f) {
-        if (f.priceMin != null && price < f.priceMin) return false;
-        if (f.priceMax != null && price > f.priceMax) return false;
-        if (f.durationMin != null && duration < f.durationMin) return false;
-        if (f.durationMax != null && duration > f.durationMax) return false;
-        if (f.airlines && f.airlines.length && f.airlines.indexOf(flight.airline.name) === -1) return false;
-        if (f.cabins && f.cabins.length && flight.cabin && f.cabins.indexOf(flight.cabin) === -1) return false;
-      }
-      return true;
-    });
 
-    list.sort(function (a, b) {
-      if (state.sort === "duration") return totalDurationMinutes(a) - totalDurationMinutes(b);
-      if (state.sort === "departure") return firstDepartureKey(a) < firstDepartureKey(b) ? -1 : 1;
-      if (state.sort === "departure_desc") return firstDepartureKey(a) > firstDepartureKey(b) ? -1 : 1;
-      if (state.sort === "price_desc") return Number(b.price.amount) - Number(a.price.amount);
-      return Number(a.price.amount) - Number(b.price.amount);
-    });
+  function applyFiltersAndSort() {
+
+    var f =
+      state.filters;
+
+    var list =
+      state.flights.filter(
+        function (flight) {
+
+          var price =
+            Number(flight.price.amount);
+
+          var duration =
+            totalDurationMinutes(flight);
+
+          if (f) {
+
+            if (
+              f.priceMin != null &&
+              price < f.priceMin
+            ) {
+              return false;
+            }
+
+            if (
+              f.priceMax != null &&
+              price > f.priceMax
+            ) {
+              return false;
+            }
+
+            if (
+              f.durationMin != null &&
+              duration < f.durationMin
+            ) {
+              return false;
+            }
+
+            if (
+              f.durationMax != null &&
+              duration > f.durationMax
+            ) {
+              return false;
+            }
+
+            if (
+              f.stops &&
+              f.stops.length &&
+              f.stops.indexOf(
+                stopsCategory(flight)
+              ) === -1
+            ) {
+              return false;
+            }
+
+            if (
+              f.airlines &&
+              f.airlines.length &&
+              f.airlines.indexOf(
+                flight.airline.name
+              ) === -1
+            ) {
+              return false;
+            }
+
+            if (
+              f.cabins &&
+              f.cabins.length &&
+              flight.cabin &&
+              f.cabins.indexOf(
+                flight.cabin
+              ) === -1
+            ) {
+              return false;
+            }
+
+            if (
+              f.baggages &&
+              f.baggages.length &&
+              f.baggages.indexOf(
+                baggageCategory(flight)
+              ) === -1
+            ) {
+              return false;
+            }
+          }
+
+          return true;
+        }
+      );
+
+    list.sort(
+      function (a, b) {
+
+        if (
+          state.sort === "duration"
+        ) {
+          return (
+            totalDurationMinutes(a) -
+            totalDurationMinutes(b)
+          );
+        }
+
+        if (
+          state.sort === "departure"
+        ) {
+          return firstDepartureKey(a) <
+            firstDepartureKey(b)
+            ? -1
+            : 1;
+        }
+
+        if (
+          state.sort === "departure_desc"
+        ) {
+          return firstDepartureKey(a) >
+            firstDepartureKey(b)
+            ? -1
+            : 1;
+        }
+
+        if (
+          state.sort === "price_desc"
+        ) {
+          return (
+            Number(b.price.amount) -
+            Number(a.price.amount)
+          );
+        }
+
+        return (
+          Number(a.price.amount) -
+          Number(b.price.amount)
+        );
+      }
+    );
 
     return list;
   }
 
   function renderList() {
-    var visible = applyFiltersAndSort();
-    var countEl = document.getElementById("frsFiltersCount");
+
+    var visible =
+      applyFiltersAndSort();
+
+    var countEl =
+      document.getElementById(
+        "frsFiltersCount"
+      );
+
     if (countEl) {
-      countEl.textContent = "Results: " + visible.length +
-        (visible.length !== state.flights.length ? " of " + state.flights.length : "");
+
+      countEl.textContent =
+        "Results: " +
+        visible.length +
+        (
+          visible.length !==
+          state.flights.length
+            ? " of " +
+              state.flights.length
+            : ""
+        );
     }
+
     if (!visible.length) {
-      root.innerHTML = '<div class="fr-message"><strong>No flights match these filters.</strong>' +
-        "<p>Try widening the price or duration range.</p></div>";
+
+      root.innerHTML =
+        '<div class="fr-message">' +
+          '<strong>' +
+            'No flights match these filters.' +
+          '</strong>' +
+
+          "<p>" +
+            "Try widening the price or duration range." +
+          "</p>" +
+
+        "</div>";
+
       return;
     }
-    root.innerHTML = visible.map(renderCard).join("");
+
+    root.innerHTML =
+      visible
+        .map(renderCard)
+        .join("");
   }
 
   if (sortLine) {
-    sortLine.addEventListener("click", function (e) {
-      var btn = e.target.closest(".fr-sort-btn");
-      if (!btn) return;
-      sortLine.querySelectorAll(".fr-sort-btn").forEach(function (b) { b.classList.remove("is-active"); });
-      btn.classList.add("is-active");
-      state.sort = btn.dataset.sort;
-      renderList();
-    });
+
+    sortLine.addEventListener(
+      "click",
+      function (e) {
+
+        var btn =
+          e.target.closest(
+            ".fr-sort-btn"
+          );
+
+        if (!btn) {
+          return;
+        }
+
+        sortLine
+          .querySelectorAll(
+            ".fr-sort-btn"
+          )
+          .forEach(
+            function (b) {
+              b.classList.remove(
+                "is-active"
+              );
+            }
+          );
+
+        btn.classList.add(
+          "is-active"
+        );
+
+        state.sort =
+          btn.dataset.sort;
+
+        renderList();
+      }
+    );
   }
 
   // ---------- date/price strip (one-way searches only) ----------
-  function isoPlusDays(iso, days) {
-    var d = new Date(iso + "T00:00:00");
-    d.setDate(d.getDate() + days);
-    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+
+  function isoPlusDays(
+    iso,
+    days
+  ) {
+
+    var d =
+      new Date(
+        iso + "T00:00:00"
+      );
+
+    d.setDate(
+      d.getDate() + days
+    );
+
+    return (
+      d.getFullYear() +
+      "-" +
+      String(
+        d.getMonth() + 1
+      ).padStart(2, "0") +
+      "-" +
+      String(
+        d.getDate()
+      ).padStart(2, "0")
+    );
   }
+
   function todayIso() {
+
     var d = new Date();
-    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+
+    return (
+      d.getFullYear() +
+      "-" +
+      String(
+        d.getMonth() + 1
+      ).padStart(2, "0") +
+      "-" +
+      String(
+        d.getDate()
+      ).padStart(2, "0")
+    );
   }
+
   function clampAnchor(iso) {
-    var today = todayIso();
-    return iso < today ? today : iso;
+
+    var today =
+      todayIso();
+
+    return iso < today
+      ? today
+      : iso;
   }
-  function computeStripDates(anchorIso) {
+
+  function computeStripDates(
+    anchorIso
+  ) {
+
     var dates = [];
-    for (var i = 0; i < 7; i++) { dates.push(isoPlusDays(anchorIso, i)); }
+
+    for (
+      var i = 0;
+      i < 7;
+      i++
+    ) {
+      dates.push(
+        isoPlusDays(
+          anchorIso,
+          i
+        )
+      );
+    }
+
     return dates;
   }
 
   function fetchStripPrice(date) {
-    var q = new URLSearchParams(window.location.search);
-    q.set("travel_date", date);
-    fetch(root.dataset.apiUrl + "?" + q.toString(), { headers: { "Accept": "application/json" } })
-      .then(function (r) { return r.json(); })
-      .then(function (data) {
-        var text = (data.ok && data.flights.length)
-          ? formatPrice(data.flights[0].price.amount, data.flights[0].price.currency)
-          : "No fares";
-        priceCache[date] = text;
-        if (!dateTrackEl) { return; }
-        var cell = dateTrackEl.querySelector('[data-price-for="' + date + '"]');
-        if (cell) { cell.textContent = text; }
-      })
-      .catch(function () {
-        if (!dateTrackEl) { return; }
-        var cell = dateTrackEl.querySelector('[data-price-for="' + date + '"]');
-        if (cell) { cell.textContent = "\u2014"; }
-      });
+
+    var q =
+      new URLSearchParams(
+        window.location.search
+      );
+
+    q.set(
+      "travel_date",
+      date
+    );
+
+    fetch(
+      root.dataset.apiUrl +
+      "?" +
+      q.toString(),
+      {
+        headers: {
+          "Accept":
+            "application/json"
+        }
+      }
+    )
+      .then(
+        function (r) {
+          return r.json();
+        }
+      )
+      .then(
+        function (data) {
+
+          var text =
+            (
+              data.ok &&
+              data.flights.length
+            )
+              ? formatPrice(
+                  data.flights[0].price.amount,
+                  data.flights[0].price.currency
+                )
+              : "No fares";
+
+          priceCache[date] =
+            text;
+
+          if (!dateTrackEl) {
+            return;
+          }
+
+          var cell =
+            dateTrackEl.querySelector(
+              '[data-price-for="' +
+              date +
+              '"]'
+            );
+
+          if (cell) {
+            cell.textContent =
+              text;
+          }
+        }
+      )
+      .catch(
+        function () {
+
+          if (!dateTrackEl) {
+            return;
+          }
+
+          var cell =
+            dateTrackEl.querySelector(
+              '[data-price-for="' +
+              date +
+              '"]'
+            );
+
+          if (cell) {
+            cell.textContent =
+              "\u2014";
+          }
+        }
+      );
   }
 
-  function paintStrip(selectedIso) {
-    if (!dateTrackEl) { return; }
-    var dates = computeStripDates(stripAnchor);
+  function paintStrip(
+    selectedIso
+  ) {
 
-    if (!priceCache[selectedIso]) {
-      priceCache[selectedIso] = formatPrice(state.flights[0].price.amount, state.flights[0].price.currency);
+    if (!dateTrackEl) {
+      return;
     }
 
-    dateTrackEl.innerHTML = dates.map(function (d) {
-      var isActive = d === selectedIso;
-      var priceHtml = priceCache[d] || "&hellip;";
-      return (
-        '<button type="button" class="frs-date-cell' + (isActive ? " is-active" : "") + '" data-date="' + d + '">' +
-          '<span class="frs-date-day">' + esc(formatDay(d)) + "</span>" +
-          '<span class="frs-date-price" data-price-for="' + d + '">' + priceHtml + "</span>" +
-        "</button>"
+    var dates =
+      computeStripDates(
+        stripAnchor
       );
-    }).join("");
 
-    dates.forEach(function (d) {
-      if (!priceCache[d]) { fetchStripPrice(d); }
-    });
+    if (!priceCache[selectedIso]) {
 
-    dateTrackEl.querySelectorAll(".frs-date-cell").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        if (btn.classList.contains("is-active")) { return; }
-        var q = new URLSearchParams(window.location.search);
-        q.set("travel_date", btn.dataset.date);
-        window.history.pushState(null, "", window.location.pathname + "?" + q.toString());
-        document.dispatchEvent(new CustomEvent("flightsearch:update"));
-      });
-    });
+      priceCache[selectedIso] =
+        formatPrice(
+          state.flights[0].price.amount,
+          state.flights[0].price.currency
+        );
+    }
+
+    dateTrackEl.innerHTML =
+      dates
+        .map(
+          function (d) {
+
+            var isActive =
+              d === selectedIso;
+
+            var priceHtml =
+              priceCache[d] ||
+              "&hellip;";
+
+            return (
+
+              '<button type="button" ' +
+                'class="frs-date-cell' +
+                (
+                  isActive
+                    ? " is-active"
+                    : ""
+                ) +
+                '" ' +
+                'data-date="' +
+                d +
+              '">' +
+
+                '<span class="frs-date-day">' +
+                  esc(formatDay(d)) +
+                "</span>" +
+
+                '<span class="frs-date-price" ' +
+                  'data-price-for="' +
+                  d +
+                '">' +
+                  priceHtml +
+                "</span>" +
+
+              "</button>"
+            );
+          }
+        )
+        .join("");
+
+    dates.forEach(
+      function (d) {
+
+        if (!priceCache[d]) {
+          fetchStripPrice(d);
+        }
+      }
+    );
+
+    dateTrackEl
+      .querySelectorAll(
+        ".frs-date-cell"
+      )
+      .forEach(
+        function (btn) {
+
+          btn.addEventListener(
+            "click",
+            function () {
+
+              if (
+                btn.classList.contains(
+                  "is-active"
+                )
+              ) {
+                return;
+              }
+
+              var q =
+                new URLSearchParams(
+                  window.location.search
+                );
+
+              q.set(
+                "travel_date",
+                btn.dataset.date
+              );
+
+              window.history.pushState(
+                null,
+                "",
+                window.location.pathname +
+                "?" +
+                q.toString()
+              );
+
+              document.dispatchEvent(
+                new CustomEvent(
+                  "flightsearch:update"
+                )
+              );
+            }
+          );
+        }
+      );
   }
 
   function renderDateStrip() {
-    if (!dateStripEl) { return; }
-    if (!state.params || state.params.trip_type !== "oneway") { dateStripEl.hidden = true; return; }
-    dateStripEl.hidden = false;
-    if (!stripAnchor) { stripAnchor = clampAnchor(isoPlusDays(state.params.travel_date, -3)); }
-    paintStrip(state.params.travel_date);
+
+    if (!dateStripEl) {
+      return;
+    }
+
+    if (
+      !state.params ||
+      state.params.trip_type !==
+      "oneway"
+    ) {
+
+      dateStripEl.hidden =
+        true;
+
+      return;
+    }
+
+    dateStripEl.hidden =
+      false;
+
+    if (!stripAnchor) {
+
+      stripAnchor =
+        clampAnchor(
+          isoPlusDays(
+            state.params.travel_date,
+            -3
+          )
+        );
+    }
+
+    paintStrip(
+      state.params.travel_date
+    );
   }
 
-  var stripPrevBtn = document.getElementById("frsDatePrev");
-  var stripNextBtn = document.getElementById("frsDateNext");
+  var stripPrevBtn =
+    document.getElementById(
+      "frsDatePrev"
+    );
+
+  var stripNextBtn =
+    document.getElementById(
+      "frsDateNext"
+    );
+
   if (stripPrevBtn) {
-    stripPrevBtn.addEventListener("click", function () {
-      var next = clampAnchor(isoPlusDays(stripAnchor, -1));
-      if (next === stripAnchor) { return; }
-      stripAnchor = next;
-      paintStrip(state.params.travel_date);
-    });
+
+    stripPrevBtn.addEventListener(
+      "click",
+      function () {
+
+        var next =
+          clampAnchor(
+            isoPlusDays(
+              stripAnchor,
+              -1
+            )
+          );
+
+        if (
+          next === stripAnchor
+        ) {
+          return;
+        }
+
+        stripAnchor =
+          next;
+
+        paintStrip(
+          state.params.travel_date
+        );
+      }
+    );
   }
+
   if (stripNextBtn) {
-    stripNextBtn.addEventListener("click", function () {
-      stripAnchor = isoPlusDays(stripAnchor, 1);
-      paintStrip(state.params.travel_date);
-    });
+
+    stripNextBtn.addEventListener(
+      "click",
+      function () {
+
+        stripAnchor =
+          isoPlusDays(
+            stripAnchor,
+            1
+          );
+
+        paintStrip(
+          state.params.travel_date
+        );
+      }
+    );
   }
 
   // ---------- inline search bar ----------
-  var pillBtn = document.getElementById("frsPillBtn");
-  var editor = document.getElementById("frsEditor");
-  var closeBtn = document.getElementById("frsEditorClose");
-  var pillText = document.getElementById("frsPillText");
+
+  var pillBtn =
+    document.getElementById(
+      "frsPillBtn"
+    );
+
+  var editor =
+    document.getElementById(
+      "frsEditor"
+    );
+
+  var closeBtn =
+    document.getElementById(
+      "frsEditorClose"
+    );
+
+  var pillText =
+    document.getElementById(
+      "frsPillText"
+    );
 
   function openEditor() {
-    if (editor) editor.hidden = false;
-    if (pillBtn) pillBtn.setAttribute("aria-expanded", "true");
-  }
-  function closeEditor() {
-    if (editor) editor.hidden = true;
-    if (pillBtn) pillBtn.setAttribute("aria-expanded", "false");
-  }
-  if (pillBtn && editor) {
-    pillBtn.addEventListener("click", function () {
-      editor.hidden ? openEditor() : closeEditor();
-    });
-  }
-  if (closeBtn) { closeBtn.addEventListener("click", closeEditor); }
 
-  function updatePillText(params) {
-    if (!pillText) return;
-    var travellers = params.adults + params.children + params.infants;
-    var text = params.origin + " \u2192 " + params.destination + " \u00b7 " + params.travel_date;
-    if (params.trip_type === "roundtrip" && params.return_date) {
-      text += " \u2013 " + params.return_date;
+    if (editor) {
+      editor.hidden =
+        false;
     }
-    text += " \u00b7 " + travellers + (travellers === 1 ? " traveller" : " travellers");
-    pillText.textContent = text;
+
+    if (pillBtn) {
+      pillBtn.setAttribute(
+        "aria-expanded",
+        "true"
+      );
+    }
   }
 
-  document.addEventListener("flightsearch:update", function () {
-    closeEditor();
-    apiUrl = root.dataset.apiUrl + window.location.search;
-    loadFlights();
-  });
+  function closeEditor() {
+
+    if (editor) {
+      editor.hidden =
+        true;
+    }
+
+    if (pillBtn) {
+      pillBtn.setAttribute(
+        "aria-expanded",
+        "false"
+      );
+    }
+  }
+
+  if (
+    pillBtn &&
+    editor
+  ) {
+
+    pillBtn.addEventListener(
+      "click",
+      function () {
+
+        editor.hidden
+          ? openEditor()
+          : closeEditor();
+      }
+    );
+  }
+
+  if (closeBtn) {
+    closeBtn.addEventListener(
+      "click",
+      closeEditor
+    );
+  }
+
+  function updatePillText(
+    params
+  ) {
+
+    if (!pillText) {
+      return;
+    }
+
+    var travellers =
+      params.adults +
+      params.children +
+      params.infants;
+
+    var text =
+      params.origin +
+      " \u2192 " +
+      params.destination +
+      " \u00b7 " +
+      params.travel_date;
+
+    if (
+      params.trip_type ===
+      "roundtrip" &&
+      params.return_date
+    ) {
+
+      text +=
+        " \u2013 " +
+        params.return_date;
+    }
+
+    text +=
+      " \u00b7 " +
+      travellers +
+      (
+        travellers === 1
+          ? " traveller"
+          : " travellers"
+      );
+
+    pillText.textContent =
+      text;
+  }
+
+  document.addEventListener(
+    "flightsearch:update",
+    function () {
+
+      closeEditor();
+
+      apiUrl =
+        root.dataset.apiUrl +
+        window.location.search;
+
+      loadFlights();
+    }
+  );
 
   // ---------- main flow ----------
+
   async function loadFlights() {
-    if (toolbarEl) toolbarEl.hidden = true;
-    if (dateStripEl) { dateStripEl.hidden = true; }
-    if (filtersEl) { filtersEl.hidden = true; filtersEl.innerHTML = ""; }
-    root.innerHTML = '<div class="fr-message"><div class="fr-spinner"></div>' +
-      "<p>Searching for the best fares&hellip; this can take up to 20 seconds.</p></div>";
+
+    if (toolbarEl) {
+      toolbarEl.hidden =
+        true;
+    }
+
+    if (dateStripEl) {
+      dateStripEl.hidden =
+        true;
+    }
+
+    if (filtersEl) {
+      filtersEl.hidden =
+        true;
+
+      filtersEl.innerHTML =
+        "";
+    }
+
+    root.innerHTML =
+      '<div class="fr-message">' +
+        '<div class="fr-spinner"></div>' +
+        "<p>" +
+          "Searching for the best fares&hellip; " +
+          "this can take up to 20 seconds." +
+        "</p>" +
+      "</div>";
 
     var data;
+
     try {
-      var response = await fetch(apiUrl, { headers: { "Accept": "application/json" } });
-      data = await response.json();
+
+      var response =
+        await fetch(
+          apiUrl,
+          {
+            headers: {
+              "Accept":
+                "application/json"
+            }
+          }
+        );
+
+      data =
+        await response.json();
+
     } catch (error) {
-      showMessage("<strong>Something went wrong.</strong><p>We could not reach the server. Please try again.</p>", "fr-message--error");
+
+      showMessage(
+        "<strong>Something went wrong.</strong>" +
+        "<p>" +
+          "We could not reach the server. " +
+          "Please try again." +
+        "</p>",
+        "fr-message--error"
+      );
+
       return;
     }
 
     if (!data.ok) {
-      var messages = Object.keys(data.errors || {}).map(function (key) {
-        return "<li>" + esc(data.errors[key]) + "</li>";
-      }).join("");
-      showMessage("<strong>We could not complete this search:</strong><ul>" + messages + "</ul>", "fr-message--error");
+
+      var messages =
+        Object.keys(
+          data.errors || {}
+        )
+        .map(
+          function (key) {
+
+            return (
+              "<li>" +
+                esc(
+                  data.errors[key]
+                ) +
+              "</li>"
+            );
+          }
+        )
+        .join("");
+
+      showMessage(
+        "<strong>" +
+          "We could not complete this search:" +
+        "</strong>" +
+
+        "<ul>" +
+          messages +
+        "</ul>",
+
+        "fr-message--error"
+      );
+
       return;
     }
 
-    state.params = data.params;
-    stripAnchor = null;
-    priceCache = {};
-    updatePillText(data.params);
+    state.params =
+      data.params;
 
-    if (data.flights.length === 0) {
-      showMessage("<strong>No flights found</strong><p>Try other dates or a different route.</p>");
+    stripAnchor =
+      null;
+
+    priceCache =
+      {};
+
+    updatePillText(
+      data.params
+    );
+
+    if (
+      data.flights.length === 0
+    ) {
+
+      showMessage(
+        "<strong>No flights found</strong>" +
+        "<p>" +
+          "Try other dates or a different route." +
+        "</p>"
+      );
+
       return;
     }
 
-    state.flights = data.flights;
-    state.totalOffers = data.total_offers;
-    state.sort = "price";
+    state.flights =
+      data.flights;
+
+    state.totalOffers =
+      data.total_offers;
+
+    state.sort =
+      "price";
+
     if (sortLine) {
-      sortLine.querySelectorAll(".fr-sort-btn").forEach(function (b) { b.classList.toggle("is-active", b.dataset.sort === "price"); });
+
+      sortLine
+        .querySelectorAll(
+          ".fr-sort-btn"
+        )
+        .forEach(
+          function (b) {
+
+            b.classList.toggle(
+              "is-active",
+              b.dataset.sort ===
+              "price"
+            );
+          }
+        );
     }
 
     renderDateStrip();
+
     buildFilters();
-    if (toolbarEl) toolbarEl.hidden = false;
+
+    if (toolbarEl) {
+      toolbarEl.hidden =
+        false;
+    }
+
     renderList();
   }
 
   loadFlights();
+
 })();

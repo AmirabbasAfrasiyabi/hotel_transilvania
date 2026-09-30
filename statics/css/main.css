@@ -7996,22 +7996,13 @@ body.mobile-nav-active #mobile-nav-toggle {
    ========================================================================== */
 /* ==========================================================================
    >>> START: HOTEL TRANSILVANIA — AUTH PAGES (Login / Signup)
-   استایل صفحات لاگین و ثبت‌نام که قبلاً به‌صورت inline داخل خود فایل‌های
-   login.html و signup.html بود، به اینجا منتقل شد تا:
-   ۱) کل استایل پروژه در main.css متمرکز باشد (طبق درخواست)
-   ۲) بشود بین دو صفحه (لاگین/ثبت‌نام) کد را به اشتراک گذاشت
-   ۳) چک‌لیست رنگی شرایط پسورد و چند طرح گرافیکی هم به همین بخش اضافه شد
    ========================================================================== */
 
 .auth-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #111827, #1e3a5f);
+  background: var(--tvl-paper, #F1E7D6);
   position: relative;
-  /* FIX: قبلاً overflow: hidden بود که وقتی محتوای فرم (مخصوصاً در
-     صفحه‌ی signup با چک‌لیست پسورد) از ارتفاع صفحه بلندتر می‌شد،
-     اجازه‌ی اسکرول عمودی را نمی‌داد و بخش پایینی فرم دیده نمی‌شد.
-     فقط overflow-x مهار می‌شود تا حباب‌های گرافیکی از عرض صفحه
-     بیرون نزنند؛ overflow-y آزاد است تا صفحه به‌صورت طبیعی اسکرول شود. */
+
   overflow-x: hidden;
   overflow-y: visible;
   font-family: var(--font-primary);
@@ -8031,7 +8022,11 @@ body.mobile-nav-active #mobile-nav-toggle {
 .auth-page::before {
   width: 380px;
   height: 380px;
-  background: radial-gradient(circle at 30% 30%, #2563eb, transparent 70%);
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(255, 111, 89, 0.18),
+    transparent 70%
+  );
   top: -120px;
   left: -100px;
   animation: auth-float-1 9s ease-in-out infinite;
@@ -8040,7 +8035,11 @@ body.mobile-nav-active #mobile-nav-toggle {
 .auth-page::after {
   width: 300px;
   height: 300px;
-  background: radial-gradient(circle at 70% 70%, #f8b600, transparent 70%);
+  background: radial-gradient(
+    circle at 70% 70%,
+    rgba(231, 217, 194, 0.8),
+    transparent 70%
+  );
   bottom: -100px;
   right: -80px;
   animation: auth-float-2 11s ease-in-out infinite;
@@ -8061,7 +8060,6 @@ body.mobile-nav-active #mobile-nav-toggle {
   display: flex;
   justify-content: center;
   align-items: center;
-  /* کوچک‌تر شد تا فرم بدون نیاز به اسکرول در صفحه جا شود */
   padding: 16px 15px;
   position: relative;
   z-index: 1;
@@ -8073,11 +8071,11 @@ body.mobile-nav-active #mobile-nav-toggle {
   height: 46px;
   margin: 0 auto 10px;
   border-radius: 14px;
-  background: linear-gradient(135deg, #2563eb, #1e3a5f);
+  background: var(--tvl-coral, #FF6F59);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 10px 25px -8px rgba(37, 99, 235, 0.6);
+  box-shadow: 0 10px 25px -8px rgba(255, 111, 89, 0.35);
 }
 
 .auth-brand i,
@@ -8099,8 +8097,7 @@ body.mobile-nav-active #mobile-nav-toggle {
   border-radius: 20px;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
   position: relative;
-  /* طرح گرافیکی ۳: نوار رنگی بالای کارت */
-  border-top: 4px solid #2563eb;
+  border-top: 4px solid var(--tvl-coral, #FF6F59);
   animation: auth-card-in 0.5s ease;
 }
 
@@ -8111,7 +8108,7 @@ body.mobile-nav-active #mobile-nav-toggle {
 
 .auth-card h1 {
   text-align: center;
-  color: #1e293b;
+  color: var(--tvl-ink, #2C2A28);
   margin-bottom: 4px;
   font-size: var(--h3-size);
 }
@@ -8133,7 +8130,7 @@ body.mobile-nav-active #mobile-nav-toggle {
 .auth-card form label {
   display: block;
   margin-bottom: 4px;
-  color: #334155;
+  color: var(--tvl-ink, #2C2A28);
   font-weight: 600;
   font-size: var(--text-size-tiny);
 }
@@ -8152,8 +8149,8 @@ body.mobile-nav-active #mobile-nav-toggle {
 
 .django-form input:focus,
 .auth-card form input:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  border-color: var(--tvl-coral, #FF6F59);
+  box-shadow: 0 0 0 3px rgba(255, 111, 89, 0.12);
 }
 
 .django-form ul.errorlist,
@@ -8193,8 +8190,8 @@ body.mobile-nav-active #mobile-nav-toggle {
   padding: 11px;
   border: none;
   border-radius: 10px;
-  background: #2563eb;
-  color: white;
+  background: var(--tvl-coral, #FF6F59);
+  color: #fff;
   font-size: var(--text-size-small);
   font-weight: 600;
   cursor: pointer;
@@ -8202,11 +8199,10 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 .auth-btn:hover:not(:disabled) {
-  background: #1d4ed8;
+  background: var(--tvl-coral-dark, #E85A45);
   transform: translateY(-2px);
 }
 
-/* FIX: قبلاً دکمه غیرفعال هم مثل حالت عادی رنگی و کلیک‌پذیر به نظر می‌رسید */
 .auth-btn:disabled {
   background: #94a3b8;
   cursor: not-allowed;
@@ -8222,7 +8218,7 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 .bottom-text a {
-  color: #2563eb;
+  color: var(--tvl-coral-dark, #E85A45);
   text-decoration: none;
   font-weight: 600;
 }

@@ -52,11 +52,13 @@
   position: relative;
   width: 100%;
   margin: 12px auto 0;
-  background: var(--tvl-paper, #F1E7D6);
+  background: #ffffff;
+  border: 1px solid rgba(44, 42, 40, 0.08);
   border-radius: var(--tvl-radius, 18px);
-  box-shadow: var(--tvl-shadow, 0 20px 45px -20px rgba(18, 41, 61, .35));
+  box-shadow: 0 20px 45px -20px rgba(18, 41, 61, .25);
   padding: 36px 20px 20px;
 }
+
 .frs-editor-close {
   position: absolute;
   top: 10px; left: 14px;
@@ -260,7 +262,7 @@
 }
 
 .fr-chip--tag {
-  background: var(--tvl-teal, #1B7A78);
+  background: var(--tvl-coral, #FF6F59);
   color: #fff;
   font-size: 12px;
   padding: 4px 11px;
@@ -288,7 +290,7 @@
   font-weight: 700;
   letter-spacing: .04em;
   text-transform: uppercase;
-  color: var(--tvl-teal, #1B7A78);
+  color: var(--tvl-coral, #FF6F59);
   margin-bottom: 6px;
 }
 
@@ -371,7 +373,7 @@
 }
 
 .fr-stops--direct {
-  color: var(--tvl-teal, #1B7A78);
+  color: var(--tvl-coral, #FF6F59);
   font-weight: 600;
 }
 
@@ -501,4 +503,19 @@
   .fr-point {
     min-width: 80px;
   }
+}
+
+
+.fr-baggage {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--tvl-coral-dark, #E85A45);
+}
+
+.fr-baggage i {
+  font-size: 11px;
 }

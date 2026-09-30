@@ -12,17 +12,17 @@
 
 <body class="auth-page">
 
+
 <div class="auth-container">
 
     <div class="auth-card">
 
-        <!-- ADDED: نشان برند (طرح گرافیکی) -->
-        <div class="auth-brand">
-            <i class="fa-solid fa-hotel"></i>
-        </div>
+        <a href="{% url 'website:index' %}" class="auth-brand">
+    <i class="fa-solid fa-plane-departure"></i>
+</a>
 
         <h1>Create Account</h1>
-        <p class="auth-subtitle">Join Hotel Transilvania</p>
+        <p class="auth-subtitle">Join your Travel Hub</p>
 
         {% if messages %}
             {% for message in messages %}
@@ -84,7 +84,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
     }
 
-    // شرایط پسورد؛ هر شرط یک تابع تست دارد که true/false برمی‌گرداند
     var rules = [
         {
             id: 'length',
@@ -135,8 +134,6 @@ document.addEventListener('DOMContentLoaded', function () {
         list.appendChild(item);
     });
 
-    // چک‌لیست بعد از فیلد «تکرار رمز» درج می‌شود تا در حالت دو ستونه‌ی
-    // دسکتاپ، دو فیلد رمز کنار هم بمانند و چک‌لیست یک ردیف کامل بگیرد.
     var anchorField = document.getElementById('id_password2') || passwordField;
     var passwordWrapper = anchorField.closest('p') || anchorField.parentNode;
     passwordWrapper.insertAdjacentElement('afterend', list);
@@ -160,15 +157,11 @@ document.addEventListener('DOMContentLoaded', function () {
         submitBtn.disabled = !allValid;
         return allValid;
     }
-
-    // در ابتدا (پیش از تایپ) دکمه غیرفعال است چون هیچ شرطی برقرار نیست
     submitBtn.disabled = true;
     validatePassword();
 
     passwordField.addEventListener('input', validatePassword);
 
-    // محافظت اضافه: حتی اگر کاربر با روش دیگری submit کند (مثلاً Enter)،
-    // اگر شرایط برقرار نبود، ارسال فرم متوقف شود.
     document.getElementById('signup-form').addEventListener('submit', function (e) {
         if (!validatePassword()) {
             e.preventDefault();
