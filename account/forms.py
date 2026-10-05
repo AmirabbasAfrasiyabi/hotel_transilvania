@@ -1,10 +1,10 @@
 from django import forms
+from django.conf import settings
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 
 User = get_user_model()
-
 
 class CustomUserCreationForm(UserCreationForm):
     first_name = forms.CharField(
@@ -19,7 +19,7 @@ class CustomUserCreationForm(UserCreationForm):
 
     email = forms.EmailField(
         required=True,
-        label=_("ایمیل"),
+        label=_("email"),
         widget=forms.EmailInput(attrs={
             "placeholder": "example@email.com",
             "autocomplete": "email",
@@ -50,3 +50,8 @@ class CustomAuthenticationForm(AuthenticationForm):
             "autocomplete": "tel",
         })
         self.fields["password"].label = _("Password")
+
+    def confirm_login_allowed(self, user):
+        super().confirm_login_allowed(user)
+        if getattr(settings, "SITE_BLOCK_STAFF_LOGIN", True) and (user.is_staff or user.is_superuser):
+            raise self.get_invalid_login_error()

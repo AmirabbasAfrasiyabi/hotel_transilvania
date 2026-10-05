@@ -52,10 +52,12 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'mysite.middleware.AdminSessionSeparationMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'mysite.middleware.BlockStaffOnSiteMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -130,6 +132,11 @@ LOGOUT_REDIRECT_URL = 'website:index'
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 14  # دو هفته
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 SESSION_SAVE_EVERY_REQUEST = True
+
+ADMIN_SESSION_COOKIE_NAME = 'admin_sessionid'
+ADMIN_CSRF_COOKIE_NAME = 'admin_csrftoken'
+ADMIN_URL_PREFIXES = ('/admin/', '/ckeditor/')
+SITE_BLOCK_STAFF_LOGIN = True
 
 
 # Internationalization
