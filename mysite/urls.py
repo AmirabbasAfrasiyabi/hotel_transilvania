@@ -29,6 +29,7 @@ urlpatterns = [
     path('packages/', include('packages.urls')),
     path('account/', include('account.urls')),
     path('help_center/', include('help_center.urls')),
+    path('booking/', include('booking.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
