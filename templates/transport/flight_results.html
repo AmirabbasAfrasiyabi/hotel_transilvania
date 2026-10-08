@@ -5,6 +5,7 @@
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/flight-results.css' %}">
+<link rel="stylesheet" href="{% static 'css/flight-details-modal.css' %}">
 
 <section class="fr-page">
   <div class="container">
@@ -194,5 +195,99 @@
 
 {% if not errors %}
 <script src="{% static 'js/flight-results.js' %}" defer></script>
+<script src="{% static 'js/flight-details-modal.js' %}" defer></script>
 {% endif %}
+
+
+<!-- ========== FLIGHT DETAILS MODAL ========== -->
+<div id="flightDetailsModal" class="fd-modal" hidden aria-hidden="true" role="dialog" aria-labelledby="fdModalTitle">
+  <div class="fd-overlay" id="fdOverlay"></div>
+
+  <div class="fd-panel" role="document">
+    <!-- HEADER -->
+    <header class="fd-header">
+      <div class="fd-header-right">
+        <h2 id="fdModalTitle" class="fd-title">Flight Details</h2>
+      </div>
+      <div class="fd-header-left">
+        <button type="button" class="fd-btn-share" id="fdShareBtn" aria-label="Share">
+          <i class="fa-solid fa-share-nodes"></i>
+          <span>Share</span>
+        </button>
+        <button type="button" class="fd-btn-close" id="fdCloseBtn" aria-label="Close">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- SHARE MENU -->
+    <div class="fd-share-menu" id="fdShareMenu" hidden>
+      <button type="button" data-share="copy">
+        <i class="fa-solid fa-link"></i> Copy flight link
+      </button>
+      <button type="button" data-share="whatsapp">
+        <i class="fa-brands fa-whatsapp"></i> WhatsApp
+      </button>
+      <button type="button" data-share="telegram">
+        <i class="fa-brands fa-telegram"></i> Telegram
+      </button>
+      <button type="button" data-share="email">
+        <i class="fa-solid fa-envelope"></i> Email
+      </button>
+    </div>
+
+    <!-- BODY (scrollable) -->
+    <div class="fd-body">
+      <!-- SUMMARY -->
+      <section class="fd-summary" id="fdSummary">
+        <!-- filled by JS -->
+      </section>
+
+      <!-- TABS -->
+      <nav class="fd-tabs" role="tablist">
+        <button type="button" class="fd-tab is-active" data-tab="info" role="tab" aria-selected="true">Travel Info</button>
+        <button type="button" class="fd-tab" data-tab="baggage" role="tab" aria-selected="false">Baggage</button>
+        <button type="button" class="fd-tab" data-tab="refund" role="tab" aria-selected="false">Refund Policy</button>
+        <button type="button" class="fd-tab" data-tab="notes" role="tab" aria-selected="false">Route Notes</button>
+      </nav>
+
+      <!-- TAB CONTENTS -->
+      <div class="fd-tab-content is-active" id="fdTab-info" role="tabpanel">
+        <!-- filled by JS -->
+      </div>
+      <div class="fd-tab-content" id="fdTab-baggage" role="tabpanel" hidden>
+        <!-- filled by JS -->
+      </div>
+      <div class="fd-tab-content" id="fdTab-refund" role="tabpanel" hidden>
+        <!-- filled by JS -->
+      </div>
+      <div class="fd-tab-content" id="fdTab-notes" role="tabpanel" hidden>
+        <div class="fd-notice">
+          <i class="fa-solid fa-circle-info"></i>
+          <div>
+            <p>Visa and travel document requirements vary by nationality, destination and route. Please ensure your documents are valid before travelling.</p>
+            <a href="#" class="fd-link">Check travel requirements</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STICKY FOOTER -->
+    <footer class="fd-footer">
+      <div class="fd-price-box">
+        <div class="fd-price-per">
+          <span id="fdPriceAmount">—</span>
+          <small>per passenger</small>
+        </div>
+        <div class="fd-price-total" id="fdPriceTotal" hidden></div>
+      </div>
+      <button type="button" class="fd-cta" id="fdSelectBtn">
+        Select flight &amp; continue
+      </button>
+    </footer>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="fdToast" class="fd-toast" hidden>Flight link copied successfully ✓</div>
 {% endblock %}

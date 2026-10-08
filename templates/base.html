@@ -38,7 +38,7 @@
      conflicts with bootstrap.min.js already loaded on the page. -->
 
 </head>
-<body>
+<body data-user-authenticated="{% if user.is_authenticated %}true{% else %}false{% endif %}">
 
 <!-- ================= Toast Notification Popup (Django Messages) ================= -->
 {% if messages %}

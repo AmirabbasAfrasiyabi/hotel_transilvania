@@ -1198,7 +1198,26 @@
         .map(renderCard)
         .join("");
   }
+  // ---------- Open Flight Details Modal ----------
+  root.addEventListener("click", function (e) {
+    var btn = e.target.closest(".fr-select-btn");
+    if (!btn) return;
 
+    e.preventDefault();
+    e.stopPropagation();
+
+    var offerId = btn.getAttribute("data-offer-id");
+    if (!offerId) return;
+
+    // پیدا کردن آبجکت کامل پرواز از state
+    var offer = state.flights.find(function (f) {
+      return f.id === offerId;
+    });
+
+    if (offer && typeof window.openFlightDetails === "function") {
+      window.openFlightDetails(offer);
+    }
+  });
   if (sortLine) {
 
     sortLine.addEventListener(
