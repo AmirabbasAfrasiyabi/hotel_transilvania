@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Passenger Details{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/booking-passengers.css' %}">
+
+<!-- Simple Header Override -->
+<style>
+  #header { display: none; } /* hide main site header */
+</style>
+
+<header class="bp-simple-header">
+  <div class="container">
+    <div class="bp-header-inner">
+      <a href="{% url 'website:index' %}" class="bp-logo">
+        <img src="{% static 'img/logo.png' %}" alt="Logo">
+      </a>
+      <div class="bp-user-nav">
+        {% if user.is_authenticated %}
+          <span>{{ user.get_full_name|default:user.username }}</span>
+          <a href="{% url 'account:logout' %}">Logout</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="bp-page">
+  <div class="container">
+
+    <!-- STEPPER -->
+    <nav class="bp-stepper">
+      <ol class="bp-stepper-list">
+        <li class="bp-step is-completed">
+          <span class="bp-step-icon"><i class="fa-solid fa-check"></i></span>
+          <span class="bp-step-label">Select Flight</span>
+        </li>
+        <li class="bp-step is-active">
+          <span class="bp-step-icon">2</span>
+          <span class="bp-step-label">Passenger Details</span>
+        </li>
+        <li class="bp-step">
+          <span class="bp-step-icon">3</span>
+          <span class="bp-step-label">Travel Services</span>
+        </li>
+        <li class="bp-step">
+          <span class="bp-step-icon">4</span>
+          <span class="bp-step-label">Review & Confirm</span>
+        </li>
+        <li class="bp-step">
+          <span class="bp-step-icon">5</span>
+          <span class="bp-step-label">Payment</span>
+        </li>
+        <li class="bp-step">
+          <span class="bp-step-icon">6</span>
+          <span class="bp-step-label">Ticket Issuance</span>
+        </li>
+      </ol>
+      <div class="bp-stepper-mobile">Step 2 of 6 — Passenger Details</div>
+    </nav>
+
+    <!-- FLIGHT SUMMARY CARD -->
+    <div class="bp-flight-card" id="bpFlightCard">
+      <div class="bp-fc-content">
+        <img src="" alt="" class="bp-fc-logo" id="bpFcLogo" hidden>
+        <div class="bp-fc-info">
+          <div class="bp-fc-airline" id="bpFcAirline">Loading...</div>
+          <div class="bp-fc-route" id="bpFcRoute">— → —</div>
+          <div class="bp-fc-meta" id="bpFcMeta"></div>
+        </div>
+      </div>
+      <a href="javascript:history.back()" class="bp-fc-change">
+        <i class="fa-solid fa-pen-to-square"></i> Change Flight
+      </a>
+    </div>
+
+    <!-- MAIN LAYOUT -->
+    <div class="bp-layout">
+
+      <!-- FORM COLUMN -->
+      <div class="bp-main">
+        <h1 class="bp-title">Enter passenger details</h1>
+        <p class="bp-subtitle">Please enter first and last names exactly as they appear on the passport.</p>
+
+        <!-- Passengers will be rendered here -->
+        <div id="bpPassengers"></div>
+
+        <!-- CONTACT INFORMATION -->
+        <div class="bp-card">
+          <h2 class="bp-card-title">Contact Information</h2>
+
+          <label class="bp-checkbox">
+            <input type="checkbox" id="sameAsFirst">
+            <span>Same as first passenger</span>
+          </label>
+
+          <div class="bp-grid-2">
+            <div class="bp-field">
+              <label>Full Name</label>
+              <input type="text" id="contactName" name="contact_name" required>
+            </div>
+            <div class="bp-field">
+              <label>Email</label>
+              <input type="email" id="contactEmail" name="contact_email" required>
+              <small>Booking confirmation and ticket details will be sent to this email.</small>
+            </div>
+            <div class="bp-field">
+              <label>Mobile Number</label>
+              <div class="bp-phone">
+                <select id="countryCode">
+                  <option value="+98">+98</option>
+                  <option value="+90">+90</option>
+                  <option value="+971">+971</option>
+                  <option value="+44">+44</option>
+                  <option value="+1">+1</option>
+                </select>
+                <input type="tel" id="contactPhone" name="contact_phone" required>
+              </div>
+              <small>Used for flight change or disruption notifications.</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- TRAVEL DOCUMENTS ALERT -->
+        <div class="bp-alert">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <div>
+            <strong>Travel Documents</strong>
+            <p>Visa and travel document requirements vary by nationality, destination and route. Please ensure your documents are valid before travelling.</p>
+            <a href="#" class="bp-link">Check travel requirements</a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- PRICE SIDEBAR -->
+      <aside class="bp-sidebar">
+        <div class="bp-sidebar-card">
+          <h3>Booking Summary</h3>
+          <div id="bpSidebarFlight" class="bp-sidebar-flight">—</div>
+          <hr>
+          <div class="bp-price-row">
+            <span>Ticket price</span>
+            <span id="bpTicketPrice">—</span>
+          </div>
+          <div class="bp-price-row">
+            <span>Taxes & fees</span>
+            <span id="bpTaxes">—</span>
+          </div>
+          <div class="bp-price-row">
+            <span>Services</span>
+            <span id="bpServices">£0</span>
+          </div>
+          <hr>
+          <div class="bp-price-row bp-price-total">
+            <span>Total</span>
+            <span id="bpTotal">—</span>
+          </div>
+          <button type="button" class="bp-cta" id="bpContinueBtn">
+            Continue to next step
+          </button>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+</section>
+
+<!-- Sticky bottom bar for mobile -->
+<div class="bp-sticky-bar" id="bpStickyBar">
+  <div class="bp-sticky-price" id="bpStickyPrice">—</div>
+  <button type="button" class="bp-cta" id="bpStickyContinue">Continue</button>
+</div>
+
+<script>
+  // Temporary: number of passengers from URL or session (will be improved later)
+  window.BOOKING_PASSENGERS = {
+    adults: {{ request.GET.adults|default:1 }},
+    children: {{ request.GET.children|default:0 }},
+    infants: {{ request.GET.infants|default:0 }},
+    offerId: "{{ offer_id|default:'' }}"
+  };
+</script>
+<script src="{% static 'js/booking-passengers.js' %}"></script>
+{% endblock %}
