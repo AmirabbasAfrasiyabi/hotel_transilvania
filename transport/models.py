@@ -1,14 +1,14 @@
 # transport/models.py
 from decimal import Decimal
 from django.core.exceptions import ValidationError
-from django.core.validators import MinValueValidator, RegexValidator, MinLengthValidator
+from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
-from django.db.models import CheckConstraint, Q, UniqueConstraint, F
+from django.db.models import  Q, F
 from django.utils import timezone
 
 class Airline(models.Model):
     name = models.CharField(max_length=200 , verbose_name="Airline Name")
-    iata_code = models.CharField(max_length=3,unique=True, validators=[RegexValidator(r'^[A-Z0-9]{2,3}$', "code IATA is validate")], verbose_name="IATA Code")
+    iata_code = models.CharField(max_length=3,unique=True, validators=[RegexValidator(r'^[A-Z0-9]{2,3}$', "IATA code must be 2-3 uppercase letters or digits.")], verbose_name="IATA Code")
     icao_code = models.CharField(max_length=4,blank=True, null=True,validators=[RegexValidator(r'^[A-Z]{3,4}$', "ICAO Code is validate")], verbose_name="ICAO Code")
 
     logo = models.ImageField(upload_to="airlines/logos",blank=True,null=True, verbose_name="Logo")
@@ -58,23 +58,27 @@ class Flight(models.Model):
 
     class TripType(models.TextChoices):
         ONE_WAY = "one_way", "one_way"
-        ROUND_TRIP = "round_trip",
+        ROUND_TRIP = "round_trip", "round_trip"
+
 
 
     airline = models.ForeignKey(Airline, on_delete=models.CASCADE, verbose_name="Airline")
     flight_number = models.CharField(max_length=10,verbose_name="Flight Number")
     origin = models.ForeignKey(Airport, on_delete=models.CASCADE, related_name="departures",verbose_name="Origin")
-    description = models.ForeignKey(Airport, on_delete=models.CASCADE, related_name="arrivals",verbose_name="Description")
+    destination = models.ForeignKey(Airport, on_delete=models.CASCADE, related_name="arrivals",verbose_name="destination")
+    description = models.TextField(blank=True, verbose_name="Description")
     trip_type = models.CharField(max_length=10,choices=TripType.choices,default=TripType.ONE_WAY,verbose_name="Trip Type",)
     departure_at = models.DateTimeField(verbose_name="Departure Time")
     arrival_at = models.DateTimeField(verbose_name="Arrival Time")
     base_price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal("0.00"))], verbose_name="Base Price")
     currency = models.CharField(max_length=10, verbose_name="Currency")
     total_capacity = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1)],verbose_name="Total Capacity")
+    sale_start_at = models.DateTimeField(null=True, blank=True, verbose_name="Sale Start")
+    sale_end_at = models.DateTimeField(null=True, blank=True, verbose_name="Sale End")
     available_seats = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)],verbose_name="Available Seats")
     status = models.CharField(max_length=10, choices=Status.choices, default=Status.SCHEDULED,verbose_name="Status")
     baggage_allowance = models.CharField(max_length=100,blank=True,default="20kg",verbose_name="Baggage Allowance")
-    refound_policy = models.TextField(blank=True,verbose_name="Refound Policy",)
+    refund_policy = models.TextField(blank=True,verbose_name="Refund Policy",)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Created Date")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Updated Date")
     is_active = models.BooleanField(default=True,verbose_name="Active")
@@ -84,7 +88,7 @@ class Flight(models.Model):
         verbose_name = "Flight"
         verbose_name_plural = "Flights"
         indexes = [
-            models.Index(fields=["origin", "description", "departure_at"]),
+            models.Index(fields=["origin",  "destination" , "departure_at"]),
             models.Index(fields=["status", "departure_at"]),
             models.Index(fields=["departure_at"]),
             models.Index(fields=["airline", "flight_number", "departure_at"]),
@@ -95,15 +99,15 @@ class Flight(models.Model):
                 name="unique_flight_instance"
             ),
             models.CheckConstraint(
-                check=Q(arrival_at__gt=F("departure_at")),
+                condition=Q(arrival_at__gt=F("departure_at")),
                 name="arrival_after_departure"
             ),
             models.CheckConstraint(
-                check=Q(available_seats__lte=F("total_capacity")),
+                condition=Q(available_seats__lte=F("total_capacity")),
                 name="available_le_total"
             ),
             models.CheckConstraint(
-                check=Q(base_price__gte=0),
+                condition=Q(base_price__gte=0),
                 name="price_non_negative"
             ),
         ]
@@ -112,7 +116,7 @@ class Flight(models.Model):
         return (
             f"{self.airline.iata_code}{self.flight_number} | "
             f"{self.origin.iata_code} → "
-            f"{self.description.iata_code}"
+            f"{self.destination.iata_code}"
         )
 
     def clean(self):
@@ -120,14 +124,10 @@ class Flight(models.Model):
 
         if (
                 self.origin_id
-                and self.description_id
-                and self.origin_id == self.description_id
+                and self.destination_id
+                and self.origin_id == self.destination_id
         ):
-            raise ValidationError({
-                "description": (
-                    "Origin and destination cannot be the same airport."
-                )
-            })
+            raise ValidationError({"destination": ("Origin and destination cannot be the same airport.")})
 
         if (
                 self.departure_at
@@ -165,6 +165,8 @@ class Flight(models.Model):
                 self.status in (self.Status.ON_SALE, self.Status.SCHEDULED)
                 and self.available_seats > 0
                 and self.departure_at > now
+                and (self.sale_start_at is None or self.sale_start_at <= now)
+                and (self.sale_end_at is None or self.sale_end_at >= now)
         )
 
 class FlightFare(models.Model):
@@ -177,15 +179,15 @@ class FlightFare(models.Model):
     flight = models.ForeignKey(Flight, on_delete=models.CASCADE,related_name="fares", verbose_name="Flight")
     cabin_class = models.CharField(max_length=20 , default=CabinClass.ECONOMY, choices=CabinClass.choices , verbose_name="Cabin Class")
     price = models.DecimalField(max_digits=12,decimal_places=2,validators=[MinValueValidator(Decimal("0.00"))], verbose_name="Price")
-    available_seat = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)], verbose_name="Available Seats")
+    available_seats = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)], verbose_name="Available Seats")
     baggage_allowance = models.CharField(max_length=100,blank=True,default="20kg",verbose_name="Baggage Allowance")
     refundable = models.BooleanField(default=False,verbose_name="Refundable")
     changeable = models.BooleanField(default=False,verbose_name="Changable")
 
     class Meta:
         ordering = [('flight' , 'cabin_class' , 'price')]
-        verbose_name = "Flight"
-        verbose_name_plural = "Flights"
+        verbose_name = "Flight Fare"
+        verbose_name_plural = "Flight Fares "
 
     def __str__(self):
         return f"{self.flight} - {self.get_cabin_class_display()}"
