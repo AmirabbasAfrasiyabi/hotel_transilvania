@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Booking confirmed{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/booking-passengers.css' %}">
+
+<style>
+  #header { display: none; }
+  .cf-page { max-width: 720px; margin: 2rem auto; padding: 0 1rem; text-align: center; }
+  .cf-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 1.25rem 0;
+    text-align: left;
+  }
+  .cf-success { color: #047857; font-size: 1.25rem; font-weight: 700; }
+  .cf-ref {
+    font-size: 1.1rem;
+    background: #f0fdf4;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    display: inline-block;
+    margin-top: 0.5rem;
+  }
+</style>
+
+<header class="bp-simple-header">
+  <div class="container">
+    <div class="bp-header-inner">
+      <a href="{% url 'website:index' %}" class="bp-logo">
+        <img src="{% static 'img/logo.png' %}" alt="Logo">
+      </a>
+    </div>
+  </div>
+</header>
+
+<section class="cf-page">
+  <p class="cf-success">
+    <i class="fa-solid fa-circle-check"></i> Booking confirmed
+  </p>
+  <p>Your ticket has been issued.</p>
+
+  <div class="cf-ref">
+    Reference:
+    <strong>
+      {{ order_meta.booking_reference|default:booking.provider_order_id|default:booking.id }}
+    </strong>
+  </div>
+
+  <div class="cf-card">
+    <h2 style="margin-top:0;">Flight</h2>
+    <p>
+      <strong>{{ booking.origin_code }} → {{ booking.destination_code }}</strong><br>
+      {{ booking.airline_or_company }}
+      {% if booking.flight_or_trip_number %} · {{ booking.flight_or_trip_number }}{% endif %}<br>
+      Total: <strong>{{ booking.total_price }} {{ booking.currency }}</strong>
+    </p>
+  </div>
+
+  <div class="cf-card">
+    <h2 style="margin-top:0;">Passengers</h2>
+    <ul>
+      {% for p in passengers %}
+        <li>{{ p.first_name }} {{ p.last_name }} ({{ p.get_passenger_type_display }})</li>
+      {% endfor %}
+    </ul>
+    <p style="margin-bottom:0;">
+      Confirmation sent to: {{ booking.contact_email }}
+    </p>
+  </div>
+
+  <p><a href="{% url 'website:index' %}">Back to home</a></p>
+</section>
+{% endblock %}
