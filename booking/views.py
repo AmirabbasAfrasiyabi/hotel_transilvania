@@ -5,8 +5,8 @@ from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_GET, require_http_methods, require_POST
 
-from booking.services import BookingService
-from booking.services.booking_service import BookingServiceError
+from booking.models import Booking
+from booking.service.booking_service import BookingService, BookingServiceError
 
 
 def _ensure_session(request):

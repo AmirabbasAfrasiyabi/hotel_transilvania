@@ -5,28 +5,37 @@ from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils import timezone
 
-# Create your models here.
 
 class Booking(models.Model):
     class TransportType(models.TextChoices):
-        Flight = "F", "Flight"
-        Train = "T", "Train"
-        Bus = "B", "Bus"
+        FLIGHT = "F", "Flight"
+        TRAIN = "T", "Train"
+        BUS = "B", "Bus"
         HOTEL = "H", "Hotel"
 
     class Status(models.TextChoices):
         DRAFT = "D", "Draft"
-        Pending_Payment = "P", "Payment"
-        Paid = "A", "Paid"
+        PENDING_PAYMENT = "P", "Payment"
+        PAID = "A", "Paid"
         ISSUED = "I", "Issued"
-        Cancelled = "C", "Cancelled"
-        Expired = "E", "Expired"
+        CANCELLED = "C", "Cancelled"
+        EXPIRED = "E", "Expired"
         FAILED = "F", "Failed"
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,null=True,blank=True,related_name="booking_user")
-    transport_type = models.CharField(choices=TransportType.choices, max_length=10, default=TransportType.Flight)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="booking_user",
+    )
+    transport_type = models.CharField(
+        choices=TransportType.choices,
+        max_length=10,
+        default=TransportType.FLIGHT,
+    )
     transport_id = models.CharField(max_length=128, blank=True)
-    provider = models.CharField(max_length=30, blank=True)  # "duffel" | "internal" | ...
+    provider = models.CharField(max_length=30, blank=True)
     provider_offer_id = models.CharField(max_length=128, blank=True, db_index=True)
     provider_order_id = models.CharField(max_length=128, blank=True, db_index=True)
     offer_snapshot = models.JSONField(default=dict, blank=True)
@@ -41,12 +50,37 @@ class Booking(models.Model):
     children = models.PositiveIntegerField(default=0)
     infants = models.PositiveIntegerField(default=0)
 
-    base_price = models.DecimalField(max_digits=12, decimal_places=2,default=Decimal("0.00"), validators=[MinValueValidator(Decimal("0.00"))],)
-    taxes = models.DecimalField(max_digits=12, decimal_places=2,default=Decimal("0.00") , validators=[MinValueValidator(Decimal("0.00"))],)
-    service_price = models.DecimalField(max_digits=12, decimal_places=2,default=Decimal("0.00") , validators=[MinValueValidator(Decimal("0.00"))],)
-    total_price = models.DecimalField(max_digits=12, decimal_places=2,default=Decimal("0.00") , validators=[MinValueValidator(Decimal("0.00"))],)
+    base_price = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        default=Decimal("0.00"),
+        validators=[MinValueValidator(Decimal("0.00"))],
+    )
+    taxes = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        default=Decimal("0.00"),
+        validators=[MinValueValidator(Decimal("0.00"))],
+    )
+    service_price = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        default=Decimal("0.00"),
+        validators=[MinValueValidator(Decimal("0.00"))],
+    )
+    total_price = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        default=Decimal("0.00"),
+        validators=[MinValueValidator(Decimal("0.00"))],
+    )
     currency = models.CharField(max_length=3, default="USD")
-    status = models.CharField(max_length=2,choices=Status.choices,default=Status.DRAFT,verbose_name="status")
+    status = models.CharField(
+        max_length=2,
+        choices=Status.choices,
+        default=Status.DRAFT,
+        verbose_name="status",
+    )
 
     contact_full_name = models.CharField(max_length=200, blank=True)
     contact_email = models.EmailField(blank=True)
@@ -80,8 +114,9 @@ class Booking(models.Model):
         return False
 
     def recalculate_total(self):
-        self.total_price = self.base_price + self.taxes + self.services_price
+        self.total_price = self.base_price + self.taxes + self.service_price
         self.save(update_fields=["total_price", "updated_at"])
+
 
 class Passenger(models.Model):
     class Gender(models.TextChoices):
@@ -89,19 +124,23 @@ class Passenger(models.Model):
         FEMALE = "F", "Female"
         OTHER = "O", "Other"
 
-    booking = models.ForeignKey(Booking, on_delete=models.CASCADE, related_name="passenger")
+    booking = models.ForeignKey(
+        Booking, on_delete=models.CASCADE, related_name="passengers"
+    )
     order = models.PositiveIntegerField(default=1)
-    title = models.CharField(max_length=10, blank=True, choices=Gender.choices)
+    passenger_type = models.CharField(max_length=10, default="adult", blank=True)
+    title = models.CharField(max_length=10, blank=True)
     first_name = models.CharField(max_length=100, blank=True)
     last_name = models.CharField(max_length=100, blank=True)
-    gender = models.CharField(max_length=10, choices=Gender.choices,blank=True, null=True)
+    gender = models.CharField(
+        max_length=10, choices=Gender.choices, blank=True, null=True
+    )
     date_of_birth = models.DateField(null=True, blank=True)
     nationality = models.CharField(max_length=100, blank=True, null=True)
 
     passport_number = models.CharField(max_length=30, blank=True)
     passport_issuing_country = models.CharField(max_length=100, blank=True)
     passport_expiry = models.DateField(null=True, blank=True)
-
 
     is_adult = models.BooleanField(default=True)
     is_child = models.BooleanField(default=False)
