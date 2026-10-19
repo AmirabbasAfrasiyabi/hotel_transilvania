@@ -30,7 +30,6 @@
 <section class="bp-page">
   <div class="container">
 
-    {# ========== Stepper (step 2 = Passenger Details active) ========== #}
     <nav class="bp-stepper" aria-label="Booking steps">
       <ol class="bp-stepper-list">
         <li class="bp-step is-completed">
@@ -71,10 +70,8 @@
     {% if booking %}
     <div class="bp-layout">
 
-      {# ========== Main column ========== #}
       <div class="bp-main">
 
-        {# Flight summary card — layout closer to reference screenshot #}
         <div class="bp-flight-card" id="bpFlightCard">
           <div class="bp-fc-actions">
             <a href="{% url 'transport:flight_results' %}?origin={{ booking.origin_code|default:'' }}&destination={{ booking.destination_code|default:'' }}"
@@ -119,38 +116,51 @@
 
         <h1 class="bp-title">
           <i class="fa-solid fa-users" aria-hidden="true"></i>
-          Enter passenger details
+          Who's traveling?
         </h1>
-        <p class="bp-subtitle">Enter names exactly as they appear on the passport (Latin characters).</p>
+        <p class="bp-subtitle">Enter names exactly as they appear on the passport (Latin characters only).</p>
 
-        {# Passenger forms rendered by JS #}
+        <div class="bp-notice-list">
+          <div class="bp-notice-item">
+            <strong>Names must match ID</strong>
+            Enter the name exactly as it appears on the passport that will be used at check-in.
+          </div>
+          <div class="bp-notice-item">
+            <strong>6-month passport validity</strong>
+            For international flights, the passport should remain valid for at least 6 months after the trip ends.
+          </div>
+          <div class="bp-notice-item">
+            <strong>Latin characters only</strong>
+            Given names and surname must use A–Z letters (as printed in the machine-readable zone of the passport).
+          </div>
+        </div>
+
         <div id="bpPassengers"></div>
 
-        {# Contact Information #}
-        <div class="bp-card">
-          <h2 class="bp-card-title">Contact Information</h2>
+        <div class="bp-card" id="bpContactCard">
+          <h2 class="bp-card-title">Contact details</h2>
 
           <label class="bp-checkbox">
             <input type="checkbox" id="sameAsFirst">
             <span>Same as first passenger</span>
           </label>
 
-          <div class="bp-grid-2">
+          <div class="bp-grid-3">
             <div class="bp-field">
-              <label>Full Name</label>
+              <label>Contact name <span class="bp-req">*</span></label>
               <input type="text" id="contactName" name="contact_name" required
                      value="{{ booking.contact_full_name|default:'' }}"
-                     autocomplete="name">
+                     autocomplete="name" maxlength="120">
             </div>
             <div class="bp-field">
-              <label>Email</label>
+              <label>Email <span class="bp-req">*</span></label>
               <input type="email" id="contactEmail" name="contact_email" required
                      value="{{ booking.contact_email|default:'' }}"
-                     autocomplete="email">
+                     autocomplete="email" placeholder="name@example.com">
               <small>Ticket and booking confirmation will be sent here.</small>
             </div>
             <div class="bp-field">
-              <label>Mobile Number</label>
+              <label>Mobile phone <span class="bp-req">*</span></label>
               <div class="bp-phone">
                 <select id="countryCode" aria-label="Country code">
                   <option value="+98">+98</option>
@@ -158,12 +168,16 @@
                   <option value="+971">+971</option>
                   <option value="+44">+44</option>
                   <option value="+1">+1</option>
+                  <option value="+49">+49</option>
+                  <option value="+33">+33</option>
+                  <option value="+86">+86</option>
                 </select>
                 <input type="tel" id="contactPhone" name="contact_phone" required
                        value="{{ booking.contact_phone|default:'' }}"
-                       autocomplete="tel">
+                       autocomplete="tel" inputmode="numeric"
+                       placeholder="9123456789" maxlength="15">
               </div>
-              <small>Used for flight change or disruption notifications.</small>
+              <small>7–15 digits, without the country code.</small>
             </div>
           </div>
         </div>
@@ -171,13 +185,12 @@
         <div class="bp-alert">
           <i class="fa-solid fa-triangle-exclamation"></i>
           <div>
-            <strong>Travel documents</strong>
-            <p>Visa and document rules depend on nationality and destination. Make sure your documents are valid before travel.</p>
+            <strong>Travel documents &amp; visa</strong>
+            <p>Visa rules depend on nationality and destination. Confirm entry requirements before travel. Miles/points eligibility depends on the airline — contact the carrier if unsure.</p>
           </div>
         </div>
       </div>
 
-      {# ========== Sidebar (price + continue) — matches reference layout ========== #}
       <aside class="bp-sidebar">
         <div class="bp-sidebar-card">
           <div class="bp-side-route" id="bpSidebarFlight">

@@ -7,7 +7,6 @@
   --bp-shadow: 0 4px 20px rgba(0,0,0,.06);
 }
 
-/* Simple Header */
 .bp-simple-header {
   background: #fff;
   border-bottom: var(--bp-border);
@@ -21,9 +20,7 @@
   align-items: center;
   justify-content: space-between;
 }
-.bp-logo img {
-  height: 36px;
-}
+.bp-logo img { height: 36px; }
 .bp-user-nav {
   display: flex;
   align-items: center;
@@ -37,17 +34,13 @@
   font-weight: 600;
 }
 
-/* Page */
 .bp-page {
   padding: 30px 0 100px;
   background: #f8fafc;
   min-height: 80vh;
 }
 
-/* Stepper */
-.bp-stepper {
-  margin-bottom: 28px;
-}
+.bp-stepper { margin-bottom: 28px; }
 .bp-stepper-list {
   display: flex;
   justify-content: space-between;
@@ -114,7 +107,6 @@
   margin-top: 8px;
 }
 
-/* Flight Summary Card — closer to reference screenshot */
 .bp-flight-card {
   background: #fff;
   border-radius: var(--bp-radius);
@@ -164,10 +156,6 @@
   justify-content: center;
   cursor: pointer;
 }
-.bp-fc-more:hover {
-  background: #f8fafc;
-  color: #1e293b;
-}
 .bp-fc-body {
   display: flex;
   align-items: center;
@@ -175,9 +163,7 @@
   margin-left: auto;
   text-align: right;
 }
-.bp-fc-text {
-  text-align: right;
-}
+.bp-fc-text { text-align: right; }
 .bp-fc-title {
   font-weight: 800;
   font-size: 1.1rem;
@@ -221,7 +207,6 @@
   color: #64748b;
 }
 
-/* Layout */
 .bp-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 300px;
@@ -229,7 +214,6 @@
   align-items: start;
 }
 
-/* Main Form */
 .bp-title {
   font-size: 1.4rem;
   font-weight: 800;
@@ -245,7 +229,6 @@
   margin: 0 0 24px;
 }
 
-/* Cards */
 .bp-card {
   background: #fff;
   border-radius: var(--bp-radius);
@@ -283,6 +266,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  margin-bottom: 16px;
 }
 .bp-helper-btn {
   display: inline-flex;
@@ -304,7 +288,6 @@
   color: var(--bp-brand);
 }
 
-/* Form Fields */
 .bp-grid-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -315,9 +298,7 @@
   grid-template-columns: 1fr 1fr 1fr;
   gap: 16px;
 }
-.bp-field {
-  margin-bottom: 16px;
-}
+.bp-field { margin-bottom: 16px; }
 .bp-field label {
   display: block;
   font-size: 0.85rem;
@@ -370,11 +351,8 @@
   width: 90px;
   flex-shrink: 0;
 }
-.bp-phone input {
-  flex: 1;
-}
+.bp-phone input { flex: 1; }
 
-/* Checkbox */
 .bp-checkbox {
   display: flex;
   align-items: center;
@@ -390,7 +368,6 @@
   accent-color: var(--bp-brand);
 }
 
-/* Alert */
 .bp-alert {
   display: flex;
   gap: 14px;
@@ -411,19 +388,8 @@
   display: block;
   margin-bottom: 4px;
 }
-.bp-alert p {
-  margin: 0 0 6px;
-}
-.bp-link {
-  color: var(--bp-brand);
-  font-weight: 600;
-  text-decoration: none;
-}
-.bp-link:hover {
-  text-decoration: underline;
-}
+.bp-alert p { margin: 0 0 6px; }
 
-/* Sidebar */
 .bp-sidebar-card {
   background: #fff;
   border-radius: var(--bp-radius);
@@ -482,9 +448,7 @@
   cursor: pointer;
   transition: background 0.15s;
 }
-.bp-cta:hover {
-  background: var(--bp-brand-hover);
-}
+.bp-cta:hover { background: var(--bp-brand-hover); }
 .bp-cta:disabled {
   opacity: 0.65;
   cursor: not-allowed;
@@ -495,7 +459,69 @@
   margin-top: 10px;
 }
 
-/* Sticky bottom (mobile) */
+.bp-req {
+  color: #dc2626;
+  font-weight: 700;
+}
+.bp-field input.bp-invalid,
+.bp-field select.bp-invalid {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+.bp-field-error {
+  color: #b91c1c;
+  font-size: 0.78rem;
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+.bp-notice-list {
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: var(--bp-radius);
+  padding: 14px 18px;
+  margin-bottom: 22px;
+}
+.bp-notice-item {
+  font-size: 0.875rem;
+  color: #334155;
+  line-height: 1.45;
+  margin-bottom: 8px;
+}
+.bp-notice-item:last-child { margin-bottom: 0; }
+.bp-notice-item strong {
+  color: #0f172a;
+  margin-right: 4px;
+}
+
+.bp-status {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.bp-status--pending {
+  background: #f1f5f9;
+  color: #64748b;
+}
+.bp-status--ok {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.bp-section-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #475569;
+  margin: 8px 0 14px;
+}
+.bp-hint {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin: -4px 0 8px;
+}
+
 .bp-sticky-bar {
   display: none;
   position: fixed;
@@ -522,34 +548,19 @@
   padding: 12px 24px;
 }
 
-/* ========== Responsive ========== */
 @media (max-width: 991.98px) {
-  .bp-layout {
-    grid-template-columns: 1fr;
-  }
-  .bp-sidebar {
-    display: none;
-  }
-  .bp-sticky-bar {
-    display: flex;
-  }
-  .bp-stepper-list {
-    display: none;
-  }
-  .bp-stepper-mobile {
-    display: block;
-  }
+  .bp-layout { grid-template-columns: 1fr; }
+  .bp-sidebar { display: none; }
+  .bp-sticky-bar { display: flex; }
+  .bp-stepper-list { display: none; }
+  .bp-stepper-mobile { display: block; }
   .bp-grid-2,
-  .bp-grid-3 {
-    grid-template-columns: 1fr;
-  }
+  .bp-grid-3 { grid-template-columns: 1fr; }
   .bp-fc-body {
     text-align: left;
     margin-left: 0;
   }
-  .bp-fc-text {
-    text-align: left;
-  }
+  .bp-fc-text { text-align: left; }
 }
 
 @media (max-width: 575.98px) {
@@ -561,15 +572,9 @@
     order: 2;
     width: 100%;
   }
-  .bp-page {
-    padding-bottom: 90px;
-  }
-  .bp-date-row {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
-  .bp-card-helpers {
-    width: 100%;
-  }
+  .bp-page { padding-bottom: 90px; }
+  .bp-date-row { grid-template-columns: 1fr 1fr 1fr; }
+  .bp-card-helpers { width: 100%; }
   .bp-helper-btn {
     flex: 1;
     justify-content: center;
