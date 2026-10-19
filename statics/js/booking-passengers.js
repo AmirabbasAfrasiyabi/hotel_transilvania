@@ -27,10 +27,7 @@
   }
 
   function monthOptions() {
-    const months = [
-      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
-    ];
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     let opts = '<option value="">Month</option>';
     months.forEach(function (m, i) {
       opts += `<option value="${String(i + 1).padStart(2, "0")}">${m}</option>`;
@@ -72,10 +69,9 @@
     <option value="SG">Singapore</option>
   `;
 
-  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
-  const LATIN_NAME_RE = /^[A-Za-z][A-Za-z\s\-'.]{0,98}[A-Za-z]?$/;
+  const EMAIL_RE = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
+  const LATIN_NAME_RE = /^[A-Za-z]+(?:[ \-'][A-Za-z]+)*$/;
   const PASSPORT_RE = /^[A-Za-z0-9]{6,12}$/;
-  const IR_NATIONAL_ID_RE = /^\d{10}$/;
   const GENERIC_ID_RE = /^[A-Za-z0-9\-]{5,20}$/;
 
   function digitsOnly(s) {
@@ -83,29 +79,46 @@
   }
 
   function isValidEmail(email) {
-    return EMAIL_RE.test(String(email || "").trim());
+    const e = String(email || "").trim();
+    if (e.length < 5 || e.length > 254) return false;
+    if (e.includes("..")) return false;
+    return EMAIL_RE.test(e);
   }
 
-  function isValidPhone(phone) {
+  function isValidPhone(phone, countryCode) {
     const d = digitsOnly(phone);
-    return d.length >= 7 && d.length <= 15;
+    if (d.length < 7 || d.length > 15) return false;
+    if (countryCode === "+98") {
+      return /^9\d{9}$/.test(d);
+    }
+    return true;
   }
 
   function isValidLatinName(name) {
-    const n = String(name || "").trim();
+    const n = String(name || "").trim().replace(/\s+/g, " ");
     if (n.length < 2 || n.length > 100) return false;
     return LATIN_NAME_RE.test(n);
   }
 
   function isValidPassport(num) {
-    return PASSPORT_RE.test(String(num || "").trim());
+    return PASSPORT_RE.test(String(num || "").trim().toUpperCase());
+  }
+
+  function iranNationalIdOk(code) {
+    if (!/^\d{10}$/.test(code)) return false;
+    if (/^(\d)\1{9}$/.test(code)) return false;
+    const check = Number(code[9]);
+    let sum = 0;
+    for (let i = 0; i < 9; i++) sum += Number(code[i]) * (10 - i);
+    const r = sum % 11;
+    return (r < 2 && check === r) || (r >= 2 && check + r === 11);
   }
 
   function isValidNationalId(id, nationality) {
     const v = String(id || "").trim();
     if (!v) return true;
     if ((nationality || "").toUpperCase() === "IR") {
-      return IR_NATIONAL_ID_RE.test(v);
+      return iranNationalIdOk(v);
     }
     return GENERIC_ID_RE.test(v);
   }
@@ -115,11 +128,7 @@
     const iso = year + "-" + month + "-" + day;
     const d = new Date(iso + "T00:00:00");
     if (isNaN(d.getTime())) return null;
-    if (
-      d.getFullYear() !== Number(year) ||
-      d.getMonth() + 1 !== Number(month) ||
-      d.getDate() !== Number(day)
-    ) {
+    if (d.getFullYear() !== Number(year) || d.getMonth() + 1 !== Number(month) || d.getDate() !== Number(day)) {
       return null;
     }
     return iso;
@@ -160,12 +169,8 @@
   }
 
   function clearFieldErrors(root) {
-    (root || document).querySelectorAll(".bp-field-error").forEach(function (el) {
-      el.remove();
-    });
-    (root || document).querySelectorAll(".bp-invalid").forEach(function (el) {
-      el.classList.remove("bp-invalid");
-    });
+    (root || document).querySelectorAll(".bp-field-error").forEach(function (el) { el.remove(); });
+    (root || document).querySelectorAll(".bp-invalid").forEach(function (el) { el.classList.remove("bp-invalid"); });
   }
 
   function markInvalid(input, message) {
@@ -186,11 +191,8 @@
     const typeLabel = type.charAt(0).toUpperCase() + type.slice(1);
     const isInfant = type === "infant";
     const ageHint =
-      type === "adult"
-        ? "Adult ticket · 12+ years"
-        : type === "child"
-          ? "Child ticket · 2–11 years"
-          : "Infant · under 2 years";
+      type === "adult" ? "Adult ticket · 12+ years" :
+      type === "child" ? "Child ticket · 2–11 years" : "Infant · under 2 years";
 
     return `
       <div class="bp-card" data-passenger="${index}" data-type="${type}">
@@ -201,7 +203,6 @@
           </h2>
           <span class="bp-status bp-status--pending" data-status>Not completed</span>
         </div>
-
         <div class="bp-card-helpers">
           <button type="button" class="bp-helper-btn" data-action="from-previous" title="Coming soon">
             <i class="fa-solid fa-users"></i> From previous passengers
@@ -210,22 +211,16 @@
             <i class="fa-solid fa-id-card"></i> Fill from passport photo
           </button>
         </div>
-
         <div class="bp-grid-2">
           <div class="bp-field">
             <label>Given names (Latin) <span class="bp-req">*</span></label>
-            <input type="text" name="first_name_${index}" required
-                   placeholder="As on passport" autocomplete="given-name"
-                   maxlength="100" inputmode="text">
+            <input type="text" name="first_name_${index}" required placeholder="As on passport" autocomplete="given-name" maxlength="100">
           </div>
           <div class="bp-field">
             <label>Last name / surname (Latin) <span class="bp-req">*</span></label>
-            <input type="text" name="last_name_${index}" required
-                   placeholder="As on passport" autocomplete="family-name"
-                   maxlength="100" inputmode="text">
+            <input type="text" name="last_name_${index}" required placeholder="As on passport" autocomplete="family-name" maxlength="100">
           </div>
         </div>
-
         <div class="bp-grid-3">
           <div class="bp-field">
             <label>Gender on ID <span class="bp-req">*</span></label>
@@ -245,42 +240,29 @@
           </div>
           <div class="bp-field">
             <label>Nationality <span class="bp-req">*</span></label>
-            <select name="nationality_${index}" required>
-              ${COUNTRY_OPTIONS}
-            </select>
+            <select name="nationality_${index}" required>${COUNTRY_OPTIONS}</select>
           </div>
         </div>
-
         <div class="bp-grid-2">
           <div class="bp-field">
             <label>National ID <span class="bp-optional">(optional)</span></label>
-            <input type="text" name="national_id_${index}"
-                   placeholder="e.g. 10-digit code for Iran" autocomplete="off"
-                   maxlength="20">
+            <input type="text" name="national_id_${index}" placeholder="e.g. 10-digit code for Iran" maxlength="20" autocomplete="off">
           </div>
           <div class="bp-field">
             <label>Frequent flyer program <span class="bp-optional">(optional)</span></label>
-            <input type="text" name="frequent_flyer_${index}"
-                   placeholder="Airline / membership number" maxlength="40">
+            <input type="text" name="frequent_flyer_${index}" placeholder="Airline / membership number" maxlength="40">
           </div>
         </div>
-
-        ${
-          !isInfant
-            ? `
+        ${!isInfant ? `
         <h3 class="bp-section-title">Travel document (passport)</h3>
         <div class="bp-grid-3">
           <div class="bp-field">
             <label>Passport number <span class="bp-req">*</span></label>
-            <input type="text" name="passport_number_${index}" required
-                   placeholder="A12345678" autocomplete="off"
-                   maxlength="12" style="text-transform:uppercase">
+            <input type="text" name="passport_number_${index}" required placeholder="A12345678" maxlength="12" style="text-transform:uppercase" autocomplete="off">
           </div>
           <div class="bp-field">
             <label>Issuing country <span class="bp-req">*</span></label>
-            <select name="passport_country_${index}" required>
-              ${COUNTRY_OPTIONS}
-            </select>
+            <select name="passport_country_${index}" required>${COUNTRY_OPTIONS}</select>
           </div>
           <div class="bp-field">
             <label>Passport expiry <span class="bp-req">*</span></label>
@@ -292,9 +274,7 @@
           </div>
         </div>
         <p class="bp-hint">Passport should remain valid for at least 6 months after your trip ends.</p>
-        `
-            : ""
-        }
+        ` : ""}
       </div>
     `;
   }
@@ -311,66 +291,46 @@
   function collectPassengers() {
     const cards = container.querySelectorAll("[data-passenger]");
     const list = [];
-
     cards.forEach(function (card) {
       const index = card.getAttribute("data-passenger");
       const type = card.getAttribute("data-type") || "adult";
-
       const val = function (name) {
         const el = card.querySelector(`[name="${name}_${index}"]`);
         return el ? String(el.value || "").trim() : "";
       };
-
-      const dob = buildDate(val("dob_day"), val("dob_month"), val("dob_year"));
-      const passportExpiry = buildDate(
-        val("passport_expiry_day"),
-        val("passport_expiry_month"),
-        val("passport_expiry_year")
-      );
-
       list.push({
         order: Number(index),
         passenger_type: type,
-        first_name: val("first_name"),
-        last_name: val("last_name"),
+        first_name: val("first_name").replace(/\s+/g, " "),
+        last_name: val("last_name").replace(/\s+/g, " "),
         gender: val("gender"),
-        date_of_birth: dob,
+        date_of_birth: buildDate(val("dob_day"), val("dob_month"), val("dob_year")),
         nationality: val("nationality"),
         national_id: val("national_id") || null,
         frequent_flyer: val("frequent_flyer") || null,
         passport_number: (val("passport_number") || "").toUpperCase(),
         passport_issuing_country: val("passport_country"),
-        passport_expiry: passportExpiry,
+        passport_expiry: buildDate(val("passport_expiry_day"), val("passport_expiry_month"), val("passport_expiry_year")),
         _card: card,
         _index: index,
       });
     });
-
     return list;
   }
 
   function validatePassengers(passengers) {
     clearFieldErrors(container);
-
     for (const p of passengers) {
       const card = p._card;
       const idx = p._index;
-      const q = function (name) {
-        return card.querySelector(`[name="${name}_${idx}"]`);
-      };
+      const q = function (name) { return card.querySelector(`[name="${name}_${idx}"]`); };
 
       if (!isValidLatinName(p.first_name)) {
-        markInvalid(
-          q("first_name"),
-          "Enter given names in Latin letters only (as on passport), min 2 characters."
-        );
+        markInvalid(q("first_name"), "Latin letters only, min 2 characters (as on passport).");
         return "Passenger " + idx + ": invalid given names.";
       }
       if (!isValidLatinName(p.last_name)) {
-        markInvalid(
-          q("last_name"),
-          "Enter last name in Latin letters only (as on passport), min 2 characters."
-        );
+        markInvalid(q("last_name"), "Latin letters only, min 2 characters (as on passport).");
         return "Passenger " + idx + ": invalid last name.";
       }
       if (!p.gender) {
@@ -385,7 +345,6 @@
         markInvalid(q("dob_day"), "Date of birth cannot be in the future.");
         return "Passenger " + idx + ": date of birth cannot be in the future.";
       }
-
       const age = ageFromDob(p.date_of_birth);
       if (p.passenger_type === "adult" && age !== null && age < 12) {
         markInvalid(q("dob_day"), "Adult passengers must be 12 years or older.");
@@ -399,28 +358,19 @@
         markInvalid(q("dob_day"), "Infants must be under 2 years.");
         return "Passenger " + idx + ": infant must be under 2 years.";
       }
-
       if (!p.nationality) {
         markInvalid(q("nationality"), "Nationality is required.");
         return "Passenger " + idx + ": nationality is required.";
       }
-
       if (!isValidNationalId(p.national_id, p.nationality)) {
-        markInvalid(
-          q("national_id"),
-          p.nationality === "IR"
-            ? "Iranian national ID must be exactly 10 digits."
-            : "National ID format is invalid (5–20 letters/numbers)."
-        );
+        markInvalid(q("national_id"), p.nationality === "IR"
+          ? "Invalid Iranian national ID (10 digits + valid checksum)."
+          : "National ID format is invalid (5–20 letters/numbers).");
         return "Passenger " + idx + ": invalid national ID.";
       }
-
       if (p.passenger_type !== "infant") {
         if (!isValidPassport(p.passport_number)) {
-          markInvalid(
-            q("passport_number"),
-            "Passport number must be 6–12 letters or digits (no spaces)."
-          );
+          markInvalid(q("passport_number"), "Passport number must be 6–12 letters or digits.");
           return "Passenger " + idx + ": invalid passport number.";
         }
         if (!p.passport_issuing_country) {
@@ -436,18 +386,10 @@
           return "Passenger " + idx + ": passport has expired.";
         }
         if (passportExpiryTooSoon(p.passport_expiry)) {
-          markInvalid(
-            q("passport_expiry_day"),
-            "Passport should be valid for at least 6 months from today."
-          );
-          return (
-            "Passenger " +
-            idx +
-            ": passport must remain valid for at least 6 months."
-          );
+          markInvalid(q("passport_expiry_day"), "Passport must be valid for at least 6 months.");
+          return "Passenger " + idx + ": passport must remain valid for at least 6 months.";
         }
       }
-
       const statusEl = card.querySelector("[data-status]");
       if (statusEl) {
         statusEl.textContent = "Completed";
@@ -459,12 +401,10 @@
 
   function validateContact() {
     clearFieldErrors(document.getElementById("bpContactCard") || document);
-
     const nameEl = document.getElementById("contactName");
     const emailEl = document.getElementById("contactEmail");
     const phoneEl = document.getElementById("contactPhone");
     const codeEl = document.getElementById("countryCode");
-
     const name = ((nameEl && nameEl.value) || "").trim();
     const email = ((emailEl && emailEl.value) || "").trim();
     const phone = ((phoneEl && phoneEl.value) || "").trim();
@@ -478,14 +418,13 @@
       markInvalid(emailEl, "Enter a valid email address (e.g. name@example.com).");
       return "Invalid email format.";
     }
-    if (!isValidPhone(phone)) {
-      markInvalid(
-        phoneEl,
-        "Mobile number must contain 7 to 15 digits (without country code)."
-      );
-      return "Invalid mobile number (7–15 digits required).";
+    if (!isValidPhone(phone, code)) {
+      const msg = code === "+98"
+        ? "Iranian mobile must be 10 digits starting with 9 (e.g. 9123456789)."
+        : "Mobile number must contain 7 to 15 digits (without country code).";
+      markInvalid(phoneEl, msg);
+      return msg;
     }
-
     return {
       contact_full_name: name,
       contact_email: email.toLowerCase(),
@@ -495,10 +434,7 @@
 
   function showError(msg) {
     const el = document.getElementById("bpFormError");
-    if (!el) {
-      alert(msg);
-      return;
-    }
+    if (!el) { alert(msg); return; }
     el.textContent = msg;
     el.hidden = false;
     el.style.display = "block";
@@ -519,8 +455,7 @@
       const firstName = document.querySelector('[name="first_name_1"]');
       const lastName = document.querySelector('[name="last_name_1"]');
       if (firstName && lastName) {
-        document.getElementById("contactName").value =
-          (firstName.value + " " + lastName.value).trim();
+        document.getElementById("contactName").value = (firstName.value + " " + lastName.value).trim();
       }
     });
   }
@@ -552,25 +487,17 @@
     const slice = slices[0] || {};
     const dep = slice.departure || {};
     const arr = slice.arrival || {};
-
     function setText(id, value) {
       const el = document.getElementById(id);
       if (!el || value == null || value === "") return;
       el.textContent = value;
     }
-
     function formatDate(iso) {
       if (!iso) return "";
       const d = new Date(String(iso).slice(0, 10) + "T00:00:00");
       if (isNaN(d.getTime())) return String(iso);
-      return d.toLocaleDateString("en-GB", {
-        weekday: "short",
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-      });
+      return d.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", year: "numeric" });
     }
-
     const logoEl = document.getElementById("bpFcLogo");
     const fallback = document.getElementById("bpFcLogoFallback");
     if (logoEl && airline.logo) {
@@ -579,39 +506,25 @@
       logoEl.hidden = false;
       if (fallback) fallback.hidden = true;
     }
-
     const originLabel = dep.city || dep.airport || booking.origin || "—";
     const destLabel = arr.city || arr.airport || booking.destination || "—";
     const titleEl = document.getElementById("bpFcTitle");
     if (titleEl) {
-      titleEl.innerHTML =
-        originLabel + ' <span class="bp-fc-arrow">→</span> ' + destLabel;
+      titleEl.innerHTML = originLabel + ' <span class="bp-fc-arrow">→</span> ' + destLabel;
     }
-
     const datePart = formatDate(dep.date);
     const timePart = dep.time || "";
-    let subtitle = "";
-    if (datePart && timePart) subtitle = datePart + " — " + timePart;
-    else if (datePart) subtitle = datePart;
-    else if (timePart) subtitle = timePart;
+    let subtitle = datePart && timePart ? datePart + " — " + timePart : datePart || timePart;
     if (subtitle) setText("bpFcSubtitle", subtitle);
-
     if (airline.name) setText("bpFcAirline", airline.name);
-
     const duration = slice.duration_text || "";
     if (duration) setText("bpFcDuration", " · " + duration);
-
     const stops = Number(slice.stops || 0);
-    const stopsText =
-      stops === 0 ? "Direct" : stops + (stops === 1 ? " stop" : " stops");
+    const stopsText = stops === 0 ? "Direct" : stops + (stops === 1 ? " stop" : " stops");
     setText("bpFcStops", " · " + stopsText);
-
     const side = document.getElementById("bpSidebarFlight");
     if (side) {
-      side.textContent =
-        (dep.airport || booking.origin || "—") +
-        " → " +
-        (arr.airport || booking.destination || "—");
+      side.textContent = (dep.airport || booking.origin || "—") + " → " + (arr.airport || booking.destination || "—");
     }
     const sideMeta = document.getElementById("bpSidebarMeta");
     if (sideMeta) {
@@ -622,31 +535,16 @@
       bits.push(stopsText);
       sideMeta.textContent = bits.join(" · ");
     }
-
-    const card = document.getElementById("bpFlightCard");
-    if (card) {
-      card.style.display = "flex";
-      card.hidden = false;
-    }
   })();
 
   async function submitPassengers() {
     clearError();
-
     const passengers = collectPassengers();
     const validationError = validatePassengers(passengers);
-    if (validationError) {
-      showError(validationError);
-      return;
-    }
-
+    if (validationError) { showError(validationError); return; }
     const contactOrError = validateContact();
-    if (typeof contactOrError === "string") {
-      showError(contactOrError);
-      return;
-    }
+    if (typeof contactOrError === "string") { showError(contactOrError); return; }
     const contact = contactOrError;
-
     const payloadPassengers = passengers.map(function (p) {
       return {
         order: p.order,
@@ -663,36 +561,25 @@
         passport_expiry: p.passport_expiry,
       };
     });
-
     const btn = document.getElementById("bpContinueBtn");
     const stickyBtn = document.getElementById("bpStickyContinue");
     if (btn) btn.disabled = true;
     if (stickyBtn) stickyBtn.disabled = true;
-
     try {
       const res = await fetch(`/booking/passengers/${booking.id}/`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": getCookie("csrftoken"),
-        },
+        headers: { "Content-Type": "application/json", "X-CSRFToken": getCookie("csrftoken") },
         credentials: "same-origin",
         body: JSON.stringify({ passengers: payloadPassengers, contact }),
       });
-
       const data = await res.json();
       if (!res.ok || !data.ok) {
         showError(data.error || "Could not save passenger details.");
         return;
       }
-
-      if (data.redirect) {
-        window.location.href = data.redirect;
-      } else if (data.next_url) {
-        window.location.href = data.next_url;
-      } else {
-        window.location.href = `/booking/review/${booking.id}/`;
-      }
+      if (data.redirect) window.location.href = data.redirect;
+      else if (data.next_url) window.location.href = data.next_url;
+      else window.location.href = `/booking/review/${booking.id}/`;
     } catch (err) {
       showError("Network error. Please try again.");
     } finally {
@@ -702,7 +589,6 @@
   }
 
   renderPassengers();
-
   const continueBtn = document.getElementById("bpContinueBtn");
   const stickyContinue = document.getElementById("bpStickyContinue");
   if (continueBtn) continueBtn.addEventListener("click", submitPassengers);
