@@ -1,0 +1,239 @@
+/* Travel Services page (extends booking-passengers visual language) */
+
+.svc-card { margin-bottom: 20px; }
+.svc-lead {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin: 0 0 18px;
+  line-height: 1.45;
+}
+.svc-ok { color: #16a34a; margin-right: 6px; }
+
+.svc-bag-legend {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 22px;
+}
+.svc-bag-type {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+.svc-bag-type i {
+  font-size: 1.4rem;
+  color: var(--bp-brand, #0d6efd);
+  margin-top: 2px;
+}
+.svc-bag-type strong {
+  display: block;
+  font-size: 0.9rem;
+  color: #0f172a;
+}
+.svc-bag-type span {
+  font-size: 0.78rem;
+  color: #94a3b8;
+}
+
+.svc-segment {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.svc-segment-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: #f1f5f9;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #0f172a;
+}
+.svc-segment-head .svc-dir {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: #dbeafe;
+  color: #1d4ed8;
+  text-transform: uppercase;
+}
+.svc-pax-row {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr 1fr;
+  gap: 12px;
+  align-items: center;
+  padding: 14px 16px;
+  border-top: 1px solid #e2e8f0;
+}
+.svc-pax-name {
+  font-weight: 600;
+  color: #1e293b;
+  font-size: 0.9rem;
+}
+.svc-pax-name small {
+  display: block;
+  font-weight: 400;
+  color: #94a3b8;
+  font-size: 0.78rem;
+}
+.svc-included {
+  font-size: 0.85rem;
+  color: #16a34a;
+  font-weight: 600;
+}
+.svc-not-included {
+  font-size: 0.85rem;
+  color: #ea580c;
+  font-weight: 600;
+}
+.svc-stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 4px;
+  background: #fff;
+}
+.svc-stepper button {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 8px;
+  background: #f1f5f9;
+  color: #334155;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.svc-stepper button:hover { background: #e2e8f0; }
+.svc-stepper button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.svc-stepper span {
+  min-width: 24px;
+  text-align: center;
+  font-weight: 700;
+  color: #0f172a;
+}
+.svc-col-label {
+  font-size: 0.72rem;
+  color: #94a3b8;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.svc-price-tag {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+.svc-seat-grid { display: grid; gap: 12px; }
+.svc-seat-card {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+.svc-seat-card:last-child { border-bottom: none; }
+.svc-seat-opts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.svc-seat-opts label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+  background: #fff;
+}
+.svc-seat-opts input { accent-color: var(--bp-brand, #0d6efd); }
+.svc-seat-opts label:has(input:checked) {
+  border-color: var(--bp-brand, #0d6efd);
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.svc-extras { display: grid; gap: 12px; }
+.svc-extra {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  cursor: pointer;
+  background: #fff;
+}
+.svc-extra:hover { border-color: #cbd5e1; }
+.svc-extra input {
+  margin-top: 3px;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--bp-brand, #0d6efd);
+}
+.svc-extra strong {
+  display: block;
+  font-size: 0.95rem;
+  color: #0f172a;
+}
+.svc-extra span {
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+.svc-actions-row { margin: 8px 0 24px; }
+.svc-back {
+  color: #475569;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.svc-back:hover { color: var(--bp-brand, #0d6efd); }
+
+.svc-skip {
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px;
+  background: transparent;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+}
+.svc-skip:hover {
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+@media (max-width: 991.98px) {
+  .svc-bag-legend { grid-template-columns: 1fr; }
+  .svc-pax-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .svc-seat-card { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 575.98px) {
+  .svc-pax-row { grid-template-columns: 1fr; }
+}
