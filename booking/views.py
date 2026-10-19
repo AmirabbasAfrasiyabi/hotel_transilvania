@@ -97,6 +97,59 @@ def passenger_details_view(request, booking_id: int):
         {
             "ok": True,
             "booking_id": booking.pk,
+            "next_url": f"/booking/services/{booking.pk}/",
+        }
+    )
+
+
+@require_http_methods(["GET", "POST"])
+def travel_services_view(request, booking_id: int):
+    try:
+        booking = BookingService.get_booking_for_request(booking_id, request)
+    except BookingServiceError as exc:
+        if exc.code in ("not_found", "forbidden", "expired"):
+            return redirect("transport:flight_results")
+        return render(
+            request,
+            "booking/services.html",
+            {"error": exc.message, "booking": None},
+        )
+
+    if request.method == "GET":
+        passengers = list(
+            booking.passengers.all().values(
+                "id",
+                "order",
+                "first_name",
+                "last_name",
+                "passenger_type",
+            )
+        )
+        return render(
+            request,
+            "booking/services.html",
+            {
+                "booking": booking,
+                "offer": booking.offer_snapshot,
+                "passengers_json": passengers,
+                "error": None,
+            },
+        )
+
+    try:
+        payload = json.loads(request.body.decode("utf-8") or "{}")
+        BookingService.save_travel_services(booking, payload)
+    except BookingServiceError as exc:
+        return JsonResponse(
+            {"ok": False, "error": exc.message, "code": exc.code}, status=400
+        )
+    except json.JSONDecodeError:
+        return JsonResponse({"ok": False, "error": "Invalid JSON."}, status=400)
+
+    return JsonResponse(
+        {
+            "ok": True,
+            "booking_id": booking.pk,
             "next_url": f"/booking/review/{booking.pk}/",
         }
     )
