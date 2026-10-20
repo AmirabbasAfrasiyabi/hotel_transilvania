@@ -1,1 +1,1 @@
-PLACEHOLDER_WILL_FAIL
+@/home/workdir/artifacts/hero-search-fixed.js
