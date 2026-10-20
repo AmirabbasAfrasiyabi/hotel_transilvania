@@ -1,0 +1,89 @@
+--- a/statics/js/hero-search.js	2026-10-20 11:31:06.579000000 +0000
++++ b/statics/js/hero-search.js	2026-10-20 11:39:23.536000000 +0000
+@@ -410,7 +410,10 @@
+ 
+     if (calRangeHint) {
+       if (isDualTriggerMode) {
+-        if (!rangeStart) {
++        if (!isRangeMode) {
++          // One-way: single departure date only
++          calRangeHint.textContent = rangeStart ? DATE_WORDS.startCap + ' ' + formatShort(rangeStart) : '';
++        } else if (!rangeStart) {
+           calRangeHint.textContent = '';
+         } else if (!rangeEnd) {
+           calRangeHint.textContent = DATE_WORDS.startCap + ' ' + formatShort(rangeStart) + ' — now pick a ' + DATE_WORDS.end + ' date';
+@@ -531,7 +534,17 @@
+       var picked = new Date(dayBtn.getAttribute('data-date') + 'T00:00:00');
+ 
+       if (isDualTriggerMode) {
+-        // Check-out (pendingField "end") is only accepted if it's
++        // One-way (isRangeMode=false): only need departure date. Confirm with Done
++        // (or outside-click). Do NOT auto-close on single click — that caused the
++        // confusing "double-click selects without Done" behaviour.
++        if (!isRangeMode) {
++          rangeStart = picked;
++          rangeEnd = null;
++          pendingField = 'start';
++          renderCalendar();
++          return;
++        }
++        // Round-trip: Check-out (pendingField "end") is only accepted if it's
+         // strictly after Check-in — the calendar already disables
+         // anything else, this is just a safety net.
+         // Google Flights behaviour: calendar STAYS OPEN until both
+@@ -555,7 +568,7 @@
+         rangeStart = picked;
+         rangeEnd = null;
+         renderCalendar();
+-        window.setTimeout(closeCalendar, 250);
++        // Single-trigger one-way: still confirm with Done (no auto-close)
+         return;
+       }
+ 
+@@ -576,20 +589,19 @@
+ 
+     if (calDoneBtn) {
+       calDoneBtn.addEventListener('click', function () {
+-        // Only allow Done to close when the required ends are set
+-        if (isRangeMode && isDualTriggerMode) {
+-          if (!rangeStart || !rangeEnd) return; // keep open until both chosen
+-        }
++        // One-way: only departure is required. Round-trip dual: both ends required.
++        if (!rangeStart) return;
++        if (isRangeMode && isDualTriggerMode && !rangeEnd) return;
+         closeCalendar();
+       });
+     }
+ 
+     document.addEventListener('click', function (e) {
+-      // Outside-click closes only when both ends of a range are set
+-      // (or one-way / single-date mode). Otherwise the calendar stays open
+-      // so the user can finish picking departure + return.
++      // Outside-click closes only when required dates are set
++      // (one-way needs depart; round-trip dual needs both).
+       if (!calendarClickedOutside(e)) return;
+-      if (isRangeMode && isDualTriggerMode && (!rangeStart || !rangeEnd)) return;
++      if (!rangeStart) return;
++      if (isRangeMode && isDualTriggerMode && !rangeEnd) return;
+       closeCalendar();
+     });
+ 
+@@ -648,7 +660,10 @@
+ 
+   // Requirement #7/#9: One-way hides/disables the Return field entirely;
+   // Round-trip brings it back. Clears any previously chosen return date.
++  // Also keeps isRangeMode in sync so the calendar / Done button treat
++  // one-way as a single-date pick (not a range that waits for return).
+   function setReturnFieldVisible(showReturn) {
++    isRangeMode = !!showReturn;
+     if (returnFieldEl) returnFieldEl.style.display = showReturn ? '' : 'none';
+     if (!showReturn) {
+       rangeEnd = null;
+@@ -656,6 +671,7 @@
+       if (returnHiddenInput) returnHiddenInput.value = '';
+       updateTriggerAndHidden();
+     }
++    if (calendarPopup && !calendarPopup.hidden) renderCalendar();
+   }
+ 
+   if (tripTypeGroup && dateTrigger) {
