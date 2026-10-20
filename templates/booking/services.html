@@ -1,0 +1,259 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Travel Services{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/booking-passengers.css' %}">
+<link rel="stylesheet" href="{% static 'css/booking-services.css' %}">
+
+<style>
+  #header { display: none !important; }
+  #footer, footer { display: none !important; }
+</style>
+
+<header class="bp-simple-header">
+  <div class="container">
+    <div class="bp-header-inner">
+      <a href="{% url 'website:index' %}" class="bp-logo">
+        <img src="{% static 'img/logo.png' %}" alt="Logo">
+      </a>
+      <div class="bp-user-nav">
+        {% if user.is_authenticated %}
+          <span>{{ user.get_full_name|default:user.username }}</span>
+          <a href="{% url 'account:logout' %}">Logout</a>
+        {% else %}
+          <a href="{% url 'account:login' %}">Login</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="bp-page">
+  <div class="container">
+
+    <nav class="bp-stepper" aria-label="Booking steps">
+      <ol class="bp-stepper-list">
+        <li class="bp-step is-completed">
+          <span class="bp-step-icon"><i class="fa-solid fa-check"></i></span>
+          <span class="bp-step-label">Select Flight</span>
+        </li>
+        <li class="bp-step is-completed">
+          <span class="bp-step-icon"><i class="fa-solid fa-check"></i></span>
+          <span class="bp-step-label">Passenger Details</span>
+        </li>
+        <li class="bp-step is-active">
+          <span class="bp-step-icon"><i class="fa-solid fa-suitcase"></i></span>
+          <span class="bp-step-label">Travel Services</span>
+        </li>
+        <li class="bp-step">
+          <span class="bp-step-icon"><i class="fa-solid fa-clipboard-check"></i></span>
+          <span class="bp-step-label">Review & Confirm</span>
+        </li>
+        <li class="bp-step">
+          <span class="bp-step-icon"><i class="fa-solid fa-credit-card"></i></span>
+          <span class="bp-step-label">Payment</span>
+        </li>
+        <li class="bp-step">
+          <span class="bp-step-icon"><i class="fa-solid fa-ticket"></i></span>
+          <span class="bp-step-label">Ticket Issuance</span>
+        </li>
+      </ol>
+      <div class="bp-stepper-mobile">Step 3 of 6 — Travel Services</div>
+    </nav>
+
+    {% if error %}
+      <div class="bp-alert" style="margin-bottom: 1rem;">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <div><strong>{{ error }}</strong></div>
+      </div>
+    {% endif %}
+
+    {% if booking %}
+    <div class="bp-layout">
+      <div class="bp-main">
+
+        <h1 class="bp-title">
+          <i class="fa-solid fa-suitcase" aria-hidden="true"></i>
+          Travel services
+        </h1>
+        <p class="bp-subtitle">Add baggage per passenger and segment, choose seat preferences and optional extras.</p>
+
+        <div class="bp-card svc-card">
+          <h2 class="bp-card-title">Baggage allowance</h2>
+          <p class="svc-lead">
+            <i class="fa-solid fa-circle-check svc-ok"></i>
+            Save more by adding baggage allowance now. Bring along everything you need for your journey.
+          </p>
+          <div class="svc-bag-legend">
+            <div class="svc-bag-type">
+              <i class="fa-solid fa-briefcase"></i>
+              <strong>Personal item</strong>
+              <span>Size limit per bag: 40 × 25 × 20 cm</span>
+            </div>
+            <div class="svc-bag-type">
+              <i class="fa-solid fa-suitcase-rolling svc-warn"></i>
+              <strong>Carry-on baggage</strong>
+              <span class="svc-view-details">Add below if not included</span>
+            </div>
+            <div class="svc-bag-type">
+              <i class="fa-solid fa-suitcase svc-warn"></i>
+              <strong>Checked baggage</strong>
+              <span class="svc-view-details">Add below if not included</span>
+            </div>
+          </div>
+          <div id="svcBaggage"></div>
+        </div>
+
+        <div class="bp-card svc-card">
+          <h2 class="bp-card-title">Seat preference</h2>
+          <p class="svc-lead">
+            Choose a preference per passenger. Exact paid seat maps (if offered by the airline) can be selected later when available from the carrier.
+          </p>
+          <div id="svcSeats"></div>
+        </div>
+
+        <div class="bp-card svc-card">
+          <h2 class="bp-card-title">Frequent flyer (optional)</h2>
+          <p class="svc-lead">Add membership numbers so the airline can credit miles when possible.</p>
+          <div id="svcFrequentFlyer"></div>
+        </div>
+
+        <div class="bp-card svc-card">
+          <h2 class="bp-card-title">Optional extras</h2>
+          <div class="svc-extras">
+            <label class="svc-extra">
+              <input type="checkbox" id="extraMeal" name="extra_meal">
+              <div>
+                <strong>Special meal request</strong>
+                <span>Vegetarian, vegan, gluten-free, etc. (subject to airline)</span>
+              </div>
+            </label>
+            <div class="bp-field" id="mealTypeWrap" hidden>
+              <label>Meal type</label>
+              <select id="mealType">
+                <option value="">Select</option>
+                <option value="VGML">Vegetarian</option>
+                <option value="VLML">Lacto-ovo vegetarian</option>
+                <option value="VGML_V">Vegan</option>
+                <option value="GFML">Gluten-free</option>
+                <option value="DBML">Diabetic</option>
+                <option value="CHML">Child meal</option>
+                <option value="BBML">Baby meal</option>
+              </select>
+            </div>
+            <label class="svc-extra">
+              <input type="checkbox" id="extraAssist" name="extra_assist">
+              <div>
+                <strong>Special assistance</strong>
+                <span>Wheelchair, mobility help, or other assistance at the airport</span>
+              </div>
+            </label>
+            <div class="bp-field" id="assistNoteWrap" hidden>
+              <label>Assistance notes</label>
+              <input type="text" id="assistNote" maxlength="200" placeholder="Brief description (optional)">
+            </div>
+            <label class="svc-extra">
+              <input type="checkbox" id="extraPriority" name="extra_priority">
+              <div>
+                <strong>Priority boarding</strong>
+                <span>Board earlier when offered by the airline</span>
+              </div>
+            </label>
+            <label class="svc-extra">
+              <input type="checkbox" id="extraInsurance" name="extra_insurance">
+              <div>
+                <strong>Travel protection (optional)</strong>
+                <span>Cancellation and medical cover — details at payment</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="svc-actions-row">
+          <a href="{% url 'booking:passengers' booking_id=booking.id %}" class="svc-back">
+            <i class="fa-solid fa-arrow-left"></i> Back to passengers
+          </a>
+        </div>
+      </div>
+
+      <aside class="bp-sidebar">
+        <div class="bp-sidebar-card">
+          <div class="bp-side-route" id="svcSidebarRoute">
+            {{ booking.origin_code|default:"—" }} → {{ booking.destination_code|default:"—" }}
+          </div>
+          <div class="bp-side-meta" id="svcSidebarMeta">
+            {{ booking.adults }} adult{% if booking.adults != 1 %}s{% endif %}
+            {% if booking.children %} · {{ booking.children }} child{% if booking.children != 1 %}ren{% endif %}{% endif %}
+            {% if booking.infants %} · {{ booking.infants }} infant{% if booking.infants != 1 %}s{% endif %}{% endif %}
+          </div>
+          <div class="bp-price-row">
+            <span>Ticket</span>
+            <span id="svcTicketPrice">{{ booking.base_price }} {{ booking.currency }}</span>
+          </div>
+          <div class="bp-price-row">
+            <span>Taxes & fees</span>
+            <span id="svcTaxes">{{ booking.taxes }} {{ booking.currency }}</span>
+          </div>
+          <div class="bp-price-row">
+            <span>Extra services</span>
+            <span id="svcExtrasPrice">0.00 {{ booking.currency }}</span>
+          </div>
+          <hr>
+          <div class="bp-price-row bp-price-total">
+            <span>Total</span>
+            <span id="svcTotal">{{ booking.total_price }} {{ booking.currency }}</span>
+          </div>
+          <p class="bp-side-note">You can skip extras and continue — baggage and seats can sometimes be added later with the airline.</p>
+          <button type="button" class="bp-cta" id="svcContinueBtn">Continue to review</button>
+          <button type="button" class="svc-skip" id="svcSkipBtn">Skip services</button>
+          <p id="svcFormError" class="bp-form-error" hidden></p>
+        </div>
+      </aside>
+    </div>
+    {% else %}
+      <div class="bp-alert">
+        <div>
+          <strong>No booking found.</strong>
+          <p><a href="{% url 'transport:out' %}">Search for flights again</a></p>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<div class="bp-sticky-bar" id="bpStickyBar">
+  <div class="bp-sticky-price" id="svcStickyPrice">
+    {% if booking %}{{ booking.total_price }} {{ booking.currency }}{% else %}—{% endif %}
+  </div>
+  <button type="button" class="bp-cta" id="svcStickyContinue">Continue</button>
+</div>
+
+{% if booking %}
+  {{ offer|json_script:"booking-offer-data" }}
+  {{ passengers_json|json_script:"booking-passengers-data" }}
+  <script>
+    window.BOOKING = {
+      id: {{ booking.id }},
+      adults: {{ booking.adults }},
+      children: {{ booking.children }},
+      infants: {{ booking.infants }},
+      basePrice: "{{ booking.base_price }}",
+      taxes: "{{ booking.taxes }}",
+      servicePrice: "{{ booking.service_price }}",
+      totalPrice: "{{ booking.total_price }}",
+      currency: "{{ booking.currency }}",
+      origin: "{{ booking.origin_code|default:'' }}",
+      destination: "{{ booking.destination_code|default:'' }}"
+    };
+    try {
+      window.BOOKING_OFFER = JSON.parse(document.getElementById("booking-offer-data").textContent);
+    } catch (e) { window.BOOKING_OFFER = {}; }
+    try {
+      window.BOOKING_PASSENGERS = JSON.parse(document.getElementById("booking-passengers-data").textContent);
+    } catch (e) { window.BOOKING_PASSENGERS = []; }
+  </script>
+  <script src="{% static 'js/booking-services.js' %}"></script>
+{% endif %}
+{% endblock %}
