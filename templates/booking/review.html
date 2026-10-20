@@ -1,42 +1,47 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Review booking{% endblock %}
+{% block title %}Review & Confirm{% endblock %}
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/booking-passengers.css' %}">
 
 <style>
-  #header { display: none; }
-  .rv-page { max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
+  #header { display: none !important; }
+  #footer, footer { display: none !important; }
+  .rv-page { max-width: 860px; margin: 0 auto; padding: 0 1rem 3rem; }
   .rv-card {
-    background: #fff;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 1.25rem 1.5rem;
-    margin-bottom: 1.25rem;
+    background: #fff; border: 1px solid var(--bp-paper-dark, #E7D9C2);
+    border-radius: 14px; padding: 1.25rem 1.5rem; margin-bottom: 1.25rem;
+    box-shadow: 0 4px 16px rgba(18, 41, 61, 0.06);
   }
-  .rv-alert {
-    padding: 1rem 1.25rem;
-    border-radius: 10px;
-    margin-bottom: 1.25rem;
-  }
+  .rv-card h2 { margin: 0 0 0.85rem; font-size: 1.05rem; color: var(--bp-navy, #12293D); display: flex; align-items: center; gap: 8px; }
+  .rv-alert { padding: 1rem 1.25rem; border-radius: 12px; margin-bottom: 1.25rem; font-size: 0.95rem; }
   .rv-alert--warn { background: #fffbeb; border: 1px solid #fcd34d; color: #92400e; }
   .rv-alert--error { background: #fef2f2; border: 1px solid #fca5a5; color: #991b1b; }
-  .rv-actions { display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; margin-top: 1.5rem; }
+  .rv-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; margin-top: 1.25rem; }
   .rv-btn {
-    display: inline-block;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    border: none;
-    font-weight: 600;
-    cursor: pointer;
-    text-decoration: none;
+    display: inline-flex; align-items: center; gap: 8px; padding: 0.8rem 1.4rem;
+    border-radius: 12px; border: none; font-weight: 700; font-size: 0.95rem;
+    cursor: pointer; text-decoration: none; transition: background 0.15s, opacity 0.15s;
   }
-  .rv-btn--primary { background: #0f766e; color: #fff; }
+  .rv-btn--primary { background: var(--bp-brand, #FF6F59); color: #fff; }
+  .rv-btn--primary:hover { background: #e85a45; color: #fff; }
   .rv-btn--primary:disabled { opacity: 0.6; cursor: not-allowed; }
-  .rv-btn--ghost { background: transparent; color: #0f766e; border: 1px solid #0f766e; }
-  .rv-price { font-size: 1.35rem; font-weight: 700; }
+  .rv-btn--ghost { background: #fff; color: var(--bp-navy, #12293D); border: 1px solid var(--bp-paper-dark, #E7D9C2); }
+  .rv-btn--ghost:hover { border-color: var(--bp-brand, #FF6F59); color: var(--bp-brand, #FF6F59); }
+  .rv-meta { color: var(--bp-ink-soft, #6B6560); font-size: 0.88rem; margin: 0.25rem 0; }
+  .rv-list { list-style: none; padding: 0; margin: 0; }
+  .rv-list li { padding: 0.55rem 0; border-bottom: 1px solid #f1ebe3; font-size: 0.95rem; color: var(--bp-ink, #2C2A28); }
+  .rv-list li:last-child { border-bottom: none; }
+  .rv-edit { font-size: 0.85rem; font-weight: 600; color: var(--bp-brand, #FF6F59); text-decoration: none; margin-left: auto; }
+  .rv-edit:hover { text-decoration: underline; }
+  .rv-row-head { display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem; }
+  .rv-badge { display: inline-block; font-size: 0.72rem; font-weight: 700; padding: 3px 8px; border-radius: 6px; background: rgba(255, 111, 89, 0.12); color: var(--bp-brand, #FF6F59); text-transform: uppercase; }
+  .rv-price-rows { margin-top: 0.75rem; }
+  .rv-price-row { display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--bp-ink-soft, #6B6560); padding: 4px 0; }
+  .rv-price-row.total { font-size: 1.1rem; font-weight: 800; color: var(--bp-navy, #12293D); border-top: 1px solid var(--bp-paper-dark, #E7D9C2); margin-top: 8px; padding-top: 10px; }
+  .rv-terms { font-size: 0.82rem; color: var(--bp-ink-soft, #6B6560); margin-top: 1rem; line-height: 1.45; }
 </style>
 
 <header class="bp-simple-header">
@@ -45,102 +50,105 @@
       <a href="{% url 'website:index' %}" class="bp-logo">
         <img src="{% static 'img/logo.png' %}" alt="Logo">
       </a>
+      <div class="bp-user-nav">
+        {% if user.is_authenticated %}
+          <span>{{ user.get_full_name|default:user.username }}</span>
+          <a href="{% url 'account:logout' %}">Logout</a>
+        {% endif %}
+      </div>
     </div>
   </div>
 </header>
 
-<section class="rv-page">
-  <nav class="bp-stepper" style="margin-bottom: 1.5rem;">
-    <ol class="bp-stepper-list">
-      <li class="bp-step is-completed">
-        <span class="bp-step-icon"><i class="fa-solid fa-check"></i></span>
-        <span class="bp-step-label">Select Flight</span>
-      </li>
-      <li class="bp-step is-completed">
-        <span class="bp-step-icon"><i class="fa-solid fa-check"></i></span>
-        <span class="bp-step-label">Passenger Details</span>
-      </li>
-      <li class="bp-step is-active">
-        <span class="bp-step-icon">4</span>
-        <span class="bp-step-label">Review & Confirm</span>
-      </li>
-      <li class="bp-step">
-        <span class="bp-step-icon">5</span>
-        <span class="bp-step-label">Payment</span>
-      </li>
-      <li class="bp-step">
-        <span class="bp-step-icon">6</span>
-        <span class="bp-step-label">Ticket Issuance</span>
-      </li>
-    </ol>
-    <div class="bp-stepper-mobile">Step 4 — Review & Confirm</div>
-  </nav>
+<section class="bp-page">
+  <div class="container rv-page">
+    <nav class="bp-stepper" aria-label="Booking steps">
+      <ol class="bp-stepper-list">
+        <li class="bp-step is-completed"><span class="bp-step-icon"><i class="fa-solid fa-check"></i></span><span class="bp-step-label">Select Flight</span></li>
+        <li class="bp-step is-completed"><span class="bp-step-icon"><i class="fa-solid fa-check"></i></span><span class="bp-step-label">Passenger Details</span></li>
+        <li class="bp-step is-completed"><span class="bp-step-icon"><i class="fa-solid fa-check"></i></span><span class="bp-step-label">Travel Services</span></li>
+        <li class="bp-step is-active"><span class="bp-step-icon"><i class="fa-solid fa-clipboard-check"></i></span><span class="bp-step-label">Review & Confirm</span></li>
+        <li class="bp-step"><span class="bp-step-icon"><i class="fa-solid fa-credit-card"></i></span><span class="bp-step-label">Payment</span></li>
+        <li class="bp-step"><span class="bp-step-icon"><i class="fa-solid fa-ticket"></i></span><span class="bp-step-label">Ticket Issuance</span></li>
+      </ol>
+      <div class="bp-stepper-mobile">Step 4 of 6 — Review & Confirm</div>
+    </nav>
 
-  <h1>Review & confirm</h1>
+    <h1 class="bp-title" style="margin-bottom:1rem;"><i class="fa-solid fa-clipboard-check"></i> Review &amp; confirm</h1>
 
-  {% if unavailable %}
-    <div class="rv-alert rv-alert--error">
-      <p><strong>{{ error }}</strong></p>
-      <p><a href="{% url 'transport:out' %}">Search for flights again</a></p>
-    </div>
-  {% else %}
+    {% if unavailable %}
+      <div class="rv-alert rv-alert--error"><p><strong>{{ error }}</strong></p><p><a href="{% url 'transport:out' %}">Search for flights again</a></p></div>
+    {% else %}
+      {% if price_info and price_info.price_changed %}
+        <div class="rv-alert rv-alert--warn">Price updated by airline: <strong>{{ price_info.old_amount }}</strong> → <strong>{{ price_info.new_amount }} {{ price_info.currency }}</strong></div>
+      {% endif %}
+      {% if error %}<div class="rv-alert rv-alert--error">{{ error }}</div>{% endif %}
 
-    {% if price_info and price_info.price_changed %}
-      <div class="rv-alert rv-alert--warn">
-        Price updated by airline:
-        <strong>{{ price_info.old_amount }}</strong> →
-        <strong>{{ price_info.new_amount }} {{ price_info.currency }}</strong>
+      <div class="rv-card">
+        <div class="rv-row-head">
+          <h2 style="margin:0;"><i class="fa-solid fa-plane"></i> Flight</h2>
+          <a class="rv-edit" href="{% url 'transport:flight_results' %}?origin={{ booking.origin_code|default:'' }}&destination={{ booking.destination_code|default:'' }}">Change</a>
+        </div>
+        <p style="margin:0 0 0.35rem;font-size:1.15rem;font-weight:800;color:var(--bp-navy,#12293D);">{{ booking.origin_code|default:"—" }} → {{ booking.destination_code|default:"—" }}</p>
+        <p class="rv-meta">{{ booking.airline_or_company|default:"Airline" }}{% if booking.flight_or_trip_number %} · {{ booking.flight_or_trip_number }}{% endif %}{% if booking.departure_at %} · {{ booking.departure_at|date:"D, d M Y — H:i" }}{% endif %}</p>
+        <p class="rv-meta">Status: {{ booking.get_status_display }}{% if booking.expires_at %} · Offer expires: {{ booking.expires_at }}{% endif %}</p>
+      </div>
+
+      <div class="rv-card">
+        <div class="rv-row-head">
+          <h2 style="margin:0;"><i class="fa-solid fa-users"></i> Passengers</h2>
+          <a class="rv-edit" href="{% url 'booking:passengers' booking.id %}">Edit</a>
+        </div>
+        <ul class="rv-list">
+          {% for p in passengers %}
+            <li><strong>{{ p.first_name }} {{ p.last_name }}</strong> <span class="rv-badge">{{ p.get_passenger_type_display|default:p.passenger_type }}</span>{% if p.date_of_birth %} · DOB {{ p.date_of_birth|date:"d M Y" }}{% endif %}{% if p.passport_number %} · Passport {{ p.passport_number }}{% endif %}</li>
+          {% empty %}
+            <li>No passengers saved. <a href="{% url 'booking:passengers' booking.id %}">Add passengers</a></li>
+          {% endfor %}
+        </ul>
+        <p class="rv-meta" style="margin-top:0.75rem;">Contact: {{ booking.contact_full_name }} · {{ booking.contact_email }} · {{ booking.contact_phone }}</p>
+      </div>
+
+      {% with svc=offer.selected_services %}
+      <div class="rv-card">
+        <div class="rv-row-head">
+          <h2 style="margin:0;"><i class="fa-solid fa-suitcase"></i> Travel services</h2>
+          <a class="rv-edit" href="{% url 'booking:services' booking.id %}">Edit</a>
+        </div>
+        {% if svc and not svc.skipped %}
+          <ul class="rv-list">
+            {% if svc.baggage %}{% for b in svc.baggage %}{% if b.carry_on or b.checked %}<li>Baggage — {{ b.passenger_name|default:"Passenger" }} ({{ b.direction|default:b.segment_label }}){% if b.carry_on %}: carry-on ×{{ b.carry_on }}{% endif %}{% if b.checked %}: checked ×{{ b.checked }}{% endif %}</li>{% endif %}{% endfor %}{% endif %}
+            {% if svc.seats %}{% for s in svc.seats %}{% if s.preference and s.preference != "none" %}<li>Seat — {{ s.passenger_name }}: {{ s.preference|cut:"_"|title }}</li>{% endif %}{% endfor %}{% endif %}
+            {% if svc.extras.special_meal %}<li>Special meal{% if svc.extras.meal_type %}: {{ svc.extras.meal_type }}{% endif %}</li>{% endif %}
+            {% if svc.extras.special_assistance %}<li>Special assistance</li>{% endif %}
+            {% if svc.extras.priority_boarding %}<li>Priority boarding</li>{% endif %}
+            {% if svc.extras.travel_insurance %}<li>Travel protection</li>{% endif %}
+          </ul>
+        {% else %}
+          <p class="rv-meta" style="margin:0;">No extra services selected (skipped).</p>
+        {% endif %}
+      </div>
+      {% endwith %}
+
+      <div class="rv-card">
+        <h2><i class="fa-solid fa-receipt"></i> Price summary</h2>
+        <div class="rv-price-rows">
+          <div class="rv-price-row"><span>Ticket</span><span>{{ booking.base_price }} {{ booking.currency }}</span></div>
+          <div class="rv-price-row"><span>Taxes &amp; fees</span><span>{{ booking.taxes }} {{ booking.currency }}</span></div>
+          <div class="rv-price-row"><span>Extra services</span><span>{{ booking.service_price }} {{ booking.currency }}</span></div>
+          <div class="rv-price-row total"><span>Total</span><span>{{ booking.total_price }} {{ booking.currency }}</span></div>
+        </div>
+        <p class="rv-terms">By confirming you agree to the site terms and airline conditions. If the fare changes before issue, you will be asked to accept the new price.</p>
+      </div>
+
+      <div class="rv-actions">
+        <button type="button" class="rv-btn rv-btn--primary" id="rvConfirmBtn"><i class="fa-solid fa-check"></i> Confirm &amp; continue to payment</button>
+        <a class="rv-btn rv-btn--ghost" href="{% url 'booking:services' booking.id %}">Back to services</a>
+        <button type="button" class="rv-btn rv-btn--ghost" id="rvRefreshPrice">Refresh price</button>
+        <p id="rvConfirmError" style="color:#b91c1c;width:100%;display:none;margin:0;"></p>
       </div>
     {% endif %}
-
-    {% if error %}
-      <div class="rv-alert rv-alert--error">{{ error }}</div>
-    {% endif %}
-
-    <div class="rv-card">
-      <h2 style="margin-top:0;">Flight</h2>
-      <p>
-        <strong>{{ booking.origin_code }} → {{ booking.destination_code }}</strong><br>
-        {{ booking.airline_or_company }}
-        {% if booking.flight_or_trip_number %} · {{ booking.flight_or_trip_number }}{% endif %}
-      </p>
-      <p class="rv-price">{{ booking.total_price }} {{ booking.currency }}</p>
-      <p style="color:#64748b;font-size:0.9rem;">
-        Status: {{ booking.get_status_display }}
-        {% if booking.expires_at %} · Expires: {{ booking.expires_at }}{% endif %}
-      </p>
-    </div>
-
-    <div class="rv-card">
-      <h2 style="margin-top:0;">Passengers</h2>
-      <ul>
-        {% for p in passengers %}
-          <li>{{ p.first_name }} {{ p.last_name }} — {{ p.get_passenger_type_display }}</li>
-        {% empty %}
-          <li>No passengers saved.
-            <a href="{% url 'booking:passengers' booking.id %}">Add passengers</a>
-          </li>
-        {% endfor %}
-      </ul>
-      <p style="margin-bottom:0;">
-        Contact: {{ booking.contact_full_name }} · {{ booking.contact_email }} · {{ booking.contact_phone }}
-      </p>
-    </div>
-
-    <div class="rv-actions">
-      <button type="button" class="rv-btn rv-btn--primary" id="rvConfirmBtn">
-        Confirm & Book
-      </button>
-      <a class="rv-btn rv-btn--ghost" href="{% url 'booking:passengers' booking.id %}">
-        Edit passengers
-      </a>
-      <button type="button" class="rv-btn rv-btn--ghost" id="rvRefreshPrice">
-        Refresh price
-      </button>
-      <p id="rvConfirmError" style="color:#b91c1c;width:100%;display:none;"></p>
-    </div>
-
-  {% endif %}
+  </div>
 </section>
 
 {% if booking and not unavailable %}
@@ -152,84 +160,43 @@
     if (parts.length === 2) return parts.pop().split(";").shift();
     return "";
   }
-
   var refreshBtn = document.getElementById("rvRefreshPrice");
   if (refreshBtn) {
     refreshBtn.addEventListener("click", async function () {
       refreshBtn.disabled = true;
       refreshBtn.textContent = "Checking…";
       try {
-        var res = await fetch("{% url 'booking:revalidate_api' booking.id %}", {
-          method: "POST",
-          headers: { "X-CSRFToken": getCookie("csrftoken") },
-          credentials: "same-origin"
-        });
+        var res = await fetch("{% url 'booking:revalidate_api' booking.id %}", { method: "POST", headers: { "X-CSRFToken": getCookie("csrftoken") }, credentials: "same-origin" });
         var data = await res.json();
-        if (!data.ok) {
-          alert(data.error || "Could not refresh price.");
-          if (data.code === "unavailable" || data.code === "expired") {
-            window.location.reload();
-          }
-          return;
-        }
-        if (data.price_changed) {
-          alert("Price updated: " + data.old_amount + " → " + data.new_amount + " " + data.currency);
-          window.location.reload();
-        } else {
-          alert("Price is still the same: " + data.new_amount + " " + data.currency);
-        }
-      } catch (e) {
-        alert("Network error.");
-      } finally {
-        refreshBtn.disabled = false;
-        refreshBtn.textContent = "Refresh price";
-      }
+        if (!data.ok) { alert(data.error || "Could not refresh price."); if (data.code === "unavailable" || data.code === "expired") window.location.reload(); return; }
+        if (data.price_changed) { alert("Price updated: " + data.old_amount + " → " + data.new_amount + " " + data.currency); window.location.reload(); }
+        else { alert("Price is still the same: " + data.new_amount + " " + data.currency); }
+      } catch (e) { alert("Network error."); }
+      finally { refreshBtn.disabled = false; refreshBtn.textContent = "Refresh price"; }
     });
   }
-
   var confirmBtn = document.getElementById("rvConfirmBtn");
   var errBox = document.getElementById("rvConfirmError");
   if (confirmBtn) {
     confirmBtn.addEventListener("click", async function () {
-      if (!confirm("Confirm this booking? The ticket will be issued.")) return;
-
+      if (!confirm("Confirm this booking? You will proceed to payment / ticket issue.")) return;
       confirmBtn.disabled = true;
-      confirmBtn.textContent = "Booking…";
-      if (errBox) {
-        errBox.style.display = "none";
-        errBox.textContent = "";
-      }
-
+      confirmBtn.innerHTML = "Processing…";
+      if (errBox) { errBox.style.display = "none"; errBox.textContent = ""; }
       try {
-        var res = await fetch("{% url 'booking:confirm' booking.id %}", {
-          method: "POST",
-          headers: { "X-CSRFToken": getCookie("csrftoken") },
-          credentials: "same-origin"
-        });
+        var res = await fetch("{% url 'booking:confirm' booking.id %}", { method: "POST", headers: { "X-CSRFToken": getCookie("csrftoken") }, credentials: "same-origin" });
         var data = await res.json();
         if (!res.ok || !data.ok) {
-          if (errBox) {
-            errBox.style.display = "block";
-            errBox.textContent = data.error || "Booking failed.";
-          } else {
-            alert(data.error || "Booking failed.");
-          }
-          if (data.code === "unavailable" || data.code === "expired") {
-            setTimeout(function () { window.location.reload(); }, 1500);
-          }
+          if (errBox) { errBox.style.display = "block"; errBox.textContent = data.error || "Booking failed."; } else { alert(data.error || "Booking failed."); }
+          if (data.code === "unavailable" || data.code === "expired") setTimeout(function () { window.location.reload(); }, 1500);
           return;
         }
         window.location.href = data.redirect_url;
       } catch (e) {
-        if (errBox) {
-          errBox.style.display = "block";
-          errBox.textContent = "Network error. Please try again.";
-        } else {
-          alert("Network error.");
-        }
+        if (errBox) { errBox.style.display = "block"; errBox.textContent = "Network error. Please try again."; } else { alert("Network error."); }
       } finally {
         confirmBtn.disabled = false;
-        confirmBtn.textContent = "Confirm & Book";
+        confirmBtn.innerHTML = '<i class="fa-solid fa-check"></i> Confirm &amp; continue to payment';
       }
     });
   }
