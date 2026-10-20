@@ -542,6 +542,7 @@
           rangeEnd = null;
           pendingField = 'start';
           renderCalendar();
+          window.setTimeout(closeCalendar, 200);
           return;
         }
         // Round-trip: Check-out (pendingField "end") is only accepted if it's
@@ -553,8 +554,7 @@
         if (pendingField === 'end' && rangeStart && picked > rangeStart) {
           rangeEnd = picked;
           renderCalendar();
-          // stay open — user closes via Done or outside-click only
-          // after both ends exist
+          window.setTimeout(closeCalendar, 200);
         } else {
           rangeStart = picked;
           rangeEnd = null;
@@ -568,7 +568,7 @@
         rangeStart = picked;
         rangeEnd = null;
         renderCalendar();
-        // Single-trigger one-way: still confirm with Done (no auto-close)
+        window.setTimeout(closeCalendar, 200);
         return;
       }
 
@@ -582,9 +582,11 @@
         pendingField = 'end';
       } else {
         rangeEnd = picked;
+        renderCalendar();
+        window.setTimeout(closeCalendar, 200);
+        return;
       }
       renderCalendar();
-      // Range mode: do NOT auto-close. User confirms with Done.
     });
 
     if (calDoneBtn) {
