@@ -18,6 +18,12 @@
     return "";
   }
 
+  function getCsrfToken() {
+    return getCookie("csrftoken") ||
+      (document.querySelector("[name=csrfmiddlewaretoken]") || {}).value ||
+      "";
+  }
+
   function getSearchParamsFromUrl() {
     const q = new URLSearchParams(window.location.search);
     return {
@@ -37,12 +43,14 @@
     renderSummary(offer);
     renderTabs(offer);
     updatePrice(offer);
+    if (!modal) return;
     modal.hidden = false;
     modal.setAttribute("aria-hidden", "false");
     document.body.style.overflow = "hidden";
   }
 
   function closeModal() {
+    if (!modal) return;
     modal.hidden = true;
     modal.setAttribute("aria-hidden", "true");
     document.body.style.overflow = "";
@@ -188,6 +196,7 @@
   function formatDate(iso) {
     if (!iso) return "";
     const d = new Date(iso + "T00:00:00");
+    if (isNaN(d.getTime())) return iso;
     return d.toLocaleDateString("en-GB", {
       day: "numeric",
       month: "short",
@@ -258,7 +267,7 @@
     });
   }
 
-  // ---------- Select: create draft booking then go to passengers ----------
+  // ---------- Select: create draft booking then go to passengers (or login) ----------
   if (selectBtn) {
     selectBtn.addEventListener("click", async () => {
       if (!currentOffer) return;
@@ -268,11 +277,20 @@
       selectBtn.textContent = "Please wait…";
 
       try {
+        const csrf = getCsrfToken();
+        if (!csrf) {
+          alert(
+            "Security token missing. Please refresh the page and try again."
+          );
+          return;
+        }
+
         const res = await fetch("/booking/select-offer/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "X-CSRFToken": getCookie("csrftoken"),
+            "X-CSRFToken": csrf,
+            Accept: "application/json",
           },
           credentials: "same-origin",
           body: JSON.stringify({
@@ -281,18 +299,44 @@
           }),
         });
 
-        const data = await res.json();
-        if (!res.ok || !data.ok) {
-          alert(data.error || "Could not start booking.");
+        const raw = await res.text();
+        let data = null;
+        try {
+          data = raw ? JSON.parse(raw) : null;
+        } catch (parseErr) {
+          console.error("select-offer non-JSON response", res.status, raw.slice(0, 500));
+          if (res.status === 403) {
+            alert("Session expired or CSRF failed. Please refresh the page and try again.");
+          } else if (res.status >= 500) {
+            alert("Server error while starting booking (" + res.status + "). Check the Django terminal log.");
+          } else {
+            alert("Unexpected response (" + res.status + "). Please try again.");
+          }
+          return;
+        }
+
+        // Guest: server returns login URL with next=passengers
+        if (data && data.redirect_url && (data.requires_login || data.code === "login_required")) {
+          window.location.href = data.redirect_url;
+          return;
+        }
+
+        if (!res.ok || !data || !data.ok) {
+          if (data && data.redirect_url && res.status === 401) {
+            window.location.href = data.redirect_url;
+            return;
+          }
+          alert((data && data.error) || "Could not start booking.");
           return;
         }
 
         window.location.href = data.redirect_url;
       } catch (err) {
-        alert("Network error. Please try again.");
+        console.error("select-offer fetch failed", err);
+        alert("Network error. Please try again. (" + (err && err.message ? err.message : "unknown") + ")");
       } finally {
         selectBtn.disabled = false;
-        selectBtn.textContent = oldText || "Select";
+        selectBtn.textContent = oldText || "Select flight & continue";
       }
     });
   }
