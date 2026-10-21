@@ -74,7 +74,7 @@
 
         <div class="bp-flight-card" id="bpFlightCard">
           <div class="bp-fc-actions">
-            <a href="{% url 'transport:flight_results' %}?origin={{ booking.origin_code|default:'' }}&destination={{ booking.destination_code|default:'' }}"
+            <a href="{% url 'transport:flight_results' %}?origin={{ booking.origin_code|default:'' }}&destination={{ booking.destination_code|default:'' }}&travel_date={% if booking.departure_at %}{{ booking.departure_at|date:'Y-m-d' }}{% endif %}&adults={{ booking.adults|default:1 }}&children={{ booking.children|default:0 }}&infants={{ booking.infants|default:0 }}&trip_type=oneway"
                class="bp-fc-change" id="bpFcChange">
               <i class="fa-solid fa-pen"></i>
               Change ticket
