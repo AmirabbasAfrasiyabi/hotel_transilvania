@@ -74,7 +74,7 @@
       <div class="bp-stepper-mobile">Step 4 of 6 — Review & Confirm</div>
     </nav>
 
-    <h1 class="bp-title" style="margin-bottom:1rem;"><i class="fa-solid fa-clipboard-check"></i> Review &amp; confirm</h1>
+    <h1 class="bp-title" style="margin-bottom:1rem;"><i class="fa-solid fa-clipboard-check"></i> Review & confirm</h1>
 
     {% if unavailable %}
       <div class="rv-alert rv-alert--error"><p><strong>{{ error }}</strong></p><p><a href="{% url 'transport:out' %}">Search for flights again</a></p></div>
@@ -87,7 +87,7 @@
       <div class="rv-card">
         <div class="rv-row-head">
           <h2 style="margin:0;"><i class="fa-solid fa-plane"></i> Flight</h2>
-          <a class="rv-edit" href="{% url 'transport:flight_results' %}?origin={{ booking.origin_code|default:'' }}&destination={{ booking.destination_code|default:'' }}">Change</a>
+          <a class="rv-edit" href="{% url 'transport:flight_results' %}?origin={{ booking.origin_code|default:'' }}&destination={{ booking.destination_code|default:'' }}&travel_date={% if booking.departure_at %}{{ booking.departure_at|date:'Y-m-d' }}{% endif %}&adults={{ booking.adults|default:1 }}&children={{ booking.children|default:0 }}&infants={{ booking.infants|default:0 }}&trip_type=oneway">Change</a>
         </div>
         <p style="margin:0 0 0.35rem;font-size:1.15rem;font-weight:800;color:var(--bp-navy,#12293D);">{{ booking.origin_code|default:"—" }} → {{ booking.destination_code|default:"—" }}</p>
         <p class="rv-meta">{{ booking.airline_or_company|default:"Airline" }}{% if booking.flight_or_trip_number %} · {{ booking.flight_or_trip_number }}{% endif %}{% if booking.departure_at %} · {{ booking.departure_at|date:"D, d M Y — H:i" }}{% endif %}</p>
@@ -134,7 +134,7 @@
         <h2><i class="fa-solid fa-receipt"></i> Price summary</h2>
         <div class="rv-price-rows">
           <div class="rv-price-row"><span>Ticket</span><span>{{ booking.base_price }} {{ booking.currency }}</span></div>
-          <div class="rv-price-row"><span>Taxes &amp; fees</span><span>{{ booking.taxes }} {{ booking.currency }}</span></div>
+          <div class="rv-price-row"><span>Taxes & fees</span><span>{{ booking.taxes }} {{ booking.currency }}</span></div>
           <div class="rv-price-row"><span>Extra services</span><span>{{ booking.service_price }} {{ booking.currency }}</span></div>
           <div class="rv-price-row total"><span>Total</span><span>{{ booking.total_price }} {{ booking.currency }}</span></div>
         </div>
@@ -142,7 +142,7 @@
       </div>
 
       <div class="rv-actions">
-        <button type="button" class="rv-btn rv-btn--primary" id="rvConfirmBtn"><i class="fa-solid fa-check"></i> Confirm &amp; continue to payment</button>
+        <button type="button" class="rv-btn rv-btn--primary" id="rvConfirmBtn"><i class="fa-solid fa-check"></i> Confirm & continue to payment</button>
         <a class="rv-btn rv-btn--ghost" href="{% url 'booking:services' booking.id %}">Back to services</a>
         <button type="button" class="rv-btn rv-btn--ghost" id="rvRefreshPrice">Refresh price</button>
         <p id="rvConfirmError" style="color:#b91c1c;width:100%;display:none;margin:0;"></p>
@@ -196,7 +196,7 @@
         if (errBox) { errBox.style.display = "block"; errBox.textContent = "Network error. Please try again."; } else { alert("Network error."); }
       } finally {
         confirmBtn.disabled = false;
-        confirmBtn.innerHTML = '<i class="fa-solid fa-check"></i> Confirm &amp; continue to payment';
+        confirmBtn.innerHTML = '<i class="fa-solid fa-check"></i> Confirm & continue to payment';
       }
     });
   }
