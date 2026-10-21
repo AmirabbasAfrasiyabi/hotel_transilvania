@@ -79,7 +79,7 @@
               <i class="fa-solid fa-pen"></i>
               Change ticket
             </a>
-            <button type="button" class="bp-fc-more" aria-label="More options" title="More">
+            <button type="button" class="bp-fc-more" id="bpFcMore" aria-label="Ticket details" title="Ticket details">
               <i class="fa-solid fa-ellipsis"></i>
             </button>
           </div>
@@ -240,6 +240,22 @@
   </div>
 </section>
 
+{# Compact ticket-details popup (opened by ⋯ next to Change ticket) #}
+<div class="bp-ticket-modal" id="bpTicketModal" hidden aria-hidden="true">
+  <div class="bp-ticket-overlay" id="bpTicketOverlay"></div>
+  <div class="bp-ticket-panel" role="dialog" aria-labelledby="bpTicketTitle">
+    <div class="bp-ticket-header">
+      <h2 id="bpTicketTitle">Ticket details</h2>
+      <button type="button" class="bp-ticket-close" id="bpTicketClose" aria-label="Close">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <div class="bp-ticket-body" id="bpTicketBody">
+      <!-- filled by JS -->
+    </div>
+  </div>
+</div>
+
 <div class="bp-sticky-bar" id="bpStickyBar">
   <div class="bp-sticky-price" id="bpStickyPrice">
     {% if booking %}{{ booking.total_price }} {{ booking.currency }}{% else %}—{% endif %}
@@ -260,7 +276,9 @@
       origin: "{{ booking.origin_code|default:'' }}",
       destination: "{{ booking.destination_code|default:'' }}",
       airline: "{{ booking.airline_or_company|default:''|escapejs }}",
-      flightNumber: "{{ booking.flight_or_trip_number|default:''|escapejs }}"
+      flightNumber: "{{ booking.flight_or_trip_number|default:''|escapejs }}",
+      departureAt: "{% if booking.departure_at %}{{ booking.departure_at|date:'c' }}{% endif %}",
+      arrivalAt: "{% if booking.arrival_at %}{{ booking.arrival_at|date:'c' }}{% endif %}"
     };
     try {
       window.BOOKING_OFFER = JSON.parse(
