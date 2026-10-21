@@ -86,6 +86,10 @@ class Booking(models.Model):
     contact_email = models.EmailField(blank=True)
     contact_phone = models.CharField(max_length=20, blank=True)
 
+    # Payment tracking (for gateway callback)
+    payment_ref = models.CharField(max_length=100, blank=True, db_index=True)
+    payment_authority = models.CharField(max_length=100, blank=True)
+
     session_key = models.CharField(max_length=40, blank=True, db_index=True)
     expires_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -124,6 +128,10 @@ class Passenger(models.Model):
         FEMALE = "F", "Female"
         OTHER = "O", "Other"
 
+    class DocumentType(models.TextChoices):
+        NATIONAL_ID = "national_id", "National ID"
+        PASSPORT = "passport", "Passport"
+
     booking = models.ForeignKey(
         Booking, on_delete=models.CASCADE, related_name="passengers"
     )
@@ -138,6 +146,14 @@ class Passenger(models.Model):
     date_of_birth = models.DateField(null=True, blank=True)
     nationality = models.CharField(max_length=100, blank=True, null=True)
 
+    # Document fields (shared architecture for domestic / international)
+    document_type = models.CharField(
+        max_length=20,
+        choices=DocumentType.choices,
+        blank=True,
+        default="",
+    )
+    national_id = models.CharField(max_length=20, blank=True, verbose_name="National ID")
     passport_number = models.CharField(max_length=30, blank=True)
     passport_issuing_country = models.CharField(max_length=100, blank=True)
     passport_expiry = models.DateField(null=True, blank=True)
