@@ -1,8 +1,10 @@
 # booking/views.py
 import json
+from urllib.parse import urlencode
 
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.views.decorators.http import require_GET, require_http_methods, require_POST
 
 from booking.models import Booking
@@ -13,6 +15,40 @@ def _ensure_session(request):
     if not request.session.session_key:
         request.session.create()
     return request.session.session_key
+
+
+def _login_url_with_next(next_path: str) -> str:
+    """Build /account/login?next=... for post-login return to booking step."""
+    try:
+        login_path = reverse("account:login")
+    except Exception:
+        login_path = "/account/login"
+    return f"{login_path}?{urlencode({'next': next_path})}"
+
+
+def _require_login_json_or_redirect(request, next_path: str):
+    """
+    For API/JSON callers: return JSON with login redirect.
+    For normal browser GETs: HTTP redirect to login.
+    """
+    login_url = _login_url_with_next(next_path)
+    accept = (request.headers.get("Accept") or "").lower()
+    is_ajax = (
+        request.headers.get("X-Requested-With") == "XMLHttpRequest"
+        or "application/json" in accept
+        or (request.content_type and "application/json" in request.content_type)
+    )
+    if is_ajax or request.method == "POST":
+        return JsonResponse(
+            {
+                "ok": False,
+                "error": "Please log in to continue booking.",
+                "code": "login_required",
+                "redirect_url": login_url,
+            },
+            status=401,
+        )
+    return redirect(login_url)
 
 
 @require_POST
@@ -38,17 +74,38 @@ def select_offer_view(request):
             {"ok": False, "error": exc.message, "code": exc.code}, status=400
         )
 
+    passengers_path = f"/booking/passengers/{booking.pk}/"
+
+    # Guest: keep draft (session-bound) and send user to login, then back to passengers
+    if not request.user.is_authenticated:
+        request.session["pending_booking_id"] = booking.pk
+        login_url = _login_url_with_next(passengers_path)
+        return JsonResponse(
+            {
+                "ok": True,
+                "booking_id": booking.pk,
+                "requires_login": True,
+                "redirect_url": login_url,
+            }
+        )
+
     return JsonResponse(
         {
             "ok": True,
             "booking_id": booking.pk,
-            "redirect_url": f"/booking/passengers/{booking.pk}/",
+            "requires_login": False,
+            "redirect_url": passengers_path,
         }
     )
 
 
 @require_http_methods(["GET", "POST"])
 def passenger_details_view(request, booking_id: int):
+    if not request.user.is_authenticated:
+        return _require_login_json_or_redirect(
+            request, f"/booking/passengers/{booking_id}/"
+        )
+
     try:
         booking = BookingService.get_booking_for_request(booking_id, request)
     except BookingServiceError as exc:
@@ -59,6 +116,11 @@ def passenger_details_view(request, booking_id: int):
             "booking/passengers.html",
             {"error": exc.message, "booking": None},
         )
+
+    # Attach guest draft to logged-in user
+    if booking.user_id is None:
+        booking.user = request.user
+        booking.save(update_fields=["user"])
 
     if request.method == "GET":
         return render(
@@ -104,6 +166,11 @@ def passenger_details_view(request, booking_id: int):
 
 @require_http_methods(["GET", "POST"])
 def travel_services_view(request, booking_id: int):
+    if not request.user.is_authenticated:
+        return _require_login_json_or_redirect(
+            request, f"/booking/services/{booking_id}/"
+        )
+
     try:
         booking = BookingService.get_booking_for_request(booking_id, request)
     except BookingServiceError as exc:
@@ -114,6 +181,10 @@ def travel_services_view(request, booking_id: int):
             "booking/services.html",
             {"error": exc.message, "booking": None},
         )
+
+    if booking.user_id is None:
+        booking.user = request.user
+        booking.save(update_fields=["user"])
 
     if request.method == "GET":
         passengers = list(
@@ -157,10 +228,17 @@ def travel_services_view(request, booking_id: int):
 
 @require_GET
 def review_view(request, booking_id: int):
+    if not request.user.is_authenticated:
+        return redirect(_login_url_with_next(f"/booking/review/{booking_id}/"))
+
     try:
         booking = BookingService.get_booking_for_request(booking_id, request)
     except BookingServiceError:
         return redirect("transport:out")
+
+    if booking.user_id is None:
+        booking.user = request.user
+        booking.save(update_fields=["user"])
 
     price_info = None
     error = None
@@ -190,6 +268,11 @@ def review_view(request, booking_id: int):
 
 @require_POST
 def revalidate_api(request, booking_id: int):
+    if not request.user.is_authenticated:
+        return _require_login_json_or_redirect(
+            request, f"/booking/review/{booking_id}/"
+        )
+
     try:
         booking = BookingService.get_booking_for_request(booking_id, request)
         result = BookingService.revalidate(booking)
@@ -215,6 +298,11 @@ def revalidate_api(request, booking_id: int):
 
 @require_POST
 def confirm_booking_view(request, booking_id: int):
+    if not request.user.is_authenticated:
+        return _require_login_json_or_redirect(
+            request, f"/booking/review/{booking_id}/"
+        )
+
     try:
         booking = BookingService.get_booking_for_request(booking_id, request)
         booking = BookingService.confirm_and_issue(booking)
@@ -237,6 +325,9 @@ def confirm_booking_view(request, booking_id: int):
 
 @require_GET
 def confirmation_view(request, booking_id: int):
+    if not request.user.is_authenticated:
+        return redirect(_login_url_with_next(f"/booking/confirmation/{booking_id}/"))
+
     try:
         booking = BookingService.get_booking_for_request(booking_id, request)
     except BookingServiceError:
