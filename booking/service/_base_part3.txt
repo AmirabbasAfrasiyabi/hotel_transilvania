@@ -1,0 +1,95 @@
+        snap["selected_services"] = {
+            "baggage": baggage,
+            "seats": seats,
+            "extras": extras,
+            "skipped": bool(payload.get("skipped")),
+            "service_amount": str(service_amount),
+            "currency": (payload.get("currency") or booking.currency or "USD")[:3],
+        }
+        booking.offer_snapshot = snap
+        booking.service_price = service_amount
+        booking.total_price = (booking.base_price or Decimal("0")) + (booking.taxes or Decimal("0")) + service_amount
+        booking.save(update_fields=["offer_snapshot", "service_price", "total_price", "updated_at"])
+        return booking
+
+    @classmethod
+    def revalidate(cls, booking: Booking) -> dict:
+        if booking.status not in (Booking.Status.DRAFT, Booking.Status.PENDING_PAYMENT):
+            raise BookingServiceError("Booking cannot be revalidated in this status.", code="invalid_status")
+        if booking.is_expired():
+            booking.status = Booking.Status.EXPIRED
+            booking.save(update_fields=["status", "updated_at"])
+            raise BookingServiceError("This booking has expired.", code="expired")
+        old_amount = booking.total_price
+        currency = booking.currency
+        if booking.provider == "duffel" and booking.provider_offer_id:
+            try:
+                fresh = get_offer(booking.provider_offer_id)
+            except DuffelError as exc:
+                raise BookingServiceError(str(exc) or "Offer is no longer available.", code="unavailable") from exc
+            price = (fresh or {}).get("total_amount") or (fresh or {}).get("amount")
+            if price is None and isinstance(fresh, dict):
+                price = (fresh.get("price") or {}).get("amount")
+            new_amount = cls._parse_decimal(price or old_amount, "amount")
+            new_currency = (fresh or {}).get("total_currency") or (fresh or {}).get("currency") or currency
+            if isinstance(fresh, dict) and fresh.get("price"):
+                new_currency = fresh["price"].get("currency") or new_currency
+            price_changed = new_amount != old_amount
+            if price_changed:
+                booking.base_price = new_amount
+                booking.total_price = new_amount + (booking.service_price or Decimal("0"))
+                booking.currency = str(new_currency)[:3]
+                booking.save(update_fields=["base_price", "total_price", "currency", "updated_at"])
+            return {
+                "price_changed": price_changed,
+                "old_amount": str(old_amount),
+                "new_amount": str(booking.total_price),
+                "currency": booking.currency,
+                "message": "Price updated." if price_changed else None,
+            }
+        return {
+            "price_changed": False,
+            "old_amount": str(old_amount),
+            "new_amount": str(old_amount),
+            "currency": currency,
+            "message": None,
+        }
+
+    @classmethod
+    @transaction.atomic
+    def confirm_and_issue(cls, booking: Booking) -> Booking:
+        if booking.status not in (Booking.Status.DRAFT, Booking.Status.PENDING_PAYMENT):
+            raise BookingServiceError("Booking cannot be confirmed in this status.", code="invalid_status")
+        if booking.is_expired():
+            raise BookingServiceError("This booking has expired.", code="expired")
+        if not booking.passengers.exists():
+            raise BookingServiceError("Passenger details are required before confirmation.", code="missing_passengers")
+        if booking.provider == "duffel" and booking.provider_offer_id:
+            passengers_payload = []
+            for p in booking.passengers.all():
+                passengers_payload.append({
+                    "type": p.passenger_type or "adult",
+                    "title": cls._map_title_for_duffel(p.title),
+                    "given_name": p.first_name,
+                    "family_name": p.last_name,
+                    "gender": cls._map_gender_for_duffel(p.gender or ""),
+                    "born_on": p.date_of_birth.isoformat() if p.date_of_birth else None,
+                })
+            try:
+                order = create_order(
+                    offer_id=booking.provider_offer_id,
+                    passengers=passengers_payload,
+                    contact={"email": booking.contact_email, "phone": booking.contact_phone},
+                )
+            except DuffelError as exc:
+                booking.status = Booking.Status.FAILED
+                booking.save(update_fields=["status", "updated_at"])
+                raise BookingServiceError(str(exc) or "Could not issue ticket.", code="unavailable") from exc
+            booking.provider_order_id = str((order or {}).get("id") or (order or {}).get("order_id") or "")[:128]
+            snap = dict(booking.offer_snapshot or {})
+            snap["order"] = order or {}
+            booking.offer_snapshot = snap
+            booking.status = Booking.Status.ISSUED
+            booking.save(update_fields=["provider_order_id", "offer_snapshot", "status", "updated_at"])
+            return booking
+        booking.status = Booking.Status.ISSUED
