@@ -83,6 +83,13 @@
         <div class="rv-alert rv-alert--warn">Price updated by airline: <strong>{{ price_info.old_amount }}</strong> → <strong>{{ price_info.new_amount }} {{ price_info.currency }}</strong></div>
       {% endif %}
       {% if error %}<div class="rv-alert rv-alert--error">{{ error }}</div>{% endif %}
+      {% if request.GET.ready_for_payment == "1" or booking.status == "pending_payment" %}
+        <div class="rv-alert rv-alert--warn">
+          <p><strong>Ready for payment.</strong> Booking status is pending payment.
+          Total: <strong>{{ booking.total_price }} {{ booking.currency }}</strong>.</p>
+          <p style="margin:0.5rem 0 0;">Gateway integration is the next step. Ticket will be issued only after successful payment.</p>
+        </div>
+      {% endif %}
 
       <div class="rv-card">
         <div class="rv-row-head">
@@ -142,7 +149,11 @@
       </div>
 
       <div class="rv-actions">
+        {% if booking.status == "pending_payment" %}
+        <button type="button" class="rv-btn rv-btn--primary" id="rvConfirmBtn" disabled><i class="fa-solid fa-hourglass-half"></i> Awaiting payment</button>
+        {% else %}
         <button type="button" class="rv-btn rv-btn--primary" id="rvConfirmBtn"><i class="fa-solid fa-check"></i> Confirm & continue to payment</button>
+        {% endif %}
         <a class="rv-btn rv-btn--ghost" href="{% url 'booking:services' booking.id %}">Back to services</a>
         <button type="button" class="rv-btn rv-btn--ghost" id="rvRefreshPrice">Refresh price</button>
         <p id="rvConfirmError" style="color:#b91c1c;width:100%;display:none;margin:0;"></p>
@@ -177,23 +188,50 @@
   }
   var confirmBtn = document.getElementById("rvConfirmBtn");
   var errBox = document.getElementById("rvConfirmError");
-  if (confirmBtn) {
+  if (confirmBtn && !confirmBtn.disabled) {
     confirmBtn.addEventListener("click", async function () {
-      if (!confirm("Confirm this booking? You will proceed to payment / ticket issue.")) return;
+      if (!confirm("Confirm details and continue to payment?")) return;
       confirmBtn.disabled = true;
-      confirmBtn.innerHTML = "Processing…";
+      confirmBtn.innerHTML = "Preparing payment…";
       if (errBox) { errBox.style.display = "none"; errBox.textContent = ""; }
       try {
-        var res = await fetch("{% url 'booking:confirm' booking.id %}", { method: "POST", headers: { "X-CSRFToken": getCookie("csrftoken") }, credentials: "same-origin" });
+        var res = await fetch("{% url 'booking:prepare_payment' booking.id %}", {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+            "Accept": "application/json",
+            "X-Requested-With": "XMLHttpRequest"
+          },
+          credentials: "same-origin"
+        });
         var data = await res.json();
         if (!res.ok || !data.ok) {
-          if (errBox) { errBox.style.display = "block"; errBox.textContent = data.error || "Booking failed."; } else { alert(data.error || "Booking failed."); }
-          if (data.code === "unavailable" || data.code === "expired") setTimeout(function () { window.location.reload(); }, 1500);
+          if (errBox) {
+            errBox.style.display = "block";
+            errBox.textContent = data.error || "Could not prepare payment.";
+          } else {
+            alert(data.error || "Could not prepare payment.");
+          }
+          if (data.code === "unavailable" || data.code === "expired" || data.code === "login_required") {
+            if (data.redirect_url) {
+              window.location.href = data.redirect_url;
+              return;
+            }
+            setTimeout(function () { window.location.reload(); }, 1500);
+          }
           return;
         }
-        window.location.href = data.redirect_url;
+        if (data.price_changed) {
+          alert((data.message || "Price updated.") + " Total: " + data.total_price + " " + data.currency);
+        }
+        window.location.href = data.next_url || data.redirect_url || ("/booking/review/" + data.booking_id + "/?ready_for_payment=1");
       } catch (e) {
-        if (errBox) { errBox.style.display = "block"; errBox.textContent = "Network error. Please try again."; } else { alert("Network error."); }
+        if (errBox) {
+          errBox.style.display = "block";
+          errBox.textContent = "Network error. Please try again.";
+        } else {
+          alert("Network error.");
+        }
       } finally {
         confirmBtn.disabled = false;
         confirmBtn.innerHTML = '<i class="fa-solid fa-check"></i> Confirm & continue to payment';
