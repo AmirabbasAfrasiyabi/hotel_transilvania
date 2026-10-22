@@ -1,14 +1,8 @@
 # booking/service/booking_service.py
-# Assembled from part modules (size workaround). Behavior is the full BookingService.
-from importlib import import_module
+# Loads full implementation from adjacent _raw_part*.txt fragments.
+from pathlib import Path
 
-_parts = [
-    import_module("booking.service._src_part0").SRC,
-    import_module("booking.service._src_part1").SRC,
-    import_module("booking.service._src_part2").SRC,
-    import_module("booking.service._src_part3").SRC,
-]
-_code = "".join(_parts)
-del _parts
+_dir = Path(__file__).resolve().parent
+_code = "".join((_dir / f"_raw_part{i}.txt").read_text() for i in range(5))
 exec(compile(_code, __file__, "exec"), globals())
-del _code
+del _dir, _code, Path
