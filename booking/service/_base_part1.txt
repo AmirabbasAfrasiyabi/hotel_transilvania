@@ -1,0 +1,102 @@
+            session_key=(session_key or "")[:40],
+            expires_at=expires_at,
+        )
+
+    @classmethod
+    def get_booking_for_request(cls, booking_id: int, request) -> Booking:
+        try:
+            booking = Booking.objects.prefetch_related("passengers").get(pk=booking_id)
+        except Booking.DoesNotExist:
+            raise BookingServiceError("Booking not found.", code="not_found")
+        if booking.is_expired() and booking.status == Booking.Status.DRAFT:
+            booking.status = Booking.Status.EXPIRED
+            booking.save(update_fields=["status", "updated_at"])
+            raise BookingServiceError("This booking has expired.", code="expired")
+        user = request.user
+        session_key = request.session.session_key or ""
+        if booking.user_id:
+            if not user.is_authenticated or booking.user_id != user.id:
+                raise BookingServiceError("Access denied.", code="forbidden")
+        else:
+            if session_key and booking.session_key and booking.session_key != session_key:
+                if not user.is_authenticated:
+                    raise BookingServiceError("Access denied.", code="forbidden")
+        return booking
+
+    @classmethod
+    @transaction.atomic
+    def save_passengers_and_contact(cls, booking: Booking, passengers_data: list[dict], contact: dict) -> Booking:
+        if booking.status != Booking.Status.DRAFT:
+            raise BookingServiceError("Only draft bookings can be edited.", code="invalid_status")
+        if booking.is_expired():
+            booking.status = Booking.Status.EXPIRED
+            booking.save(update_fields=["status", "updated_at"])
+            raise BookingServiceError("This booking has expired.", code="expired")
+        expected = booking.total_passengers
+        if len(passengers_data) != expected:
+            raise BookingServiceError(
+                f"Expected {expected} passengers, got {len(passengers_data)}.", code="passenger_count"
+            )
+        email_re = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]{2,}$", re.I)
+        latin_name_re = re.compile(r"^[A-Za-z]+(?:[ \-'.][A-Za-z]+)*$")
+        passport_re = re.compile(r"^[A-Za-z0-9]{6,12}$")
+        iso2_re = re.compile(r"^[A-Za-z]{2}$")
+
+        def digits_only(s: str) -> str:
+            return re.sub(r"\D", "", s or "")
+
+        def parse_date(value):
+            if value is None or value == "":
+                return None
+            if isinstance(value, date) and not isinstance(value, datetime):
+                return value
+            try:
+                return date.fromisoformat(str(value).strip()[:10])
+            except ValueError:
+                return None
+
+        def age_on(today: date, dob: date) -> int:
+            years = today.year - dob.year
+            if (today.month, today.day) < (dob.month, dob.day):
+                years -= 1
+            return years
+
+        def iran_national_id_ok(code: str) -> bool:
+            if not re.fullmatch(r"\d{10}", code):
+                return False
+            if code == code[0] * 10:
+                return False
+            check = int(code[9])
+            total = sum(int(code[i]) * (10 - i) for i in range(9)) % 11
+            return (total < 2 and check == total) or (total >= 2 and check + total == 11)
+
+        full_name = (contact.get("contact_full_name") or "").strip()
+        email = (contact.get("contact_email") or "").strip().lower()
+        phone_raw = (contact.get("contact_phone") or "").strip()
+        phone_digits = digits_only(phone_raw)
+        if len(full_name) < 2:
+            raise BookingServiceError("Contact name is required (min 2 characters).", code="contact_name")
+        if not email_re.match(email) or len(email) > 254:
+            raise BookingServiceError("Enter a valid email address.", code="contact_email")
+        if len(phone_digits) < 7 or len(phone_digits) > 15:
+            raise BookingServiceError("Mobile number must contain 7 to 15 digits.", code="contact_phone")
+        booking.contact_full_name = full_name[:200]
+        booking.contact_email = email[:254]
+        booking.contact_phone = phone_raw[:20]
+        today = timezone.now().date()
+        m = today.month + 6
+        y = today.year + (m - 1) // 12
+        m = (m - 1) % 12 + 1
+        mdays = [31, 29 if y % 4 == 0 and (y % 100 != 0 or y % 400 == 0) else 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+        min_passport_expiry = date(y, m, min(today.day, mdays[m - 1]))
+        booking.passengers.all().delete()
+        for index, row in enumerate(passengers_data, start=1):
+            ptype = (row.get("passenger_type") or "adult").lower()
+            if ptype not in ("adult", "child", "infant"):
+                ptype = "adult"
+            first_name = (row.get("first_name") or "").strip()
+            last_name = (row.get("last_name") or "").strip()
+            gender = (row.get("gender") or "").strip().upper()
+            nationality = (row.get("nationality") or "").strip().upper()[:2]
+            national_id = (row.get("national_id") or "").strip()
+            passport_number = (row.get("passport_number") or "").strip().upper()
