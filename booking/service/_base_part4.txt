@@ -1,0 +1,2 @@
+        booking.save(update_fields=["status", "updated_at"])
+        return booking
