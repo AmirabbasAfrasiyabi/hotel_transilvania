@@ -1,0 +1,149 @@
+# booking/service/booking_service.py
+from __future__ import annotations
+
+from datetime import timedelta, date, datetime
+from decimal import Decimal, InvalidOperation
+from typing import Any
+import re
+
+from django.db import transaction
+from django.utils import timezone
+from django.utils.dateparse import parse_datetime
+
+from booking.models import Booking, Passenger
+from transport.duffel_client import DuffelError, create_order, get_offer
+
+
+class BookingServiceError(Exception):
+    def __init__(self, message: str, code: str = "booking_error"):
+        super().__init__(message)
+        self.message = message
+        self.code = code
+
+
+class BookingService:
+    DRAFT_TTL_MINUTES = 30
+
+    @staticmethod
+    def _parse_decimal(value: Any, field_name: str = "price") -> Decimal:
+        try:
+            amount = Decimal(str(value))
+        except (InvalidOperation, TypeError, ValueError):
+            raise BookingServiceError(f"Invalid {field_name}.", code="invalid_price")
+        if amount < 0:
+            raise BookingServiceError(
+                f"{field_name} cannot be negative.", code="invalid_price"
+            )
+        return amount
+
+    @classmethod
+    def _map_title_for_duffel(cls, title: str) -> str:
+        t = (title or "").strip().upper()
+        if t in ("MR",):
+            return "mr"
+        if t in ("MRS",):
+            return "mrs"
+        if t in ("MS", "MISS"):
+            return "ms"
+        return "mr"
+
+    @classmethod
+    def _map_gender_for_duffel(cls, gender: str) -> str:
+        g = (gender or "").strip().upper()
+        if g in ("M", "MALE"):
+            return "m"
+        if g in ("F", "FEMALE"):
+            return "f"
+        return "m"
+
+    @classmethod
+    @transaction.atomic
+    def create_draft_from_offer(
+        cls, *, user, session_key: str, offer: dict, search_params: dict | None = None
+    ) -> Booking:
+        if not offer or not isinstance(offer, dict):
+            raise BookingServiceError("Offer data is required.", code="missing_offer")
+        raw_id = str(offer.get("id") or "").strip()
+        if not raw_id:
+            raise BookingServiceError("Offer id is required.", code="missing_offer_id")
+        source = (offer.get("source") or "").strip().lower()
+        if raw_id.startswith("duffel-"):
+            source = source or "duffel"
+            provider_offer_id = raw_id.removeprefix("duffel-")
+        elif raw_id.startswith("internal-"):
+            source = source or "internal"
+            provider_offer_id = raw_id.removeprefix("internal-")
+        else:
+            provider_offer_id = raw_id
+            source = source or "duffel"
+        price_info = offer.get("price") or {}
+        amount = cls._parse_decimal(price_info.get("amount"), "amount")
+        currency = (price_info.get("currency") or "USD").strip().upper()[:3]
+        origin_code = ""
+        destination_code = ""
+        departure_at = None
+        arrival_at = None
+        flight_number = ""
+        airline = offer.get("airline") or {}
+        airline_name = airline.get("name") or airline.get("code") or ""
+        slices = offer.get("slices") or []
+        if slices:
+            first = slices[0] or {}
+            dep = first.get("departure") or {}
+            arr = first.get("arrival") or {}
+            origin_code = (dep.get("airport") or dep.get("iata") or "")[:10]
+            destination_code = (arr.get("airport") or arr.get("iata") or "")[:10]
+            if dep.get("at"):
+                departure_at = parse_datetime(str(dep.get("at")))
+            elif dep.get("date") and dep.get("time"):
+                departure_at = parse_datetime(f"{dep.get('date')}T{dep.get('time')}:00")
+            if arr.get("at"):
+                arrival_at = parse_datetime(str(arr.get("at")))
+            flight_number = str(first.get("flight_number") or "")[:200]
+        params = search_params or {}
+        adults = max(1, int(params.get("adults") or offer.get("adults") or 1))
+        children = max(0, int(params.get("children") or offer.get("children") or 0))
+        infants = max(0, int(params.get("infants") or offer.get("infants") or 0))
+        expires_at = timezone.now() + timedelta(minutes=cls.DRAFT_TTL_MINUTES)
+        return Booking.objects.create(
+            user=user if getattr(user, "is_authenticated", False) else None,
+            transport_type=Booking.TransportType.FLIGHT,
+            transport_id=provider_offer_id[:128],
+            provider=source[:30],
+            provider_offer_id=provider_offer_id[:128],
+            offer_snapshot=offer if isinstance(offer, dict) else {},
+            origin_code=origin_code or None,
+            destination_code=destination_code or None,
+            departure_at=departure_at,
+            arrival_at=arrival_at,
+            airline_or_company=airline_name[:200] or None,
+            flight_or_trip_number=flight_number or None,
+            adults=adults,
+            children=children,
+            infants=infants,
+            base_price=amount,
+            taxes=Decimal("0.00"),
+            service_price=Decimal("0.00"),
+            total_price=amount,
+            currency=currency,
+            status=Booking.Status.DRAFT,
+            session_key=(session_key or "")[:40],
+            expires_at=expires_at,
+        )
+
+    @classmethod
+    def get_booking_for_request(cls, booking_id: int, request) -> Booking:
+        try:
+            booking = Booking.objects.prefetch_related("passengers").get(pk=booking_id)
+        except Booking.DoesNotExist:
+            raise BookingServiceError("Booking not found.", code="not_found")
+        if booking.is_expired() and booking.status == Booking.Status.DRAFT:
+            booking.status = Booking.Status.EXPIRED
+            booking.save(update_fields=["status", "updated_at"])
+            raise BookingServiceError("This booking has expired.", code="expired")
+        user = request.user
+        session_key = request.session.session_key or ""
+        if booking.user_id:
+            if not user.is_authenticated or booking.user_id != user.id:
+                raise BookingServiceError("Access denied.", code="forbidden")
+        else:
