@@ -2,6 +2,7 @@
 """Payment page and sandbox/gateway callback."""
 import json
 
+from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_GET, require_POST
@@ -49,7 +50,7 @@ def _error_status(code: str) -> int:
 
 @require_GET
 def payment_view(request, booking_id: int):
-    """Payment step (sandbox until real gateway is connected)."""
+    """Payment step page."""
     if not request.user.is_authenticated:
         return redirect(_login_url_with_next(f"/booking/payment/{booking_id}/"))
 
@@ -78,13 +79,24 @@ def payment_view(request, booking_id: int):
             {
                 "booking": booking,
                 "error": "This booking is not awaiting payment.",
+                "zarinpal_enabled": bool(
+                    (getattr(settings, "ZARINPAL_MERCHANT_ID", None) or "").strip()
+                ),
+                "zarinpal_sandbox": bool(getattr(settings, "ZARINPAL_SANDBOX", True)),
             },
         )
 
     return render(
         request,
         "booking/payment.html",
-        {"booking": booking, "error": None},
+        {
+            "booking": booking,
+            "error": request.GET.get("error") or None,
+            "zarinpal_enabled": bool(
+                (getattr(settings, "ZARINPAL_MERCHANT_ID", None) or "").strip()
+            ),
+            "zarinpal_sandbox": bool(getattr(settings, "ZARINPAL_SANDBOX", True)),
+        },
     )
 
 
@@ -133,10 +145,10 @@ def payment_callback_view(request, booking_id: int):
             payment_ref=payment_ref or f"SANDBOX-{booking.pk}",
             payment_authority=payment_authority or "SANDBOX",
         )
-    except BookingServiceError as exp:
-        status = 410 if exp.code in ("expired", "unavailable") else 400
+    except BookingServiceError as exc:
+        status = 410 if exc.code in ("expired", "unavailable") else 400
         return JsonResponse(
-            {"ok": False, "error": exp.message, "code": exp.code},
+            {"ok": False, "error": exc.message, "code": exc.code},
             status=status,
         )
 
