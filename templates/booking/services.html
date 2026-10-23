@@ -6,6 +6,7 @@
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/booking-passengers.css' %}">
 <link rel="stylesheet" href="{% static 'css/booking-services.css' %}">
+<link rel="stylesheet" href="{% static 'css/booking-alerts.css' %}">
 
 <style>
   #header { display: none !important; }
@@ -60,7 +61,7 @@
           <span class="bp-step-label">Ticket Issuance</span>
         </li>
       </ol>
-      <div class="bp-stepper-mobile">Step 3 of 6 — Travel Services</div>
+      <div class="bp-stepper-mobile">Step 3 of 6 â€” Travel Services</div>
     </nav>
 
     {% if error %}
@@ -90,7 +91,7 @@
             <div class="svc-bag-type">
               <i class="fa-solid fa-briefcase"></i>
               <strong>Personal item</strong>
-              <span>Size limit per bag: 40 × 25 × 20 cm</span>
+              <span>Size limit per bag: 40 Ã— 25 Ã— 20 cm</span>
             </div>
             <div class="svc-bag-type">
               <i class="fa-solid fa-suitcase-rolling svc-warn"></i>
@@ -165,7 +166,7 @@
               <input type="checkbox" id="extraInsurance" name="extra_insurance">
               <div>
                 <strong>Travel protection (optional)</strong>
-                <span>Cancellation and medical cover — details at payment</span>
+                <span>Cancellation and medical cover â€” details at payment</span>
               </div>
             </label>
           </div>
@@ -181,12 +182,12 @@
       <aside class="bp-sidebar">
         <div class="bp-sidebar-card">
           <div class="bp-side-route" id="svcSidebarRoute">
-            {{ booking.origin_code|default:"—" }} → {{ booking.destination_code|default:"—" }}
+            {{ booking.origin_code|default:"â€”" }} â†’ {{ booking.destination_code|default:"â€”" }}
           </div>
           <div class="bp-side-meta" id="svcSidebarMeta">
             {{ booking.adults }} adult{% if booking.adults != 1 %}s{% endif %}
-            {% if booking.children %} · {{ booking.children }} child{% if booking.children != 1 %}ren{% endif %}{% endif %}
-            {% if booking.infants %} · {{ booking.infants }} infant{% if booking.infants != 1 %}s{% endif %}{% endif %}
+            {% if booking.children %} Â· {{ booking.children }} child{% if booking.children != 1 %}ren{% endif %}{% endif %}
+            {% if booking.infants %} Â· {{ booking.infants }} infant{% if booking.infants != 1 %}s{% endif %}{% endif %}
           </div>
           <div class="bp-price-row">
             <span>Ticket</span>
@@ -205,7 +206,7 @@
             <span>Total</span>
             <span id="svcTotal">{{ booking.total_price }} {{ booking.currency }}</span>
           </div>
-          <p class="bp-side-note">You can skip extras and continue — baggage and seats can sometimes be added later with the airline.</p>
+          <p class="bp-side-note">You can skip extras and continue â€” baggage and seats can sometimes be added later with the airline.</p>
           <button type="button" class="bp-cta" id="svcContinueBtn">Continue to review</button>
           <button type="button" class="svc-skip" id="svcSkipBtn">Skip services</button>
           <p id="svcFormError" class="bp-form-error" hidden></p>
@@ -225,7 +226,7 @@
 
 <div class="bp-sticky-bar" id="bpStickyBar">
   <div class="bp-sticky-price" id="svcStickyPrice">
-    {% if booking %}{{ booking.total_price }} {{ booking.currency }}{% else %}—{% endif %}
+    {% if booking %}{{ booking.total_price }} {{ booking.currency }}{% else %}â€”{% endif %}
   </div>
   <button type="button" class="bp-cta" id="svcStickyContinue">Continue</button>
 </div>
@@ -254,6 +255,7 @@
       window.BOOKING_PASSENGERS = JSON.parse(document.getElementById("booking-passengers-data").textContent);
     } catch (e) { window.BOOKING_PASSENGERS = []; }
   </script>
+  <script src="{% static 'js/booking-alerts.js' %}"></script>
   <script src="{% static 'js/booking-services.js' %}"></script>
 {% endif %}
 {% endblock %}

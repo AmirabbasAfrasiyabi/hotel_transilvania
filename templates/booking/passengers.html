@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load static %}
 
 {% block title %}Passenger Details{% endblock %}
@@ -29,76 +29,255 @@
 </header>
 
 <section class="bp-page">
-  <div class="container bp-page-inner">
+  <div class="container">
+
     <nav class="bp-stepper" aria-label="Booking steps">
       <ol class="bp-stepper-list">
-        <li class="bp-step is-completed"><span class="bp-step-icon"><i class="fa-solid fa-check"></i></span><span class="bp-step-label">Select Flight</span></li>
-        <li class="bp-step is-active"><span class="bp-step-icon"><i class="fa-solid fa-users"></i></span><span class="bp-step-label">Passenger Details</span></li>
-        <li class="bp-step"><span class="bp-step-icon"><i class="fa-solid fa-suitcase"></i></span><span class="bp-step-label">Travel Services</span></li>
-        <li class="bp-step"><span class="bp-step-icon"><i class="fa-solid fa-clipboard-check"></i></span><span class="bp-step-label">Review</span></li>
-        <li class="bp-step"><span class="bp-step-icon"><i class="fa-solid fa-credit-card"></i></span><span class="bp-step-label">Payment</span></li>
-        <li class="bp-step"><span class="bp-step-icon"><i class="fa-solid fa-ticket"></i></span><span class="bp-step-label">Ticket Issuance</span></li>
+        <li class="bp-step is-completed">
+          <span class="bp-step-icon"><i class="fa-solid fa-check"></i></span>
+          <span class="bp-step-label">Select Flight</span>
+        </li>
+        <li class="bp-step is-active">
+          <span class="bp-step-icon"><i class="fa-solid fa-users"></i></span>
+          <span class="bp-step-label">Passenger Details</span>
+        </li>
+        <li class="bp-step">
+          <span class="bp-step-icon"><i class="fa-solid fa-suitcase"></i></span>
+          <span class="bp-step-label">Travel Services</span>
+        </li>
+        <li class="bp-step">
+          <span class="bp-step-icon"><i class="fa-solid fa-clipboard-check"></i></span>
+          <span class="bp-step-label">Review & Confirm</span>
+        </li>
+        <li class="bp-step">
+          <span class="bp-step-icon"><i class="fa-solid fa-credit-card"></i></span>
+          <span class="bp-step-label">Payment</span>
+        </li>
+        <li class="bp-step">
+          <span class="bp-step-icon"><i class="fa-solid fa-ticket"></i></span>
+          <span class="bp-step-label">Ticket Issuance</span>
+        </li>
       </ol>
-      <div class="bp-stepper-mobile">Step 2 of 6 — Passenger Details</div>
+      <div class="bp-stepper-mobile">Step 2 of 6 â€” Passenger Details</div>
     </nav>
 
-    <h1 class="bp-title"><i class="fa-solid fa-users"></i> Passenger details</h1>
-    <p class="bp-subtitle">Enter contact and passenger information exactly as on travel documents.</p>
-
     {% if error %}
-      <div class="bp-alert bp-alert--error">{{ error }}</div>
+      <div class="bp-alert" style="margin-bottom: 1rem;">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <div><strong>{{ error }}</strong></div>
+      </div>
     {% endif %}
 
-    <div id="bpFormError" class="bp-alert bp-alert--error" hidden style="display:none;"></div>
+    {% if booking %}
+    <div class="bp-layout">
 
-    <form id="bpPassengerForm" class="bp-form" novalidate>
-      <div class="bp-card">
-        <h2><i class="fa-solid fa-address-book"></i> Contact</h2>
-        <div class="bp-grid">
-          <label class="bp-field">
-            <span>Full name</span>
-            <input type="text" name="contact_full_name" id="contact_full_name" value="{{ booking.contact_full_name|default:'' }}" required>
+      <div class="bp-main">
+
+        <div class="bp-flight-card" id="bpFlightCard">
+          <div class="bp-fc-actions">
+            <a href="{% url 'transport:flight_results' %}?origin={{ booking.origin_code|default:'' }}&destination={{ booking.destination_code|default:'' }}&travel_date={% if booking.departure_at %}{{ booking.departure_at|date:'Y-m-d' }}{% endif %}&adults={{ booking.adults|default:1 }}&children={{ booking.children|default:0 }}&infants={{ booking.infants|default:0 }}&trip_type=oneway"
+               class="bp-fc-change" id="bpFcChange">
+              <i class="fa-solid fa-pen"></i>
+              Change ticket
+            </a>
+            <button type="button" class="bp-fc-more" id="bpFcMore" aria-label="Ticket details" title="Ticket details">
+              <i class="fa-solid fa-ellipsis"></i>
+            </button>
+          </div>
+          <div class="bp-fc-body">
+            <div class="bp-fc-text">
+              <div class="bp-fc-title" id="bpFcTitle">
+                {{ booking.origin_code|default:"â€”" }}
+                <span class="bp-fc-arrow">â†’</span>
+                {{ booking.destination_code|default:"â€”" }}
+              </div>
+              <div class="bp-fc-subtitle" id="bpFcSubtitle">
+                {% if booking.departure_at %}
+                  {{ booking.departure_at|date:"D, d M Y" }} â€” {{ booking.departure_at|time:"H:i" }}
+                {% elif booking.flight_or_trip_number %}
+                  {{ booking.flight_or_trip_number }}
+                {% else %}
+                  Selected flight
+                {% endif %}
+              </div>
+              <div class="bp-fc-meta" id="bpFcMeta">
+                <span id="bpFcAirline">{{ booking.airline_or_company|default:"" }}</span>
+                <span id="bpFcDuration"></span>
+                <span id="bpFcStops"></span>
+              </div>
+            </div>
+            <div class="bp-fc-logo-wrap">
+              <img src="" alt="" class="bp-fc-logo" id="bpFcLogo" hidden>
+              <span class="bp-fc-logo-fallback" id="bpFcLogoFallback">
+                {{ booking.airline_or_company|default:"FL"|slice:":2"|upper }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <h1 class="bp-title">
+          <i class="fa-solid fa-users" aria-hidden="true"></i>
+          Who's traveling?
+        </h1>
+        <p class="bp-subtitle">Enter names exactly as they appear on the passport (Latin characters only).</p>
+
+        <div class="bp-notice-list">
+          <div class="bp-notice-item">
+            <strong>Names must match ID</strong>
+            Enter the name exactly as it appears on the passport that will be used at check-in.
+          </div>
+          <div class="bp-notice-item">
+            <strong>6-month passport validity</strong>
+            For international flights, the passport should remain valid for at least 6 months after the trip ends.
+          </div>
+          <div class="bp-notice-item">
+            <strong>Latin characters only</strong>
+            Given names and surname must use Aâ€“Z letters (as printed in the machine-readable zone of the passport).
+          </div>
+        </div>
+
+        <div id="bpPassengers"></div>
+
+        <div class="bp-card" id="bpContactCard">
+          <h2 class="bp-card-title">Contact details</h2>
+
+          <label class="bp-checkbox">
+            <input type="checkbox" id="sameAsFirst">
+            <span>Same as first passenger</span>
           </label>
-          <label class="bp-field">
-            <span>Email</span>
-            <input type="email" name="contact_email" id="contact_email" value="{{ booking.contact_email|default:'' }}" required>
-          </label>
-          <label class="bp-field">
-            <span>Phone</span>
-            <input type="tel" name="contact_phone" id="contact_phone" value="{{ booking.contact_phone|default:'' }}" required>
-          </label>
+
+          <div class="bp-grid-3">
+            <div class="bp-field">
+              <label>Contact name <span class="bp-req">*</span></label>
+              <input type="text" id="contactName" name="contact_name" required
+                     value="{{ booking.contact_full_name|default:'' }}"
+                     autocomplete="name" maxlength="120">
+            </div>
+            <div class="bp-field">
+              <label>Email <span class="bp-req">*</span></label>
+              <input type="email" id="contactEmail" name="contact_email" required
+                     value="{{ booking.contact_email|default:'' }}"
+                     autocomplete="email" placeholder="name@example.com">
+              <small>Ticket and booking confirmation will be sent here.</small>
+            </div>
+            <div class="bp-field">
+              <label>Mobile phone <span class="bp-req">*</span></label>
+              <div class="bp-phone">
+                <select id="countryCode" aria-label="Country code">
+                  <option value="+98">+98</option>
+                  <option value="+90">+90</option>
+                  <option value="+971">+971</option>
+                  <option value="+44">+44</option>
+                  <option value="+1">+1</option>
+                  <option value="+49">+49</option>
+                  <option value="+33">+33</option>
+                  <option value="+86">+86</option>
+                </select>
+                <input type="tel" id="contactPhone" name="contact_phone" required
+                       value="{{ booking.contact_phone|default:'' }}"
+                       autocomplete="tel" inputmode="numeric"
+                       placeholder="9123456789" maxlength="15">
+              </div>
+              <small>7â€“15 digits, without the country code.</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="bp-alert">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <div>
+            <strong>Travel documents & visa</strong>
+            <p>Visa rules depend on nationality and destination. Confirm entry requirements before travel. Miles/points eligibility depends on the airline â€” contact the carrier if unsure.</p>
+          </div>
         </div>
       </div>
 
-      <div id="bpPassengerList" class="bp-passenger-list"></div>
+      <aside class="bp-sidebar">
+        <div class="bp-sidebar-card">
+          <div class="bp-side-route" id="bpSidebarFlight">
+            {{ booking.origin_code|default:"â€”" }} â†’ {{ booking.destination_code|default:"â€”" }}
+          </div>
+          <div class="bp-side-meta" id="bpSidebarMeta"></div>
 
-      <div class="bp-actions">
-        <button type="submit" class="bp-btn bp-btn--primary" id="bpContinueBtn">
-          <i class="fa-solid fa-arrow-right"></i> Continue to services
-        </button>
-        <a class="bp-btn bp-btn--ghost" href="{% url 'transport:flight_results' %}">Back to flights</a>
+          <div class="bp-price-row">
+            <span>Adult</span>
+            <span id="bpTicketPrice">{{ booking.base_price }} {{ booking.currency }}</span>
+          </div>
+          <div class="bp-price-row bp-price-note">
+            <span>Including taxes & airport fees</span>
+          </div>
+          <div class="bp-price-row">
+            <span>Taxes & fees</span>
+            <span id="bpTaxes">{{ booking.taxes }} {{ booking.currency }}</span>
+          </div>
+          <div class="bp-price-row">
+            <span>Services</span>
+            <span id="bpServices">{{ booking.service_price }} {{ booking.currency }}</span>
+          </div>
+          <hr>
+          <div class="bp-price-row bp-price-total">
+            <span>Total</span>
+            <span id="bpTotal">{{ booking.total_price }} {{ booking.currency }}</span>
+          </div>
+          <p class="bp-side-note">
+            By clicking confirm you agree to the site terms and airline conditions.
+          </p>
+          <button type="button" class="bp-cta" id="bpContinueBtn">
+            Confirm & continue
+          </button>
+          <p id="bpFormError" class="bp-form-error" hidden></p>
+        </div>
+      </aside>
+    </div>
+    {% else %}
+      <div class="bp-alert">
+        <div>
+          <strong>No booking found.</strong>
+          <p><a href="{% url 'transport:out' %}">Search for flights again</a></p>
+        </div>
       </div>
-    </form>
+    {% endif %}
+
   </div>
 </section>
 
+{# Compact ticket-details popup (opened by â‹¯ next to Change ticket) #}
+<div class="bp-ticket-modal" id="bpTicketModal" hidden aria-hidden="true">
+  <div class="bp-ticket-overlay" id="bpTicketOverlay"></div>
+  <div class="bp-ticket-panel" role="dialog" aria-labelledby="bpTicketTitle">
+    <div class="bp-ticket-header">
+      <h2 id="bpTicketTitle">Ticket details</h2>
+      <button type="button" class="bp-ticket-close" id="bpTicketClose" aria-label="Close">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <div class="bp-ticket-body" id="bpTicketBody">
+      <!-- filled by JS -->
+    </div>
+  </div>
+</div>
+
+<div class="bp-sticky-bar" id="bpStickyBar">
+  <div class="bp-sticky-price" id="bpStickyPrice">
+    {% if booking %}{{ booking.total_price }} {{ booking.currency }}{% else %}â€”{% endif %}
+  </div>
+  <button type="button" class="bp-cta" id="bpStickyContinue">Confirm & continue</button>
+</div>
+
 {% if booking %}
-  {{ booking.offer_snapshot|json_script:"booking-offer-data" }}
+  {{ offer|json_script:"booking-offer-data" }}
   <script>
-    window.BOOKING_ID = {{ booking.id }};
-    window.BOOKING_CSRF = "{{ csrf_token }}";
-    window.BOOKING_NEXT_URL = "{% url 'booking:services' booking.id %}";
-    window.BOOKING_SAVE_URL = "{% url 'booking:passengers' booking.id %}";
-    window.BOOKING_COUNTS = {
-      adults: {{ booking.adults|default:1 }},
-      children: {{ booking.children|default:0 }},
-      infants: {{ booking.infants|default:0 }}
-    };
-    window.BOOKING_FLIGHT = {
+    window.BOOKING = {
+      id: {{ booking.id }},
+      adults: {{ booking.adults }},
+      children: {{ booking.children }},
+      infants: {{ booking.infants }},
+      totalPrice: "{{ booking.total_price }}",
+      currency: "{{ booking.currency }}",
       origin: "{{ booking.origin_code|default:'' }}",
       destination: "{{ booking.destination_code|default:'' }}",
-      airline: "{{ booking.airline_or_company|default:'' }}",
-      flightNumber: "{{ booking.flight_or_trip_number|default:'' }}",
+      airline: "{{ booking.airline_or_company|default:''|escapejs }}",
+      flightNumber: "{{ booking.flight_or_trip_number|default:''|escapejs }}",
       departureAt: "{% if booking.departure_at %}{{ booking.departure_at|date:'c' }}{% endif %}",
       arrivalAt: "{% if booking.arrival_at %}{{ booking.arrival_at|date:'c' }}{% endif %}"
     };
