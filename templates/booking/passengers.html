@@ -58,7 +58,7 @@
           <span class="bp-step-label">Ticket Issuance</span>
         </li>
       </ol>
-      <div class="bp-stepper-mobile">Step 2 of 6 â€” Passenger Details</div>
+      <div class="bp-stepper-mobile">Step 2 of 6 — Passenger Details</div>
     </nav>
 
     {% if error %}
@@ -87,13 +87,13 @@
           <div class="bp-fc-body">
             <div class="bp-fc-text">
               <div class="bp-fc-title" id="bpFcTitle">
-                {{ booking.origin_code|default:"â€”" }}
-                <span class="bp-fc-arrow">â†’</span>
-                {{ booking.destination_code|default:"â€”" }}
+                {{ booking.origin_code|default:"—" }}
+                <span class="bp-fc-arrow">→</span>
+                {{ booking.destination_code|default:"—" }}
               </div>
               <div class="bp-fc-subtitle" id="bpFcSubtitle">
                 {% if booking.departure_at %}
-                  {{ booking.departure_at|date:"D, d M Y" }} â€” {{ booking.departure_at|time:"H:i" }}
+                  {{ booking.departure_at|date:"D, d M Y" }} — {{ booking.departure_at|time:"H:i" }}
                 {% elif booking.flight_or_trip_number %}
                   {{ booking.flight_or_trip_number }}
                 {% else %}
@@ -132,7 +132,7 @@
           </div>
           <div class="bp-notice-item">
             <strong>Latin characters only</strong>
-            Given names and surname must use Aâ€“Z letters (as printed in the machine-readable zone of the passport).
+            Given names and surname must use A–Z letters (as printed in the machine-readable zone of the passport).
           </div>
         </div>
 
@@ -178,7 +178,7 @@
                        autocomplete="tel" inputmode="numeric"
                        placeholder="9123456789" maxlength="15">
               </div>
-              <small>7â€“15 digits, without the country code.</small>
+              <small>7–15 digits, without the country code.</small>
             </div>
           </div>
         </div>
@@ -187,7 +187,7 @@
           <i class="fa-solid fa-triangle-exclamation"></i>
           <div>
             <strong>Travel documents & visa</strong>
-            <p>Visa rules depend on nationality and destination. Confirm entry requirements before travel. Miles/points eligibility depends on the airline â€” contact the carrier if unsure.</p>
+            <p>Visa rules depend on nationality and destination. Confirm entry requirements before travel. Miles/points eligibility depends on the airline — contact the carrier if unsure.</p>
           </div>
         </div>
       </div>
@@ -195,7 +195,7 @@
       <aside class="bp-sidebar">
         <div class="bp-sidebar-card">
           <div class="bp-side-route" id="bpSidebarFlight">
-            {{ booking.origin_code|default:"â€”" }} â†’ {{ booking.destination_code|default:"â€”" }}
+            {{ booking.origin_code|default:"—" }} → {{ booking.destination_code|default:"—" }}
           </div>
           <div class="bp-side-meta" id="bpSidebarMeta"></div>
 
@@ -241,7 +241,7 @@
   </div>
 </section>
 
-{# Compact ticket-details popup (opened by â‹¯ next to Change ticket) #}
+{# Compact ticket-details popup (opened by ⋯ next to Change ticket) #}
 <div class="bp-ticket-modal" id="bpTicketModal" hidden aria-hidden="true">
   <div class="bp-ticket-overlay" id="bpTicketOverlay"></div>
   <div class="bp-ticket-panel" role="dialog" aria-labelledby="bpTicketTitle">
@@ -259,7 +259,7 @@
 
 <div class="bp-sticky-bar" id="bpStickyBar">
   <div class="bp-sticky-price" id="bpStickyPrice">
-    {% if booking %}{{ booking.total_price }} {{ booking.currency }}{% else %}â€”{% endif %}
+    {% if booking %}{{ booking.total_price }} {{ booking.currency }}{% else %}—{% endif %}
   </div>
   <button type="button" class="bp-cta" id="bpStickyContinue">Confirm & continue</button>
 </div>

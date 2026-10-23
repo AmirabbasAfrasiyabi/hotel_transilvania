@@ -434,7 +434,11 @@
 
   function showError(msg) {
     const el = document.getElementById("bpFormError");
-    if (!el) { alert(msg); return; }
+    if (window.BookingAlert) { BookingAlert.toast(msg, "error"); }
+    if (!el) {
+      if (!window.BookingAlert) alert(msg);
+      return;
+    }
     el.textContent = msg;
     el.hidden = false;
     el.style.display = "block";
