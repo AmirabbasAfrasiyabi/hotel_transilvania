@@ -1,14 +1,11 @@
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from .models import *
-from website.forms import *
+from website.forms import ContactForm
 from django.contrib import messages
 from help_center.models import FAQCategory
 from help_center.services import get_service_content
 
 
 def index_view(request):
-    # get_service_content فقط مقاصد خارجی را برمی‌گرداند
     context = get_service_content(FAQCategory.FLIGHT)
     return render(request, "website/index.html", context)
 
