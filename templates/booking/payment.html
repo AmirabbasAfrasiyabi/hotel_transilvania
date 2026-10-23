@@ -5,6 +5,7 @@
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/booking-passengers.css' %}">
+<link rel="stylesheet" href="{% static 'css/booking-alerts.css' %}">
 
 <style>
   #header { display: none !important; }
@@ -112,6 +113,7 @@
   </div>
 </section>
 
+<script src="{% static 'js/booking-alerts.js' %}"></script>
 <script>
 (function () {
   function getCookie(name) {
@@ -121,13 +123,25 @@
     return "";
   }
   var errBox = document.getElementById("payError");
+  function showInlineError(msg) {
+    if (errBox) {
+      errBox.style.display = "block";
+      errBox.textContent = msg || "";
+    }
+    if (window.BookingAlert) {
+      BookingAlert.toast(msg, "error");
+    }
+  }
+  function clearInlineError() {
+    if (errBox) { errBox.style.display = "none"; errBox.textContent = ""; }
+  }
 
   var zpBtn = document.getElementById("payZarinpalBtn");
   if (zpBtn) {
     zpBtn.addEventListener("click", async function () {
       zpBtn.disabled = true;
       zpBtn.innerHTML = "Redirecting to Zarinpal…";
-      if (errBox) { errBox.style.display = "none"; errBox.textContent = ""; }
+      clearInlineError();
       try {
         var res = await fetch("{% url 'booking:zarinpal_start' booking.id %}", {
           method: "POST",
@@ -138,20 +152,15 @@
           },
           credentials: "same-origin"
         });
-        var data = await res.json();
+        var data = {};
+        try { data = await res.json(); } catch (e) { data = {}; }
         if (!res.ok || !data.ok) {
-          if (errBox) {
-            errBox.style.display = "block";
-            errBox.textContent = data.error || "Could not start payment.";
-          }
+          showInlineError(data.error || "Could not start payment.");
           return;
         }
         window.location.href = data.redirect_url;
       } catch (e) {
-        if (errBox) {
-          errBox.style.display = "block";
-          errBox.textContent = "Network error. Please try again.";
-        }
+        showInlineError("Network error. Please try again.");
       } finally {
         zpBtn.disabled = false;
         zpBtn.innerHTML = '<i class="fa-solid fa-lock"></i> Pay with Zarinpal';
@@ -162,10 +171,20 @@
   var btn = document.getElementById("payNowBtn");
   if (!btn) return;
   btn.addEventListener("click", async function () {
-    if (!confirm("Simulate successful payment for this booking?")) return;
+    var ok = true;
+    if (window.BookingAlert) {
+      ok = await BookingAlert.confirm(
+        "Simulate successful payment for this booking?\nThe ticket will be issued after confirmation.",
+        { title: "Simulate payment", okText: "Yes, pay", cancelText: "Cancel" }
+      );
+    } else {
+      ok = window.confirm("Simulate successful payment for this booking?");
+    }
+    if (!ok) return;
+
     btn.disabled = true;
     btn.innerHTML = "Processing payment…";
-    if (errBox) { errBox.style.display = "none"; errBox.textContent = ""; }
+    clearInlineError();
     try {
       var res = await fetch("{% url 'booking:payment_callback' booking.id %}", {
         method: "POST",
@@ -182,23 +201,21 @@
           success: true
         })
       });
-      var data = await res.json();
+      var data = {};
+      try { data = await res.json(); } catch (e) { data = {}; }
       if (!res.ok || !data.ok) {
-        if (errBox) {
-          errBox.style.display = "block";
-          errBox.textContent = data.error || "Payment failed.";
-        }
+        showInlineError(data.error || "Payment failed.");
         if (data.redirect_url) {
-          setTimeout(function () { window.location.href = data.redirect_url; }, 1200);
+          setTimeout(function () { window.location.href = data.redirect_url; }, 1400);
         }
         return;
       }
+      if (window.BookingAlert) {
+        BookingAlert.toast("Payment successful. Issuing ticket…", "success", 2000);
+      }
       window.location.href = data.redirect_url || ("/booking/confirmation/" + data.booking_id + "/");
     } catch (e) {
-      if (errBox) {
-        errBox.style.display = "block";
-        errBox.textContent = "Network error. Please try again.";
-      }
+      showInlineError("Network error. Please try again.");
     } finally {
       btn.disabled = false;
       btn.innerHTML = '<i class="fa-solid fa-flask"></i> Simulate payment (dev)';
