@@ -116,7 +116,7 @@ def zarinpal_start_view(request, booking_id: int):
     except ZarinpalError as exc:
         logger.warning("Zarinpal start failed booking=%s: %s", booking_id, exc.message)
         return JsonResponse(
-            {"ok": False, "error": exc.message, "code": exp.code},
+            {"ok": False, "error": exc.message, "code": exc.code},
             status=400,
         )
 
