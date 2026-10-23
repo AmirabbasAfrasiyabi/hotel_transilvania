@@ -34,6 +34,8 @@ class DestinationAdmin(admin.ModelAdmin):
     list_filter = ("category", "country", "is_active")
     search_fields = ("name", "country")
     ordering = ("category", "display_order", "name")
+
+    # کشور فقط خواندنی است — با انتخاب شهر خودکار پر می‌شود
     fields = (
         "category",
         "name",
@@ -43,7 +45,7 @@ class DestinationAdmin(admin.ModelAdmin):
         "is_active",
         "display_order",
     )
-    readonly_fields = ("image_preview",)
+    readonly_fields = ("country", "image_preview")
 
     class Media:
         js = ("admin/js/destination_city_country.js",)

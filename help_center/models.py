@@ -1,7 +1,7 @@
 from django.db import models
 from ckeditor.fields import RichTextField
 
-from .destination_data import CITY_CHOICES, COUNTRY_CHOICES, CITY_TO_COUNTRY
+from .destination_data import CITY_CHOICES, CITY_TO_COUNTRY
 
 
 class ServiceContentManager(models.Manager):
@@ -74,9 +74,9 @@ class Destination(models.Model):
         choices=CITY_CHOICES,
         verbose_name="Destination Name",
     )
+    # فقط نمایش / ذخیره خودکار — کاربر دستی انتخاب نمی‌کند
     country = models.CharField(
         max_length=100,
-        choices=COUNTRY_CHOICES,
         blank=True,
         default="",
         verbose_name="Country",
@@ -99,7 +99,6 @@ class Destination(models.Model):
         return f"{self.name} ({self.get_category_display()})"
 
     def save(self, *args, **kwargs):
-        # اگر شهر انتخاب شده، کشور را خودکار ست کن
         if self.name and self.name in CITY_TO_COUNTRY:
             self.country = CITY_TO_COUNTRY[self.name]
         super().save(*args, **kwargs)
