@@ -394,3 +394,6 @@ def confirmation_view(request, booking_id: int):
     )
 
 from booking.payment_views import payment_callback_view, payment_view
+
+from booking.zarinpal_views import zarinpal_callback_view, zarinpal_start_view
+
