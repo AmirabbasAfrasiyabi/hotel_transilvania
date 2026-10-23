@@ -181,3 +181,11 @@ CKEDITOR_CONFIGS = {
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 DUFFEL_ACCESS_TOKEN = os.environ.get('DUFFEL_ACCESS_TOKEN', '')
+
+# Zarinpal payment gateway
+ZARINPAL_MERCHANT_ID = os.environ.get("ZARINPAL_MERCHANT_ID", "")
+ZARINPAL_SANDBOX = os.environ.get("ZARINPAL_SANDBOX", "true").lower() in ("1", "true", "yes")
+# "toman" → multiply by 10 for Rial API; "rial" → use total_price as Rial
+ZARINPAL_PRICE_UNIT = os.environ.get("ZARINPAL_PRICE_UNIT", "toman")
+# Optional absolute callback override, may include {booking_id}
+ZARINPAL_CALLBACK_URL = os.environ.get("ZARINPAL_CALLBACK_URL", "")
