@@ -68,12 +68,6 @@ class Destination(models.Model):
     name = models.CharField(max_length=100, verbose_name="Destination Name")
     country = models.CharField(max_length=100, blank=True, default='', verbose_name="Country")
     image = models.ImageField(upload_to="images/", null=True, blank=True)
-    is_domestic = models.BooleanField(
-        null=True,
-        blank=True,
-        default=None,
-        verbose_name="Domestic",
-    )
 
     is_active = models.BooleanField(default=True, verbose_name="is_active")
     display_order = models.PositiveIntegerField(default=0, verbose_name="display_order")
