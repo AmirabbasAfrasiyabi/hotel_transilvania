@@ -1,10 +1,7 @@
-import json
-
+from django import forms
 from django.contrib import admin
 from django.utils.html import format_html
-from django.utils.safestring import mark_safe
 
-from .destination_data import CITY_TO_COUNTRY
 from .models import FAQ, Destination
 
 
@@ -35,7 +32,6 @@ class DestinationAdmin(admin.ModelAdmin):
     search_fields = ("name", "country")
     ordering = ("category", "display_order", "name")
 
-    # کشور فقط خواندنی است — با انتخاب شهر خودکار پر می‌شود
     fields = (
         "category",
         "name",
@@ -45,17 +41,22 @@ class DestinationAdmin(admin.ModelAdmin):
         "is_active",
         "display_order",
     )
-    readonly_fields = ("country", "image_preview")
+    readonly_fields = ("image_preview",)
 
     class Media:
         js = ("admin/js/destination_city_country.js",)
 
-    def changeform_view(self, request, object_id=None, form_url="", extra_context=None):
-        extra_context = extra_context or {}
-        extra_context["city_to_country_json"] = mark_safe(
-            json.dumps(CITY_TO_COUNTRY, ensure_ascii=False)
-        )
-        return super().changeform_view(request, object_id, form_url, extra_context)
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        formfield = super().formfield_for_dbfield(db_field, request, **kwargs)
+        if db_field.name == "country":
+            formfield.widget = forms.TextInput(
+                attrs={
+                    "readonly": "readonly",
+                    "style": "background:#2b2b2b;color:#ccc;cursor:default;",
+                }
+            )
+            formfield.help_text = "با انتخاب شهر به‌صورت خودکار پر می‌شود"
+        return formfield
 
     @admin.display(description="preview")
     def image_preview(self, obj):
