@@ -7,5 +7,111 @@
 <link rel="stylesheet" href="{% static 'css/booking-passengers.css' %}">
 <link rel="stylesheet" href="{% static 'css/booking-alerts.css' %}">
 
-{% include "booking/_passengers_body.html" ignore missing %}
-{# Fallback: full page content follows if partial not used #}
+<style>
+  #header { display: none !important; }
+  #footer, footer { display: none !important; }
+</style>
+
+<header class="bp-simple-header">
+  <div class="container">
+    <div class="bp-header-inner">
+      <a href="{% url 'website:index' %}" class="bp-logo">
+        <img src="{% static 'img/logo.png' %}" alt="Logo">
+      </a>
+      <div class="bp-user-nav">
+        {% if user.is_authenticated %}
+          <span>{{ user.get_full_name|default:user.username }}</span>
+          <a href="{% url 'account:logout' %}">Logout</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="bp-page">
+  <div class="container bp-page-inner">
+    <nav class="bp-stepper" aria-label="Booking steps">
+      <ol class="bp-stepper-list">
+        <li class="bp-step is-completed"><span class="bp-step-icon"><i class="fa-solid fa-check"></i></span><span class="bp-step-label">Select Flight</span></li>
+        <li class="bp-step is-active"><span class="bp-step-icon"><i class="fa-solid fa-users"></i></span><span class="bp-step-label">Passenger Details</span></li>
+        <li class="bp-step"><span class="bp-step-icon"><i class="fa-solid fa-suitcase"></i></span><span class="bp-step-label">Travel Services</span></li>
+        <li class="bp-step"><span class="bp-step-icon"><i class="fa-solid fa-clipboard-check"></i></span><span class="bp-step-label">Review</span></li>
+        <li class="bp-step"><span class="bp-step-icon"><i class="fa-solid fa-credit-card"></i></span><span class="bp-step-label">Payment</span></li>
+        <li class="bp-step"><span class="bp-step-icon"><i class="fa-solid fa-ticket"></i></span><span class="bp-step-label">Ticket Issuance</span></li>
+      </ol>
+      <div class="bp-stepper-mobile">Step 2 of 6 — Passenger Details</div>
+    </nav>
+
+    <h1 class="bp-title"><i class="fa-solid fa-users"></i> Passenger details</h1>
+    <p class="bp-subtitle">Enter contact and passenger information exactly as on travel documents.</p>
+
+    {% if error %}
+      <div class="bp-alert bp-alert--error">{{ error }}</div>
+    {% endif %}
+
+    <div id="bpFormError" class="bp-alert bp-alert--error" hidden style="display:none;"></div>
+
+    <form id="bpPassengerForm" class="bp-form" novalidate>
+      <div class="bp-card">
+        <h2><i class="fa-solid fa-address-book"></i> Contact</h2>
+        <div class="bp-grid">
+          <label class="bp-field">
+            <span>Full name</span>
+            <input type="text" name="contact_full_name" id="contact_full_name" value="{{ booking.contact_full_name|default:'' }}" required>
+          </label>
+          <label class="bp-field">
+            <span>Email</span>
+            <input type="email" name="contact_email" id="contact_email" value="{{ booking.contact_email|default:'' }}" required>
+          </label>
+          <label class="bp-field">
+            <span>Phone</span>
+            <input type="tel" name="contact_phone" id="contact_phone" value="{{ booking.contact_phone|default:'' }}" required>
+          </label>
+        </div>
+      </div>
+
+      <div id="bpPassengerList" class="bp-passenger-list"></div>
+
+      <div class="bp-actions">
+        <button type="submit" class="bp-btn bp-btn--primary" id="bpContinueBtn">
+          <i class="fa-solid fa-arrow-right"></i> Continue to services
+        </button>
+        <a class="bp-btn bp-btn--ghost" href="{% url 'transport:flight_results' %}">Back to flights</a>
+      </div>
+    </form>
+  </div>
+</section>
+
+{% if booking %}
+  {{ booking.offer_snapshot|json_script:"booking-offer-data" }}
+  <script>
+    window.BOOKING_ID = {{ booking.id }};
+    window.BOOKING_CSRF = "{{ csrf_token }}";
+    window.BOOKING_NEXT_URL = "{% url 'booking:services' booking.id %}";
+    window.BOOKING_SAVE_URL = "{% url 'booking:passengers' booking.id %}";
+    window.BOOKING_COUNTS = {
+      adults: {{ booking.adults|default:1 }},
+      children: {{ booking.children|default:0 }},
+      infants: {{ booking.infants|default:0 }}
+    };
+    window.BOOKING_FLIGHT = {
+      origin: "{{ booking.origin_code|default:'' }}",
+      destination: "{{ booking.destination_code|default:'' }}",
+      airline: "{{ booking.airline_or_company|default:'' }}",
+      flightNumber: "{{ booking.flight_or_trip_number|default:'' }}",
+      departureAt: "{% if booking.departure_at %}{{ booking.departure_at|date:'c' }}{% endif %}",
+      arrivalAt: "{% if booking.arrival_at %}{{ booking.arrival_at|date:'c' }}{% endif %}"
+    };
+    try {
+      window.BOOKING_OFFER = JSON.parse(
+        document.getElementById("booking-offer-data").textContent
+      );
+    } catch (e) {
+      window.BOOKING_OFFER = {};
+    }
+  </script>
+  <script src="{% static 'js/booking-alerts.js' %}"></script>
+  <script src="{% static 'js/booking-passengers.js' %}"></script>
+  <script src="{% static 'js/booking-ticket-popup.js' %}"></script>
+{% endif %}
+{% endblock %}
