@@ -83,11 +83,10 @@
         <div class="rv-alert rv-alert--warn">Price updated by airline: <strong>{{ price_info.old_amount }}</strong> → <strong>{{ price_info.new_amount }} {{ price_info.currency }}</strong></div>
       {% endif %}
       {% if error %}<div class="rv-alert rv-alert--error">{{ error }}</div>{% endif %}
-      {% if request.GET.ready_for_payment == "1" or booking.status == "pending_payment" %}
+      {% if request.GET.ready_for_payment == "1" or booking.status == "P" %}
         <div class="rv-alert rv-alert--warn">
-          <p><strong>Ready for payment.</strong> Booking status is pending payment.
-          Total: <strong>{{ booking.total_price }} {{ booking.currency }}</strong>.</p>
-          <p style="margin:0.5rem 0 0;">Gateway integration is the next step. Ticket will be issued only after successful payment.</p>
+          <p><strong>Ready for payment.</strong> Total: <strong>{{ booking.total_price }} {{ booking.currency }}</strong>.</p>
+          <p style="margin:0.5rem 0 0;">Continue to the payment step. The ticket is issued only after successful payment.</p>
         </div>
       {% endif %}
 
@@ -104,7 +103,9 @@
       <div class="rv-card">
         <div class="rv-row-head">
           <h2 style="margin:0;"><i class="fa-solid fa-users"></i> Passengers</h2>
+          {% if booking.status == "D" %}
           <a class="rv-edit" href="{% url 'booking:passengers' booking.id %}">Edit</a>
+          {% endif %}
         </div>
         <ul class="rv-list">
           {% for p in passengers %}
@@ -120,7 +121,9 @@
       <div class="rv-card">
         <div class="rv-row-head">
           <h2 style="margin:0;"><i class="fa-solid fa-suitcase"></i> Travel services</h2>
+          {% if booking.status == "D" %}
           <a class="rv-edit" href="{% url 'booking:services' booking.id %}">Edit</a>
+          {% endif %}
         </div>
         {% if svc and not svc.skipped %}
           <ul class="rv-list">
@@ -149,8 +152,8 @@
       </div>
 
       <div class="rv-actions">
-        {% if booking.status == "pending_payment" %}
-        <button type="button" class="rv-btn rv-btn--primary" id="rvConfirmBtn" disabled><i class="fa-solid fa-hourglass-half"></i> Awaiting payment</button>
+        {% if booking.status == "P" %}
+        <a class="rv-btn rv-btn--primary" href="{% url 'booking:payment' booking.id %}"><i class="fa-solid fa-credit-card"></i> Go to payment</a>
         {% else %}
         <button type="button" class="rv-btn rv-btn--primary" id="rvConfirmBtn"><i class="fa-solid fa-check"></i> Confirm & continue to payment</button>
         {% endif %}
@@ -224,7 +227,7 @@
         if (data.price_changed) {
           alert((data.message || "Price updated.") + " Total: " + data.total_price + " " + data.currency);
         }
-        window.location.href = data.next_url || data.redirect_url || ("/booking/review/" + data.booking_id + "/?ready_for_payment=1");
+        window.location.href = data.next_url || data.redirect_url || ("/booking/payment/" + data.booking_id + "/");
       } catch (e) {
         if (errBox) {
           errBox.style.display = "block";
