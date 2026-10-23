@@ -361,9 +361,85 @@ class BookingService:
 
     @classmethod
     @transaction.atomic
+    def prepare_for_payment(cls, booking: Booking) -> dict:
+        if booking.status == Booking.Status.PENDING_PAYMENT:
+            return {
+                "booking": booking,
+                "price_info": {
+                    "price_changed": False,
+                    "old_amount": str(booking.total_price),
+                    "new_amount": str(booking.total_price),
+                    "currency": booking.currency,
+                    "message": None,
+                },
+            }
+        if booking.status != Booking.Status.DRAFT:
+            raise BookingServiceError(
+                "Booking cannot enter payment in this status.",
+                code="invalid_status",
+            )
+        if booking.is_expired():
+            booking.status = Booking.Status.EXPIRED
+            booking.save(update_fields=["status", "updated_at"])
+            raise BookingServiceError("This booking has expired.", code="expired")
+        if not booking.passengers.exists():
+            raise BookingServiceError(
+                "Passenger details are required before payment.",
+                code="missing_passengers",
+            )
+        if not (booking.contact_email or "").strip():
+            raise BookingServiceError(
+                "Contact details are required before payment.",
+                code="missing_contact",
+            )
+        price_info = cls.revalidate(booking)
+        booking.refresh_from_db()
+        booking.status = Booking.Status.PENDING_PAYMENT
+        booking.expires_at = timezone.now() + timedelta(minutes=cls.DRAFT_TTL_MINUTES)
+        booking.save(update_fields=["status", "expires_at", "updated_at"])
+        return {"booking": booking, "price_info": price_info}
+
+    @classmethod
+    @transaction.atomic
+    def mark_paid(
+        cls,
+        booking: Booking,
+        payment_ref: str = "",
+        payment_authority: str = "",
+    ) -> Booking:
+        if booking.status == Booking.Status.ISSUED:
+            return booking
+        if booking.status == Booking.Status.PAID:
+            return cls.confirm_and_issue(booking)
+        if booking.status != Booking.Status.PENDING_PAYMENT:
+            raise BookingServiceError(
+                "Booking is not awaiting payment.",
+                code="invalid_status",
+            )
+        if booking.is_expired():
+            booking.status = Booking.Status.EXPIRED
+            booking.save(update_fields=["status", "updated_at"])
+            raise BookingServiceError("This booking has expired.", code="expired")
+        booking.status = Booking.Status.PAID
+        if payment_ref:
+            booking.payment_ref = str(payment_ref)[:100]
+        if payment_authority:
+            booking.payment_authority = str(payment_authority)[:100]
+        booking.save(
+            update_fields=["status", "payment_ref", "payment_authority", "updated_at"]
+        )
+        return cls.confirm_and_issue(booking)
+
+    @classmethod
+    @transaction.atomic
     def confirm_and_issue(cls, booking: Booking) -> Booking:
-        if booking.status not in (Booking.Status.DRAFT, Booking.Status.PENDING_PAYMENT):
-            raise BookingServiceError("Booking cannot be confirmed in this status.", code="invalid_status")
+        if booking.status == Booking.Status.ISSUED:
+            return booking
+        if booking.status != Booking.Status.PAID:
+            raise BookingServiceError(
+                "Payment is required before ticket issuance.",
+                code="payment_required",
+            )
         if booking.is_expired():
             raise BookingServiceError("This booking has expired.", code="expired")
         if not booking.passengers.exists():
