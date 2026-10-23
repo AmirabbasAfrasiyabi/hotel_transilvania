@@ -77,16 +77,33 @@
       <p class="pay-meta">Status: {{ booking.get_status_display }}</p>
       <div class="pay-total">{{ booking.total_price }} {{ booking.currency }}</div>
 
+      {% if zarinpal_enabled %}
       <div class="pay-alert pay-alert--warn">
-        <strong>Development payment stub.</strong>
-        Real gateway (e.g. Zarinpal / Stripe) will replace this button.
-        Clicking “Pay now” marks the booking as paid and issues the ticket.
+        {% if zarinpal_sandbox %}
+        <strong>Zarinpal sandbox.</strong> You will be redirected to Zarinpal test gateway.
+        {% else %}
+        <strong>Secure payment via Zarinpal.</strong> You will be redirected to complete the payment.
+        {% endif %}
       </div>
+      {% else %}
+      <div class="pay-alert pay-alert--warn">
+        <strong>Zarinpal not configured.</strong>
+        Set <code>ZARINPAL_MERCHANT_ID</code> in <code>.env</code>.
+        Sandbox simulate button is still available for local testing.
+      </div>
+      {% endif %}
 
       <div class="pay-actions">
-        <button type="button" class="pay-btn pay-btn--primary" id="payNowBtn">
-          <i class="fa-solid fa-lock"></i> Pay now (sandbox)
+        {% if zarinpal_enabled %}
+        <button type="button" class="pay-btn pay-btn--primary" id="payZarinpalBtn">
+          <i class="fa-solid fa-lock"></i> Pay with Zarinpal
         </button>
+        {% endif %}
+        {% if not zarinpal_enabled or zarinpal_sandbox %}
+        <button type="button" class="pay-btn {% if zarinpal_enabled %}pay-btn--ghost{% else %}pay-btn--primary{% endif %}" id="payNowBtn" style="{% if zarinpal_enabled %}justify-content:center;{% endif %}">
+          <i class="fa-solid fa-flask"></i> Simulate payment (dev)
+        </button>
+        {% endif %}
         <a class="pay-btn pay-btn--ghost" href="{% url 'booking:review' booking.id %}?stay=1" style="justify-content:center;">Back to review</a>
         <p id="payError" style="color:#b91c1c;display:none;margin:0;"></p>
       </div>
@@ -103,8 +120,46 @@
     if (parts.length === 2) return parts.pop().split(";").shift();
     return "";
   }
-  var btn = document.getElementById("payNowBtn");
   var errBox = document.getElementById("payError");
+
+  var zpBtn = document.getElementById("payZarinpalBtn");
+  if (zpBtn) {
+    zpBtn.addEventListener("click", async function () {
+      zpBtn.disabled = true;
+      zpBtn.innerHTML = "Redirecting to Zarinpal…";
+      if (errBox) { errBox.style.display = "none"; errBox.textContent = ""; }
+      try {
+        var res = await fetch("{% url 'booking:zarinpal_start' booking.id %}", {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+            "Accept": "application/json",
+            "X-Requested-With": "XMLHttpRequest"
+          },
+          credentials: "same-origin"
+        });
+        var data = await res.json();
+        if (!res.ok || !data.ok) {
+          if (errBox) {
+            errBox.style.display = "block";
+            errBox.textContent = data.error || "Could not start payment.";
+          }
+          return;
+        }
+        window.location.href = data.redirect_url;
+      } catch (e) {
+        if (errBox) {
+          errBox.style.display = "block";
+          errBox.textContent = "Network error. Please try again.";
+        }
+      } finally {
+        zpBtn.disabled = false;
+        zpBtn.innerHTML = '<i class="fa-solid fa-lock"></i> Pay with Zarinpal';
+      }
+    });
+  }
+
+  var btn = document.getElementById("payNowBtn");
   if (!btn) return;
   btn.addEventListener("click", async function () {
     if (!confirm("Simulate successful payment for this booking?")) return;
@@ -132,8 +187,6 @@
         if (errBox) {
           errBox.style.display = "block";
           errBox.textContent = data.error || "Payment failed.";
-        } else {
-          alert(data.error || "Payment failed.");
         }
         if (data.redirect_url) {
           setTimeout(function () { window.location.href = data.redirect_url; }, 1200);
@@ -145,12 +198,10 @@
       if (errBox) {
         errBox.style.display = "block";
         errBox.textContent = "Network error. Please try again.";
-      } else {
-        alert("Network error.");
       }
     } finally {
       btn.disabled = false;
-      btn.innerHTML = '<i class="fa-solid fa-lock"></i> Pay now (sandbox)';
+      btn.innerHTML = '<i class="fa-solid fa-flask"></i> Simulate payment (dev)';
     }
   });
 })();
