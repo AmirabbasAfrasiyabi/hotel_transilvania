@@ -43,19 +43,16 @@ class DestinationAdmin(admin.ModelAdmin):
     )
     readonly_fields = ("image_preview",)
 
-    class Media:
-        js = ("admin/js/destination_city_country.js",)
-
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         formfield = super().formfield_for_dbfield(db_field, request, **kwargs)
-        if db_field.name == "country":
+        if db_field.name == "country" and formfield is not None:
             formfield.widget = forms.TextInput(
                 attrs={
-                    "readonly": "readonly",
-                    "style": "background:#2b2b2b;color:#ccc;cursor:default;",
+                    "readonly": True,
+                    "tabindex": "-1",
                 }
             )
-            formfield.help_text = "با انتخاب شهر به‌صورت خودکار پر می‌شود"
+            formfield.help_text = ""
         return formfield
 
     @admin.display(description="preview")
