@@ -1,6 +1,6 @@
 {% load static %}
 <!-- ========== START: POPULAR DESTINATIONS (reusable component) ========== -->
-{% if popular_destinations_domestic or popular_destinations_international or popular_destinations %}
+{% if popular_destinations %}
 <section class="popular-destinations-area section-gap">
   <div class="container">
     <div class="row d-flex justify-content-center">
@@ -12,14 +12,6 @@
       </div>
     </div>
 
-    {% if popular_destinations_domestic or popular_destinations_international %}
-  
-      <div class="pd-tabs" role="tablist" aria-label="فیلتر مقاصد محبوب" data-pd-tabs>
-        <button type="button" class="pd-tab active" data-pd-tab="domestic" role="tab" aria-selected="true">Domestic</button>
-        <button type="button" class="pd-tab" data-pd-tab="international" role="tab" aria-selected="false">International</button>
-      </div>
-    {% endif %}
-
     <div class="pd-carousel-wrap">
 
       <!-- تنها یک جفت فلش سراسری برای کل ردیف (نه داخل هر کارت) -->
@@ -28,18 +20,9 @@
       </button>
 
       <div class="pd-track" id="pdTrack" role="listbox" aria-label="Popular destinations" tabindex="0">
-        {% if popular_destinations_domestic or popular_destinations_international %}
-          {% for destination in popular_destinations_domestic %}
-            {% include "help_center/_pd_card.html" with destination=destination pd_group="domestic" counter=forloop.counter %}
-          {% endfor %}
-          {% for destination in popular_destinations_international %}
-            {% include "help_center/_pd_card.html" with destination=destination pd_group="international" counter=forloop.counter %}
-          {% endfor %}
-        {% else %}
-          {% for destination in popular_destinations %}
-            {% include "help_center/_pd_card.html" with destination=destination counter=forloop.counter %}
-          {% endfor %}
-        {% endif %}
+        {% for destination in popular_destinations %}
+          {% include "help_center/_pd_card.html" with destination=destination counter=forloop.counter %}
+        {% endfor %}
       </div>
 
       <button type="button" class="pd-nav pd-nav-next" id="pdNextBtn" aria-label="Next destination">

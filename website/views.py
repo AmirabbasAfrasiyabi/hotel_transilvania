@@ -1,40 +1,36 @@
 from django.http import HttpResponse
-from django.shortcuts import render,redirect
+from django.shortcuts import render, redirect
 from .models import *
 from website.forms import *
 from django.contrib import messages
-from help_center.models import  FAQCategory
+from help_center.models import FAQCategory
 from help_center.services import get_service_content
-# Create your views here.
+
 
 def index_view(request):
+    # get_service_content فقط مقاصد خارجی را برمی‌گرداند
     context = get_service_content(FAQCategory.FLIGHT)
-
-    context['popular_destinations'] = (
-        context['popular_destinations']
-        .exclude(is_domestic=True)
-        .exclude(country__icontains='iran')
-    )
-
-    return render(request, 'website/index.html', context)
+    return render(request, "website/index.html", context)
 
 
 def about_view(request):
-    return render(request,'website/about.html')
+    return render(request, "website/about.html")
+
 
 def contact_view(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = ContactForm(request.POST)
         if form.is_valid():
             contact = form.save(commit=False)
             contact.name = "none"
             contact.save()
-            messages.success(request, 'Your ticket submitted successfully')
-            return redirect('website:contact')
+            messages.success(request, "Your ticket submitted successfully")
+            return redirect("website:contact")
     else:
         form = ContactForm()
 
-    return render(request, 'website/contact.html', {'form': form})
+    return render(request, "website/contact.html", {"form": form})
+
 
 def Why_view(request):
-    return render(request,'website/why_Mine.html')
+    return render(request, "website/why_Mine.html")
