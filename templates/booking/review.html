@@ -5,6 +5,7 @@
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/booking-passengers.css' %}">
+<link rel="stylesheet" href="{% static 'css/booking-alerts.css' %}">
 
 <style>
   #header { display: none !important; }
@@ -166,6 +167,7 @@
 </section>
 
 {% if booking and not unavailable %}
+<script src="{% static 'js/booking-alerts.js' %}"></script>
 <script>
 (function () {
   function getCookie(name) {
@@ -173,6 +175,10 @@
     var parts = value.split("; " + name + "=");
     if (parts.length === 2) return parts.pop().split(";").shift();
     return "";
+  }
+  function notify(msg, type) {
+    if (window.BookingAlert) BookingAlert.toast(msg, type || "info");
+    else alert(msg);
   }
   var refreshBtn = document.getElementById("rvRefreshPrice");
   if (refreshBtn) {
@@ -182,18 +188,40 @@
       try {
         var res = await fetch("{% url 'booking:revalidate_api' booking.id %}", { method: "POST", headers: { "X-CSRFToken": getCookie("csrftoken") }, credentials: "same-origin" });
         var data = await res.json();
-        if (!data.ok) { alert(data.error || "Could not refresh price."); if (data.code === "unavailable" || data.code === "expired") window.location.reload(); return; }
-        if (data.price_changed) { alert("Price updated: " + data.old_amount + " → " + data.new_amount + " " + data.currency); window.location.reload(); }
-        else { alert("Price is still the same: " + data.new_amount + " " + data.currency); }
-      } catch (e) { alert("Network error."); }
-      finally { refreshBtn.disabled = false; refreshBtn.textContent = "Refresh price"; }
+        if (!data.ok) {
+          notify(data.error || "Could not refresh price.", "error");
+          if (data.code === "unavailable" || data.code === "expired") window.location.reload();
+          return;
+        }
+        if (data.price_changed) {
+          notify("Price updated: " + data.old_amount + " → " + data.new_amount + " " + data.currency, "warn");
+          window.location.reload();
+        } else {
+          notify("Price is still the same: " + data.new_amount + " " + data.currency, "success");
+        }
+      } catch (e) {
+        notify("Network error.", "error");
+      } finally {
+        refreshBtn.disabled = false;
+        refreshBtn.textContent = "Refresh price";
+      }
     });
   }
   var confirmBtn = document.getElementById("rvConfirmBtn");
   var errBox = document.getElementById("rvConfirmError");
   if (confirmBtn && !confirmBtn.disabled) {
     confirmBtn.addEventListener("click", async function () {
-      if (!confirm("Confirm details and continue to payment?")) return;
+      var ok = true;
+      if (window.BookingAlert) {
+        ok = await BookingAlert.confirm("Confirm details and continue to payment?", {
+          title: "Confirm booking",
+          okText: "Continue",
+          cancelText: "Cancel"
+        });
+      } else {
+        ok = confirm("Confirm details and continue to payment?");
+      }
+      if (!ok) return;
       confirmBtn.disabled = true;
       confirmBtn.innerHTML = "Preparing payment…";
       if (errBox) { errBox.style.display = "none"; errBox.textContent = ""; }
@@ -209,32 +237,23 @@
         });
         var data = await res.json();
         if (!res.ok || !data.ok) {
-          if (errBox) {
-            errBox.style.display = "block";
-            errBox.textContent = data.error || "Could not prepare payment.";
-          } else {
-            alert(data.error || "Could not prepare payment.");
-          }
+          var msg = data.error || "Could not prepare payment.";
+          if (errBox) { errBox.style.display = "block"; errBox.textContent = msg; }
+          if (window.BookingAlert) BookingAlert.alert(msg, { type: "error", title: "Payment" });
           if (data.code === "unavailable" || data.code === "expired" || data.code === "login_required") {
-            if (data.redirect_url) {
-              window.location.href = data.redirect_url;
-              return;
-            }
+            if (data.redirect_url) { window.location.href = data.redirect_url; return; }
             setTimeout(function () { window.location.reload(); }, 1500);
           }
           return;
         }
         if (data.price_changed) {
-          alert((data.message || "Price updated.") + " Total: " + data.total_price + " " + data.currency);
+          notify((data.message || "Price updated.") + " Total: " + data.total_price + " " + data.currency, "warn");
         }
         window.location.href = data.next_url || data.redirect_url || ("/booking/payment/" + data.booking_id + "/");
       } catch (e) {
-        if (errBox) {
-          errBox.style.display = "block";
-          errBox.textContent = "Network error. Please try again.";
-        } else {
-          alert("Network error.");
-        }
+        var nmsg = "Network error. Please try again.";
+        if (errBox) { errBox.style.display = "block"; errBox.textContent = nmsg; }
+        notify(nmsg, "error");
       } finally {
         confirmBtn.disabled = false;
         confirmBtn.innerHTML = '<i class="fa-solid fa-check"></i> Confirm & continue to payment';
