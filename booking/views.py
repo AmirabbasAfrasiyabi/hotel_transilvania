@@ -126,6 +126,16 @@ def passenger_details_view(request, booking_id: int):
             },
         )
 
+    if booking.status != Booking.Status.DRAFT:
+        return JsonResponse(
+            {
+                "ok": False,
+                "error": "Passenger details cannot be changed after payment has started.",
+                "code": "invalid_status",
+            },
+            status=400,
+        )
+
     try:
         if request.content_type and "application/json" in request.content_type:
             payload = json.loads(request.body.decode("utf-8") or "{}")
@@ -200,6 +210,16 @@ def travel_services_view(request, booking_id: int):
             },
         )
 
+    if booking.status != Booking.Status.DRAFT:
+        return JsonResponse(
+            {
+                "ok": False,
+                "error": "Services cannot be changed after payment has started.",
+                "code": "invalid_status",
+            },
+            status=400,
+        )
+
     try:
         payload = json.loads(request.body.decode("utf-8") or "{}")
         BookingService.save_travel_services(booking, payload)
@@ -241,8 +261,8 @@ def review_view(request, booking_id: int):
         price_info = BookingService.revalidate(booking)
         booking.refresh_from_db()
     except BookingServiceError as exc:
-        error = exc.message
-        if exc.code in ("unavailable", "expired"):
+        error = exp.message
+        if exp.code in ("unavailable", "expired"):
             unavailable = True
 
     return render(
@@ -257,120 +277,3 @@ def review_view(request, booking_id: int):
             "unavailable": unavailable,
         },
     )
-
-
-@require_POST
-def revalidate_api(request, booking_id: int):
-    if not request.user.is_authenticated:
-        return _require_login_json_or_redirect(
-            request, f"/booking/review/{booking_id}/"
-        )
-
-    try:
-        booking = BookingService.get_booking_for_request(booking_id, request)
-        result = BookingService.revalidate(booking)
-        booking.refresh_from_db()
-    except BookingServiceError as exc:
-        status = 410 if exc.code in ("expired", "unavailable") else 400
-        return JsonResponse(
-            {"ok": False, "error": exc.message, "code": exc.code}, status=status
-        )
-
-    return JsonResponse(
-        {
-            "ok": True,
-            "price_changed": result["price_changed"],
-            "old_amount": result["old_amount"],
-            "new_amount": result["new_amount"],
-            "currency": result["currency"],
-            "message": result.get("message"),
-            "total_price": str(booking.total_price),
-        }
-    )
-
-
-@require_POST
-def prepare_payment_view(request, booking_id: int):
-    if not request.user.is_authenticated:
-        return _require_login_json_or_redirect(
-            request, f"/booking/review/{booking_id}/"
-        )
-
-    try:
-        booking = BookingService.get_booking_for_request(booking_id, request)
-        result = BookingService.prepare_for_payment(booking)
-        booking = result["booking"]
-        price_info = result["price_info"]
-    except BookingServiceError as exc:
-        status = 410 if exc.code in ("expired", "unavailable") else 400
-        return JsonResponse(
-            {"ok": False, "error": exc.message, "code": exc.code}, status=status
-        )
-
-    return JsonResponse(
-        {
-            "ok": True,
-            "booking_id": booking.pk,
-            "status": booking.status,
-            "total_price": str(booking.total_price),
-            "currency": booking.currency,
-            "price_changed": price_info.get("price_changed", False),
-            "message": price_info.get("message"),
-            "next_url": f"/booking/payment/{booking.pk}/",
-            "redirect_url": f"/booking/payment/{booking.pk}/",
-        }
-    )
-
-
-@require_POST
-def confirm_booking_view(request, booking_id: int):
-    if not request.user.is_authenticated:
-        return _require_login_json_or_redirect(
-            request, f"/booking/review/{booking_id}/"
-        )
-
-    try:
-        booking = BookingService.get_booking_for_request(booking_id, request)
-        booking = BookingService.confirm_and_issue(booking)
-    except BookingServiceError as exc:
-        status = 410 if exc.code in ("expired", "unavailable") else 400
-        return JsonResponse(
-            {"ok": False, "error": exc.message, "code": exc.code}, status=status
-        )
-
-    return JsonResponse(
-        {
-            "ok": True,
-            "booking_id": booking.pk,
-            "status": booking.status,
-            "provider_order_id": booking.provider_order_id,
-            "redirect_url": f"/booking/confirmation/{booking.pk}/",
-        }
-    )
-
-
-@require_GET
-def confirmation_view(request, booking_id: int):
-    if not request.user.is_authenticated:
-        return redirect(_login_url_with_next(f"/booking/confirmation/{booking_id}/"))
-
-    try:
-        booking = BookingService.get_booking_for_request(booking_id, request)
-    except BookingServiceError:
-        return redirect("transport:out")
-
-    if booking.status != Booking.Status.ISSUED:
-        return redirect("booking:review", booking_id=booking.pk)
-
-    order_meta = (booking.offer_snapshot or {}).get("order") or {}
-    return render(
-        request,
-        "booking/confirmation.html",
-        {
-            "booking": booking,
-            "passengers": booking.passengers.all(),
-            "order_meta": order_meta,
-        },
-    )
-
-from booking.payment_views import payment_callback_view, payment_view
