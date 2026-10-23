@@ -1,0 +1,32 @@
+# booking/service/booking_service.py
+from __future__ import annotations
+
+from datetime import timedelta, date, datetime
+from decimal import Decimal, InvalidOperation
+from typing import Any
+import re
+
+from django.db import transaction
+from django.utils import timezone
+from django.utils.dateparse import parse_datetime
+
+from booking.models import Booking, Passenger
+from transport.duffel_client import DuffelError, create_order, get_offer
+
+
+class BookingServiceError(Exception):
+    def __init__(self, message: str, code: str = "booking_error"):
+        super().__init__(message)
+        self.message = message
+        self.code = code
+
+
+class BookingService:
+    DRAFT_TTL_MINUTES = 30
+
+    @staticmethod
+    def _parse_decimal(value: Any, field_name: str = "price") -> Decimal:
+        try:
+            return Decimal(str(value))
+        except (InvalidOperation, TypeError, ValueError) as exc:
+            raise BookingServiceError(f"Invalid {field_name}.", code="invalid_price") from exc
