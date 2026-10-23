@@ -1,5 +1,10 @@
+import json
+
 from django.contrib import admin
 from django.utils.html import format_html
+from django.utils.safestring import mark_safe
+
+from .destination_data import CITY_TO_COUNTRY
 from .models import FAQ, Destination
 
 
@@ -39,6 +44,16 @@ class DestinationAdmin(admin.ModelAdmin):
         "display_order",
     )
     readonly_fields = ("image_preview",)
+
+    class Media:
+        js = ("admin/js/destination_city_country.js",)
+
+    def changeform_view(self, request, object_id=None, form_url="", extra_context=None):
+        extra_context = extra_context or {}
+        extra_context["city_to_country_json"] = mark_safe(
+            json.dumps(CITY_TO_COUNTRY, ensure_ascii=False)
+        )
+        return super().changeform_view(request, object_id, form_url, extra_context)
 
     @admin.display(description="preview")
     def image_preview(self, obj):

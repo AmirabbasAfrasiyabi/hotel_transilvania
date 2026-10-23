@@ -1,6 +1,8 @@
 from django.db import models
 from ckeditor.fields import RichTextField
 
+from .destination_data import CITY_CHOICES, COUNTRY_CHOICES, CITY_TO_COUNTRY
+
 
 class ServiceContentManager(models.Manager):
 
@@ -58,97 +60,6 @@ class DestinationManager(ServiceContentManager):
     pass
 
 
-class DestinationCountry(models.TextChoices):
-    """کشورهای پرکاربرد برای مقاصد خارجی"""
-    TURKEY = "Turkey", "Turkey"
-    UAE = "United Arab Emirates", "United Arab Emirates"
-    GERMANY = "Germany", "Germany"
-    FRANCE = "France", "France"
-    ITALY = "Italy", "Italy"
-    SPAIN = "Spain", "Spain"
-    UK = "United Kingdom", "United Kingdom"
-    NETHERLANDS = "Netherlands", "Netherlands"
-    SWITZERLAND = "Switzerland", "Switzerland"
-    AUSTRIA = "Austria", "Austria"
-    GREECE = "Greece", "Greece"
-    GEORGIA = "Georgia", "Georgia"
-    ARMENIA = "Armenia", "Armenia"
-    AZERBAIJAN = "Azerbaijan", "Azerbaijan"
-    RUSSIA = "Russia", "Russia"
-    CHINA = "China", "China"
-    JAPAN = "Japan", "Japan"
-    THAILAND = "Thailand", "Thailand"
-    MALAYSIA = "Malaysia", "Malaysia"
-    INDONESIA = "Indonesia", "Indonesia"
-    INDIA = "India", "India"
-    QATAR = "Qatar", "Qatar"
-    SAUDI_ARABIA = "Saudi Arabia", "Saudi Arabia"
-    OMAN = "Oman", "Oman"
-    KUWAIT = "Kuwait", "Kuwait"
-    IRAQ = "Iraq", "Iraq"
-    CYPRUS = "Cyprus", "Cyprus"
-    USA = "United States", "United States"
-    CANADA = "Canada", "Canada"
-    AUSTRALIA = "Australia", "Australia"
-    OTHER = "Other", "Other"
-
-
-class DestinationCity(models.TextChoices):
-    """شهرهای پرکاربرد بین‌المللی"""
-    # Turkey
-    ISTANBUL = "Istanbul", "Istanbul"
-    ANTALYA = "Antalya", "Antalya"
-    ANKARA = "Ankara", "Ankara"
-    IZMIR = "Izmir", "Izmir"
-    TRABZON = "Trabzon", "Trabzon"
-    # UAE
-    DUBAI = "Dubai", "Dubai"
-    ABU_DHABI = "Abu Dhabi", "Abu Dhabi"
-    SHARJAH = "Sharjah", "Sharjah"
-    # Europe
-    PARIS = "Paris", "Paris"
-    LONDON = "London", "London"
-    ROME = "Rome", "Rome"
-    MILAN = "Milan", "Milan"
-    BARCELONA = "Barcelona", "Barcelona"
-    MADRID = "Madrid", "Madrid"
-    BERLIN = "Berlin", "Berlin"
-    MUNICH = "Munich", "Munich"
-    FRANKFURT = "Frankfurt", "Frankfurt"
-    AMSTERDAM = "Amsterdam", "Amsterdam"
-    VIENNA = "Vienna", "Vienna"
-    ZURICH = "Zurich", "Zurich"
-    ATHENS = "Athens", "Athens"
-    # Caucasus / nearby
-    TBILISI = "Tbilisi", "Tbilisi"
-    YEREVAN = "Yerevan", "Yerevan"
-    BAKU = "Baku", "Baku"
-    # Middle East
-    DOHA = "Doha", "Doha"
-    RIYADH = "Riyadh", "Riyadh"
-    JEDDAH = "Jeddah", "Jeddah"
-    MUSCAT = "Muscat", "Muscat"
-    KUWAIT_CITY = "Kuwait City", "Kuwait City"
-    BAGHDAD = "Baghdad", "Baghdad"
-    LARNACA = "Larnaca", "Larnaca"
-    # Asia
-    BEIJING = "Beijing", "Beijing"
-    SHANGHAI = "Shanghai", "Shanghai"
-    TOKYO = "Tokyo", "Tokyo"
-    BANGKOK = "Bangkok", "Bangkok"
-    KUALA_LUMPUR = "Kuala Lumpur", "Kuala Lumpur"
-    BALI = "Bali", "Bali"
-    DELHI = "Delhi", "Delhi"
-    MUMBAI = "Mumbai", "Mumbai"
-    # Other
-    MOSCOW = "Moscow", "Moscow"
-    NEW_YORK = "New York", "New York"
-    LOS_ANGELES = "Los Angeles", "Los Angeles"
-    TORONTO = "Toronto", "Toronto"
-    SYDNEY = "Sydney", "Sydney"
-    OTHER = "Other", "Other"
-
-
 class Destination(models.Model):
 
     category = models.CharField(
@@ -160,12 +71,12 @@ class Destination(models.Model):
     )
     name = models.CharField(
         max_length=100,
-        choices=DestinationCity.choices,
+        choices=CITY_CHOICES,
         verbose_name="Destination Name",
     )
     country = models.CharField(
         max_length=100,
-        choices=DestinationCountry.choices,
+        choices=COUNTRY_CHOICES,
         blank=True,
         default="",
         verbose_name="Country",
@@ -186,3 +97,9 @@ class Destination(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.get_category_display()})"
+
+    def save(self, *args, **kwargs):
+        # اگر شهر انتخاب شده، کشور را خودکار ست کن
+        if self.name and self.name in CITY_TO_COUNTRY:
+            self.country = CITY_TO_COUNTRY[self.name]
+        super().save(*args, **kwargs)
