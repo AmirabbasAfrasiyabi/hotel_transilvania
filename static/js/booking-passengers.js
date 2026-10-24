@@ -191,8 +191,8 @@
     const typeLabel = type.charAt(0).toUpperCase() + type.slice(1);
     const isInfant = type === "infant";
     const ageHint =
-      type === "adult" ? "Adult ticket · 12+ years" :
-      type === "child" ? "Child ticket · 2–11 years" : "Infant · under 2 years";
+      type === "adult" ? "Adult ticket Â· 12+ years" :
+      type === "child" ? "Child ticket Â· 2â€“11 years" : "Infant Â· under 2 years";
 
     return `
       <div class="bp-card" data-passenger="${index}" data-type="${type}">
@@ -352,7 +352,7 @@
       }
       if (p.passenger_type === "child" && age !== null && (age < 2 || age >= 12)) {
         markInvalid(q("dob_day"), "Child passengers must be between 2 and 11 years.");
-        return "Passenger " + idx + ": child age must be 2–11.";
+        return "Passenger " + idx + ": child age must be 2â€“11.";
       }
       if (p.passenger_type === "infant" && age !== null && age >= 2) {
         markInvalid(q("dob_day"), "Infants must be under 2 years.");
@@ -365,12 +365,12 @@
       if (!isValidNationalId(p.national_id, p.nationality)) {
         markInvalid(q("national_id"), p.nationality === "IR"
           ? "Invalid Iranian national ID (10 digits + valid checksum)."
-          : "National ID format is invalid (5–20 letters/numbers).");
+          : "National ID format is invalid (5â€“20 letters/numbers).");
         return "Passenger " + idx + ": invalid national ID.";
       }
       if (p.passenger_type !== "infant") {
         if (!isValidPassport(p.passport_number)) {
-          markInvalid(q("passport_number"), "Passport number must be 6–12 letters or digits.");
+          markInvalid(q("passport_number"), "Passport number must be 6â€“12 letters or digits.");
           return "Passenger " + idx + ": invalid passport number.";
         }
         if (!p.passport_issuing_country) {
@@ -434,7 +434,11 @@
 
   function showError(msg) {
     const el = document.getElementById("bpFormError");
-    if (!el) { alert(msg); return; }
+    if (window.BookingAlert) { BookingAlert.toast(msg, "error"); }
+    if (!el) {
+      if (!window.BookingAlert) alert(msg);
+      return;
+    }
     el.textContent = msg;
     el.hidden = false;
     el.style.display = "block";
@@ -506,25 +510,25 @@
       logoEl.hidden = false;
       if (fallback) fallback.hidden = true;
     }
-    const originLabel = dep.city || dep.airport || booking.origin || "—";
-    const destLabel = arr.city || arr.airport || booking.destination || "—";
+    const originLabel = dep.city || dep.airport || booking.origin || "â€”";
+    const destLabel = arr.city || arr.airport || booking.destination || "â€”";
     const titleEl = document.getElementById("bpFcTitle");
     if (titleEl) {
-      titleEl.innerHTML = originLabel + ' <span class="bp-fc-arrow">→</span> ' + destLabel;
+      titleEl.innerHTML = originLabel + ' <span class="bp-fc-arrow">â†’</span> ' + destLabel;
     }
     const datePart = formatDate(dep.date);
     const timePart = dep.time || "";
-    let subtitle = datePart && timePart ? datePart + " — " + timePart : datePart || timePart;
+    let subtitle = datePart && timePart ? datePart + " â€” " + timePart : datePart || timePart;
     if (subtitle) setText("bpFcSubtitle", subtitle);
     if (airline.name) setText("bpFcAirline", airline.name);
     const duration = slice.duration_text || "";
-    if (duration) setText("bpFcDuration", " · " + duration);
+    if (duration) setText("bpFcDuration", " Â· " + duration);
     const stops = Number(slice.stops || 0);
     const stopsText = stops === 0 ? "Direct" : stops + (stops === 1 ? " stop" : " stops");
-    setText("bpFcStops", " · " + stopsText);
+    setText("bpFcStops", " Â· " + stopsText);
     const side = document.getElementById("bpSidebarFlight");
     if (side) {
-      side.textContent = (dep.airport || booking.origin || "—") + " → " + (arr.airport || booking.destination || "—");
+      side.textContent = (dep.airport || booking.origin || "â€”") + " â†’ " + (arr.airport || booking.destination || "â€”");
     }
     const sideMeta = document.getElementById("bpSidebarMeta");
     if (sideMeta) {
@@ -533,7 +537,7 @@
       if (timePart) bits.push(timePart);
       if (duration) bits.push(duration);
       bits.push(stopsText);
-      sideMeta.textContent = bits.join(" · ");
+      sideMeta.textContent = bits.join(" Â· ");
     }
   })();
 

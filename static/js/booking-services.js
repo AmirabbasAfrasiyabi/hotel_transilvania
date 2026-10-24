@@ -32,12 +32,12 @@
       return slices.map(function (sl, i) {
         const dep = sl.departure || {};
         const arr = sl.arrival || {};
-        const origin = dep.airport || dep.city || booking.origin || "—";
-        const dest = arr.airport || arr.city || booking.destination || "—";
+        const origin = dep.airport || dep.city || booking.origin || "â€”";
+        const dest = arr.airport || arr.city || booking.destination || "â€”";
         return {
           id: "slice_" + i,
           direction: i === 0 ? "Depart" : "Return",
-          label: origin + " → " + dest,
+          label: origin + " â†’ " + dest,
         };
       });
     }
@@ -45,7 +45,7 @@
       {
         id: "slice_0",
         direction: "Depart",
-        label: (booking.origin || "—") + " → " + (booking.destination || "—"),
+        label: (booking.origin || "â€”") + " â†’ " + (booking.destination || "â€”"),
       },
     ];
   }
@@ -152,7 +152,7 @@
       '" data-pax="' +
       paxOrder +
       '">' +
-      '<button type="button" data-act="dec" aria-label="Decrease">−</button>' +
+      '<button type="button" data-act="dec" aria-label="Decrease">âˆ’</button>' +
       "<span data-count>" +
       count +
       "</span>" +
@@ -185,8 +185,8 @@
             '<div class="svc-pax-row">' +
             '<div class="svc-pax-name">' +
             p.name +
-            "<small>Infant · no hold bag</small></div>" +
-            "<div><div class=\"svc-col-label\">Personal</div><span class=\"svc-included\">1 × 7 kg</span></div>" +
+            "<small>Infant Â· no hold bag</small></div>" +
+            "<div><div class=\"svc-col-label\">Personal</div><span class=\"svc-included\">1 Ã— 7 kg</span></div>" +
             "<div><div class=\"svc-col-label\">Carry-on</div><span class=\"svc-not-included\">N/A</span></div>" +
             "<div><div class=\"svc-col-label\">Checked</div><span class=\"svc-not-included\">N/A</span></div>" +
             "</div>";
@@ -202,7 +202,7 @@
           "<small>" +
           p.type +
           "</small></div>" +
-          "<div><div class=\"svc-col-label\">Personal item</div><span class=\"svc-included\">1 × 7 kg</span></div>" +
+          "<div><div class=\"svc-col-label\">Personal item</div><span class=\"svc-included\">1 Ã— 7 kg</span></div>" +
           "<div><div class=\"svc-col-label\">Carry-on</div>" +
           bagCell("carry_on", seg.id, p.order, st.carry_on) +
           "</div>" +
