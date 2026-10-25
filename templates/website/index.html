@@ -6,7 +6,15 @@
   <div class="container">
     <div class="hero-layout">
 
-      <!-- ستون چپ: سرچ‌بار -->
+      <!-- تصویر دسته‌بندی (بالا) -->
+      <div class="hero-image-col">
+        <img src="{% static 'img/hero/flight.jpg' %}"
+             alt="Flight illustration"
+             class="hero-category-img"
+             loading="eager">
+      </div>
+
+      <!-- سرچ‌بار (زیر عکس) -->
       <div class="hero-search-col">
         <div class="hero-search-intro">
           <span class="contact-eyebrow">✈️ Travelista</span>
@@ -22,7 +30,6 @@
                 data-location-unit="City"
                 data-results-url="{% url 'transport:flight_results' %}">
 
-            <!-- ردیف ۱: گزینه‌های سفر (Travel Options) -->
             <div class="hsf-toolbar hsf-toolbar--top">
               <div class="hsf-select" id="tripTypeGroup" data-target="tripTypeHidden">
                 <button type="button" class="hsf-select-trigger" aria-expanded="false" aria-haspopup="listbox">
@@ -36,7 +43,6 @@
               </div>
             </div>
 
-            <!-- ردیف ۲: فیلدهای اصلی -->
             <div class="hsf-search-row hsf-search-row--route">
               <div class="hsf-field" id="originField">
                 <span class="hsf-label">From</span>
@@ -87,7 +93,6 @@
                       <button type="button" class="pax-btn" data-action="inc" aria-label="Increase children">+</button>
                     </div>
                   </div>
-
                   <div class="pax-divider"></div>
                   <button type="button" class="pax-apply-btn" id="paxApplyBtn">Apply</button>
                 </div>
@@ -129,7 +134,6 @@
               </div>
             </div>
 
-            <!-- خطای اعتبارسنجی -->
             <div class="hsf-form-error" id="formErrorBox" hidden>
               <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
               <span id="formErrorText"></span>
@@ -142,7 +146,6 @@
             <input type="hidden" name="infants" id="infantsHidden" value="0">
             <input type="hidden" name="trip_type" id="tripTypeHidden" value="oneway">
 
-            <!-- دکمه جستجو -->
             <div class="hsf-actions-row hsf-actions-row--center">
               <button type="submit" class="hero-search-submit" id="heroSearchSubmit">
                 <span class="btn-label">Search</span>
@@ -153,18 +156,10 @@
             </div>
           </form>
         </div>
-      </div>
+      </div><!-- /.hero-search-col -->
 
-      <!-- ستون راست: تصویر دسته‌بندی -->
-      <div class="hero-image-col">
-        <img src="{% static 'img/hero/flight.jpg' %}"
-             alt="Flight illustration"
-             class="hero-category-img"
-             loading="eager">
-      </div>
-
-    </div>
-  </div>
+    </div><!-- /.hero-layout -->
+  </div><!-- /.container -->
 </section>
 
 {% include "help_center/popular_destinations_widget.html" %}
