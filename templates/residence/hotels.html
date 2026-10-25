@@ -2,22 +2,20 @@
 {% load static %}
 {% block content %}
 
-<section class="hero-search-area relative">
-  <img class="hero-search-bg" src="{% static 'img/hero-bg.jpg' %}" alt="">
-  <div class="hero-search-overlay"></div>
+<section class="hero-search-area">
+  <div class="container">
+    <div class="hero-layout">
 
-  <div class="container hero-search-inner">
+      <div class="hero-search-col">
+        <div class="hero-search-intro">
+          <span class="contact-eyebrow">🏨 Travelista</span>
+          <h1 class="hero-search-heading">Find your stay</h1>
+          <p class="hero-search-sub">From boutique rooms to family suites — book the stay that fits your trip.</p>
+        </div>
 
-    <div class="hero-search-intro">
-      <span class="contact-eyebrow">🏨 Travelista</span>
-      <h1 class="hero-search-heading">Find your stay</h1>
-      <p class="hero-search-sub">From boutique rooms to family suites — book the stay that fits your trip.</p>
-    </div>
-
-    <div class="hero-search-card" id="heroSearchCard">
-
-            {% include "website/_hero_tabs.html" %}
-        <form class="hero-search-form" id="heroSearchForm" autocomplete="off" data-location-scope="mixed" data-location-unit="City" data-hide-history="true">
+        <div class="hero-search-card" id="heroSearchCard">
+          {% include "website/_hero_tabs.html" %}
+          <form class="hero-search-form" id="heroSearchForm" autocomplete="off" data-location-scope="mixed" data-location-unit="City" data-hide-history="true">
 
         <div class="hsf-search-row hsf-search-row--destination">
           <div class="hsf-field" id="originField">
@@ -33,8 +31,6 @@
               <span id="passengerTriggerText">1 Room, 2 Guests</span>
             </button>
 
-            <!-- Per-room guest manager: each room has its own Adults/Children
-                 steppers, capped at 4 guests/room (see hero-search.js). -->
             <div class="hsf-passenger-popup hsf-rooms-popup" id="passengerPopup" hidden>
               <div class="hsf-rooms-list" id="roomsList" data-max-rooms="6"></div>
 
@@ -78,21 +74,12 @@
             <div class="hsf-calendar-popup" id="calendarPopup" hidden>
               <div class="cal-months" id="calMonths"></div>
               <div class="cal-footer">
-                <span class="cal-range-hint" id="calRangeHint">Select a check-in date</span>
+                <span class="cal-range-hint" id="calRangeHint"></span>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Central validation error box (Requirement #18) -->
-        <div class="hsf-form-error" id="formErrorBox" hidden>
-          <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
-          <span id="formErrorText"></span>
-        </div>
-
-        <!-- TODO(backend): wire these to the real hotel search view.
-             rooms_detail carries the full per-room breakdown as JSON,
-             e.g. [{"adults":2,"children":1},{"adults":2,"children":0}] -->
         <input type="hidden" name="checkin_date" id="departDateHidden">
         <input type="hidden" name="checkout_date" id="returnDateHidden">
         <input type="hidden" name="adults" id="adultsHidden" value="2">
@@ -109,9 +96,19 @@
           </button>
         </div>
       </form>
-    </div>
+        </div><!-- /.hero-search-card -->
+      </div><!-- /.hero-search-col -->
 
-  </div>
+      <!-- ستون راست: تصویر هتل -->
+      <div class="hero-image-col">
+        <img src="{% static 'img/hero/hotel.jpg' %}"
+             alt="Hotel illustration"
+             class="hero-category-img"
+             loading="eager">
+      </div>
+
+    </div><!-- /.hero-layout -->
+  </div><!-- /.container -->
 </section>
 
 
