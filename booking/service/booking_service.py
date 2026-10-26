@@ -338,10 +338,11 @@ class BookingService:
             new_currency = (fresh or {}).get("total_currency") or (fresh or {}).get("currency") or currency
             if isinstance(fresh, dict) and fresh.get("price"):
                 new_currency = fresh["price"].get("currency") or new_currency
-            price_changed = new_amount != old_amount
+            price_changed = new_amount != (booking.base_price or Decimal("0"))
             if price_changed:
                 booking.base_price = new_amount
-                booking.total_price = new_amount + (booking.service_price or Decimal("0"))
+                booking.total_price = new_amount + (booking.taxes or Decimal("0")) + (
+                booking.service_price or Decimal("0"))
                 booking.currency = str(new_currency)[:3]
                 booking.save(update_fields=["base_price", "total_price", "currency", "updated_at"])
             return {

@@ -6269,27 +6269,28 @@ body.mobile-nav-active #mobile-nav-toggle {
    (به بخش base.html در همین تحویل مراجعه کن).
    ========================================================================== */
 
-/* ---------- New two-column hero layout ---------- */
+/* ---------- Hero layout: image on top + search card below ---------- */
 .hero-search-area {
-  padding: 140px 0 80px;
+  padding: 110px 0 70px;
   background: var(--tvl-paper, #F1E7D6);
   position: relative;
+  overflow: hidden;
 }
 
 .hero-layout {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 48px;
-  align-items: center;
-  max-width: 1200px;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto auto;
+  gap: 28px;
+  align-items: stretch;
+  max-width: 980px;
   margin: 0 auto;
+  padding: 0 16px;
 }
 
-.hero-search-col {
-  min-width: 0;
-}
-
+/* Image on top */
 .hero-image-col {
+  order: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -6297,35 +6298,57 @@ body.mobile-nav-active #mobile-nav-toggle {
 
 .hero-category-img {
   width: 100%;
-  max-width: 520px;
+  max-width: 420px;          /* smaller */
   height: auto;
-  border-radius: 24px;
-  object-fit: cover;
-  box-shadow: 0 24px 48px -18px rgba(18, 41, 61, 0.25);
+  max-height: 280px;
+  object-fit: contain;
+  border-radius: 18px;
+  display: block;
 }
 
-/* Mobile: image on top */
-@media (max-width: 991px) {
-  .hero-layout {
-    grid-template-columns: 1fr;
-    gap: 32px;
-  }
-  .hero-image-col {
-    order: -1;
-  }
-  .hero-category-img {
-    max-width: 420px;
-  }
+/* Search column below */
+.hero-search-col {
+  order: 2;
+  min-width: 0;
 }
 
-@media (max-width: 575px) {
-  .hero-search-area {
-    padding: 120px 0 50px;
-  }
-  .hero-category-img {
-    max-width: 100%;
-    border-radius: 18px;
-  }
+.hero-search-intro {
+  text-align: center;
+  max-width: 100%;
+  margin: 0 0 18px;
+}
+
+.hero-search-intro .contact-eyebrow {
+  justify-content: center;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+}
+
+.hero-search-heading {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--tvl-navy, #12293D);
+  font-size: clamp(1.6rem, 1.25rem + 1.4vw, 2.1rem);
+  line-height: 1.2;
+  margin: 6px 0 8px;
+}
+
+.hero-search-sub {
+  color: #6B6560;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* Search card */
+.hero-search-card {
+  max-width: 100%;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 12px 40px -12px rgba(18, 41, 61, 0.18);
+  overflow: visible;
+  border: 1px solid rgba(18, 41, 61, 0.06);
 }
 
 /* Keep old classes harmless */
@@ -6339,40 +6362,26 @@ body.mobile-nav-active #mobile-nav-toggle {
   z-index: 3;
 }
 
-.hero-search-intro {
-  text-align: left;
-  max-width: 100%;
-  margin: 0 0 28px;
+/* Responsive */
+@media (max-width: 767px) {
+  .hero-search-area {
+    padding: 100px 0 50px;
+  }
+  .hero-layout {
+    gap: 22px;
+  }
+  .hero-category-img {
+    max-width: 320px;
+    max-height: 220px;
+  }
 }
 
-.hero-search-intro .contact-eyebrow {
-  justify-content: flex-start;
-}
-
-.hero-search-heading {
-  font-family: var(--font-display);
-  font-weight: 700;
-  color: var(--tvl-navy, #12293D);
-  font-size: var(--hero-title-size);
-  line-height: 1.15;
-  margin: 10px 0 14px;
-}
-
-.hero-search-sub {
-  color: var(--tvl-ink-soft, #6B6560);
-  font-size: var(--text-size);
-  line-height: 1.6;
-  margin: 0;
-}
-
-/* ---------- Search card ---------- */
-.hero-search-card {
-  max-width: 100%;
-  margin: 0;
-  background: #fff;
-  border-radius: var(--tvl-radius);
-  box-shadow: var(--tvl-shadow);
-  overflow: visible;
+@media (max-width: 480px) {
+  .hero-category-img {
+    max-width: 280px;
+    max-height: 190px;
+    border-radius: 14px;
+  }
 }
 
 .hero-tabs {
