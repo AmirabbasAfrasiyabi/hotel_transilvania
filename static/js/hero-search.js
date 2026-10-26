@@ -5,26 +5,6 @@
   if (!form) return; // Hero not present on this page — nothing to do.
 
 
-  var IRAN_CITIES = [
-    { city: 'Tehran', region: 'Tehran Province' },
-    { city: 'Mashhad', region: 'Razavi Khorasan' },
-    { city: 'Isfahan', region: 'Isfahan Province' },
-    { city: 'Shiraz', region: 'Fars Province' },
-    { city: 'Tabriz', region: 'East Azerbaijan' },
-    { city: 'Ahvaz', region: 'Khuzestan' },
-    { city: 'Kish Island', region: 'Hormozgan' },
-    { city: 'Qeshm', region: 'Hormozgan' },
-    { city: 'Bandar Abbas', region: 'Hormozgan' },
-    { city: 'Kerman', region: 'Kerman Province' },
-    { city: 'Rasht', region: 'Gilan' },
-    { city: 'Yazd', region: 'Yazd Province' },
-    { city: 'Kermanshah', region: 'Kermanshah Province' },
-    { city: 'Urmia', region: 'West Azerbaijan' },
-    { city: 'Zahedan', region: 'Sistan & Baluchestan' },
-    { city: 'Qom', region: 'Qom Province' },
-    { city: 'Sari', region: 'Mazandaran' }
-  ];
-
   var INTL_CITIES = [
     { city: 'Dubai', region: 'United Arab Emirates' },
     { city: 'Istanbul', region: 'Türkiye' },
@@ -43,37 +23,10 @@
     { city: 'Kuala Lumpur', region: 'Malaysia' }
   ];
 
-  // Requirement (Hotel): both Iran AND international destinations, so
-  // Hotel search gets the union of both lists.
-  var MIXED_CITIES = IRAN_CITIES.concat(INTL_CITIES);
-
-  // Requirement (Villa): Iran ONLY, and specifically resort/vacation
-  // towns rather than the airport-oriented city list used by
-  // Flight/Bus/Train — kept as its own list so it never mixes with the
-  // Hotel destination system.
-  var IRAN_VILLA_DESTINATIONS = [
-    { city: 'Tehran', region: 'Tehran Province' },
-    { city: 'Ramsar', region: 'Mazandaran' },
-    { city: 'Chalus', region: 'Mazandaran' },
-    { city: 'Kelardasht', region: 'Mazandaran' },
-    { city: 'Sari', region: 'Mazandaran' },
-    { city: 'Lahijan', region: 'Gilan' },
-    { city: 'Rasht', region: 'Gilan' },
-    { city: 'Masal', region: 'Gilan' },
-    { city: 'Kish Island', region: 'Hormozgan' },
-    { city: 'Qeshm', region: 'Hormozgan' },
-    { city: 'Shiraz', region: 'Fars Province' },
-    { city: 'Isfahan', region: 'Isfahan Province' }
-  ];
-
-  var IRAN_HISTORY = [
-    { from: 'Tehran', to: 'Mashhad' },
-    { from: 'Shiraz', to: 'Isfahan' },
-    { from: 'Tabriz', to: 'Tehran' }
-  ];
+  // Hotel / Villa / Packages use the same international list.
+  var MIXED_CITIES = INTL_CITIES.slice();
 
   var INTL_HISTORY = [
-    { from: 'Tehran', to: 'Dubai' },
     { from: 'Berlin', to: 'Paris' },
     { from: 'Istanbul', to: 'London' }
   ];
@@ -84,22 +37,14 @@
   // its own named scope so this stays independent from the Hotel form
   // if the two ever need to diverge later) and merges recent-search
   // history from both.
-  var IRAN_CITY_NAMES = IRAN_CITIES.map(function (loc) { return loc.city; });
-
-  // Flight search: NO city inside Iran, neither in the city list nor in the
-  // "Recent searches" list (INTL_HISTORY contains a Tehran route, so we filter it).
-  var FLIGHT_HISTORY = INTL_HISTORY.filter(function (h) {
-    return IRAN_CITY_NAMES.indexOf(h.from) === -1 && IRAN_CITY_NAMES.indexOf(h.to) === -1;
-  });
+  // Flight search uses the same international history.
+  var FLIGHT_HISTORY = INTL_HISTORY;
 
   var scope = form.getAttribute('data-location-scope') || 'international';
-  var LOCATIONS = scope === 'domestic' ? IRAN_CITIES
-    : scope === 'flight' ? INTL_CITIES
-    : scope === 'villa' ? IRAN_VILLA_DESTINATIONS
+  var LOCATIONS = scope === 'flight' ? INTL_CITIES
     : scope === 'mixed' ? MIXED_CITIES
     : INTL_CITIES;
-  var HISTORY = scope === 'domestic' ? IRAN_HISTORY
-    : scope === 'flight' ? FLIGHT_HISTORY
+  var HISTORY = scope === 'flight' ? FLIGHT_HISTORY
     : INTL_HISTORY;
   var LOCATION_UNIT = form.getAttribute('data-location-unit') || 'City';
 
@@ -119,7 +64,7 @@
     if (!input || !panel) return;
 
     // Hotels/Villas have a single Destination field with no matching
-    // Origin/Destination pair on the page — showing "Tehran → Mashhad"
+    // Origin/Destination pair on the page — showing "Berlin → Paris"
     // style route history there is confusing, so it's skipped for them.
     var isSingleField = !pairInput;
 
@@ -1022,7 +967,7 @@
       return false;
     }
 
-    // Flight only: the text must be one of the suggested cities (typing "Tehran" is not enough).
+    // Flight only: the text must be one of the suggested cities (typing "Paris" is not enough).
     if (scope === 'flight') {
       if (!isKnownLocation(originInputEl.value)) {
         showFormError('Please choose an origin from the list.');
@@ -1079,11 +1024,9 @@
   // like before, just without a second top-level UI option.
   var tripScopeHidden = document.getElementById('tripScopeHidden');
   function computeTripScope() {
-    var originVal = (originInput && originInput.value || '').trim();
-    var destVal = (destInput && destInput.value || '').trim();
-    var originIsDomestic = IRAN_CITY_NAMES.indexOf(originVal) !== -1;
-    var destIsDomestic = IRAN_CITY_NAMES.indexOf(destVal) !== -1;
-    return (originIsDomestic && destIsDomestic) ? 'domestic' : 'international';
+    // No Iranian cities exist any more, so every trip is international.
+    // (Kept so the hidden field still reaches the backend.)
+    return 'international';
   }
   if (tripScopeHidden) {
     var updateTripScope = function () { tripScopeHidden.value = computeTripScope(); };
@@ -1456,4 +1399,32 @@
     //   body: JSON.stringify({ vote: fbBtn.getAttribute('data-faqi-feedback') })
     // });
   });
+})();
+
+/* ==========================================================================
+   Hero layout sync
+   Makes the category image banner exactly as tall as the search card by
+   writing the card height into the CSS variable --hero-card-h.
+   (Separate IIFE: independent from the search logic above.)
+   ========================================================================== */
+(function () {
+  'use strict';
+
+  var card   = document.getElementById('heroSearchCard');
+  var layout = document.querySelector('.hero-layout');
+  if (!card || !layout || typeof ResizeObserver === 'undefined') return;
+
+  var mq = window.matchMedia('(min-width: 768px)');
+
+  function sync() {
+    if (!mq.matches) {                 // phones: CSS decides (200px)
+      layout.style.removeProperty('--hero-card-h');
+      return;
+    }
+    layout.style.setProperty('--hero-card-h', card.offsetHeight + 'px');
+  }
+
+  new ResizeObserver(sync).observe(card);   // runs on load + whenever the card size changes
+  if (mq.addEventListener) mq.addEventListener('change', sync);
+  sync();
 })();
