@@ -98,16 +98,31 @@
     function renderMatches(query) {
       var q = query.trim().toLowerCase();
       var matches = LOCATIONS.filter(function (loc) {
-        return loc.city.toLowerCase().indexOf(q) === 0;
+        return loc.city.toLowerCase().indexOf(q) === 0 ||
+               loc.city.toLowerCase().indexOf(q) !== -1;
       });
-      if (!matches.length) {
-        panel.innerHTML = '<div class="hsf-group-label">No matches — try another city</div>';
-        return;
+      var html = '';
+      if (matches.length) {
+        html += '<div class="hsf-group-label">' + LOCATION_UNIT + ' options</div>';
+        matches.forEach(function (loc) {
+          html += suggestionRow('fa-solid fa-location-dot', loc.city, loc.region, { value: loc.city });
+        });
       }
-      var html = '<div class="hsf-group-label">' + LOCATION_UNIT + ' options</div>';
-      matches.forEach(function (loc) {
-        html += suggestionRow('fa-solid fa-location-dot', loc.city, loc.region, { value: loc.city });
-      });
+      // Always offer the typed text as a valid free-form choice
+      // (covers Popular Destinations from admin and any custom city).
+      var typed = query.trim();
+      if (typed) {
+        var already = matches.some(function (loc) {
+          return loc.city.toLowerCase() === typed.toLowerCase();
+        });
+        if (!already) {
+          html += '<div class="hsf-group-label">Use this ' + LOCATION_UNIT.toLowerCase() + '</div>';
+          html += suggestionRow('fa-solid fa-pen', typed, 'Custom destination', { value: typed });
+        }
+      }
+      if (!html) {
+        html = '<div class="hsf-group-label">Type a city name</div>';
+      }
       panel.innerHTML = html;
     }
 
@@ -967,19 +982,9 @@
       return false;
     }
 
-    // Flight only: the text must be one of the suggested cities (typing "Paris" is not enough).
-    if (scope === 'flight') {
-      if (!isKnownLocation(originInputEl.value)) {
-        showFormError('Please choose an origin from the list.');
-        originInputEl.focus();
-        return false;
-      }
-      if (!isKnownLocation(destInputEl.value)) {
-        showFormError('Please choose a destination from the list.');
-        destInputEl.focus();
-        return false;
-      }
-    }
+    // Any non-empty city is accepted (Popular Destinations from admin,
+    // free typing, autocomplete picks, etc.). No hardcoded city whitelist.
+    // (Previously flight required isKnownLocation() which blocked admin cities.)
     if (!departHiddenInput || !departHiddenInput.value) {
       showFormError('Please select a departure date.');
       if (departTrigger) departTrigger.focus(); else if (dateTrigger) dateTrigger.focus();
@@ -1269,17 +1274,21 @@
     if (pdInitialTab) applyPdTab(pdInitialTab.getAttribute('data-pd-tab'));
   }
 
-  // ---------- اتصال کلیک روی کارت مقصد به input مقصد سرچ‌بار ----------
-  var destinationCards = track.querySelectorAll('[data-destination-card]');
+  // ---------- اتصال کلیک روی کارت مقصد به input مقصد سرچ‌بار + اسکرول نرم ----------
+  var destinationCards = track.querySelectorAll('[data-destination-card], .pd-card[data-destination]');
   var destInput = document.getElementById('destInput');
+  var searchCard = document.getElementById('heroSearchCard') || document.querySelector('.hero-search-card');
 
   if (destinationCards.length && destInput) {
     var destSuggestPanel = document.getElementById('destSuggestions');
 
     destinationCards.forEach(function (card) {
       card.addEventListener('click', function () {
-        var cityName = card.getAttribute('data-destination');
+        var cityName = card.getAttribute('data-destination') ||
+                       card.getAttribute('data-city') ||
+                       ((card.querySelector('.pd-card-name') || {}).textContent || '');
         if (!cityName) return;
+        cityName = String(cityName).trim();
 
         destInput.value = cityName;
 
@@ -1293,6 +1302,14 @@
         card.classList.add('is-selected');
 
         destInput.dispatchEvent(new Event('change', { bubbles: true }));
+
+        // اسکرول نرم به سرچ‌بار تا کاربر مقصد پرشده را ببیند
+        if (searchCard) {
+          searchCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setTimeout(function () { destInput.focus(); }, 450);
+        } else {
+          destInput.focus();
+        }
       });
     });
   }
@@ -1427,4 +1444,5 @@
   new ResizeObserver(sync).observe(card);   // runs on load + whenever the card size changes
   if (mq.addEventListener) mq.addEventListener('change', sync);
   sync();
+
 })();

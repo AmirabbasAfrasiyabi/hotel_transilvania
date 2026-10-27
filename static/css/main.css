@@ -8929,3 +8929,135 @@ img, svg, video, canvas { max-width: 100%; height: auto; }
     max-width: none !important;
   }
 }
+
+
+/* =========================================================
+   FINAL POLISH — plane image + Search button spacing
+   ========================================================= */
+
+/* ۱) تصویر هیرو: هواپیما کامل دیده شود */
+.hero-image-col {
+  height: var(--hero-card-h, 320px);
+  overflow: hidden;
+  border-radius: 18px;
+  background: transparent;
+}
+
+.hero-category-img {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  object-fit: cover !important;
+  /* هواپیما در بالای تصویر است → کمی به بالا متمایل می‌شویم */
+  object-position: center center !important;
+  border-radius: 18px;
+}
+
+@media (max-width: 767px) {
+  .hero-image-col { height: 200px; }
+  .hero-category-img { object-position: center center !important; }
+}
+
+/* ۲) دکمه Search دقیقاً وسط فضای خالی زیر فیلدها */
+.hero-search-form {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr);
+  /* ردیف‌ها: toolbar | fields | error | actions */
+  grid-template-rows: auto auto auto 1fr;
+  row-gap: 14px;
+  min-height: 0;
+}
+
+/* ردیف دکمه: فضای باقی‌مانده را بگیرد و دکمه را وسط عمودی قرار دهد */
+.hsf-actions-row,
+.hsf-actions-row--center {
+  display: flex !important;
+  align-items: center !important;      /* وسط عمودی */
+  justify-content: center !important;  /* وسط افقی */
+  min-height: 72px;                    /* فضای خالی یکسان بالا و پایین */
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.hero-search-submit {
+  width: 220px !important;
+  min-width: 220px !important;
+  max-width: 220px !important;
+  min-height: 50px;
+  height: 50px;
+  border-radius: 30px;
+  font-weight: 600;
+}
+
+@media (max-width: 767px) {
+  .hero-search-submit {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+  }
+  .hsf-actions-row,
+  .hsf-actions-row--center {
+    min-height: 60px;
+  }
+}
+
+
+/* =========================================================
+   Hero images — per-category object-position
+   Flight plane sits high; other illustrations sit lower/right.
+   ========================================================= */
+.hero-image-col {
+  height: var(--hero-card-h, 340px);
+  overflow: hidden;
+  border-radius: 18px;
+  background: transparent !important;
+}
+
+.hero-category-img {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  object-fit: cover !important;
+  object-position: center center !important; /* safe default */
+  border-radius: 18px;
+}
+
+/* Flight: plane is in the upper area */
+.hero-category-img[src*="flight"] {
+  object-position: center 18% !important;
+}
+
+/* Hotels: building on the right */
+.hero-category-img[src*="hotel"] {
+  object-position: 70% 45% !important;
+}
+
+/* Villa: house + palms on the right */
+.hero-category-img[src*="villa"],
+.hero-category-img[src*="village"] {
+  object-position: 75% 50% !important;
+}
+
+/* Train: train in lower-right */
+.hero-category-img[src*="train"] {
+  object-position: 80% 70% !important;
+}
+
+/* Bus: bus centered-right */
+.hero-category-img[src*="bus"] {
+  object-position: 60% 45% !important;
+}
+
+/* Tours: suitcase on the right */
+.hero-category-img[src*="tour"],
+.hero-category-img[src*="package"] {
+  object-position: 75% 55% !important;
+}
+
+@media (max-width: 767px) {
+  .hero-image-col { height: 200px; }
+  .hero-category-img { object-position: center center !important; }
+  .hero-category-img[src*="flight"] { object-position: center 20% !important; }
+}
