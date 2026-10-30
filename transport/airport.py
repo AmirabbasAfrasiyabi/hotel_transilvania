@@ -1,7 +1,18 @@
-"""Map the city names used in our search form to airport IATA codes."""
+"""Map city names (or free text) to airport IATA codes.
 
-# International cities offered in flight search.
-# Key = city name in lowercase, exactly as the form shows it.
+Resolution order:
+  1. Local dictionary (fast, offline)
+  2. Raw 3-letter IATA code (e.g. DOH, BER)
+  3. Duffel Places Suggestions API (any city worldwide)
+"""
+
+from __future__ import annotations
+
+import logging
+
+logger = logging.getLogger(__name__)
+
+# Fast local map for common cities (optional cache; not a hard limit).
 AIRPORT_CODES = {
     "dubai": "DXB",
     "istanbul": "IST",
@@ -18,45 +29,95 @@ AIRPORT_CODES = {
     "vienna": "VIE",
     "cairo": "CAI",
     "kuala lumpur": "KUL",
-}
-
-# Cities inside Iran. Kept for the future, but flight search does NOT use them:
-# they are not suggested and not accepted (see city_to_iata below).
-IRAN_AIRPORT_CODES = {
-    "tehran": "THR",        # Mehrabad. (Imam Khomeini airport is IKA)
+    "doha": "DOH",
+    "madrid": "MAD",
+    "lisbon": "LIS",
+    "milan": "MXP",
+    "munich": "MUC",
+    "frankfurt": "FRA",
+    "zurich": "ZRH",
+    "brussels": "BRU",
+    "prague": "PRG",
+    "athens": "ATH",
+    "dublin": "DUB",
+    "los angeles": "LAX",
+    "san francisco": "SFO",
+    "chicago": "ORD",
+    "miami": "MIA",
+    "toronto": "YYZ",
+    "singapore": "SIN",
+    "hong kong": "HKG",
+    "seoul": "ICN",
+    "beijing": "PEK",
+    "shanghai": "PVG",
+    "sydney": "SYD",
+    "melbourne": "MEL",
+    "abu dhabi": "AUH",
+    "riyadh": "RUH",
+    "jeddah": "JED",
+    "delhi": "DEL",
+    "mumbai": "BOM",
+    "tehran": "IKA",
     "mashhad": "MHD",
     "isfahan": "IFN",
     "shiraz": "SYZ",
-    "tabriz": "TBZ",
-    "ahvaz": "AWZ",
-    "kish island": "KIH",
-    "qeshm": "GSM",
-    "bandar abbas": "BND",
-    "kerman": "KER",
-    "rasht": "RAS",
-    "yazd": "AZD",
-    "kermanshah": "KSH",
-    "urmia": "OMH",
-    "zahedan": "ZAH",
-    "qom": None,            # no regular commercial airport (please verify)
-    "sari": "SRY",
 }
 
-# Raw airport codes we also refuse (so typing "THR" in a URL does not work either).
-_BLOCKED_CODES = {code for code in IRAN_AIRPORT_CODES.values() if code} | {"IKA"}
+# In-memory cache for Duffel lookups in this process
+_CACHE: dict[str, str | None] = {}
 
 
-def city_to_iata(name):
+def _lookup_duffel_place(query: str) -> str | None:
     """
-    Return the IATA code for an international city name (case-insensitive).
-    A raw 3-letter code such as "LHR" is also accepted (handy for testing),
-    except the airports inside Iran.
-    Returns None if we do not offer this city.
+    Ask Duffel Places Suggestions for the best airport/city match.
+    Returns an IATA code or None.
+    """
+    key = query.strip().lower()
+    if key in _CACHE:
+        return _CACHE[key]
+
+    try:
+        from transport.duffel_client import suggest_places
+
+        places = suggest_places(query)
+    except Exception as exc:  # network / config — do not crash the search
+        logger.warning("Duffel places lookup failed for %r: %s", query, exc)
+        _CACHE[key] = None
+        return None
+
+    code = None
+    # Prefer airport, then city
+    for place in places:
+        ptype = (place.get("type") or "").lower()
+        iata = place.get("iata_code") or place.get("iata_city_code")
+        if not iata:
+            continue
+        if ptype == "airport":
+            code = iata
+            break
+        if code is None:  # first city-level hit as fallback
+            code = iata
+
+    _CACHE[key] = code
+    return code
+
+
+def city_to_iata(name: str) -> str | None:
+    """
+    Return an IATA airport (or city) code for any free-text place name.
+    No hard whitelist — unknown names are resolved via Duffel when possible.
     """
     key = (name or "").strip().lower()
+    if not key:
+        return None
+
+    # 1) Local dictionary
     if key in AIRPORT_CODES:
         return AIRPORT_CODES[key]
+
+    # 2) Already an IATA code
     if len(key) == 3 and key.isalpha():
-        code = key.upper()
-        return None if code in _BLOCKED_CODES else code
-    return None
+        return key.upper()
+
+    # 3) Live lookup via Duffel Places API
+    return _lookup_duffel_place(key)
