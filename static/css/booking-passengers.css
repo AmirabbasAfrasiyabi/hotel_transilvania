@@ -528,3 +528,85 @@
     max-width: none;
   }
 }
+
+/* ---- Add passenger bar ---- */
+.bp-add-passenger {
+  margin: 16px 0 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.bp-add-passenger-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: 1px dashed rgba(18, 41, 61, 0.25);
+  background: #fff;
+  color: #12293d;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.bp-add-passenger-btn:hover {
+  border-color: #f8b600;
+  background: rgba(248, 182, 0, 0.06);
+}
+
+.bp-add-passenger-type {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.bp-type-btn {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(18, 41, 61, 0.15);
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.bp-type-btn:hover {
+  border-color: #f8b600;
+  background: rgba(248, 182, 0, 0.08);
+}
+
+.bp-type-btn--cancel {
+  color: #777;
+  border-style: dashed;
+}
+
+.bp-card-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bp-remove-passenger {
+  border: none;
+  background: rgba(244, 74, 64, 0.1);
+  color: #f44a40;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bp-remove-passenger:hover {
+  background: rgba(244, 74, 64, 0.2);
+}
+
+#altContactFields {
+  margin-top: 8px;
+  padding-top: 4px;
+}

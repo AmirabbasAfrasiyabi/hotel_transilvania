@@ -138,47 +138,66 @@
 
         <div id="bpPassengers"></div>
 
-        <div class="bp-card" id="bpContactCard">
+        <div class="bp-add-passenger" id="bpAddPassengerBar">
+          <button type="button" class="bp-add-passenger-btn" id="bpAddPassengerBtn">
+            <i class="fa-solid fa-user-plus"></i>
+            Add new passenger
+          </button>
+          <div class="bp-add-passenger-type" id="bpAddPassengerType" hidden>
+            <span class="bp-hint">Select age category:</span>
+            <button type="button" class="bp-type-btn" data-add-type="adult">Over 12 years (Adult)</button>
+            <button type="button" class="bp-type-btn" data-add-type="child">Under 12 years (Child)</button>
+            <button type="button" class="bp-type-btn bp-type-btn--cancel" id="bpAddPassengerCancel">Cancel</button>
+          </div>
+        </div>
+
+                        <div class="bp-card" id="bpContactCard">
           <h2 class="bp-card-title">Contact details</h2>
 
-          <label class="bp-checkbox">
-            <input type="checkbox" id="sameAsFirst">
-            <span>Same as first passenger</span>
-          </label>
+          <input type="hidden" id="defaultContactName"
+                 value="{{ booking.contact_full_name|default:user.get_full_name|default:user.username }}">
+          <input type="hidden" id="defaultContactEmail"
+                 value="{{ booking.contact_email|default:user.email }}">
+          <input type="hidden" id="defaultContactPhone"
+                 value="{{ booking.contact_phone|default:'' }}">
 
-          <div class="bp-grid-3">
-            <div class="bp-field">
-              <label>Contact name <span class="bp-req">*</span></label>
-              <input type="text" id="contactName" name="contact_name" required
-                     value="{{ booking.contact_full_name|default:'' }}"
-                     autocomplete="name" maxlength="120">
-            </div>
-            <div class="bp-field">
-              <label>Email <span class="bp-req">*</span></label>
-              <input type="email" id="contactEmail" name="contact_email" required
-                     value="{{ booking.contact_email|default:'' }}"
-                     autocomplete="email" placeholder="name@example.com">
-              <small>Ticket and booking confirmation will be sent here.</small>
-            </div>
-            <div class="bp-field">
-              <label>Mobile phone <span class="bp-req">*</span></label>
-              <div class="bp-phone">
-                <select id="countryCode" aria-label="Country code">
-                  <option value="+98">+98</option>
-                  <option value="+90">+90</option>
-                  <option value="+971">+971</option>
-                  <option value="+44">+44</option>
-                  <option value="+1">+1</option>
-                  <option value="+49">+49</option>
-                  <option value="+33">+33</option>
-                  <option value="+86">+86</option>
-                </select>
-                <input type="tel" id="contactPhone" name="contact_phone" required
-                       value="{{ booking.contact_phone|default:'' }}"
-                       autocomplete="tel" inputmode="numeric"
-                       placeholder="9123456789" maxlength="15">
+          <div class="bp-alt-contact" dir="rtl">
+            <label class="bp-alt-contact-check">
+              <input type="checkbox" id="altContactToggle">
+              <span>Send ticket to another email and mobile number</span>
+            </label>
+
+            <div id="altContactFields" class="bp-alt-contact-fields" hidden>
+              <div class="bp-alt-contact-inputs">
+                <div class="bp-field bp-alt-phone">
+                  <div class="bp-phone">
+                    <select id="countryCode" aria-label="Country code">
+                      <option value="+98" selected>+98</option>
+                      <option value="+90">+90</option>
+                      <option value="+971">+971</option>
+                      <option value="+44">+44</option>
+                      <option value="+1">+1</option>
+                      <option value="+49">+49</option>
+                      <option value="+33">+33</option>
+                      <option value="+86">+86</option>
+                    </select>
+                    <input type="tel" id="contactPhone" name="contact_phone"
+                           autocomplete="tel" inputmode="numeric"
+                           placeholder="Mobile number" maxlength="15">
+                  </div>
+                </div>
+                <div class="bp-field bp-alt-email">
+                  <input type="email" id="contactEmail" name="contact_email"
+                         autocomplete="email" placeholder="Email">
+                </div>
+                <input type="hidden" id="contactName" name="contact_name"
+                       value="{{ booking.contact_full_name|default:user.get_full_name|default:user.username }}">
               </div>
-              <small>7–15 digits, without the country code.</small>
+              <p class="bp-alt-contact-note">
+                If you fill in this form, the ticket and purchase confirmation will be sent to these contact details.
+                Ticket change requests or confirmation messages may also be delivered through either your account
+                phone number or the number entered here. Please keep both channels available.
+              </p>
             </div>
           </div>
         </div>

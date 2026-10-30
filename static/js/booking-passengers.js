@@ -187,7 +187,8 @@
     err.textContent = message;
   }
 
-  function createPassengerCard(index, type) {
+  function createPassengerCard(index, type, extra) {
+    extra = !!extra;
     const typeLabel = type.charAt(0).toUpperCase() + type.slice(1);
     const isInfant = type === "infant";
     const ageHint =
@@ -195,21 +196,16 @@
       type === "child" ? "Child ticket · 2–11 years" : "Infant · under 2 years";
 
     return `
-      <div class="bp-card" data-passenger="${index}" data-type="${type}">
+      <div class="bp-card" data-passenger="${index}" data-type="${type}" data-extra="${extra ? 1 : 0}">
         <div class="bp-card-header">
           <h2 class="bp-card-title">
             Passenger ${index}: ${typeLabel}
             <span class="bp-card-badge">${ageHint}</span>
           </h2>
-          <span class="bp-status bp-status--pending" data-status>Not completed</span>
-        </div>
-        <div class="bp-card-helpers">
-          <button type="button" class="bp-helper-btn" data-action="from-previous" title="Coming soon">
-            <i class="fa-solid fa-users"></i> From previous passengers
-          </button>
-          <button type="button" class="bp-helper-btn" data-action="from-passport" title="Coming soon">
-            <i class="fa-solid fa-id-card"></i> Fill from passport photo
-          </button>
+          <div class="bp-card-header-actions">
+            <span class="bp-status bp-status--pending" data-status>Not completed</span>
+            ${extra ? `<button type="button" class="bp-remove-passenger" data-remove-passenger="${index}" title="Remove passenger"><i class="fa-solid fa-trash"></i></button>` : ''}
+          </div>
         </div>
         <div class="bp-grid-2">
           <div class="bp-field">
@@ -401,34 +397,53 @@
 
   function validateContact() {
     clearFieldErrors(document.getElementById("bpContactCard") || document);
+
+    const altToggle = document.getElementById("altContactToggle");
+    const useAlt = altToggle && altToggle.checked;
+
+    if (!useAlt) {
+      // Ticket goes to the logged-in account contact
+      const name = (document.getElementById("defaultContactName") || {}).value || "";
+      const email = (document.getElementById("defaultContactEmail") || {}).value || "";
+      const phone = (document.getElementById("defaultContactPhone") || {}).value || "";
+      if (!email || !email.includes("@")) {
+        return "Your account has no email. Please enable “send to another contact” and enter an email.";
+      }
+      return {
+        contact_full_name: String(name).trim() || "Passenger",
+        contact_email: String(email).trim().toLowerCase(),
+        contact_phone: String(phone).trim() || "—",
+      };
+    }
+
     const nameEl = document.getElementById("contactName");
     const emailEl = document.getElementById("contactEmail");
     const phoneEl = document.getElementById("contactPhone");
     const codeEl = document.getElementById("countryCode");
-    const name = ((nameEl && nameEl.value) || "").trim();
-    const email = ((emailEl && emailEl.value) || "").trim();
-    const phone = ((phoneEl && phoneEl.value) || "").trim();
-    const code = ((codeEl && codeEl.value) || "").trim();
+    if (!nameEl || !emailEl || !phoneEl) return "Contact form is missing.";
 
-    if (!name || name.length < 2) {
+    const name = String(nameEl.value || "").trim();
+    const email = String(emailEl.value || "").trim();
+    const phone = String(phoneEl.value || "").trim();
+    const code = codeEl ? codeEl.value : "";
+
+    if (name.length < 2) {
       markInvalid(nameEl, "Contact name is required (min 2 characters).");
       return "Contact name is required.";
     }
-    if (!isValidEmail(email)) {
-      markInvalid(emailEl, "Enter a valid email address (e.g. name@example.com).");
-      return "Invalid email format.";
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      markInvalid(emailEl, "Enter a valid email address.");
+      return "A valid contact email is required.";
     }
-    if (!isValidPhone(phone, code)) {
-      const msg = code === "+98"
-        ? "Iranian mobile must be 10 digits starting with 9 (e.g. 9123456789)."
-        : "Mobile number must contain 7 to 15 digits (without country code).";
-      markInvalid(phoneEl, msg);
-      return msg;
+    const digits = digitsOnly(phone);
+    if (digits.length < 7 || digits.length > 15) {
+      markInvalid(phoneEl, "Mobile number must be 7–15 digits.");
+      return "A valid mobile number is required.";
     }
     return {
       contact_full_name: name,
       contact_email: email.toLowerCase(),
-      contact_phone: (code + " " + digitsOnly(phone)).trim(),
+      contact_phone: (code + " " + digits).trim(),
     };
   }
 
@@ -590,6 +605,90 @@
       if (btn) btn.disabled = false;
       if (stickyBtn) stickyBtn.disabled = false;
     }
+  }
+
+  function nextPassengerIndex() {
+    let max = 0;
+    container.querySelectorAll("[data-passenger]").forEach(function (card) {
+      const n = Number(card.getAttribute("data-passenger")) || 0;
+      if (n > max) max = n;
+    });
+    return max + 1;
+  }
+
+  function renumberPassengerTitles() {
+    const cards = container.querySelectorAll("[data-passenger]");
+    cards.forEach(function (card, i) {
+      const num = i + 1;
+      card.setAttribute("data-passenger", String(num));
+      // rename input name attributes to match new index
+      card.querySelectorAll("[name]").forEach(function (el) {
+        const name = el.getAttribute("name") || "";
+        el.setAttribute("name", name.replace(/_\d+$/, "_" + num));
+      });
+      const title = card.querySelector(".bp-card-title");
+      if (title) {
+        const badge = title.querySelector(".bp-card-badge");
+        const type = card.getAttribute("data-type") || "adult";
+        const typeLabel = type.charAt(0).toUpperCase() + type.slice(1);
+        title.innerHTML = "Passenger " + num + ": " + typeLabel + " " + (badge ? badge.outerHTML : "");
+      }
+      const rm = card.querySelector("[data-remove-passenger]");
+      if (rm) rm.setAttribute("data-remove-passenger", String(num));
+    });
+  }
+
+  function addPassenger(type) {
+    const index = nextPassengerIndex();
+    const wrap = document.createElement("div");
+    wrap.innerHTML = createPassengerCard(index, type, true).trim();
+    const card = wrap.firstElementChild;
+    container.appendChild(card);
+    card.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
+  // Add passenger UI
+  const addBtn = document.getElementById("bpAddPassengerBtn");
+  const typeBar = document.getElementById("bpAddPassengerType");
+  const cancelAdd = document.getElementById("bpAddPassengerCancel");
+  if (addBtn && typeBar) {
+    addBtn.addEventListener("click", function () {
+      typeBar.hidden = !typeBar.hidden;
+    });
+    typeBar.querySelectorAll("[data-add-type]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        addPassenger(btn.getAttribute("data-add-type"));
+        typeBar.hidden = true;
+      });
+    });
+  }
+  if (cancelAdd && typeBar) {
+    cancelAdd.addEventListener("click", function () { typeBar.hidden = true; });
+  }
+
+  // Remove extra passengers
+  container.addEventListener("click", function (e) {
+    const btn = e.target.closest("[data-remove-passenger]");
+    if (!btn) return;
+    const card = btn.closest("[data-passenger]");
+    if (!card || card.getAttribute("data-extra") !== "1") return;
+    card.remove();
+    renumberPassengerTitles();
+  });
+
+  // Alternate contact toggle
+  const altToggle = document.getElementById("altContactToggle");
+  const altFields = document.getElementById("altContactFields");
+  if (altToggle && altFields) {
+    altToggle.addEventListener("change", function () {
+      altFields.hidden = !altToggle.checked;
+      if (!altToggle.checked) {
+        ["contactName", "contactEmail", "contactPhone"].forEach(function (id) {
+          const el = document.getElementById(id);
+          if (el) el.value = "";
+        });
+      }
+    });
   }
 
   renderPassengers();
