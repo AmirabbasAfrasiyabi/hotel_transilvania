@@ -1,0 +1,86 @@
+{% load static %}
+<header class="bk-header" id="bkHeader">
+  <div class="container">
+    <div class="bk-header-inner">
+      <a href="{% url 'website:index' %}" class="bk-logo" aria-label="Travelista home">
+        <img src="{% static 'img/logo.png' %}" alt="Travelista">
+        <span>Travelista</span>
+      </a>
+
+      <div class="bk-header-actions">
+        {% if request.user.is_authenticated %}
+        <div class="bk-account">
+          <button type="button" class="bk-account-trigger" id="bkAccountTrigger" aria-expanded="false" aria-haspopup="true">
+            <span class="bk-account-name">{{ request.user.get_full_name|default:request.user.username }}</span>
+            <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+          </button>
+          <ul class="bk-account-menu" id="bkAccountMenu" hidden>
+            {% if request.user.is_staff %}
+            <li>
+              <a href="{% url 'admin:index' %}">
+                <i class="fa-solid fa-gauge-high"></i> Admin Panel
+              </a>
+            </li>
+            {% endif %}
+            <li>
+              <a href="#">
+                <i class="fa-solid fa-wallet"></i> Wallet
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <i class="fa-solid fa-user"></i> Account details
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <i class="fa-solid fa-bell"></i> Notifications
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <i class="fa-solid fa-headset"></i> Support request
+              </a>
+            </li>
+            <li class="bk-account-menu-divider" role="separator"></li>
+            <li>
+              <a href="{% url 'account:logout' %}" class="bk-account-logout">
+                <i class="fa-solid fa-right-from-bracket"></i> Log out
+              </a>
+            </li>
+          </ul>
+        </div>
+        {% else %}
+        <a class="bk-login-link" href="{% url 'account:login' %}">
+          <i class="fa-solid fa-user"></i> Login / Register
+        </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</header>
+<script>
+(function () {
+  var trigger = document.getElementById("bkAccountTrigger");
+  var menu = document.getElementById("bkAccountMenu");
+  if (!trigger || !menu) return;
+  function closeMenu() {
+    menu.hidden = true;
+    trigger.setAttribute("aria-expanded", "false");
+  }
+  function openMenu() {
+    menu.hidden = false;
+    trigger.setAttribute("aria-expanded", "true");
+  }
+  trigger.addEventListener("click", function (e) {
+    e.stopPropagation();
+    menu.hidden ? openMenu() : closeMenu();
+  });
+  document.addEventListener("click", function (e) {
+    if (!menu.hidden && !menu.contains(e.target) && e.target !== trigger) closeMenu();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") closeMenu();
+  });
+})();
+</script>
