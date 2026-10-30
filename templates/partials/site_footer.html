@@ -1,24 +1,40 @@
 {% load static %}
 <footer class="footer-area">
+
+<div class="ft-container">
   <div class="ft-grid">
 
-    <!-- Brand -->
-    <div class="ft-brand">
+    <!-- Socials -->
+    <div class="ft-socials-col">
+        <!-- Logo -->
   <div class="ft-footer-logo">
     <a href="{% url 'website:index' %}">
-      <img src="{% static 'img/logo.png' %}" alt="Travelista">
-      <span>Travelista</span>
+      <img src="{% static 'img/logo.png' %}" alt="Travelista Logo">
     </a>
   </div>
 
-  <div class="ft-social">
-    <a href="#" aria-label="Telegram"><i class="fa-brands fa-telegram"></i></a>
-    <a href="#" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
-    <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-    <a href="#" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
-  </div>
-</div>
+  <!-- Social Icons -->
 
+      <div class="ft-socials">
+
+<a href="https://t.me/amir_afrasiyabi" class="ft-social-btn">
+    <i class="fa fa-paper-plane"></i>
+</a>
+
+<a href="https://github.com/AmirabbasAfrasiyabi" class="ft-social-btn">
+    <i class="fa-brands fa-github"></i>
+</a>
+
+<a href="https://www.linkedin.com/in/amirabbas-afrasiyabi-a6a230259" class="ft-social-btn">
+    <i class="fa-brands fa-linkedin"></i>
+</a>
+
+<a href="mailto:abb.afrasiyabi@gmail.com" class="ft-social-btn">
+    <i class="fa fa-envelope"></i>
+</a>
+
+</div>
+    </div>
 
     <!-- Services -->
     <div>
@@ -30,7 +46,7 @@
       </ul>
     </div>
 
-    <!-- About Us -->
+    <!-- Company -->
     <div>
       <p class="ft-col-title">About Us</p>
       <ul class="ft-nav-list">
