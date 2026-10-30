@@ -211,3 +211,42 @@ def create_order(
         raise DuffelError(message, response.status_code)
 
     return payload["data"]
+
+
+def suggest_places(query: str, limit: int = 5) -> list:
+    """
+    Resolve a free-text place name to Duffel places (airports / cities).
+    GET https://api.duffel.com/places/suggestions
+    Returns a list of place dicts (may be empty).
+    """
+    query = (query or "").strip()
+    if not query:
+        return []
+
+    try:
+        response = requests.get(
+            "https://api.duffel.com/places/suggestions",
+            headers=_headers(),
+            params={"query": query},
+            timeout=12,
+        )
+    except requests.Timeout:
+        raise DuffelError("Duffel places lookup timed out.")
+    except requests.RequestException:
+        raise DuffelError("Could not connect to Duffel places API.")
+
+    try:
+        payload = response.json()
+    except ValueError:
+        raise DuffelError(
+            f"Duffel returned an unreadable places answer (HTTP {response.status_code}).",
+            response.status_code,
+        )
+
+    if response.status_code >= 400:
+        errors = payload.get("errors") or [{}]
+        message = errors[0].get("message") or f"Duffel places error (HTTP {response.status_code})."
+        raise DuffelError(message, response.status_code)
+
+    data = payload.get("data") or []
+    return data[:limit]
