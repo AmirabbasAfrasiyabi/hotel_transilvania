@@ -5,7 +5,6 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<!-- FIXED: fav.png replaced with logo.png to avoid 404 -->
 <link rel="shortcut icon" href="{% static 'img/logo.png' %}">
 
 <meta name="author" content="colorlib">
@@ -16,13 +15,7 @@
 <title>{% block title %}Travel{% endblock %}</title>
 <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet">
 
-<!-- FIXED: Fraunces + Space Mono, used by the --tvl-* "boarding pass" design
-     system (Contact page, Why Travelista page, and now the Hero search). -->
-
-<!-- FIXED: Linearicons via CDN to avoid 404 font files -->
 <link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
-
-<!-- FIXED: Font Awesome via CDN to avoid 404 font files -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
 <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
@@ -33,14 +26,9 @@
 <link rel="stylesheet" href="{% static 'css/owl.carousel.css' %}">
 <link rel="stylesheet" href="{% static 'css/main.css' %}">
 
-<!-- FIXED: Toast notification popup styles for Django messages framework.
-     Vanilla CSS (not tied to the site's Bootstrap version) so it never
-     conflicts with bootstrap.min.js already loaded on the page. -->
-
 </head>
 <body data-user-authenticated="{% if user.is_authenticated %}true{% else %}false{% endif %}">
 
-<!-- ================= Toast Notification Popup (Django Messages) ================= -->
 {% if messages %}
 <div id="toast-container" class="tvl-toast-container">
     {% for message in messages %}
@@ -57,8 +45,8 @@
     {% endfor %}
 </div>
 {% endif %}
-<!-- ================================================================================ -->
 
+{% block header %}
 <header id="header">
 <div class="header-top">
 <div class="container">
@@ -125,7 +113,6 @@
       </ul>
     </nav>
 
-
     <div class="header-account-actions">
   <ul class="nav-menu">
     {% if request.user.is_authenticated %}
@@ -171,84 +158,14 @@
   </div>
 </div>
 </header>
+{% endblock %}
 
 {% block content %}
 
 {% endblock %}
-<footer class="footer-area">
-
-<div class="ft-container">
-  <div class="ft-grid">
-
-    <!-- Socials -->
-    <div class="ft-socials-col">
-        <!-- Logo -->
-  <div class="ft-footer-logo">
-    <a href="{% url 'website:index' %}">
-      <img src="{% static 'img/logo.png' %}" alt="Travelista Logo">
-    </a>
-  </div>
-
-  <!-- Social Icons -->
-
-      <div class="ft-socials">
-
-<a href="https://t.me/amir_afrasiyabi" class="ft-social-btn">
-    <i class="fa fa-paper-plane"></i>
-</a>
-
-<a href="https://github.com/AmirabbasAfrasiyabi" class="ft-social-btn">
-    <i class="fa-brands fa-github"></i>
-</a>
-
-<a href="https://www.linkedin.com/in/amirabbas-afrasiyabi-a6a230259" class="ft-social-btn">
-    <i class="fa-brands fa-linkedin"></i>
-</a>
-
-<a href="mailto:abb.afrasiyabi@gmail.com" class="ft-social-btn">
-    <i class="fa fa-envelope"></i>
-</a>
-
-</div>
-    </div>
-
-    <!-- Services -->
-    <div>
-      <p class="ft-col-title">Services</p>
-      <ul class="ft-nav-list">
-        <li><a href="{% url 'website:index' %}"><i class="fa fa-plane"></i>Flight</a></li>
-        <li><a href="{% url 'transport:train' %}"><i class="fa fa-train"></i>Train</a></li>
-        <li><a href="{% url 'transport:bus' %}"><i class="fa fa-bus"></i>Bus</a></li>
-      </ul>
-    </div>
-
-    <!-- Company -->
-    <div>
-      <p class="ft-col-title">About Us</p>
-      <ul class="ft-nav-list">
-        <li><a href="{% url 'website:about' %}"><i class="fa-solid fa-book-open"></i>Our Story</a></li>
-        <li><a href="{% url 'website:contact' %}"><i class="fa-solid fa-envelope"></i>Contact Us</a></li>
-        <li><a href="{% url 'website:Why_Mine' %}"><i class="fa fa-question-circle"></i>Why Mine</a></li>
-        <li><a href="{% url 'blog:index' %}"><i class="fa-solid fa-file-lines"></i>Blog</a></li>
-      </ul>
-    </div>
-
-    <!-- Legal -->
-    <div>
-      <p class="ft-col-title">Legal</p>
-      <ul class="ft-nav-list">
-        <li><a href="{% url 'help_center:FAQ' %}"><i class="fa fa-question-circle"></i>Faq</a></li>
-        <li><a href="{% url 'help_center:Terms_and_Conditions' %}"><i class="fa-solid fa-scale-balanced"></i> Terms & Conditions</a></li>
-        <li><a href="{% url 'help_center:Buying_Guide' %}"><i class="fa-solid fa-cart-shopping"></i> Buying Guide</a></li>
-        <li><a href="{% url 'help_center:Refound_Guide' %}"><i class="fa-solid fa-money-bill-transfer"></i> Refund Guide</a></li>
-      </ul>
-    </div>
-
-  </div>
-
-  <hr class="ft-divider">
-
-</footer>
+{% block footer %}
+{% include "partials/site_footer.html" %}
+{% endblock %}
 
 <script src="{% static 'js/vendor/jquery-2.2.4.min.js' %}"></script>
 <script src="{% static 'js/popper.min.js' %}"></script>
@@ -264,12 +181,8 @@
 <script src="{% static 'js/owl.carousel.min.js' %}"></script>
 <script src="{% static 'js/mail-script.js' %}"></script>
 <script src="{% static 'js/main.js' %}"></script>
-<!-- FIXED: Hero search hub behavior (autocomplete, calendar, passenger
-     selector, reverse button). Safe to load site-wide — it no-ops on any
-     page that doesn't have #heroSearchForm. -->
 <script src="{% static 'js/hero-search.js' %}"></script>
 
-<!-- FIXED: Auto-dismiss toast notifications after 4 seconds -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var toasts = document.querySelectorAll('.tvl-toast');
@@ -277,7 +190,7 @@
             setTimeout(function () {
                 toast.style.animation = 'tvl-fade-out 0.35s ease forwards';
                 setTimeout(function () { toast.remove(); }, 350);
-            }, 4000); // auto-dismiss after 4 seconds
+            }, 4000);
         });
     });
 </script>

@@ -1,0 +1,110 @@
+/* Booking flow chrome: compact header + account menu */
+.bk-header {
+  background: #12293d;
+  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.bk-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 64px;
+  gap: 16px;
+}
+
+.bk-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.bk-logo img {
+  height: 36px;
+  width: auto;
+  border-radius: 50%;
+}
+
+.bk-account {
+  position: relative;
+}
+
+.bk-account-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #fff;
+  border-radius: 999px;
+  padding: 8px 14px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.bk-account-trigger:hover {
+  border-color: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.bk-account-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  min-width: 220px;
+  background: #fff;
+  color: #12293d;
+  border-radius: 12px;
+  box-shadow: 0 16px 40px -12px rgba(18, 41, 61, 0.35);
+  padding: 8px;
+  list-style: none;
+  margin: 0;
+  z-index: 1001;
+}
+
+.bk-account-menu li a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: #12293d;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.bk-account-menu li a:hover {
+  background: rgba(18, 41, 61, 0.06);
+}
+
+.bk-account-menu-divider {
+  height: 1px;
+  background: rgba(18, 41, 61, 0.1);
+  margin: 6px 4px;
+}
+
+.bk-account-logout {
+  color: #c0392b !important;
+}
+
+.bk-login-link {
+  color: #fff;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  padding: 8px 14px;
+}
+
+.bk-login-link:hover {
+  background: rgba(255, 255, 255, 0.06);
+}

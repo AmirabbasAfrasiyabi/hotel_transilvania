@@ -1,0 +1,75 @@
+{% load static %}
+<footer class="footer-area">
+
+<div class="ft-container">
+  <div class="ft-grid">
+
+    <!-- Socials -->
+    <div class="ft-socials-col">
+        <!-- Logo -->
+  <div class="ft-footer-logo">
+    <a href="{% url 'website:index' %}">
+      <img src="{% static 'img/logo.png' %}" alt="Travelista Logo">
+    </a>
+  </div>
+
+  <!-- Social Icons -->
+
+      <div class="ft-socials">
+
+<a href="https://t.me/amir_afrasiyabi" class="ft-social-btn">
+    <i class="fa fa-paper-plane"></i>
+</a>
+
+<a href="https://github.com/AmirabbasAfrasiyabi" class="ft-social-btn">
+    <i class="fa-brands fa-github"></i>
+</a>
+
+<a href="https://www.linkedin.com/in/amirabbas-afrasiyabi-a6a230259" class="ft-social-btn">
+    <i class="fa-brands fa-linkedin"></i>
+</a>
+
+<a href="mailto:abb.afrasiyabi@gmail.com" class="ft-social-btn">
+    <i class="fa fa-envelope"></i>
+</a>
+
+</div>
+    </div>
+
+    <!-- Services -->
+    <div>
+      <p class="ft-col-title">Services</p>
+      <ul class="ft-nav-list">
+        <li><a href="{% url 'website:index' %}"><i class="fa fa-plane"></i>Flight</a></li>
+        <li><a href="{% url 'transport:train' %}"><i class="fa fa-train"></i>Train</a></li>
+        <li><a href="{% url 'transport:bus' %}"><i class="fa fa-bus"></i>Bus</a></li>
+      </ul>
+    </div>
+
+    <!-- Company -->
+    <div>
+      <p class="ft-col-title">About Us</p>
+      <ul class="ft-nav-list">
+        <li><a href="{% url 'website:about' %}"><i class="fa-solid fa-book-open"></i>Our Story</a></li>
+        <li><a href="{% url 'website:contact' %}"><i class="fa-solid fa-envelope"></i>Contact Us</a></li>
+        <li><a href="{% url 'website:Why_Mine' %}"><i class="fa fa-question-circle"></i>Why Mine</a></li>
+        <li><a href="{% url 'blog:index' %}"><i class="fa-solid fa-file-lines"></i>Blog</a></li>
+      </ul>
+    </div>
+
+    <!-- Legal -->
+    <div>
+      <p class="ft-col-title">Legal</p>
+      <ul class="ft-nav-list">
+        <li><a href="{% url 'help_center:FAQ' %}"><i class="fa fa-question-circle"></i>Faq</a></li>
+        <li><a href="{% url 'help_center:Terms_and_Conditions' %}"><i class="fa-solid fa-scale-balanced"></i> Terms & Conditions</a></li>
+        <li><a href="{% url 'help_center:Buying_Guide' %}"><i class="fa-solid fa-cart-shopping"></i> Buying Guide</a></li>
+        <li><a href="{% url 'help_center:Refound_Guide' %}"><i class="fa-solid fa-money-bill-transfer"></i> Refund Guide</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <hr class="ft-divider">
+
+</footer>
