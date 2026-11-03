@@ -32,12 +32,12 @@
       return slices.map(function (sl, i) {
         const dep = sl.departure || {};
         const arr = sl.arrival || {};
-        const origin = dep.airport || dep.city || booking.origin || "â€”";
-        const dest = arr.airport || arr.city || booking.destination || "â€”";
+        const origin = dep.airport || dep.city || booking.origin || "—";
+        const dest = arr.airport || arr.city || booking.destination || "—”";
         return {
           id: "slice_" + i,
           direction: i === 0 ? "Depart" : "Return",
-          label: origin + " â†’ " + dest,
+          label: origin + " → " + dest,
         };
       });
     }
@@ -45,7 +45,7 @@
       {
         id: "slice_0",
         direction: "Depart",
-        label: (booking.origin || "â€”") + " â†’ " + (booking.destination || "â€”"),
+        label: (booking.origin || "—") + " -> " + (booking.destination || "—"),
       },
     ];
   }
@@ -152,7 +152,7 @@
       '" data-pax="' +
       paxOrder +
       '">' +
-      '<button type="button" data-act="dec" aria-label="Decrease">âˆ’</button>' +
+      '<button type="button" data-act="dec" aria-label="Decrease">−</button>' +
       "<span data-count>" +
       count +
       "</span>" +
@@ -185,8 +185,8 @@
             '<div class="svc-pax-row">' +
             '<div class="svc-pax-name">' +
             p.name +
-            "<small>Infant Â· no hold bag</small></div>" +
-            "<div><div class=\"svc-col-label\">Personal</div><span class=\"svc-included\">1 Ã— 7 kg</span></div>" +
+            "<small>Infant · no hold bag</small></div>" +
+            "<div><div class=\"svc-col-label\">Personal</div><span class=\"svc-included\">1 x 7 kg</span></div>" +
             "<div><div class=\"svc-col-label\">Carry-on</div><span class=\"svc-not-included\">N/A</span></div>" +
             "<div><div class=\"svc-col-label\">Checked</div><span class=\"svc-not-included\">N/A</span></div>" +
             "</div>";

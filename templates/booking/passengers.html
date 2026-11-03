@@ -1,32 +1,12 @@
-{% extends 'base.html' %}
+{% extends 'booking/base_booking.html' %}
 {% load static %}
 
 {% block title %}Passenger Details{% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/booking-chrome.css' %}">
 <link rel="stylesheet" href="{% static 'css/booking-passengers.css' %}">
 <link rel="stylesheet" href="{% static 'css/booking-alerts.css' %}">
-
-<style>
-  #header { display: none !important; }
-  #footer, footer { display: none !important; }
-</style>
-
-<header class="bp-simple-header">
-  <div class="container">
-    <div class="bp-header-inner">
-      <a href="{% url 'website:index' %}" class="bp-logo">
-        <img src="{% static 'img/logo.png' %}" alt="Logo">
-      </a>
-      <div class="bp-user-nav">
-        {% if user.is_authenticated %}
-          <span>{{ user.get_full_name|default:user.username }}</span>
-          <a href="{% url 'account:logout' %}">Logout</a>
-        {% endif %}
-      </div>
-    </div>
-  </div>
-</header>
 
 <section class="bp-page">
   <div class="container">
@@ -151,7 +131,8 @@
           </div>
         </div>
 
-                        <div class="bp-card" id="bpContactCard">
+        <!-- Contact details -->
+        <div class="bp-card" id="bpContactCard">
           <h2 class="bp-card-title">Contact details</h2>
 
           <input type="hidden" id="defaultContactName"
@@ -161,10 +142,10 @@
           <input type="hidden" id="defaultContactPhone"
                  value="{{ booking.contact_phone|default:'' }}">
 
-          <div class="bp-alt-contact" dir="rtl">
-            <label class="bp-alt-contact-check">
+          <div class="bp-alt-contact">
+            <label class="bp-alt-contact-check" for="altContactToggle">
               <input type="checkbox" id="altContactToggle">
-              <span>Send ticket to another email and mobile number</span>
+              <span class="bp-alt-contact-label">Send ticket to another email and mobile number</span>
             </label>
 
             <div id="altContactFields" class="bp-alt-contact-fields" hidden>
@@ -260,7 +241,7 @@
   </div>
 </section>
 
-{# Compact ticket-details popup (opened by ⋯ next to Change ticket) #}
+{# Ticket details popup #}
 <div class="bp-ticket-modal" id="bpTicketModal" hidden aria-hidden="true">
   <div class="bp-ticket-overlay" id="bpTicketOverlay"></div>
   <div class="bp-ticket-panel" role="dialog" aria-labelledby="bpTicketTitle">
@@ -270,9 +251,7 @@
         <i class="fa-solid fa-xmark"></i>
       </button>
     </div>
-    <div class="bp-ticket-body" id="bpTicketBody">
-      <!-- filled by JS -->
-    </div>
+    <div class="bp-ticket-body" id="bpTicketBody"></div>
   </div>
 </div>
 

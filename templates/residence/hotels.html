@@ -17,6 +17,11 @@
           {% include "website/_hero_tabs.html" %}
           <form class="hero-search-form" id="heroSearchForm" autocomplete="off" data-location-scope="mixed" data-location-unit="City" data-hide-history="true">
 
+        <!-- هم‌ارتفاع‌سازی کارت با صفحات پرواز/اتوبوس/قطار: ردیف نامرئیِ هم‌قد Travel Options -->
+        <div class="hsf-toolbar hsf-toolbar--top hsf-toolbar--spacer" aria-hidden="true">
+          <span class="hsf-select-trigger">&nbsp;</span>
+        </div>
+
         <div class="hsf-search-row hsf-search-row--destination">
           <div class="hsf-field" id="originField">
             <span class="hsf-label">Destination</span>
@@ -80,6 +85,12 @@
           </div>
         </div>
 
+        <div class="hsf-form-error" id="formErrorBox" hidden>
+          <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+          <span id="formErrorText"></span>
+        </div>
+
+
         <input type="hidden" name="checkin_date" id="departDateHidden">
         <input type="hidden" name="checkout_date" id="returnDateHidden">
         <input type="hidden" name="adults" id="adultsHidden" value="2">
@@ -87,7 +98,7 @@
         <input type="hidden" name="rooms" id="infantsHidden" value="1">
         <input type="hidden" name="rooms_detail" id="roomsDetailHidden" value="">
 
-        <div class="hsf-actions-row">
+        <div class="hsf-actions-row hsf-actions-row--center">
           <button type="submit" class="hero-search-submit" id="heroSearchSubmit">
             <span class="btn-label">Search</span>
             <span class="btn-loading" hidden>

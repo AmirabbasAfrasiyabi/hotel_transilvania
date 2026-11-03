@@ -715,7 +715,7 @@ b, sup, sub, u, del {
 }
 
 .progress-table .table-row .country img {
-  margin-right: 15px;
+  margin-right: 12px;
 }
 
 .progress-table .table-row .percentage .progress {
@@ -1501,7 +1501,7 @@ b, sup, sub, u, del {
 
 .header-top ul li {
   display: inline-block;
-  margin-right: 15px;
+  margin-right: 12px;
 }
 
 @media (max-width: 414px) {
@@ -1535,11 +1535,11 @@ b, sup, sub, u, del {
    a dark hero image. #header now always carries a solid background (see
    below), so text here is legible on every page, not just the homepage. */
 .main-menu {
-  padding-bottom: 20px;
-  padding-top: 20px;
+  padding-bottom: 12px;
+  padding-top: 12px;
   background: transparent;
   padding-left: 15px;
-  padding-right: 15px;
+  padding-right: 12px;
   -webkit-transition: all 0.3s ease 0s;
   transition: all 0.3s ease 0s;
 }
@@ -1552,11 +1552,6 @@ b, sup, sub, u, del {
 
   .main-menu .row {
     flex-wrap: nowrap;
-    /* FIX (Navbar icons on the left): was space-between, which let the
-       nav-menu float wherever the 3-item math landed it. flex-start pins
-       it snugly after the logo; the auto margin below pushes the
-       Sign Up group to the far right with a guaranteed, standard gap
-       instead of letting it butt up against the menu. */
     justify-content: flex-start;
   }
 
@@ -1568,12 +1563,12 @@ b, sup, sub, u, del {
 
   .main-menu .header-account-actions {
     flex-shrink: 0;
-    margin-left: auto; /* standard, guaranteed gap from the nav-menu icons */
+    margin-left: auto;
     padding-left: 24px;
   }
 }
 
-/* در عرض‌های نزدیک به بریک‌پوینت موبایل، کمی فاصله‌ها را جمع‌تر می‌کنیم تا فشرده‌تر جا شوند */
+
 @media (min-width: 992px) and (max-width: 1300px) {
   .nav-menu > li {
     margin-left: 6px;
@@ -1593,8 +1588,6 @@ b, sup, sub, u, del {
   right: 0;
   transition: all 0.5s;
   z-index: 997;
-  /* FIXED: dark background instead of white so the gold logo mark and the
-     nav links/icons both have proper contrast (they were washing out on white). */
   background-color: #1c1e26;
   box-shadow: 0 2px 20px rgba(20, 20, 30, 0.08);
 }
@@ -1610,8 +1603,8 @@ b, sup, sub, u, del {
 }
 
 #header.header-scrolled .main-menu {
-  padding-top: 12px;
-  padding-bottom: 12px;
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
 
 /*--------------------------------------------------------------
@@ -1663,7 +1656,7 @@ b, sup, sub, u, del {
 .sf-arrows .sf-with-ul:after {
   content: "\f107";
   position: absolute;
-  right: 15px;
+  right: 12px;
   font-family: FontAwesome;
   font-style: normal;
   font-weight: normal;
@@ -1685,7 +1678,6 @@ b, sup, sub, u, del {
   padding: 0 8px 0px 8px;
   text-decoration: none;
   display: inline-block;
-  /* FIXED: was #222222, invisible on the new dark header background */
   color: #ffffff;
   font-weight: 500;
   font-size: var(--text-size-small);
@@ -1858,22 +1850,22 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 #logo {
-  padding-left: 15px;
+  padding-left: 0;
 }
 
 #logo img {
-  max-height: 42px;
+  max-height: 36px;
   width: auto;
   -webkit-transition: all 0.3s ease 0s;
   transition: all 0.3s ease 0s;
 }
 
 #header.header-scrolled #logo img {
-  max-height: 34px;
+  max-height: 30px;
 }
 
 #nav-menu-container {
-  padding-right: 15px;
+  padding-right: 12px;
 }
 
 /*--------------------------------------------------------------
@@ -1884,7 +1876,7 @@ body.mobile-nav-active #mobile-nav-toggle {
   align-items: center;
   gap: 8px;
   flex-shrink: 0;
-  padding-right: 15px;
+  padding-right: 12px;
 }
 
 .account-action-link {
@@ -1942,9 +1934,34 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 @media (max-width: 991px) {
+  .main-menu .row.main-menu-grid {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  .main-menu #logo {
+    flex-shrink: 0;
+  }
+
+  .container.main-menu {
+    position: relative;
+  }
+
+  #mobile-nav-toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-top: 0;
+    float: none;
+  }
+
   .header-account-actions {
-    margin-right: 45px;
+    margin-left: auto;
+    margin-right: 40px;
     /* فضای لازم برای دکمه منوی موبایل */
+    padding-right: 0;
     gap: 4px;
   }
   .account-action-link span,
@@ -6431,7 +6448,7 @@ body.mobile-nav-active #mobile-nav-toggle {
 
 /* ---------- Search form ---------- */
 .hero-search-form {
-  padding: 20px 28px 28px;
+  padding: 16px 24px 18px;
   position: relative;
 }
 
@@ -6643,15 +6660,17 @@ body.mobile-nav-active #mobile-nav-toggle {
 /* ---------- Calendar popup ---------- */
 .hsf-calendar-popup {
   position: absolute;
-  top: calc(100% + 10px);
+  top: calc(100% + 6px);
   left: 0;
   background: #fff;
   border-radius: 14px;
   box-shadow: 0 25px 50px -12px rgba(18, 41, 61, 0.32);
-  padding: 20px;
-  z-index: 70;
-  width: min(620px, 90vw);
+  padding: 14px 16px;
+  z-index: 300;
+  width: min(580px, 92vw);
   max-width: calc(100vw - 16px);
+  max-height: min(360px, 58vh);
+  overflow-y: auto;
   box-sizing: border-box;
   animation: hsfPopIn 0.18s ease both;
 }
@@ -6775,14 +6794,16 @@ body.mobile-nav-active #mobile-nav-toggle {
 /* ---------- Passenger selector ---------- */
 .hsf-passenger-popup {
   position: absolute;
-  top: calc(100% + 10px);
+  top: calc(100% + 8px);
   right: 0;
   background: #fff;
   border-radius: 14px;
   box-shadow: 0 25px 50px -12px rgba(18, 41, 61, 0.32);
-  padding: 20px;
-  z-index: 70;
-  width: min(320px, 90vw);
+  padding: 14px 16px;
+  z-index: 300;
+  width: min(300px, 90vw);
+  max-height: min(300px, 50vh);
+  overflow-y: auto;
   animation: hsfPopIn 0.18s ease both;
 }
 
@@ -6931,7 +6952,7 @@ body.mobile-nav-active #mobile-nav-toggle {
   flex-wrap: wrap;
   align-items: center;
   gap: 4px 12px;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
 }
 
 .hsf-toolbar--top {
@@ -7418,9 +7439,8 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 .hsf-calendar-popup {
-  /* was inheriting position from a distant ancestor; now anchored
-     directly under .hsf-date-group with a tight, consistent gap */
-  top: calc(100% + 6px);
+  top: calc(100% + 6px) !important;
+  bottom: auto !important;
 }
 
 @media (max-width: 767px) {
@@ -8451,23 +8471,94 @@ body.mobile-nav-active #mobile-nav-toggle {
   .main-menu-grid .nav-menu > li > a i { font-size: var(--text-size-tiny); }
 }
 
-/* Mobile/Tablet: منوی اصلی به mobile-nav منتقل می‌شود (رفتار فعلی حفظ شد) */
+/* Mobile/Tablet: مثل هدر booking — لوگو چپ، اکانت راست، همبرگر جدا */
 @media (max-width: 991px) {
-  .main-menu .main-menu-grid {
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
+  .main-menu .main-menu-grid,
+  .main-menu .row.main-menu-grid {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: flex-start !important; /* نه space-between */
+    gap: 12px;
   }
-  .main-menu-grid > #logo { flex: 0 0 auto; }
-  .main-menu-grid > .header-account-actions { flex: 0 1 auto; min-width: 0; }
+
+  .main-menu-grid > #logo {
+    flex: 0 0 auto;
+    padding-left: 0;
+  }
+
+  .main-menu-grid > #nav-menu-container {
+    display: none !important;
+  }
+
+  .main-menu-grid > .header-account-actions {
+    flex: 0 0 auto;
+    margin-left: auto !important;
+    margin-right: 40px; /* جا برای همبرگر — هماهنگ با booking */
+    padding-right: 0;
+    padding-left: 8px;
+    min-width: 0;
+  }
+
   .main-menu-grid .header-account-actions .nav-menu > li > a {
-    max-width: 38vw;
+    max-width: 36vw;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    text-transform: uppercase;
+    font-weight: 500;
+    letter-spacing: normal;
+    font-size: 0.8125rem;
+    padding: 0;
   }
+
+  .container.main-menu {
+    position: relative;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  #mobile-nav-toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-top: 0;
+    float: none;
+    z-index: 5;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+/* یکسان‌سازی اندازه لوگو و padding با هدر booking */
+.main-menu {
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+}
+
+#header.header-scrolled .main-menu {
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+}
+
+#logo img {
+  max-height: 36px !important;
+}
+
+#header.header-scrolled #logo img {
+  max-height: 30px !important;
+}
+
+/* نام کاربر در هدر اصلی — مثل booking */
+.header-account-actions .nav-menu > li > a {
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  font-size: 0.875rem;
 }
 
 /* --------------------------------------------------------------------------
@@ -8807,17 +8898,17 @@ img, svg, video, canvas { max-width: 100%; height: auto; }
    Train, Bus, Tours). Banner height synced via --hero-card-h (JS optional).
    ========================================================================== */
 .hero-search-area {
-  padding: 110px 0 70px;
+  padding: 90px 0 40px;
   background: rgba(245, 166, 35, 0.1);
   position: relative;
   overflow: visible !important;   /* CRITICAL: allow dropdowns to escape */
 }
 
 .hero-layout {
-  --hero-card-h: 320px;
+  --hero-card-h: 200px;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 24px;
+  gap: 16px;
   max-width: 1100px;
   margin: 0 auto;
   padding: 0 16px;
@@ -8874,7 +8965,7 @@ img, svg, video, canvas { max-width: 100%; height: auto; }
   box-shadow: 0 12px 40px -12px rgba(18, 41, 61, 0.18);
   border: 1px solid rgba(18, 41, 61, 0.06);
   overflow: visible !important;   /* dropdowns / calendar must overflow */
-  min-height: 280px;
+  min-height: 0;
   display: flex;
   flex-direction: column;
 }
@@ -8919,9 +9010,9 @@ img, svg, video, canvas { max-width: 100%; height: auto; }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 767px) {
-  .hero-search-area { padding: 100px 0 50px; }
-  .hero-layout { gap: 18px; }
-  .hero-image-col { height: 200px; }
+  .hero-search-area { padding: 80px 0 28px; }
+  .hero-layout { gap: 12px; --hero-card-h: 140px; }
+  .hero-image-col { height: 140px; }
 
   .hero-search-submit {
     width: 100% !important;
@@ -8937,7 +9028,7 @@ img, svg, video, canvas { max-width: 100%; height: auto; }
 
 /* ۱) تصویر هیرو: هواپیما کامل دیده شود */
 .hero-image-col {
-  height: var(--hero-card-h, 320px);
+  height: var(--hero-card-h, 200px);
   overflow: hidden;
   border-radius: 18px;
   background: transparent;
@@ -8954,7 +9045,7 @@ img, svg, video, canvas { max-width: 100%; height: auto; }
 }
 
 @media (max-width: 767px) {
-  .hero-image-col { height: 200px; }
+  .hero-image-col { height: 140px; }
   .hero-category-img { object-position: center center !important; }
 }
 
@@ -8963,8 +9054,8 @@ img, svg, video, canvas { max-width: 100%; height: auto; }
   display: grid !important;
   grid-template-columns: minmax(0, 1fr);
   /* ردیف‌ها: toolbar | fields | error | actions */
-  grid-template-rows: auto auto auto 1fr;
-  row-gap: 14px;
+  grid-template-rows: auto auto auto auto;
+  row-gap: 12px;
   min-height: 0;
 }
 
@@ -8974,9 +9065,9 @@ img, svg, video, canvas { max-width: 100%; height: auto; }
   display: flex !important;
   align-items: center !important;      /* وسط عمودی */
   justify-content: center !important;  /* وسط افقی */
-  min-height: 72px;                    /* فضای خالی یکسان بالا و پایین */
+  min-height: 56px;
   margin: 0 !important;
-  padding: 0 !important;
+  padding: 4px 0 !important;
 }
 
 .hero-search-submit {
@@ -9007,7 +9098,7 @@ img, svg, video, canvas { max-width: 100%; height: auto; }
    Flight plane sits high; other illustrations sit lower/right.
    ========================================================= */
 .hero-image-col {
-  height: var(--hero-card-h, 340px);
+  height: var(--hero-card-h, 200px);
   overflow: hidden;
   border-radius: 18px;
   background: transparent !important;
@@ -9057,7 +9148,371 @@ img, svg, video, canvas { max-width: 100%; height: auto; }
 }
 
 @media (max-width: 767px) {
-  .hero-image-col { height: 200px; }
+  .hero-image-col { height: 140px; }
   .hero-category-img { object-position: center center !important; }
   .hero-category-img[src*="flight"] { object-position: center 20% !important; }
 }
+
+
+/* =========================================================
+   No dropdown arrows on main header (hover-only open)
+   ========================================================= */
+.sf-arrows .sf-with-ul {
+  padding-right: 8px !important;
+}
+.sf-arrows .sf-with-ul:after,
+.sf-arrows ul .sf-with-ul:after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Ensure main header account dropdown also opens purely on hover */
+.header-account-actions .dropdown:hover > .submenu,
+.nav-menu .dropdown:hover > .submenu {
+  display: block;
+}
+/* =========================================================
+   FINAL HEADER ALIGNMENT FIX (safe — does not break nav grid)
+   ========================================================= */
+
+/* header-top is empty in base.html — hide it always so height matches booking */
+.header-top {
+  display: none !important;
+  padding: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Equal vertical padding only — DO NOT change display (grid must stay) */
+.main-menu {
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+}
+
+#header.header-scrolled .main-menu {
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+}
+
+/* Logo size — exact match with booking */
+#logo img {
+  max-height: 36px !important;
+  height: auto !important;
+  width: auto !important;
+  display: block !important;
+  object-fit: contain !important;
+}
+
+#header.header-scrolled #logo img {
+  max-height: 30px !important;
+}
+
+/* Username only — do not touch main nav links */
+.header-account-actions .nav-menu > li > a,
+.header-account-actions .nav-menu > li > a span {
+  font-weight: 500 !important;
+  letter-spacing: normal !important;
+  font-size: 0.875rem !important;
+  text-transform: uppercase !important;
+  color: #ffffff !important;
+}
+
+.header-account-actions .nav-menu > li:hover > a,
+.header-account-actions .nav-menu > li:hover > a span {
+  color: #f8b600 !important;
+}
+
+/* Restore main nav link styles if anything overrode them */
+#nav-menu-container .nav-menu > li > a {
+  color: #ffffff !important;
+  font-weight: 500 !important;
+  font-size: 0.875rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: normal !important;
+}
+
+#nav-menu-container .nav-menu > li:hover > a {
+  color: #f8b600 !important;
+}
+
+/* =========================================================
+   MOBILE — forced alignment with booking header
+   ========================================================= */
+@media (max-width: 991px) {
+  .container.main-menu {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    position: relative !important;
+  }
+
+  .main-menu {
+    padding: 10px 16px !important;   /* same 10 / 16 as booking */
+    box-sizing: border-box !important;
+  }
+
+  #header.header-scrolled .main-menu {
+    padding: 8px 16px !important;
+  }
+
+  .main-menu .main-menu-grid,
+  .main-menu .row.main-menu-grid {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 12px !important;
+    margin: 0 !important;
+    width: 100% !important;
+  }
+
+  #logo {
+    flex: 0 0 auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  #logo img {
+    max-height: 32px !important;
+    height: auto !important;
+    width: auto !important;
+    display: block !important;
+  }
+
+  #header.header-scrolled #logo img {
+    max-height: 28px !important;
+  }
+
+  .main-menu-grid > #nav-menu-container {
+    display: none !important;
+  }
+
+  .main-menu-grid > .header-account-actions {
+    flex: 0 0 auto !important;
+    margin-left: auto !important;
+    margin-right: 40px !important;
+    padding: 0 0 0 8px !important;
+  }
+
+  .main-menu-grid .header-account-actions .nav-menu > li > a,
+  .main-menu-grid .header-account-actions .nav-menu > li > a span {
+    font-size: 0.8125rem !important;
+    font-weight: 500 !important;
+    letter-spacing: normal !important;
+    text-transform: uppercase !important;
+    padding: 0 !important;
+    max-width: 36vw !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    color: #ffffff !important;
+  }
+
+  #mobile-nav-toggle {
+    position: absolute !important;
+    right: 12px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 36px !important;
+    height: 36px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 !important;
+    float: none !important;
+    z-index: 5 !important;
+  }
+
+  #mobile-nav-toggle i {
+    font-size: 1.25rem !important;
+    line-height: 1 !important;
+  }
+}
+
+@media (max-width: 575px) {
+  .main-menu {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  .main-menu-grid > .header-account-actions {
+    margin-right: 36px !important;
+  }
+}
+
+/* ========== FORCE MOBILE ALIGN (paste-safe) ========== */
+@media (max-width: 991px) {
+  #header .container.main-menu {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  #header .main-menu {
+    padding: 10px 16px !important;
+    min-height: 52px !important;
+    box-sizing: border-box !important;
+    position: relative !important;
+  }
+  #header #logo img {
+    max-height: 32px !important;
+    height: 32px !important;
+    width: auto !important;
+  }
+
+  /* username — leave clear gap before hamburger */
+  #header .header-account-actions {
+    margin-left: auto !important;
+    margin-right: 48px !important; /* 32px icon + 16px gap */
+    padding-right: 0 !important;
+  }
+  #header .header-account-actions .nav-menu > li > a,
+  #header .header-account-actions .nav-menu > li > a span {
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    line-height: 32px !important;
+    padding: 0 !important;
+    letter-spacing: normal !important;
+  }
+
+  /* Hamburger — not glued to username */
+  #header #mobile-nav-toggle {
+    position: absolute !important;
+    right: 12px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    color: #ffffff !important;
+    cursor: pointer !important;
+    z-index: 10 !important;
+  }
+  #header #mobile-nav-toggle i,
+  #header #mobile-nav-toggle .lnr,
+  #header #mobile-nav-toggle:before {
+    font-size: 22px !important;
+    line-height: 1 !important;
+    color: #ffffff !important;
+    font-weight: normal !important;
+  }
+}
+
+@media (max-width: 575px) {
+  #header .main-menu {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+  #header .header-account-actions {
+    margin-right: 44px !important;
+  }
+  #header #mobile-nav-toggle {
+    right: 8px !important;
+  }
+}
+
+/* ==========================================================================
+   >>> START: UNIFIED SEARCH BAR SIZING (Flight/Bus/Train/Hotel/Villa/Tours)
+   All sizes are read from these variables; change sizes only here.
+   ========================================================================== */
+:root {
+  --hs-max-width: 1100px;   /* width of card and banner image */
+  --hs-field-h: 50px;       /* height of every search box */
+  --hs-banner-h: 200px;     /* top image height (desktop) */
+  --hs-banner-h-mobile: 140px;
+}
+
+/* ---------- 1) Same fixed width for the whole hero ---------- */
+.hero-search-area > .container {
+  width: 100%;
+  max-width: 1140px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hero-layout {
+  width: 100%;
+  max-width: var(--hs-max-width);
+  min-width: 0;
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+  --hero-card-h: var(--hs-banner-h);
+}
+
+.hero-search-col,
+.hero-search-card,
+.hero-search-form {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.hero-image-col { height: var(--hs-banner-h); }
+
+@media (max-width: 767px) {
+  .hero-layout    { --hero-card-h: var(--hs-banner-h-mobile); }
+  .hero-image-col { height: var(--hs-banner-h-mobile); }
+}
+
+/* ---------- 2) Identical height for all boxes ---------- */
+.hsf-input,
+.hsf-passenger-field > .hsf-date-trigger,
+.hsf-date-box {
+  height: var(--hs-field-h);
+  min-height: var(--hs-field-h);
+  box-sizing: border-box;
+}
+
+/* ---------- 3) One grid pattern for both row types ---------- */
+@media (min-width: 1200px) {
+  .hsf-search-row--route,
+  .hsf-search-row--destination {
+    grid-template-columns:
+      minmax(0, 0.9fr) 44px minmax(0, 0.9fr) minmax(0, 0.85fr) minmax(0, 1.6fr);
+  }
+  .hsf-search-row--destination > :first-child {
+    grid-column: span 3;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .hsf-search-row--route,
+  .hsf-search-row--destination {
+    grid-template-columns: minmax(0, 1fr) 44px minmax(0, 1fr);
+  }
+  .hsf-search-row--route > .hsf-passenger-field,
+  .hsf-search-row--route > .hsf-date-group,
+  .hsf-search-row--destination > * {
+    grid-column: 1 / -1;
+  }
+}
+/* ==========================================================================
+   >>> END: UNIFIED SEARCH BAR SIZING <<<
+   ========================================================================== */
+
+
+/* ==========================================================================
+   >>> START: SEARCH CARD EQUAL-HEIGHT FIX <<<
+   علت: گرید فرم ۴ ردیف صریح (auto auto auto auto) داشت؛ ردیف‌های خالی هم
+   row-gap می‌گرفتند، پس کارت صفحاتِ با تعداد آیتم متفاوت قد متفاوت داشت.
+   ========================================================================== */
+.hero-search-form {
+  grid-template-rows: none;
+  grid-auto-rows: auto;
+}
+
+/* ردیف نامرئی در صفحات Hotel/Villa/Tours (بدون Travel Options) */
+.hsf-toolbar--spacer {
+  visibility: hidden;
+  pointer-events: none;
+}
+/* ==========================================================================
+   >>> END: SEARCH CARD EQUAL-HEIGHT FIX <<<
+   ========================================================================== */
