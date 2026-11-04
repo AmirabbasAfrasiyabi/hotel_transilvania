@@ -1,35 +1,84 @@
-/* Booking flow chrome: compact header + account menu */
+/* Booking flow chrome: header matched to #header / .main-menu in main.css */
+
 .bk-header {
-  background: #12293d;
+  background-color: #1c1e26;
   color: #fff;
   position: sticky;
   top: 0;
   z-index: 1000;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06);
+  box-shadow: 0 2px 20px rgba(20, 20, 30, 0.08);
+  transition: box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.bk-header .container {
+  max-width: 1140px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+@media (min-width: 992px) {
+  .bk-header .container {
+    max-width: 1600px;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
 }
 
 .bk-header-inner {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  min-height: 64px;
-  gap: 16px;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  min-height: 60px;
+  padding: 12px 0;
+  gap: 24px;
+  transition: min-height 0.3s ease, padding 0.3s ease;
+}
+
+.bk-header.is-scrolled {
+  box-shadow: 0 4px 24px rgba(20, 20, 30, 0.12);
+}
+
+.bk-header.is-scrolled .bk-header-inner {
+  min-height: 46px;
+  padding: 8px 0;
 }
 
 .bk-logo {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  color: #fff;
   text-decoration: none;
-  font-weight: 600;
-  font-size: 1.05rem;
+  line-height: 0;
+  flex-shrink: 0;
+  padding-left: 0;
+  margin: 0;
 }
 
 .bk-logo img {
-  height: 36px;
+  max-height: 36px;
+  height: auto;
   width: auto;
-  border-radius: 50%;
+  max-width: 180px;
+  display: block;
+  object-fit: contain;
+  border-radius: 0;
+  -webkit-transition: all 0.3s ease 0s;
+  transition: all 0.3s ease 0s;
+}
+
+.bk-header.is-scrolled .bk-logo img {
+  max-height: 30px;
+}
+
+.bk-header-actions {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-left: auto;
+  margin-right: 0;
+  padding-left: 24px;
+  padding-right: 0;
+  gap: 8px;
 }
 
 .bk-account {
@@ -39,49 +88,78 @@
 .bk-account-trigger {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  color: #fff;
-  border-radius: 999px;
-  padding: 8px 14px;
-  cursor: pointer;
-  font-size: 0.9rem;
+  border: none;
+  border-radius: 0;
+  color: #ffffff;
+  padding: 0 8px;
+  cursor: default;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  line-height: 1.4;
+  letter-spacing: normal;
+  transition: color 0.3s ease;
 }
 
-.bk-account-trigger:hover {
-  border-color: rgba(255, 255, 255, 0.35);
-  background: rgba(255, 255, 255, 0.06);
+.bk-account:hover .bk-account-trigger {
+  color: #f8b600;
 }
 
 .bk-account-menu {
   position: absolute;
   right: 0;
-  top: calc(100% + 8px);
+  top: calc(100% + 10px);
   min-width: 220px;
   background: #fff;
-  color: #12293d;
-  border-radius: 12px;
-  box-shadow: 0 16px 40px -12px rgba(18, 41, 61, 0.35);
-  padding: 8px;
+  color: #333;
+  border-radius: 0;
+  box-shadow: 0px 0px 30px rgba(127, 137, 161, 0.25);
+  padding: 10px;
   list-style: none;
   margin: 0;
   z-index: 1001;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px);
+  transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
+  pointer-events: none;
+}
+
+.bk-account-menu::before {
+  content: "";
+  position: absolute;
+  top: -12px;
+  left: 0;
+  right: 0;
+  height: 12px;
+}
+
+.bk-account:hover .bk-account-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
 }
 
 .bk-account-menu li a {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 12px;
-  border-radius: 8px;
-  color: #12293d;
+  padding: 8px 12px;
+  border-radius: 0;
+  color: #333;
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  text-transform: none;
+  transition: color 0.2s ease, background 0.2s ease;
 }
 
 .bk-account-menu li a:hover {
-  background: rgba(18, 41, 61, 0.06);
+  color: #f8b600;
+  background: rgba(18, 41, 61, 0.04);
 }
 
 .bk-account-menu-divider {
@@ -94,17 +172,135 @@
   color: #c0392b !important;
 }
 
+.bk-account-logout:hover {
+  color: #c0392b !important;
+  background: rgba(192, 57, 43, 0.06) !important;
+}
+
 .bk-login-link {
-  color: #fff;
+  color: #ffffff;
   text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 999px;
-  padding: 8px 14px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  padding: 0 8px;
+  line-height: 1.4;
+  letter-spacing: normal;
+  transition: color 0.3s ease;
 }
 
 .bk-login-link:hover {
-  background: rgba(255, 255, 255, 0.06);
+  color: #f8b600;
+}
+
+/* =========================================================
+   MOBILE — forced alignment with main header
+   Logo left edge & username right edge match when pages stacked
+   ========================================================= */
+@media (max-width: 991px) {
+  .bk-header .container {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .bk-header-inner {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    min-height: 52px !important;
+    padding: 10px 16px !important;   /* L/R 16px — same as main */
+    gap: 12px !important;
+    box-sizing: border-box !important;
+  }
+
+  .bk-header.is-scrolled .bk-header-inner {
+    min-height: 44px !important;
+    padding: 8px 16px !important;
+  }
+
+  .bk-logo {
+    flex: 0 0 auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .bk-logo img {
+    max-height: 32px !important;
+    height: auto !important;
+    width: auto !important;
+    display: block !important;
+  }
+
+  .bk-header.is-scrolled .bk-logo img {
+    max-height: 28px !important;
+  }
+
+  /* username: same right inset as main (hamburger = 40px from edge) */
+  .bk-header-actions {
+    flex: 0 0 auto !important;
+    margin-left: auto !important;
+    margin-right: 48px !important;
+    padding: 0 0 0 8px !important;
+  }
+
+  .bk-account-trigger,
+  .bk-login-link {
+    font-size: 0.8125rem !important;
+    font-weight: 500 !important;
+    letter-spacing: normal !important;
+    text-transform: uppercase !important;
+    padding: 0 !important;
+    max-width: 36vw !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+}
+
+@media (max-width: 575px) {
+  .bk-header-inner {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  .bk-header-actions {
+    margin-right: 36px !important;
+  }
+
+  .bk-account-menu {
+    right: 0;
+    min-width: 200px;
+  }
+}
+
+/* ========== FORCE MOBILE ALIGN (paste-safe) ========== */
+@media (max-width: 991px) {
+  header.bk-header .container {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  header.bk-header .bk-header-inner {
+    padding: 10px 16px !important;
+    min-height: 52px !important;
+    align-items: center !important;
+  }
+  header.bk-header .bk-logo img {
+    max-height: 32px !important;
+    height: 32px !important;
+    width: auto !important;
+  }
+  header.bk-header .bk-header-actions {
+    margin-left: auto !important;
+    margin-right: 48px !important; /* same slot as hamburger+gap on main */
+    padding-right: 0 !important;
+  }
+  header.bk-header .bk-account-trigger,
+  header.bk-header .bk-login-link {
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    line-height: 32px !important;
+    padding: 0 !important;
+  }
 }

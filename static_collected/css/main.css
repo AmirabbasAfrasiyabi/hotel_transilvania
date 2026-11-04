@@ -715,7 +715,7 @@ b, sup, sub, u, del {
 }
 
 .progress-table .table-row .country img {
-  margin-right: 15px;
+  margin-right: 12px;
 }
 
 .progress-table .table-row .percentage .progress {
@@ -1501,7 +1501,7 @@ b, sup, sub, u, del {
 
 .header-top ul li {
   display: inline-block;
-  margin-right: 15px;
+  margin-right: 12px;
 }
 
 @media (max-width: 414px) {
@@ -1535,11 +1535,11 @@ b, sup, sub, u, del {
    a dark hero image. #header now always carries a solid background (see
    below), so text here is legible on every page, not just the homepage. */
 .main-menu {
-  padding-bottom: 20px;
-  padding-top: 20px;
+  padding-bottom: 12px;
+  padding-top: 12px;
   background: transparent;
   padding-left: 15px;
-  padding-right: 15px;
+  padding-right: 12px;
   -webkit-transition: all 0.3s ease 0s;
   transition: all 0.3s ease 0s;
 }
@@ -1552,11 +1552,6 @@ b, sup, sub, u, del {
 
   .main-menu .row {
     flex-wrap: nowrap;
-    /* FIX (Navbar icons on the left): was space-between, which let the
-       nav-menu float wherever the 3-item math landed it. flex-start pins
-       it snugly after the logo; the auto margin below pushes the
-       Sign Up group to the far right with a guaranteed, standard gap
-       instead of letting it butt up against the menu. */
     justify-content: flex-start;
   }
 
@@ -1568,12 +1563,12 @@ b, sup, sub, u, del {
 
   .main-menu .header-account-actions {
     flex-shrink: 0;
-    margin-left: auto; /* standard, guaranteed gap from the nav-menu icons */
+    margin-left: auto;
     padding-left: 24px;
   }
 }
 
-/* در عرض‌های نزدیک به بریک‌پوینت موبایل، کمی فاصله‌ها را جمع‌تر می‌کنیم تا فشرده‌تر جا شوند */
+
 @media (min-width: 992px) and (max-width: 1300px) {
   .nav-menu > li {
     margin-left: 6px;
@@ -1593,8 +1588,6 @@ b, sup, sub, u, del {
   right: 0;
   transition: all 0.5s;
   z-index: 997;
-  /* FIXED: dark background instead of white so the gold logo mark and the
-     nav links/icons both have proper contrast (they were washing out on white). */
   background-color: #1c1e26;
   box-shadow: 0 2px 20px rgba(20, 20, 30, 0.08);
 }
@@ -1610,8 +1603,8 @@ b, sup, sub, u, del {
 }
 
 #header.header-scrolled .main-menu {
-  padding-top: 12px;
-  padding-bottom: 12px;
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
 
 /*--------------------------------------------------------------
@@ -1663,7 +1656,7 @@ b, sup, sub, u, del {
 .sf-arrows .sf-with-ul:after {
   content: "\f107";
   position: absolute;
-  right: 15px;
+  right: 12px;
   font-family: FontAwesome;
   font-style: normal;
   font-weight: normal;
@@ -1685,7 +1678,6 @@ b, sup, sub, u, del {
   padding: 0 8px 0px 8px;
   text-decoration: none;
   display: inline-block;
-  /* FIXED: was #222222, invisible on the new dark header background */
   color: #ffffff;
   font-weight: 500;
   font-size: var(--text-size-small);
@@ -1858,22 +1850,22 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 #logo {
-  padding-left: 15px;
+  padding-left: 0;
 }
 
 #logo img {
-  max-height: 42px;
+  max-height: 36px;
   width: auto;
   -webkit-transition: all 0.3s ease 0s;
   transition: all 0.3s ease 0s;
 }
 
 #header.header-scrolled #logo img {
-  max-height: 34px;
+  max-height: 30px;
 }
 
 #nav-menu-container {
-  padding-right: 15px;
+  padding-right: 12px;
 }
 
 /*--------------------------------------------------------------
@@ -1884,7 +1876,7 @@ body.mobile-nav-active #mobile-nav-toggle {
   align-items: center;
   gap: 8px;
   flex-shrink: 0;
-  padding-right: 15px;
+  padding-right: 12px;
 }
 
 .account-action-link {
@@ -1942,9 +1934,34 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 @media (max-width: 991px) {
+  .main-menu .row.main-menu-grid {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  .main-menu #logo {
+    flex-shrink: 0;
+  }
+
+  .container.main-menu {
+    position: relative;
+  }
+
+  #mobile-nav-toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-top: 0;
+    float: none;
+  }
+
   .header-account-actions {
-    margin-right: 45px;
+    margin-left: auto;
+    margin-right: 40px;
     /* فضای لازم برای دکمه منوی موبایل */
+    padding-right: 0;
     gap: 4px;
   }
   .account-action-link span,
@@ -6269,26 +6286,92 @@ body.mobile-nav-active #mobile-nav-toggle {
    (به بخش base.html در همین تحویل مراجعه کن).
    ========================================================================== */
 
+/* ---------- Hero layout: image on top + search card below ---------- */
 .hero-search-area {
-  padding: 190px 0 90px;
+  padding: 110px 0 70px;
+  background: var(--tvl-paper, #F1E7D6);
+  position: relative;
+  overflow: hidden;
 }
 
-.hero-search-bg {
-  position: absolute;
-  inset: 0;
+.hero-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto auto;
+  gap: 28px;
+  align-items: stretch;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* Image on top */
+.hero-image-col {
+  order: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-category-img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  z-index: 1;
+  max-width: 420px;          /* smaller */
+  height: auto;
+  max-height: 280px;
+  object-fit: contain;
+  border-radius: 18px;
+  display: block;
 }
 
+/* Search column below */
+.hero-search-col {
+  order: 2;
+  min-width: 0;
+}
+
+.hero-search-intro {
+  text-align: center;
+  max-width: 100%;
+  margin: 0 0 18px;
+}
+
+.hero-search-intro .contact-eyebrow {
+  justify-content: center;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+}
+
+.hero-search-heading {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--tvl-navy, #12293D);
+  font-size: clamp(1.6rem, 1.25rem + 1.4vw, 2.1rem);
+  line-height: 1.2;
+  margin: 6px 0 8px;
+}
+
+.hero-search-sub {
+  color: #6B6560;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* Search card */
+.hero-search-card {
+  max-width: 100%;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 12px 40px -12px rgba(18, 41, 61, 0.18);
+  overflow: visible;
+  border: 1px solid rgba(18, 41, 61, 0.06);
+}
+
+/* Keep old classes harmless */
+.hero-search-bg,
 .hero-search-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  background:
-    linear-gradient(180deg, rgba(18, 41, 61, 0.75) 0%, rgba(18, 41, 61, 0.55) 45%, rgba(18, 41, 61, 0.92) 100%);
+  display: none !important;
 }
 
 .hero-search-inner {
@@ -6296,40 +6379,26 @@ body.mobile-nav-active #mobile-nav-toggle {
   z-index: 3;
 }
 
-.hero-search-intro {
-  text-align: center;
-  max-width: 620px;
-  margin: 0 auto 34px;
+/* Responsive */
+@media (max-width: 767px) {
+  .hero-search-area {
+    padding: 100px 0 50px;
+  }
+  .hero-layout {
+    gap: 22px;
+  }
+  .hero-category-img {
+    max-width: 320px;
+    max-height: 220px;
+  }
 }
 
-.hero-search-intro .contact-eyebrow {
-  justify-content: center;
-}
-
-.hero-search-heading {
-  font-family: var(--font-display);
-  font-weight: 700;
-  color: #fff;
-  font-size: var(--hero-title-size);
-  line-height: 1.15;
-  margin: 10px 0 14px;
-}
-
-.hero-search-sub {
-  color: rgba(241, 231, 214, 0.82);
-  font-size: var(--text-size);
-  line-height: 1.6;
-  margin: 0;
-}
-
-/* ---------- Search card ---------- */
-.hero-search-card {
-  max-width: 980px;
-  margin: 0 auto;
-  background: var(--tvl-paper);
-  border-radius: var(--tvl-radius);
-  box-shadow: var(--tvl-shadow);
-  overflow: visible;
+@media (max-width: 480px) {
+  .hero-category-img {
+    max-width: 280px;
+    max-height: 190px;
+    border-radius: 14px;
+  }
 }
 
 .hero-tabs {
@@ -6379,7 +6448,7 @@ body.mobile-nav-active #mobile-nav-toggle {
 
 /* ---------- Search form ---------- */
 .hero-search-form {
-  padding: 20px 28px 28px;
+  padding: 16px 24px 18px;
   position: relative;
 }
 
@@ -6591,15 +6660,17 @@ body.mobile-nav-active #mobile-nav-toggle {
 /* ---------- Calendar popup ---------- */
 .hsf-calendar-popup {
   position: absolute;
-  top: calc(100% + 10px);
+  top: calc(100% + 6px);
   left: 0;
   background: #fff;
   border-radius: 14px;
   box-shadow: 0 25px 50px -12px rgba(18, 41, 61, 0.32);
-  padding: 20px;
-  z-index: 70;
-  width: min(620px, 90vw);
+  padding: 14px 16px;
+  z-index: 300;
+  width: min(580px, 92vw);
   max-width: calc(100vw - 16px);
+  max-height: min(360px, 58vh);
+  overflow-y: auto;
   box-sizing: border-box;
   animation: hsfPopIn 0.18s ease both;
 }
@@ -6723,14 +6794,16 @@ body.mobile-nav-active #mobile-nav-toggle {
 /* ---------- Passenger selector ---------- */
 .hsf-passenger-popup {
   position: absolute;
-  top: calc(100% + 10px);
+  top: calc(100% + 8px);
   right: 0;
   background: #fff;
   border-radius: 14px;
   box-shadow: 0 25px 50px -12px rgba(18, 41, 61, 0.32);
-  padding: 20px;
-  z-index: 70;
-  width: min(320px, 90vw);
+  padding: 14px 16px;
+  z-index: 300;
+  width: min(300px, 90vw);
+  max-height: min(300px, 50vh);
+  overflow-y: auto;
   animation: hsfPopIn 0.18s ease both;
 }
 
@@ -6879,7 +6952,7 @@ body.mobile-nav-active #mobile-nav-toggle {
   flex-wrap: wrap;
   align-items: center;
   gap: 4px 12px;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
 }
 
 .hsf-toolbar--top {
@@ -7366,9 +7439,8 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 .hsf-calendar-popup {
-  /* was inheriting position from a distant ancestor; now anchored
-     directly under .hsf-date-group with a tight, consistent gap */
-  top: calc(100% + 6px);
+  top: calc(100% + 6px) !important;
+  bottom: auto !important;
 }
 
 @media (max-width: 767px) {
@@ -8399,23 +8471,94 @@ body.mobile-nav-active #mobile-nav-toggle {
   .main-menu-grid .nav-menu > li > a i { font-size: var(--text-size-tiny); }
 }
 
-/* Mobile/Tablet: منوی اصلی به mobile-nav منتقل می‌شود (رفتار فعلی حفظ شد) */
+/* Mobile/Tablet: مثل هدر booking — لوگو چپ، اکانت راست، همبرگر جدا */
 @media (max-width: 991px) {
-  .main-menu .main-menu-grid {
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
+  .main-menu .main-menu-grid,
+  .main-menu .row.main-menu-grid {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: flex-start !important; /* نه space-between */
+    gap: 12px;
   }
-  .main-menu-grid > #logo { flex: 0 0 auto; }
-  .main-menu-grid > .header-account-actions { flex: 0 1 auto; min-width: 0; }
+
+  .main-menu-grid > #logo {
+    flex: 0 0 auto;
+    padding-left: 0;
+  }
+
+  .main-menu-grid > #nav-menu-container {
+    display: none !important;
+  }
+
+  .main-menu-grid > .header-account-actions {
+    flex: 0 0 auto;
+    margin-left: auto !important;
+    margin-right: 40px; /* جا برای همبرگر — هماهنگ با booking */
+    padding-right: 0;
+    padding-left: 8px;
+    min-width: 0;
+  }
+
   .main-menu-grid .header-account-actions .nav-menu > li > a {
-    max-width: 38vw;
+    max-width: 36vw;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    text-transform: uppercase;
+    font-weight: 500;
+    letter-spacing: normal;
+    font-size: 0.8125rem;
+    padding: 0;
   }
+
+  .container.main-menu {
+    position: relative;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  #mobile-nav-toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-top: 0;
+    float: none;
+    z-index: 5;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+/* یکسان‌سازی اندازه لوگو و padding با هدر booking */
+.main-menu {
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+}
+
+#header.header-scrolled .main-menu {
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+}
+
+#logo img {
+  max-height: 36px !important;
+}
+
+#header.header-scrolled #logo img {
+  max-height: 30px !important;
+}
+
+/* نام کاربر در هدر اصلی — مثل booking */
+.header-account-actions .nav-menu > li > a {
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  font-size: 0.875rem;
 }
 
 /* --------------------------------------------------------------------------
@@ -8749,3 +8892,650 @@ img, svg, video, canvas { max-width: 100%; height: auto; }
 .hsf-date-segment { padding: 4px 4px 4px 8px; }
 .hsf-date-nudge { width: 22px; }
 .hsf-date-box .hsf-date-trigger { gap: 6px; padding: 2px; }
+/* ==========================================================================
+   HERO v2 — Image banner (top) + Search card (bottom), cream background
+   Applies to every page that uses .hero-layout (Flight, Hotel, Villa,
+   Train, Bus, Tours). Banner height synced via --hero-card-h (JS optional).
+   ========================================================================== */
+.hero-search-area {
+  padding: 90px 0 40px;
+  background: rgba(245, 166, 35, 0.1);
+  position: relative;
+  overflow: visible !important;   /* CRITICAL: allow dropdowns to escape */
+}
+
+.hero-layout {
+  --hero-card-h: 200px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 16px;
+  align-items: stretch;
+}
+
+/* ---- Row 1: category image — fills entire box, no white space ---- */
+.hero-image-col {
+  order: 1;
+  height: var(--hero-card-h);
+  border-radius: 18px;
+  overflow: hidden;
+  background: transparent;
+  border: none;
+  box-shadow: 0 12px 40px -12px rgba(18, 41, 61, 0.18);
+  display: block;
+}
+
+.hero-category-img {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+  border-radius: 18px;
+}
+
+/* Intro text hidden visually (kept for SEO / screen readers) */
+.hero-layout .hero-search-intro {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---- Row 2: search card ---- */
+.hero-search-col {
+  order: 2;
+  min-width: 0;
+}
+
+.hero-search-card {
+  max-width: 100%;
+  margin: 0 auto;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 12px 40px -12px rgba(18, 41, 61, 0.18);
+  border: 1px solid rgba(18, 41, 61, 0.06);
+  overflow: visible !important;   /* dropdowns / calendar must overflow */
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---- Prevent any parent from clipping popups ---- */
+.hero-search-form,
+.hsf-search-row,
+.hsf-field,
+.hsf-date-group,
+.hsf-passenger-field,
+.hsf-date-box {
+  overflow: visible !important;
+}
+
+.hsf-suggestions,
+.hsf-calendar-popup,
+.hsf-passenger-popup,
+.hsf-select-popup {
+  z-index: 300 !important;
+}
+
+/* ---- Search button: same size on ALL tabs ---- */
+.hsf-actions-row--center {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.hero-search-submit {
+  width: 220px !important;
+  min-width: 220px !important;
+  max-width: 220px !important;
+  min-height: 50px;
+  height: 50px;
+  border-radius: 30px;
+  font-size: 1rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 767px) {
+  .hero-search-area { padding: 80px 0 28px; }
+  .hero-layout { gap: 12px; --hero-card-h: 140px; }
+  .hero-image-col { height: 140px; }
+
+  .hero-search-submit {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+  }
+}
+
+
+/* =========================================================
+   FINAL POLISH — plane image + Search button spacing
+   ========================================================= */
+
+/* ۱) تصویر هیرو: هواپیما کامل دیده شود */
+.hero-image-col {
+  height: var(--hero-card-h, 200px);
+  overflow: hidden;
+  border-radius: 18px;
+  background: transparent;
+}
+
+.hero-category-img {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  object-fit: cover !important;
+  /* هواپیما در بالای تصویر است → کمی به بالا متمایل می‌شویم */
+  object-position: center center !important;
+  border-radius: 18px;
+}
+
+@media (max-width: 767px) {
+  .hero-image-col { height: 140px; }
+  .hero-category-img { object-position: center center !important; }
+}
+
+/* ۲) دکمه Search دقیقاً وسط فضای خالی زیر فیلدها */
+.hero-search-form {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr);
+  /* ردیف‌ها: toolbar | fields | error | actions */
+  grid-template-rows: auto auto auto auto;
+  row-gap: 12px;
+  min-height: 0;
+}
+
+/* ردیف دکمه: فضای باقی‌مانده را بگیرد و دکمه را وسط عمودی قرار دهد */
+.hsf-actions-row,
+.hsf-actions-row--center {
+  display: flex !important;
+  align-items: center !important;      /* وسط عمودی */
+  justify-content: center !important;  /* وسط افقی */
+  min-height: 56px;
+  margin: 0 !important;
+  padding: 4px 0 !important;
+}
+
+.hero-search-submit {
+  width: 220px !important;
+  min-width: 220px !important;
+  max-width: 220px !important;
+  min-height: 50px;
+  height: 50px;
+  border-radius: 30px;
+  font-weight: 600;
+}
+
+@media (max-width: 767px) {
+  .hero-search-submit {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+  }
+  .hsf-actions-row,
+  .hsf-actions-row--center {
+    min-height: 60px;
+  }
+}
+
+
+/* =========================================================
+   Hero images — per-category object-position
+   Flight plane sits high; other illustrations sit lower/right.
+   ========================================================= */
+.hero-image-col {
+  height: var(--hero-card-h, 200px);
+  overflow: hidden;
+  border-radius: 18px;
+  background: transparent !important;
+}
+
+.hero-category-img {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  object-fit: cover !important;
+  object-position: center center !important; /* safe default */
+  border-radius: 18px;
+}
+
+/* Flight: plane is in the upper area */
+.hero-category-img[src*="flight"] {
+  object-position: center 18% !important;
+}
+
+/* Hotels: building on the right */
+.hero-category-img[src*="hotel"] {
+  object-position: 70% 45% !important;
+}
+
+/* Villa: house + palms on the right */
+.hero-category-img[src*="villa"],
+.hero-category-img[src*="village"] {
+  object-position: 75% 50% !important;
+}
+
+/* Train: train in lower-right */
+.hero-category-img[src*="train"] {
+  object-position: 80% 70% !important;
+}
+
+/* Bus: bus centered-right */
+.hero-category-img[src*="bus"] {
+  object-position: 60% 45% !important;
+}
+
+/* Tours: suitcase on the right */
+.hero-category-img[src*="tour"],
+.hero-category-img[src*="package"] {
+  object-position: 75% 55% !important;
+}
+
+@media (max-width: 767px) {
+  .hero-image-col { height: 140px; }
+  .hero-category-img { object-position: center center !important; }
+  .hero-category-img[src*="flight"] { object-position: center 20% !important; }
+}
+
+
+/* =========================================================
+   No dropdown arrows on main header (hover-only open)
+   ========================================================= */
+.sf-arrows .sf-with-ul {
+  padding-right: 8px !important;
+}
+.sf-arrows .sf-with-ul:after,
+.sf-arrows ul .sf-with-ul:after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Ensure main header account dropdown also opens purely on hover */
+.header-account-actions .dropdown:hover > .submenu,
+.nav-menu .dropdown:hover > .submenu {
+  display: block;
+}
+/* =========================================================
+   FINAL HEADER ALIGNMENT FIX (safe — does not break nav grid)
+   ========================================================= */
+
+/* header-top is empty in base.html — hide it always so height matches booking */
+.header-top {
+  display: none !important;
+  padding: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Equal vertical padding only — DO NOT change display (grid must stay) */
+.main-menu {
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+}
+
+#header.header-scrolled .main-menu {
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+}
+
+/* Logo size — exact match with booking */
+#logo img {
+  max-height: 36px !important;
+  height: auto !important;
+  width: auto !important;
+  display: block !important;
+  object-fit: contain !important;
+}
+
+#header.header-scrolled #logo img {
+  max-height: 30px !important;
+}
+
+/* Username only — do not touch main nav links */
+.header-account-actions .nav-menu > li > a,
+.header-account-actions .nav-menu > li > a span {
+  font-weight: 500 !important;
+  letter-spacing: normal !important;
+  font-size: 0.875rem !important;
+  text-transform: uppercase !important;
+  color: #ffffff !important;
+}
+
+.header-account-actions .nav-menu > li:hover > a,
+.header-account-actions .nav-menu > li:hover > a span {
+  color: #f8b600 !important;
+}
+
+/* Restore main nav link styles if anything overrode them */
+#nav-menu-container .nav-menu > li > a {
+  color: #ffffff !important;
+  font-weight: 500 !important;
+  font-size: 0.875rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: normal !important;
+}
+
+#nav-menu-container .nav-menu > li:hover > a {
+  color: #f8b600 !important;
+}
+
+/* =========================================================
+   MOBILE — forced alignment with booking header
+   ========================================================= */
+@media (max-width: 991px) {
+  .container.main-menu {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    position: relative !important;
+  }
+
+  .main-menu {
+    padding: 10px 16px !important;   /* same 10 / 16 as booking */
+    box-sizing: border-box !important;
+  }
+
+  #header.header-scrolled .main-menu {
+    padding: 8px 16px !important;
+  }
+
+  .main-menu .main-menu-grid,
+  .main-menu .row.main-menu-grid {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 12px !important;
+    margin: 0 !important;
+    width: 100% !important;
+  }
+
+  #logo {
+    flex: 0 0 auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  #logo img {
+    max-height: 32px !important;
+    height: auto !important;
+    width: auto !important;
+    display: block !important;
+  }
+
+  #header.header-scrolled #logo img {
+    max-height: 28px !important;
+  }
+
+  .main-menu-grid > #nav-menu-container {
+    display: none !important;
+  }
+
+  .main-menu-grid > .header-account-actions {
+    flex: 0 0 auto !important;
+    margin-left: auto !important;
+    margin-right: 40px !important;
+    padding: 0 0 0 8px !important;
+  }
+
+  .main-menu-grid .header-account-actions .nav-menu > li > a,
+  .main-menu-grid .header-account-actions .nav-menu > li > a span {
+    font-size: 0.8125rem !important;
+    font-weight: 500 !important;
+    letter-spacing: normal !important;
+    text-transform: uppercase !important;
+    padding: 0 !important;
+    max-width: 36vw !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    color: #ffffff !important;
+  }
+
+  #mobile-nav-toggle {
+    position: absolute !important;
+    right: 12px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 36px !important;
+    height: 36px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 !important;
+    float: none !important;
+    z-index: 5 !important;
+  }
+
+  #mobile-nav-toggle i {
+    font-size: 1.25rem !important;
+    line-height: 1 !important;
+  }
+}
+
+@media (max-width: 575px) {
+  .main-menu {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  .main-menu-grid > .header-account-actions {
+    margin-right: 36px !important;
+  }
+}
+
+/* ========== FORCE MOBILE ALIGN (paste-safe) ========== */
+@media (max-width: 991px) {
+  #header .container.main-menu {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  #header .main-menu {
+    padding: 10px 16px !important;
+    min-height: 52px !important;
+    box-sizing: border-box !important;
+    position: relative !important;
+  }
+  #header #logo img {
+    max-height: 32px !important;
+    height: 32px !important;
+    width: auto !important;
+  }
+
+  /* username — leave clear gap before hamburger */
+  #header .header-account-actions {
+    margin-left: auto !important;
+    margin-right: 48px !important; /* 32px icon + 16px gap */
+    padding-right: 0 !important;
+  }
+  #header .header-account-actions .nav-menu > li > a,
+  #header .header-account-actions .nav-menu > li > a span {
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    line-height: 32px !important;
+    padding: 0 !important;
+    letter-spacing: normal !important;
+  }
+
+  /* Hamburger — not glued to username */
+  #header #mobile-nav-toggle {
+    position: absolute !important;
+    right: 12px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    color: #ffffff !important;
+    cursor: pointer !important;
+    z-index: 10 !important;
+  }
+  #header #mobile-nav-toggle i,
+  #header #mobile-nav-toggle .lnr,
+  #header #mobile-nav-toggle:before {
+    font-size: 22px !important;
+    line-height: 1 !important;
+    color: #ffffff !important;
+    font-weight: normal !important;
+  }
+}
+
+@media (max-width: 575px) {
+  #header .main-menu {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+  #header .header-account-actions {
+    margin-right: 44px !important;
+  }
+  #header #mobile-nav-toggle {
+    right: 8px !important;
+  }
+}
+
+
+/* =========================================================
+   MOBILE SEARCH BAR — equal tabs + compact From/To row
+   Applies on all hero pages (Flight, Bus, Train, Hotel, …)
+   ========================================================= */
+
+/* تب‌ها: همیشه ۶ ستون مساوی — فقط آیکن، بدون اسکرول افقی */
+.hero-tabs {
+  display: grid !important;
+  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+  overflow: hidden !important;
+  width: 100%;
+}
+
+.hero-tab {
+  flex: unset !important;
+  min-width: 0 !important;
+  padding: 14px 4px !important;
+  gap: 0 !important;
+  justify-content: center !important;
+}
+
+.hero-tab i {
+  font-size: 1.05rem !important;
+  line-height: 1 !important;
+}
+
+/* متن تب فقط از تبلت به بالا */
+@media (max-width: 991px) {
+  .hero-tab span {
+    display: none !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .hero-tab {
+    padding: 16px 10px !important;
+    gap: 8px !important;
+  }
+  .hero-tab span {
+    display: inline !important;
+  }
+}
+
+/* موبایل: From | Swap | To در یک ردیف — بعد مسافر و تاریخ */
+@media (max-width: 767px) {
+  .hero-search-form {
+    padding: 14px 14px 16px !important;
+    row-gap: 12px !important;
+  }
+
+  .hsf-toolbar--top {
+    margin-bottom: 0 !important;
+  }
+
+  /* مسیر (پرواز/اتوبوس/قطار): From + Swap + To بالا، بقیه پایین */
+  .hsf-search-row--route {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 40px minmax(0, 1fr) !important;
+    grid-template-areas:
+      "origin swap dest"
+      "pax   pax  pax"
+      "date  date date" !important;
+    gap: 10px 8px !important;
+    align-items: end !important;
+  }
+
+  /* ترتیب DOM ثابت: origin | swap | dest | pax | date */
+  .hsf-search-row--route > :nth-child(1) { grid-area: origin; }
+  .hsf-search-row--route > :nth-child(2) {
+    grid-area: swap;
+    justify-self: center;
+    align-self: end;
+    margin-bottom: 4px;
+    transform: none !important; /* افقی بین From و To */
+  }
+  .hsf-search-row--route > :nth-child(3) { grid-area: dest; }
+  .hsf-search-row--route > :nth-child(4) { grid-area: pax; }
+  .hsf-search-row--route > :nth-child(5) { grid-area: date; }
+
+  /* اقامت (هتل/ویلا): مقصد و تاریخ/مسافر */
+  .hsf-search-row--destination {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  .hsf-reverse-btn.is-swapping {
+    transform: rotate(180deg) !important;
+  }
+
+  /* ارتفاع یکسان فیلدها */
+  .hsf-input,
+  .hsf-date-trigger,
+  .hsf-date-box {
+    min-height: 48px !important;
+  }
+
+  .hero-search-submit {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    height: 48px !important;
+    min-height: 48px !important;
+  }
+
+  .hsf-actions-row,
+  .hsf-actions-row--center {
+    min-height: 48px !important;
+  }
+}
+
+/* گوشی خیلی باریک: تب‌ها کمی فشرده‌تر */
+@media (max-width: 380px) {
+  .hero-tab {
+    padding: 12px 2px !important;
+  }
+  .hero-tab i {
+    font-size: 0.95rem !important;
+  }
+}
+

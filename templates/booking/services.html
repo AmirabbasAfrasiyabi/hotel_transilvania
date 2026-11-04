@@ -1,35 +1,13 @@
-{% extends 'base.html' %}
+{% extends 'booking/base_booking.html' %}
 {% load static %}
 
 {% block title %}Travel Services{% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/booking-chrome.css' %}">
 <link rel="stylesheet" href="{% static 'css/booking-passengers.css' %}">
 <link rel="stylesheet" href="{% static 'css/booking-services.css' %}">
 <link rel="stylesheet" href="{% static 'css/booking-alerts.css' %}">
-
-<style>
-  #header { display: none !important; }
-  #footer, footer { display: none !important; }
-</style>
-
-<header class="bp-simple-header">
-  <div class="container">
-    <div class="bp-header-inner">
-      <a href="{% url 'website:index' %}" class="bp-logo">
-        <img src="{% static 'img/logo.png' %}" alt="Logo">
-      </a>
-      <div class="bp-user-nav">
-        {% if user.is_authenticated %}
-          <span>{{ user.get_full_name|default:user.username }}</span>
-          <a href="{% url 'account:logout' %}">Logout</a>
-        {% else %}
-          <a href="{% url 'account:login' %}">Login</a>
-        {% endif %}
-      </div>
-    </div>
-  </div>
-</header>
 
 <section class="bp-page">
   <div class="container">
@@ -226,7 +204,7 @@
 
 <div class="bp-sticky-bar" id="bpStickyBar">
   <div class="bp-sticky-price" id="svcStickyPrice">
-    {% if booking %}{{ booking.total_price }} {{ booking.currency }} {% else %}—{% endif %}
+    {% if booking %}{{ booking.total_price }} {{ booking.currency }}{% else %}—{% endif %}
   </div>
   <button type="button" class="bp-cta" id="svcStickyContinue">Continue</button>
 </div>

@@ -1,15 +1,14 @@
-{% extends "base.html" %}
+{% extends 'booking/base_booking.html' %}
 {% load static %}
 
 {% block title %}Review & Confirm{% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/booking-chrome.css' %}">
 <link rel="stylesheet" href="{% static 'css/booking-passengers.css' %}">
 <link rel="stylesheet" href="{% static 'css/booking-alerts.css' %}">
 
 <style>
-  #header { display: none !important; }
-  #footer, footer { display: none !important; }
   .rv-page { max-width: 860px; margin: 0 auto; padding: 0 1rem 3rem; }
   .rv-card {
     background: #fff; border: 1px solid var(--bp-paper-dark, #E7D9C2);
@@ -44,22 +43,6 @@
   .rv-price-row.total { font-size: 1.1rem; font-weight: 800; color: var(--bp-navy, #12293D); border-top: 1px solid var(--bp-paper-dark, #E7D9C2); margin-top: 8px; padding-top: 10px; }
   .rv-terms { font-size: 0.82rem; color: var(--bp-ink-soft, #6B6560); margin-top: 1rem; line-height: 1.45; }
 </style>
-
-<header class="bp-simple-header">
-  <div class="container">
-    <div class="bp-header-inner">
-      <a href="{% url 'website:index' %}" class="bp-logo">
-        <img src="{% static 'img/logo.png' %}" alt="Logo">
-      </a>
-      <div class="bp-user-nav">
-        {% if user.is_authenticated %}
-          <span>{{ user.get_full_name|default:user.username }}</span>
-          <a href="{% url 'account:logout' %}">Logout</a>
-        {% endif %}
-      </div>
-    </div>
-  </div>
-</header>
 
 <section class="bp-page">
   <div class="container rv-page">
