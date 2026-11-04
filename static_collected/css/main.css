@@ -9417,102 +9417,125 @@ img, svg, video, canvas { max-width: 100%; height: auto; }
   }
 }
 
-/* ==========================================================================
-   >>> START: UNIFIED SEARCH BAR SIZING (Flight/Bus/Train/Hotel/Villa/Tours)
-   All sizes are read from these variables; change sizes only here.
-   ========================================================================== */
-:root {
-  --hs-max-width: 1100px;   /* width of card and banner image */
-  --hs-field-h: 50px;       /* height of every search box */
-  --hs-banner-h: 200px;     /* top image height (desktop) */
-  --hs-banner-h-mobile: 140px;
-}
 
-/* ---------- 1) Same fixed width for the whole hero ---------- */
-.hero-search-area > .container {
+/* =========================================================
+   MOBILE SEARCH BAR — equal tabs + compact From/To row
+   Applies on all hero pages (Flight, Bus, Train, Hotel, …)
+   ========================================================= */
+
+/* تب‌ها: همیشه ۶ ستون مساوی — فقط آیکن، بدون اسکرول افقی */
+.hero-tabs {
+  display: grid !important;
+  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+  overflow: hidden !important;
   width: 100%;
-  max-width: 1140px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
-.hero-layout {
-  width: 100%;
-  max-width: var(--hs-max-width);
-  min-width: 0;
-  margin-left: auto;
-  margin-right: auto;
-  box-sizing: border-box;
-  --hero-card-h: var(--hs-banner-h);
+.hero-tab {
+  flex: unset !important;
+  min-width: 0 !important;
+  padding: 14px 4px !important;
+  gap: 0 !important;
+  justify-content: center !important;
 }
 
-.hero-search-col,
-.hero-search-card,
-.hero-search-form {
-  width: 100%;
-  min-width: 0;
-  box-sizing: border-box;
+.hero-tab i {
+  font-size: 1.05rem !important;
+  line-height: 1 !important;
 }
 
-.hero-image-col { height: var(--hs-banner-h); }
+/* متن تب فقط از تبلت به بالا */
+@media (max-width: 991px) {
+  .hero-tab span {
+    display: none !important;
+  }
+}
 
+@media (min-width: 992px) {
+  .hero-tab {
+    padding: 16px 10px !important;
+    gap: 8px !important;
+  }
+  .hero-tab span {
+    display: inline !important;
+  }
+}
+
+/* موبایل: From | Swap | To در یک ردیف — بعد مسافر و تاریخ */
 @media (max-width: 767px) {
-  .hero-layout    { --hero-card-h: var(--hs-banner-h-mobile); }
-  .hero-image-col { height: var(--hs-banner-h-mobile); }
-}
+  .hero-search-form {
+    padding: 14px 14px 16px !important;
+    row-gap: 12px !important;
+  }
 
-/* ---------- 2) Identical height for all boxes ---------- */
-.hsf-input,
-.hsf-passenger-field > .hsf-date-trigger,
-.hsf-date-box {
-  height: var(--hs-field-h);
-  min-height: var(--hs-field-h);
-  box-sizing: border-box;
-}
+  .hsf-toolbar--top {
+    margin-bottom: 0 !important;
+  }
 
-/* ---------- 3) One grid pattern for both row types ---------- */
-@media (min-width: 1200px) {
-  .hsf-search-row--route,
+  /* مسیر (پرواز/اتوبوس/قطار): From + Swap + To بالا، بقیه پایین */
+  .hsf-search-row--route {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 40px minmax(0, 1fr) !important;
+    grid-template-areas:
+      "origin swap dest"
+      "pax   pax  pax"
+      "date  date date" !important;
+    gap: 10px 8px !important;
+    align-items: end !important;
+  }
+
+  /* ترتیب DOM ثابت: origin | swap | dest | pax | date */
+  .hsf-search-row--route > :nth-child(1) { grid-area: origin; }
+  .hsf-search-row--route > :nth-child(2) {
+    grid-area: swap;
+    justify-self: center;
+    align-self: end;
+    margin-bottom: 4px;
+    transform: none !important; /* افقی بین From و To */
+  }
+  .hsf-search-row--route > :nth-child(3) { grid-area: dest; }
+  .hsf-search-row--route > :nth-child(4) { grid-area: pax; }
+  .hsf-search-row--route > :nth-child(5) { grid-area: date; }
+
+  /* اقامت (هتل/ویلا): مقصد و تاریخ/مسافر */
   .hsf-search-row--destination {
-    grid-template-columns:
-      minmax(0, 0.9fr) 44px minmax(0, 0.9fr) minmax(0, 0.85fr) minmax(0, 1.6fr);
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
   }
-  .hsf-search-row--destination > :first-child {
-    grid-column: span 3;
+
+  .hsf-reverse-btn.is-swapping {
+    transform: rotate(180deg) !important;
+  }
+
+  /* ارتفاع یکسان فیلدها */
+  .hsf-input,
+  .hsf-date-trigger,
+  .hsf-date-box {
+    min-height: 48px !important;
+  }
+
+  .hero-search-submit {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    height: 48px !important;
+    min-height: 48px !important;
+  }
+
+  .hsf-actions-row,
+  .hsf-actions-row--center {
+    min-height: 48px !important;
   }
 }
 
-@media (min-width: 768px) and (max-width: 1199px) {
-  .hsf-search-row--route,
-  .hsf-search-row--destination {
-    grid-template-columns: minmax(0, 1fr) 44px minmax(0, 1fr);
+/* گوشی خیلی باریک: تب‌ها کمی فشرده‌تر */
+@media (max-width: 380px) {
+  .hero-tab {
+    padding: 12px 2px !important;
   }
-  .hsf-search-row--route > .hsf-passenger-field,
-  .hsf-search-row--route > .hsf-date-group,
-  .hsf-search-row--destination > * {
-    grid-column: 1 / -1;
+  .hero-tab i {
+    font-size: 0.95rem !important;
   }
 }
-/* ==========================================================================
-   >>> END: UNIFIED SEARCH BAR SIZING <<<
-   ========================================================================== */
 
-
-/* ==========================================================================
-   >>> START: SEARCH CARD EQUAL-HEIGHT FIX <<<
-   علت: گرید فرم ۴ ردیف صریح (auto auto auto auto) داشت؛ ردیف‌های خالی هم
-   row-gap می‌گرفتند، پس کارت صفحاتِ با تعداد آیتم متفاوت قد متفاوت داشت.
-   ========================================================================== */
-.hero-search-form {
-  grid-template-rows: none;
-  grid-auto-rows: auto;
-}
-
-/* ردیف نامرئی در صفحات Hotel/Villa/Tours (بدون Travel Options) */
-.hsf-toolbar--spacer {
-  visibility: hidden;
-  pointer-events: none;
-}
-/* ==========================================================================
-   >>> END: SEARCH CARD EQUAL-HEIGHT FIX <<<
-   ========================================================================== */
