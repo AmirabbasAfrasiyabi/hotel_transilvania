@@ -1,1 +1,250 @@
-PLACEHOLDER
+/* ============================================================
+   Hero Search – layout only (does NOT touch date-box styles)
+   Date / + Return date styles come from main.css
+   ============================================================ */
+
+/* Space under fixed header */
+.hero-search-area {
+  padding: 96px 16px 40px !important;
+  background: #f8f6f2 !important;
+}
+
+@media (max-width: 767px) {
+  .hero-search-area {
+    padding: 88px 12px 32px !important;
+  }
+}
+
+.hero-layout {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 16px !important;
+  align-items: stretch !important;
+  max-width: 1100px !important;
+  margin: 0 auto !important;
+}
+
+/* Banner fills frame – no cuts, clear elements */
+.hero-image-col {
+  position: relative !important;
+  width: 100% !important;
+  order: -1 !important;
+  border-radius: 14px !important;
+  overflow: hidden !important;
+  background: #e8eef5 !important;
+  aspect-ratio: 2.6 / 1 !important;
+  max-height: 220px !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+}
+
+.hero-category-img {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+  display: block !important;
+  border-radius: 0 !important;
+}
+
+.hero-search-col {
+  width: 100% !important;
+  order: 2 !important;
+  min-width: 0 !important;
+}
+
+/* ============================================================
+   MOBILE (< 640px)
+   ============================================================ */
+@media (max-width: 639.98px) {
+  .hero-image-col {
+    aspect-ratio: 2.2 / 1 !important;
+    max-height: 140px !important;
+  }
+
+  .hsf-search-row--route {
+    display: grid !important;
+    grid-template-columns: 1fr 40px 1fr !important;
+    grid-template-areas:
+      "from swap to"
+      "pax  pax  pax"
+      "date date date" !important;
+    gap: 10px 8px !important;
+    align-items: end !important;
+  }
+  .hsf-search-row--route > * {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+  .hsf-search-row--route #originField { grid-area: from !important; }
+  .hsf-search-row--route #reverseBtn {
+    grid-area: swap !important;
+    align-self: end !important;
+    margin-bottom: 4px !important;
+    justify-self: center !important;
+  }
+  .hsf-search-row--route #destField { grid-area: to !important; }
+  .hsf-search-row--route .hsf-passenger-field { grid-area: pax !important; }
+  .hsf-search-row--route .hsf-date-group { grid-area: date !important; }
+
+  .hsf-search-row--destination {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+  .hsf-search-row--destination > * {
+    width: 100% !important;
+  }
+
+  .hsf-actions-row {
+    width: 100% !important;
+    margin-top: 12px !important;
+  }
+  .hero-search-submit {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+}
+
+/* ============================================================
+   TABLET (640 – 1023)
+   ============================================================ */
+@media (min-width: 640px) and (max-width: 1023.98px) {
+  .hero-image-col {
+    aspect-ratio: 2.5 / 1 !important;
+    max-height: 170px !important;
+  }
+
+  .hsf-search-row--route {
+    display: grid !important;
+    grid-template-columns: 1fr 40px 1fr !important;
+    grid-template-areas:
+      "from swap to"
+      "pax  pax  date" !important;
+    gap: 12px 10px !important;
+    align-items: end !important;
+  }
+  .hsf-search-row--route > * { min-width: 0 !important; }
+  .hsf-search-row--route #originField { grid-area: from !important; }
+  .hsf-search-row--route #reverseBtn {
+    grid-area: swap !important;
+    align-self: end !important;
+    margin-bottom: 4px !important;
+    justify-self: center !important;
+  }
+  .hsf-search-row--route #destField { grid-area: to !important; }
+  .hsf-search-row--route .hsf-passenger-field { grid-area: pax !important; }
+  .hsf-search-row--route .hsf-date-group { grid-area: date !important; }
+
+  .hsf-search-row--destination {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    grid-template-areas:
+      "dest dest"
+      "pax  date" !important;
+    gap: 12px !important;
+  }
+  .hsf-search-row--destination #originField { grid-area: dest !important; }
+  .hsf-search-row--destination .hsf-passenger-field { grid-area: pax !important; }
+  .hsf-search-row--destination .hsf-date-group { grid-area: date !important; }
+
+  .hsf-actions-row {
+    width: 100% !important;
+    margin-top: 12px !important;
+  }
+  .hero-search-submit {
+    width: 100% !important;
+  }
+}
+
+/* ============================================================
+   DESKTOP (>= 1024)
+   One row: From | swap | To | Pax | Date(+Return) | SEARCH
+   ============================================================ */
+@media (min-width: 1024px) {
+  .hero-image-col {
+    aspect-ratio: 3 / 1 !important;
+    max-height: 220px !important;
+  }
+
+  .hsf-search-row--route,
+  .hsf-search-row--destination {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    gap: 8px !important;
+    align-items: flex-end !important;
+  }
+
+  .hsf-search-row--route .hsf-field {
+    flex: 1 1 110px !important;
+    min-width: 90px !important;
+  }
+  .hsf-search-row--route #reverseBtn {
+    flex: 0 0 36px !important;
+    width: 36px !important;
+    height: 36px !important;
+    align-self: flex-end !important;
+    margin-bottom: 6px !important;
+  }
+  .hsf-search-row--route .hsf-passenger-field {
+    flex: 0 1 130px !important;
+  }
+  .hsf-search-row--route .hsf-date-group {
+    flex: 1 1 220px !important;
+    min-width: 180px !important;
+  }
+
+  .hsf-search-row--destination #originField {
+    flex: 2 1 200px !important;
+  }
+  .hsf-search-row--destination .hsf-passenger-field {
+    flex: 0 1 150px !important;
+  }
+  .hsf-search-row--destination .hsf-date-group {
+    flex: 1 1 240px !important;
+  }
+
+  /* SEARCH on the right of the same row */
+  .hero-search-form {
+    display: grid !important;
+    grid-template-columns: 1fr auto !important;
+    grid-template-areas:
+      "toolbar toolbar"
+      "fields  submit"
+      "error   ." !important;
+    column-gap: 10px !important;
+    row-gap: 10px !important;
+    align-items: end !important;
+  }
+  .hero-search-form > .hsf-toolbar {
+    grid-area: toolbar !important;
+    margin-bottom: 0 !important;
+  }
+  .hero-search-form > .hsf-search-row {
+    grid-area: fields !important;
+    margin: 0 !important;
+  }
+  .hero-search-form > .hsf-actions-row {
+    grid-area: submit !important;
+    display: flex !important;
+    margin: 0 !important;
+    align-self: end !important;
+  }
+  .hero-search-form > .hsf-form-error {
+    grid-area: error !important;
+  }
+  .hero-search-form > input[type="hidden"] {
+    display: none !important;
+  }
+
+  .hero-search-submit {
+    width: auto !important;
+    min-width: 100px !important;
+    height: 40px !important;
+    padding: 0 18px !important;
+    white-space: nowrap !important;
+  }
+}
