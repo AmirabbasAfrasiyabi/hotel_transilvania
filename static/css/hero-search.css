@@ -1,9 +1,10 @@
 /* ============================================================
-   Hero Search – spacing + mobile/tablet layout only
-   Desktop stays single-row like before.
+   Hero Search
+   - Desktop: single-row fields (like before), SEARCH below
+   - Mobile / Tablet: mockup layout only
    ============================================================ */
 
-/* Equal gap: header ↔ banner ≈ banner ↔ card */
+/* Equal gap under fixed header */
 .hero-search-area {
   padding: 96px 16px 40px !important;
   background: #f8f6f2 !important;
@@ -55,13 +56,14 @@
   min-width: 0 !important;
 }
 
-/* Remove nested / double borders on date segments */
+/* Date: no nested double borders */
 .hsf-date-box {
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
   gap: 8px !important;
   overflow: visible !important;
+  display: flex !important;
 }
 
 .hsf-date-segment {
@@ -85,7 +87,7 @@
 }
 
 /* ============================================================
-   MOBILE (< 640px) – stacked per mockup
+   MOBILE (< 640px)
    ============================================================ */
 @media (max-width: 639.98px) {
   .hero-image-col {
@@ -93,7 +95,6 @@
     max-height: 150px !important;
   }
 
-  /* Flight / bus / train */
   .hsf-search-row--route {
     display: grid !important;
     grid-template-columns: 1fr 40px 1fr !important;
@@ -119,7 +120,6 @@
   .hsf-search-row--route .hsf-passenger-field { grid-area: pax !important; }
   .hsf-search-row--route .hsf-date-group { grid-area: date !important; }
 
-  /* Hotel / villa / tour */
   .hsf-search-row--destination {
     display: flex !important;
     flex-direction: column !important;
@@ -127,12 +127,6 @@
   }
   .hsf-search-row--destination > * {
     width: 100% !important;
-  }
-
-  /* Two dates side by side */
-  .hsf-date-box {
-    display: flex !important;
-    flex-direction: row !important;
   }
 
   .hsf-actions-row {
@@ -146,7 +140,7 @@
 }
 
 /* ============================================================
-   TABLET (640 – 1023) – per mockup
+   TABLET (640 – 1023)
    ============================================================ */
 @media (min-width: 640px) and (max-width: 1023.98px) {
   .hero-image-col {
@@ -154,7 +148,6 @@
     max-height: 180px !important;
   }
 
-  /* Flight: From|swap|To full row, then pax + date */
   .hsf-search-row--route {
     display: grid !important;
     grid-template-columns: 1fr 40px 1fr !important;
@@ -176,7 +169,6 @@
   .hsf-search-row--route .hsf-passenger-field { grid-area: pax !important; }
   .hsf-search-row--route .hsf-date-group { grid-area: date !important; }
 
-  /* Destination pages */
   .hsf-search-row--destination {
     display: grid !important;
     grid-template-columns: 1fr 1fr !important;
@@ -199,7 +191,7 @@
 }
 
 /* ============================================================
-   DESKTOP (>= 1024) – single row, SEARCH beside dates
+   DESKTOP (>= 1024) – previous single-row style
    ============================================================ */
 @media (min-width: 1024px) {
   .hero-image-col {
@@ -207,6 +199,7 @@
     max-height: 240px !important;
   }
 
+  /* One horizontal row of fields */
   .hsf-search-row--route,
   .hsf-search-row--destination {
     display: flex !important;
@@ -226,73 +219,32 @@
     margin-bottom: 4px !important;
   }
   .hsf-search-row--route .hsf-passenger-field {
-    flex: 0 1 130px !important;
+    flex: 0 1 140px !important;
   }
   .hsf-search-row--route .hsf-date-group {
-    flex: 1 1 200px !important;
+    flex: 1 1 220px !important;
     min-width: 180px !important;
   }
 
   .hsf-search-row--destination #originField {
-    flex: 2 1 200px !important;
+    flex: 2 1 220px !important;
   }
   .hsf-search-row--destination .hsf-passenger-field {
-    flex: 0 1 150px !important;
+    flex: 0 1 160px !important;
   }
   .hsf-search-row--destination .hsf-date-group {
-    flex: 1 1 220px !important;
+    flex: 1 1 240px !important;
   }
 
-  /* SEARCH in the same row as fields, next to calendar */
-  .hero-search-form {
-    display: flex !important;
-    flex-direction: column !important;
-  }
-
+  /* SEARCH centered under the row (previous style) */
   .hsf-actions-row {
-    /* pull into the fields row visually by negative margin if needed */
-    margin-top: 0 !important;
+    display: flex !important;
+    justify-content: center !important;
+    margin-top: 16px !important;
   }
-
-  /* Put actions on same visual line: form body uses grid for desktop */
-  .hsf-search-row--route,
-  .hsf-search-row--destination {
-    /* leave room conceptually; button stays below but compact */
-  }
-
   .hero-search-submit {
     width: auto !important;
-    min-width: 120px !important;
+    min-width: 160px !important;
     height: 48px !important;
-  }
-
-  /* Actually place SEARCH in the route row on desktop via order + flex on form */
-  .hero-search-form {
-    display: grid !important;
-    grid-template-columns: 1fr auto !important;
-    grid-template-areas:
-      "toolbar toolbar"
-      "fields  submit"
-      "error   error" !important;
-    gap: 10px 12px !important;
-    align-items: end !important;
-  }
-  .hero-search-form > .hsf-toolbar {
-    grid-area: toolbar !important;
-  }
-  .hero-search-form > .hsf-search-row {
-    grid-area: fields !important;
-  }
-  .hero-search-form > .hsf-actions-row {
-    grid-area: submit !important;
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-    align-self: end !important;
-  }
-  .hero-search-form > .hsf-form-error {
-    grid-area: error !important;
-  }
-  .hero-search-form > input[type="hidden"] {
-    display: none !important;
   }
 }
