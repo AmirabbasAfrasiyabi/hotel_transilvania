@@ -1,9 +1,9 @@
 /* ============================================================
-   Hero Search
-   Desktop: one row  From | swap | To | Pax | Date | SEARCH
-   Mobile/Tablet: stacked per mockup
+   Hero Search – layout only (does NOT touch date-box styles)
+   Date / + Return date styles come from main.css
    ============================================================ */
 
+/* Space under fixed header */
 .hero-search-area {
   padding: 96px 16px 40px !important;
   background: #f8f6f2 !important;
@@ -24,7 +24,7 @@
   margin: 0 auto !important;
 }
 
-/* Banner – fill entire frame */
+/* Banner fills frame */
 .hero-image-col {
   position: relative !important;
   width: 100% !important;
@@ -53,42 +53,6 @@
   width: 100% !important;
   order: 2 !important;
   min-width: 0 !important;
-}
-
-/* Date chips – no nested borders */
-.hsf-date-box {
-  display: flex !important;
-  align-items: stretch !important;
-  gap: 8px !important;
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  overflow: visible !important;
-  min-height: 0 !important;
-}
-
-.hsf-date-segment {
-  flex: 1 !important;
-  min-width: 0 !important;
-  background: #f8fafc !important;
-  border: 1px solid #e2e8f0 !important;
-  border-radius: 10px !important;
-  padding: 0 !important;
-}
-
-.hsf-date-divider { display: none !important; }
-
-.hsf-date-segment .hsf-label {
-  display: none !important; /* labels live outside in desktop row style */
-}
-
-.hsf-date-segment .hsf-date-row,
-.hsf-date-segment .hsf-date-trigger {
-  border: none !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  height: 48px !important;
-  width: 100% !important;
 }
 
 /* ============================================================
@@ -130,9 +94,9 @@
     flex-direction: column !important;
     gap: 12px !important;
   }
-  .hsf-search-row--destination > * { width: 100% !important; }
-
-  .hsf-date-segment .hsf-label { display: block !important; }
+  .hsf-search-row--destination > * {
+    width: 100% !important;
+  }
 
   .hsf-actions-row {
     width: 100% !important;
@@ -186,8 +150,6 @@
   .hsf-search-row--destination .hsf-passenger-field { grid-area: pax !important; }
   .hsf-search-row--destination .hsf-date-group { grid-area: date !important; }
 
-  .hsf-date-segment .hsf-label { display: block !important; }
-
   .hsf-actions-row {
     width: 100% !important;
     margin-top: 12px !important;
@@ -199,18 +161,12 @@
 
 /* ============================================================
    DESKTOP (>= 1024)
-   One row: fields + SEARCH on the right (like screenshot)
+   One row: From | swap | To | Pax | Date(+Return) | SEARCH
    ============================================================ */
 @media (min-width: 1024px) {
   .hero-image-col {
     aspect-ratio: 3 / 1 !important;
     max-height: 220px !important;
-  }
-
-  /* Put fields + submit on one visual row */
-  .hero-search-form {
-    display: flex !important;
-    flex-direction: column !important;
   }
 
   .hsf-search-row--route,
@@ -237,8 +193,8 @@
     flex: 0 1 130px !important;
   }
   .hsf-search-row--route .hsf-date-group {
-    flex: 1 1 200px !important;
-    min-width: 160px !important;
+    flex: 1 1 220px !important;
+    min-width: 180px !important;
   }
 
   .hsf-search-row--destination #originField {
@@ -248,15 +204,10 @@
     flex: 0 1 150px !important;
   }
   .hsf-search-row--destination .hsf-date-group {
-    flex: 1 1 220px !important;
+    flex: 1 1 240px !important;
   }
 
-  /* SEARCH sits on the RIGHT of the same row */
-  .hsf-actions-row {
-    display: contents !important; /* children participate in parent flex if we merge */
-  }
-
-  /* Merge submit into the fields row using grid on form body */
+  /* SEARCH on the right of the same row */
   .hero-search-form {
     display: grid !important;
     grid-template-columns: 1fr auto !important;
@@ -268,7 +219,6 @@
     row-gap: 10px !important;
     align-items: end !important;
   }
-
   .hero-search-form > .hsf-toolbar {
     grid-area: toolbar !important;
     margin-bottom: 0 !important;
