@@ -1,60 +1,59 @@
 /* ============================================================
-   Hero Search Area – filled images + stacked layout + mobile
+   Hero Search – layout per mobile / tablet / desktop specs
    ============================================================ */
 
 .hero-search-area {
-  padding: 20px 0 40px;
+  padding: 16px 0 36px;
   background: #f8f6f2;
 }
 
 .hero-layout {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
   align-items: stretch;
+  max-width: 960px;
+  margin: 0 auto;
 }
 
-/* Image: full width. Taller aspect forces left/right crop of source
-   so the illustration (not the empty margins) fills the box. */
+/* Banner image – force fill, crop empty sides */
 .hero-image-col {
   position: relative;
   width: 100%;
-  border-radius: 16px;
+  border-radius: 14px;
   overflow: hidden;
-  background: #eef1f5;
-  aspect-ratio: 1.55 / 1;
-  max-height: 320px;
-  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
+  background: #e8eef5;
+  aspect-ratio: 1.5 / 1;
+  max-height: 280px;
 }
 
 .hero-category-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 60% center; /* bias toward the illustration (often right-heavy) */
+  object-position: 65% center;
   display: block;
 }
 
-/* Search column */
 .hero-search-col {
   width: 100%;
 }
 
 .hero-search-intro {
-  margin-bottom: 14px;
+  margin-bottom: 12px;
   text-align: center;
 }
 
 .contact-eyebrow {
   display: inline-block;
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 600;
   color: #0d6efd;
   margin-bottom: 4px;
 }
 
 .hero-search-heading {
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 700;
   color: #0f172a;
   margin: 0 0 4px;
@@ -62,36 +61,32 @@
 }
 
 .hero-search-sub {
-  font-size: 14px;
+  font-size: 13.5px;
   color: #64748b;
   margin: 0;
 }
 
-/* Search Card */
+/* Card */
 .hero-search-card {
-  background: #ffffff;
+  background: #fff;
   border-radius: 16px;
-  box-shadow: 0 10px 36px rgba(15, 23, 42, 0.1);
+  box-shadow: 0 10px 32px rgba(15, 23, 42, 0.1);
   border: 1px solid #e8ecf1;
   overflow: visible;
 }
 
-/* Tabs – dark bar like screenshot */
+/* Tabs */
 .hero-tabs {
   display: flex;
   flex-wrap: nowrap;
   overflow-x: auto;
   gap: 0;
-  padding: 0 6px;
+  padding: 0 4px;
   background: #1e293b;
   border-radius: 16px 16px 0 0;
   scrollbar-width: none;
-  -ms-overflow-style: none;
 }
-
-.hero-tabs::-webkit-scrollbar {
-  display: none;
-}
+.hero-tabs::-webkit-scrollbar { display: none; }
 
 .hero-tab {
   flex: 1 1 0;
@@ -99,26 +94,18 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 13px 10px;
-  font-size: 12.5px;
+  gap: 5px;
+  padding: 12px 8px;
+  font-size: 12px;
   font-weight: 500;
   color: #94a3b8;
   text-decoration: none;
   border-bottom: 3px solid transparent;
-  transition: color 0.2s, border-color 0.2s, background 0.2s;
   white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
 }
-
-.hero-tab i {
-  font-size: 14px;
-}
-
-.hero-tab:hover {
-  color: #e2e8f0;
-  background: rgba(255,255,255,0.05);
-}
-
+.hero-tab i { font-size: 13px; }
+.hero-tab:hover { color: #e2e8f0; background: rgba(255,255,255,0.05); }
 .hero-tab.active {
   color: #fff;
   border-bottom-color: #f97316;
@@ -126,29 +113,23 @@
   background: rgba(255,255,255,0.08);
 }
 
-/* Form */
+/* Form body */
 .hero-search-form {
-  padding: 16px 18px 20px;
+  padding: 14px 16px 18px;
 }
 
 .hsf-toolbar {
   display: flex;
-  align-items: center;
+  justify-content: flex-end;
   margin-bottom: 12px;
 }
+.hsf-toolbar--spacer { display: none; }
 
-.hsf-toolbar--spacer {
-  display: none;
-}
-
-.hsf-select {
-  position: relative;
-}
-
+.hsf-select { position: relative; }
 .hsf-select-trigger {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   padding: 5px 12px;
   font-size: 13px;
   font-weight: 500;
@@ -158,34 +139,26 @@
   border-radius: 999px;
   cursor: pointer;
 }
-
-.hsf-select-trigger:hover {
-  background: #e2e8f0;
-}
-
-.hsf-select-chevron {
-  font-size: 11px;
-  opacity: 0.7;
-}
+.hsf-select-trigger:hover { background: #e2e8f0; }
+.hsf-select-chevron { font-size: 10px; opacity: 0.7; }
 
 .hsf-select-popup {
   position: absolute;
   top: calc(100% + 6px);
-  left: 0;
+  right: 0;
   min-width: 140px;
   background: #fff;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.12);
   z-index: 40;
   padding: 6px;
 }
-
 .hsf-select-option {
   display: block;
   width: 100%;
   text-align: left;
-  padding: 9px 12px;
+  padding: 8px 12px;
   font-size: 13.5px;
   color: #334155;
   background: transparent;
@@ -193,39 +166,25 @@
   border-radius: 8px;
   cursor: pointer;
 }
-
 .hsf-select-option:hover,
 .hsf-select-option.active {
   background: #eff6ff;
   color: #0d6efd;
 }
 
-/* Desktop / tablet: fields in a row */
-.hsf-search-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  align-items: flex-end;
-  margin-bottom: 12px;
-}
-
-.hsf-field {
-  position: relative;
-  flex: 1 1 120px;
-  min-width: 110px;
-}
-
+/* ===== Shared field styles ===== */
 .hsf-label {
   display: block;
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 600;
   color: #64748b;
   margin-bottom: 4px;
 }
 
-.hsf-input {
+.hsf-input,
+.hsf-date-trigger {
   width: 100%;
-  height: 44px;
+  height: 48px;
   padding: 0 12px;
   font-size: 14px;
   color: #0f172a;
@@ -235,22 +194,32 @@
   outline: none;
   transition: border-color 0.15s, box-shadow 0.15s;
 }
-
-.hsf-input:focus {
+.hsf-input:focus,
+.hsf-date-trigger:focus,
+.hsf-date-trigger[aria-expanded="true"] {
   border-color: #0d6efd;
   background: #fff;
   box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.12);
 }
+.hsf-input::placeholder { color: #94a3b8; }
 
-.hsf-input::placeholder {
-  color: #94a3b8;
+.hsf-date-trigger {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  text-align: left;
+}
+.hsf-date-trigger i {
+  color: #64748b;
+  font-size: 14px;
+  flex-shrink: 0;
 }
 
 .hsf-reverse-btn {
-  flex: 0 0 38px;
-  width: 38px;
-  height: 38px;
-  margin-bottom: 2px;
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -261,50 +230,14 @@
   cursor: pointer;
   transition: background 0.15s, color 0.15s, transform 0.2s;
 }
-
 .hsf-reverse-btn:hover {
   background: #0d6efd;
   color: #fff;
   border-color: #0d6efd;
-  transform: rotate(180deg);
 }
 
-.hsf-date-trigger {
-  width: 100%;
-  height: 44px;
-  padding: 0 10px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13.5px;
-  color: #0f172a;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  cursor: pointer;
-  text-align: left;
-  transition: border-color 0.15s, box-shadow 0.15s;
-}
-
-.hsf-date-trigger:hover,
-.hsf-date-trigger[aria-expanded="true"] {
-  border-color: #0d6efd;
-  background: #fff;
-  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
-}
-
-.hsf-date-trigger i {
-  color: #64748b;
-  font-size: 14px;
-  flex-shrink: 0;
-}
-
-.hsf-date-group {
-  position: relative;
-  flex: 1 1 200px;
-  min-width: 180px;
-}
-
+/* Date group internals */
+.hsf-date-group { position: relative; }
 .hsf-date-box {
   display: flex;
   align-items: stretch;
@@ -312,25 +245,21 @@
   border: 1px solid #e2e8f0;
   border-radius: 10px;
   overflow: hidden;
+  min-height: 48px;
 }
-
 .hsf-date-segment {
   flex: 1;
   padding: 4px 6px 6px;
   min-width: 0;
 }
-
 .hsf-date-segment .hsf-label {
   margin-bottom: 1px;
   padding-left: 2px;
 }
-
 .hsf-date-row {
   display: flex;
   align-items: center;
-  gap: 0;
 }
-
 .hsf-date-nudge {
   width: 24px;
   height: 24px;
@@ -345,19 +274,17 @@
   cursor: pointer;
   flex-shrink: 0;
 }
-
 .hsf-date-nudge:hover {
   background: #e2e8f0;
   color: #0f172a;
 }
-
 .hsf-date-divider {
   width: 1px;
   background: #e2e8f0;
   margin: 6px 0;
 }
 
-/* Suggestions & popups */
+/* Suggestions / popups */
 .hsf-suggestions,
 .hsf-passenger-popup,
 .hsf-calendar-popup {
@@ -374,12 +301,10 @@
   overflow-y: auto;
   padding: 6px;
 }
-
 .hsf-passenger-popup {
   min-width: 250px;
   right: auto;
 }
-
 .hsf-group-label {
   font-size: 11px;
   font-weight: 600;
@@ -388,7 +313,6 @@
   letter-spacing: 0.03em;
   padding: 8px 10px 4px;
 }
-
 .hsf-suggestion-item {
   display: flex;
   align-items: center;
@@ -403,17 +327,8 @@
   font-size: 13.5px;
   color: #0f172a;
 }
-
-.hsf-suggestion-item:hover {
-  background: #f1f5f9;
-}
-
-.hsf-suggestion-item i {
-  color: #64748b;
-  width: 16px;
-  text-align: center;
-}
-
+.hsf-suggestion-item:hover { background: #f1f5f9; }
+.hsf-suggestion-item i { color: #64748b; width: 16px; text-align: center; }
 .sugg-city { display: block; font-weight: 500; }
 .sugg-detail { display: block; font-size: 12px; color: #94a3b8; }
 
@@ -423,12 +338,9 @@
   justify-content: space-between;
   padding: 9px 6px;
 }
-
 .pax-copy strong { display: block; font-size: 13.5px; color: #0f172a; }
 .pax-copy span { font-size: 11.5px; color: #94a3b8; }
-
 .pax-stepper { display: flex; align-items: center; gap: 8px; }
-
 .pax-btn {
   width: 28px;
   height: 28px;
@@ -440,18 +352,14 @@
   line-height: 1;
   cursor: pointer;
 }
-
 .pax-btn:hover { border-color: #0d6efd; color: #0d6efd; }
-
 .pax-count {
   min-width: 18px;
   text-align: center;
   font-weight: 600;
   font-size: 14px;
 }
-
 .pax-divider { height: 1px; background: #e2e8f0; margin: 3px 0; }
-
 .pax-apply-btn {
   width: 100%;
   margin-top: 6px;
@@ -464,7 +372,6 @@
   font-size: 13.5px;
   cursor: pointer;
 }
-
 .pax-apply-btn:hover { background: #0b5ed7; }
 
 .hsf-form-error {
@@ -482,13 +389,10 @@
 
 .hsf-actions-row {
   display: flex;
-  justify-content: center;
   margin-top: 4px;
 }
-
 .hero-search-submit {
-  min-width: 160px;
-  height: 46px;
+  height: 48px;
   padding: 0 24px;
   background: #f97316;
   color: #fff;
@@ -500,13 +404,11 @@
   box-shadow: 0 4px 14px rgba(249, 115, 22, 0.35);
   transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
 }
-
 .hero-search-submit:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(249, 115, 22, 0.45);
+  box-shadow: 0 6px 18px rgba(249, 115, 22, 0.45);
   background: #ea580c;
 }
-
 .btn-loading {
   display: inline-flex;
   align-items: center;
@@ -519,7 +421,6 @@
   padding: 6px;
   overflow-x: auto;
 }
-
 .cal-footer {
   padding: 8px 12px;
   border-top: 1px solid #e2e8f0;
@@ -527,44 +428,15 @@
   color: #64748b;
 }
 
-[hidden] {
-  display: none !important;
-}
+[hidden] { display: none !important; }
 
-/* ========== MOBILE RESPONSIVE ========== */
-@media (max-width: 767.98px) {
-  .hero-search-area {
-    padding: 12px 0 28px;
-  }
-
+/* ============================================================
+   MOBILE  (< 640px)
+   ============================================================ */
+@media (max-width: 639.98px) {
   .hero-image-col {
-    aspect-ratio: 1.5 / 1;
-    max-height: 210px;
-    border-radius: 14px;
-  }
-
-  .hero-search-heading {
-    font-size: 20px;
-  }
-
-  .hero-search-sub {
-    font-size: 13px;
-  }
-
-  .hero-search-card {
-    border-radius: 14px;
-  }
-
-  .hero-tabs {
-    border-radius: 14px 14px 0 0;
-    padding: 0 2px;
-  }
-
-  .hero-tab {
-    flex: 0 0 auto;
-    padding: 11px 11px;
-    font-size: 11.5px;
-    gap: 4px;
+    aspect-ratio: 1.45 / 1;
+    max-height: 180px;
   }
 
   .hero-search-form {
@@ -572,67 +444,171 @@
   }
 
   .hsf-search-row {
+    display: flex;
     flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
+    gap: 12px;
+    margin-bottom: 12px;
   }
 
-  .hsf-field,
-  .hsf-date-group {
-    flex: 1 1 100%;
+  /* Route row: From + swap + To on one line */
+  .hsf-search-row--route {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 8px;
+    align-items: end;
+  }
+  .hsf-search-row--route .hsf-field {
     min-width: 0;
+  }
+  .hsf-search-row--route .hsf-reverse-btn {
+    margin-bottom: 4px;
+  }
+
+  /* Passenger & date each full width */
+  .hsf-passenger-field,
+  .hsf-date-group {
     width: 100%;
   }
 
-  .hsf-reverse-btn {
-    align-self: center;
-    margin: 0;
-    transform: rotate(90deg);
-  }
-
-  .hsf-reverse-btn:hover {
-    transform: rotate(270deg);
-  }
-
+  /* Date box: stack Departure / Return vertically so they don't overlap */
   .hsf-date-box {
     flex-direction: column;
   }
-
   .hsf-date-divider {
     width: auto;
     height: 1px;
     margin: 0 8px;
   }
 
+  /* SEARCH full width – no overflow */
+  .hsf-actions-row {
+    width: 100%;
+  }
   .hero-search-submit {
     width: 100%;
     min-width: 0;
-    height: 48px;
-    font-size: 15.5px;
   }
 
+  .hero-tab {
+    flex: 0 0 auto;
+    padding: 11px 10px;
+    font-size: 11px;
+  }
+}
+
+/* ============================================================
+   TABLET  (640px – 1023px)
+   ============================================================ */
+@media (min-width: 640px) and (max-width: 1023.98px) {
+  .hero-image-col {
+    aspect-ratio: 1.55 / 1;
+    max-height: 220px;
+  }
+
+  .hsf-search-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 12px;
+    align-items: flex-end;
+  }
+
+  /* Route: From | swap | To full width row */
+  .hsf-search-row--route {
+    width: 100%;
+  }
+  .hsf-search-row--route .hsf-field {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  /* Passenger ~1/3, Date ~2/3 side by side */
   .hsf-passenger-field {
+    flex: 1 1 30%;
+    min-width: 140px;
+  }
+  .hsf-date-group {
+    flex: 1 1 55%;
+    min-width: 200px;
+  }
+
+  .hero-search-submit {
     width: 100%;
   }
 }
 
-@media (max-width: 479.98px) {
+/* ============================================================
+   DESKTOP  (>= 1024px)
+   ============================================================ */
+@media (min-width: 1024px) {
+  .hero-layout {
+    max-width: 1100px;
+  }
+
   .hero-image-col {
-    max-height: 170px;
-    aspect-ratio: 1.45 / 1;
+    aspect-ratio: 1.6 / 1;
+    max-height: 260px;
   }
 
-  .hero-tab {
-    padding: 10px 9px;
-    font-size: 11px;
+  .hsf-search-row {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 10px;
+    align-items: flex-end;
+    margin-bottom: 0;
   }
 
-  .hero-tab i {
-    font-size: 13px;
+  .hsf-search-row--route .hsf-field {
+    flex: 1 1 140px;
+    min-width: 120px;
   }
 
-  .hsf-input,
-  .hsf-date-trigger {
-    height: 42px;
+  .hsf-passenger-field {
+    flex: 0 1 140px;
+    min-width: 120px;
+  }
+
+  .hsf-date-group {
+    flex: 1 1 220px;
+    min-width: 200px;
+  }
+
+  /* SEARCH sits in the same row, content-sized */
+  .hsf-actions-row {
+    flex: 0 0 auto;
+    margin-top: 0;
+    margin-left: 4px;
+  }
+  .hero-search-submit {
+    width: auto;
+    min-width: 120px;
+    white-space: nowrap;
+  }
+
+  /* Put actions inside the form flow on desktop by using flex on the form */
+  .hero-search-form {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+/* Tour / hotel style pages that have destination + dates side by side on tablet+ */
+@media (min-width: 640px) {
+  .hsf-search-row--destination {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .hsf-search-row--destination .hsf-field {
+    flex: 1 1 100%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hsf-search-row--destination {
+    flex-wrap: nowrap;
+  }
+  .hsf-search-row--destination .hsf-field[id="originField"] {
+    flex: 2 1 200px;
   }
 }
