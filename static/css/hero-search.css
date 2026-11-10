@@ -1,8 +1,9 @@
 /* ============================================================
-   Hero Search overrides – loads AFTER main.css
+   Hero Search – spacing + mobile/tablet layout only
+   Desktop stays single-row like before.
    ============================================================ */
 
-/* Fixed header clearance: same gap above banner as between banner and card */
+/* Equal gap: header ↔ banner ≈ banner ↔ card */
 .hero-search-area {
   padding: 96px 16px 40px !important;
   background: #f8f6f2 !important;
@@ -23,7 +24,7 @@
   margin: 0 auto !important;
 }
 
-/* Banner fills frame edge-to-edge */
+/* Banner fills frame */
 .hero-image-col {
   position: relative !important;
   width: 100% !important;
@@ -54,177 +55,37 @@
   min-width: 0 !important;
 }
 
-.hero-search-intro {
-  margin-bottom: 12px !important;
-  text-align: center !important;
-}
-
-.hero-search-card {
-  background: #fff !important;
-  border-radius: 16px !important;
-  box-shadow: 0 10px 32px rgba(15, 23, 42, 0.1) !important;
-  border: 1px solid #e8ecf1 !important;
-  overflow: visible !important;
-  max-width: 100% !important;
-}
-
-/* Tabs */
-.hero-tabs {
-  display: flex !important;
-  flex-wrap: nowrap !important;
-  overflow-x: auto !important;
-  gap: 0 !important;
-  padding: 0 4px !important;
-  background: #1e293b !important;
-  border-radius: 16px 16px 0 0 !important;
-  scrollbar-width: none;
-}
-.hero-tabs::-webkit-scrollbar { display: none; }
-
-.hero-tab {
-  flex: 1 1 0 !important;
-  min-width: 0 !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 5px !important;
-  padding: 12px 8px !important;
-  font-size: 12px !important;
-  font-weight: 500 !important;
-  color: #94a3b8 !important;
-  text-decoration: none !important;
-  border-bottom: 3px solid transparent !important;
-  white-space: nowrap !important;
-  background: transparent !important;
-  text-transform: none !important;
-  letter-spacing: normal !important;
-}
-.hero-tab i { font-size: 13px !important; }
-.hero-tab:hover {
-  color: #e2e8f0 !important;
-  background: rgba(255,255,255,0.05) !important;
-}
-.hero-tab.active {
-  color: #fff !important;
-  border-bottom-color: #f97316 !important;
-  font-weight: 600 !important;
-  background: rgba(255,255,255,0.08) !important;
-}
-
-.hero-search-form {
-  padding: 14px 16px 18px !important;
-  direction: ltr !important;
-  text-align: left !important;
-}
-
-.hsf-toolbar {
-  display: flex !important;
-  justify-content: flex-end !important;
-  margin-bottom: 12px !important;
-}
-.hsf-toolbar--spacer { display: none !important; }
-
-.hsf-select { position: relative; }
-.hsf-select-trigger {
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 5px !important;
-  padding: 5px 12px !important;
-  font-size: 13px !important;
-  font-weight: 500 !important;
-  color: #334155 !important;
-  background: #f1f5f9 !important;
-  border: 1px solid #e2e8f0 !important;
-  border-radius: 999px !important;
-  cursor: pointer;
-}
-
-.hsf-label {
-  display: block !important;
-  font-size: 11px !important;
-  font-weight: 600 !important;
-  color: #64748b !important;
-  margin-bottom: 4px !important;
-}
-
-.hsf-input,
-.hsf-date-trigger {
-  width: 100% !important;
-  height: 48px !important;
-  padding: 0 12px !important;
-  font-size: 14px !important;
-  color: #0f172a !important;
-  background: #f8fafc !important;
-  border: 1px solid #e2e8f0 !important;
-  border-radius: 10px !important;
-  outline: none;
-  box-sizing: border-box !important;
-}
-
-.hsf-date-trigger {
-  display: flex !important;
-  align-items: center !important;
-  gap: 6px !important;
-  cursor: pointer;
-}
-
-.hsf-reverse-btn {
-  width: 40px !important;
-  height: 40px !important;
-  flex: 0 0 40px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  background: #f1f5f9 !important;
-  border: 1px solid #e2e8f0 !important;
-  border-radius: 50% !important;
-  color: #475569 !important;
-  cursor: pointer;
-  padding: 0 !important;
-}
-
-.hsf-date-group { position: relative; width: 100%; }
+/* Remove nested / double borders on date segments */
 .hsf-date-box {
-  display: flex !important;
-  align-items: stretch !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  gap: 8px !important;
+  overflow: visible !important;
+}
+
+.hsf-date-segment {
   background: #f8fafc !important;
   border: 1px solid #e2e8f0 !important;
   border-radius: 10px !important;
-  overflow: hidden !important;
-  min-height: 48px !important;
-}
-.hsf-date-segment {
-  flex: 1 !important;
   padding: 4px 6px 6px !important;
   min-width: 0 !important;
+  flex: 1 !important;
 }
+
 .hsf-date-divider {
-  width: 1px !important;
-  background: #e2e8f0 !important;
-  margin: 6px 0 !important;
+  display: none !important;
 }
 
-.hsf-actions-row {
-  display: flex !important;
-  margin-top: 14px !important;
-}
-.hero-search-submit {
-  height: 48px !important;
-  padding: 0 24px !important;
-  background: #f97316 !important;
-  color: #fff !important;
+.hsf-date-segment .hsf-date-trigger,
+.hsf-date-segment .hsf-date-row {
   border: none !important;
-  border-radius: 10px !important;
-  font-size: 15px !important;
-  font-weight: 600 !important;
-  cursor: pointer;
-  box-shadow: 0 4px 14px rgba(249, 115, 22, 0.35) !important;
+  background: transparent !important;
+  box-shadow: none !important;
 }
-
-[hidden] { display: none !important; }
 
 /* ============================================================
-   MOBILE  (< 640px)  – match mockups
+   MOBILE (< 640px) – stacked per mockup
    ============================================================ */
 @media (max-width: 639.98px) {
   .hero-image-col {
@@ -232,11 +93,7 @@
     max-height: 150px !important;
   }
 
-  .hero-search-form {
-    padding: 12px 12px 16px !important;
-  }
-
-  /* Flight / bus / train: From | swap | To, then pax, then date */
+  /* Flight / bus / train */
   .hsf-search-row--route {
     display: grid !important;
     grid-template-columns: 1fr 40px 1fr !important;
@@ -272,28 +129,24 @@
     width: 100% !important;
   }
 
-  /* Dates side by side on mobile for destination pages */
-  .hsf-search-row--destination .hsf-date-box {
+  /* Two dates side by side */
+  .hsf-date-box {
+    display: flex !important;
     flex-direction: row !important;
   }
 
   .hsf-actions-row {
     width: 100% !important;
+    margin-top: 12px !important;
   }
   .hero-search-submit {
     width: 100% !important;
     min-width: 0 !important;
   }
-
-  .hero-tab {
-    flex: 0 0 auto !important;
-    padding: 11px 10px !important;
-    font-size: 11px !important;
-  }
 }
 
 /* ============================================================
-   TABLET  (640 – 1023)
+   TABLET (640 – 1023) – per mockup
    ============================================================ */
 @media (min-width: 640px) and (max-width: 1023.98px) {
   .hero-image-col {
@@ -301,6 +154,7 @@
     max-height: 180px !important;
   }
 
+  /* Flight: From|swap|To full row, then pax + date */
   .hsf-search-row--route {
     display: grid !important;
     grid-template-columns: 1fr 40px 1fr !important;
@@ -310,9 +164,7 @@
     gap: 12px 10px !important;
     align-items: end !important;
   }
-  .hsf-search-row--route > * {
-    min-width: 0 !important;
-  }
+  .hsf-search-row--route > * { min-width: 0 !important; }
   .hsf-search-row--route #originField { grid-area: from !important; }
   .hsf-search-row--route #reverseBtn {
     grid-area: swap !important;
@@ -324,6 +176,7 @@
   .hsf-search-row--route .hsf-passenger-field { grid-area: pax !important; }
   .hsf-search-row--route .hsf-date-group { grid-area: date !important; }
 
+  /* Destination pages */
   .hsf-search-row--destination {
     display: grid !important;
     grid-template-columns: 1fr 1fr !important;
@@ -336,13 +189,17 @@
   .hsf-search-row--destination .hsf-passenger-field { grid-area: pax !important; }
   .hsf-search-row--destination .hsf-date-group { grid-area: date !important; }
 
+  .hsf-actions-row {
+    width: 100% !important;
+    margin-top: 12px !important;
+  }
   .hero-search-submit {
     width: 100% !important;
   }
 }
 
 /* ============================================================
-   DESKTOP  (>= 1024)
+   DESKTOP (>= 1024) – single row, SEARCH beside dates
    ============================================================ */
 @media (min-width: 1024px) {
   .hero-image-col {
@@ -350,52 +207,92 @@
     max-height: 240px !important;
   }
 
-  .hsf-search-row--route {
+  .hsf-search-row--route,
+  .hsf-search-row--destination {
     display: flex !important;
-    flex-wrap: nowrap !important;
     flex-direction: row !important;
+    flex-wrap: nowrap !important;
     gap: 10px !important;
     align-items: flex-end !important;
   }
+
   .hsf-search-row--route .hsf-field {
     flex: 1 1 120px !important;
-    min-width: 110px !important;
-  }
-  .hsf-search-row--route .hsf-passenger-field {
-    flex: 0 1 140px !important;
-  }
-  .hsf-search-row--route .hsf-date-group {
-    flex: 1 1 220px !important;
-    min-width: 200px !important;
+    min-width: 100px !important;
   }
   .hsf-search-row--route #reverseBtn {
     flex: 0 0 40px !important;
     align-self: flex-end !important;
     margin-bottom: 4px !important;
   }
-
-  .hsf-search-row--destination {
-    display: flex !important;
-    flex-wrap: nowrap !important;
-    flex-direction: row !important;
-    gap: 10px !important;
-    align-items: flex-end !important;
+  .hsf-search-row--route .hsf-passenger-field {
+    flex: 0 1 130px !important;
   }
+  .hsf-search-row--route .hsf-date-group {
+    flex: 1 1 200px !important;
+    min-width: 180px !important;
+  }
+
   .hsf-search-row--destination #originField {
     flex: 2 1 200px !important;
   }
   .hsf-search-row--destination .hsf-passenger-field {
-    flex: 0 1 160px !important;
+    flex: 0 1 150px !important;
   }
   .hsf-search-row--destination .hsf-date-group {
-    flex: 1 1 240px !important;
+    flex: 1 1 220px !important;
+  }
+
+  /* SEARCH in the same row as fields, next to calendar */
+  .hero-search-form {
+    display: flex !important;
+    flex-direction: column !important;
   }
 
   .hsf-actions-row {
-    justify-content: center !important;
+    /* pull into the fields row visually by negative margin if needed */
+    margin-top: 0 !important;
   }
+
+  /* Put actions on same visual line: form body uses grid for desktop */
+  .hsf-search-row--route,
+  .hsf-search-row--destination {
+    /* leave room conceptually; button stays below but compact */
+  }
+
   .hero-search-submit {
     width: auto !important;
-    min-width: 160px !important;
+    min-width: 120px !important;
+    height: 48px !important;
+  }
+
+  /* Actually place SEARCH in the route row on desktop via order + flex on form */
+  .hero-search-form {
+    display: grid !important;
+    grid-template-columns: 1fr auto !important;
+    grid-template-areas:
+      "toolbar toolbar"
+      "fields  submit"
+      "error   error" !important;
+    gap: 10px 12px !important;
+    align-items: end !important;
+  }
+  .hero-search-form > .hsf-toolbar {
+    grid-area: toolbar !important;
+  }
+  .hero-search-form > .hsf-search-row {
+    grid-area: fields !important;
+  }
+  .hero-search-form > .hsf-actions-row {
+    grid-area: submit !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    align-self: end !important;
+  }
+  .hero-search-form > .hsf-form-error {
+    grid-area: error !important;
+  }
+  .hero-search-form > input[type="hidden"] {
+    display: none !important;
   }
 }
