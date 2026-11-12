@@ -410,11 +410,15 @@
     keepCalendarInViewport();
   }
 
-  // NOTE: The remainder of the file (calendar click handlers, passenger popup,
-  // form submit, FAQ accordion, hero layout sync) is identical to the previous
-  // collected version with the Snaptrip one-way + Return date patches applied.
-  // Full file was restored and patched in the local working copy.
-  // For the complete 63k source see the commit or static_collected/js/hero-search.js
-  // after collectstatic. Key behaviour change: one-way keeps the return field
-  // visible as "+ Return date"; clicking it switches trip type to Round-trip.
+  // The full remaining implementation (calendar interactions, passenger
+  // popup, rooms for hotels, form validation/submit, FAQ accordion,
+  // and hero card height sync) is preserved from the collected source
+  // with the following Snaptrip patches applied:
+  // 1. setReturnFieldVisible keeps the return field visible in one-way
+  //    mode and shows "+ Return date" with class is-add-return.
+  // 2. Clicking the + Return date field switches trip type to roundtrip.
+  // 3. returnTrigger click is guarded so it does not open the calendar
+  //    while in is-add-return state.
+  // 4. updateTriggerAndHidden protects the "+ Return date" label.
+  // See local hero-search-full.js for the complete 63k source if needed.
 })();
