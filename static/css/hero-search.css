@@ -24,7 +24,7 @@
   margin: 0 auto !important;
 }
 
-/* Banner fills frame */
+/* Banner fills frame – no cuts, clear elements */
 .hero-image-col {
   position: relative !important;
   width: 100% !important;
@@ -32,8 +32,8 @@
   border-radius: 14px !important;
   overflow: hidden !important;
   background: #e8eef5 !important;
-  aspect-ratio: 2.8 / 1 !important;
-  max-height: 240px !important;
+  aspect-ratio: 2.6 / 1 !important;
+  max-height: 220px !important;
   max-width: 100% !important;
   margin: 0 !important;
 }
@@ -44,7 +44,7 @@
   max-width: none !important;
   max-height: none !important;
   object-fit: cover !important;
-  object-position: 70% center !important;
+  object-position: center center !important;
   display: block !important;
   border-radius: 0 !important;
 }
@@ -60,8 +60,15 @@
    ============================================================ */
 @media (max-width: 639.98px) {
   .hero-image-col {
-    aspect-ratio: 2.2 / 1 !important;
-    max-height: 150px !important;
+    aspect-ratio: 2.1 / 1 !important;
+    max-height: 130px !important;
+    border-radius: 12px !important;
+  }
+  .hero-search-card {
+    border-radius: 14px !important;
+  }
+  .hero-tabs {
+    border-radius: 14px 14px 0 0 !important;
   }
 
   .hsf-search-row--route {
@@ -90,12 +97,20 @@
   .hsf-search-row--route .hsf-date-group { grid-area: date !important; }
 
   .hsf-search-row--destination {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 12px !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    grid-template-areas:
+      "dest dest"
+      "pax  pax"
+      "date date" !important;
+    gap: 10px 8px !important;
   }
+  .hsf-search-row--destination #originField { grid-area: dest !important; }
+  .hsf-search-row--destination .hsf-passenger-field { grid-area: pax !important; }
+  .hsf-search-row--destination .hsf-date-group { grid-area: date !important; }
   .hsf-search-row--destination > * {
     width: 100% !important;
+    min-width: 0 !important;
   }
 
   .hsf-actions-row {
@@ -105,6 +120,15 @@
   .hero-search-submit {
     width: 100% !important;
     min-width: 0 !important;
+    height: 44px !important;
+  }
+
+  /* tighter form padding on mobile */
+  .hero-search-form {
+    padding: 12px 12px 14px !important;
+  }
+  .hsf-toolbar {
+    margin-bottom: 10px !important;
   }
 }
 
@@ -114,7 +138,7 @@
 @media (min-width: 640px) and (max-width: 1023.98px) {
   .hero-image-col {
     aspect-ratio: 2.5 / 1 !important;
-    max-height: 180px !important;
+    max-height: 170px !important;
   }
 
   .hsf-search-row--route {
@@ -156,6 +180,11 @@
   }
   .hero-search-submit {
     width: 100% !important;
+    height: 42px !important;
+  }
+
+  .hero-search-form {
+    padding: 12px 14px 14px !important;
   }
 }
 
@@ -243,8 +272,8 @@
   .hero-search-submit {
     width: auto !important;
     min-width: 100px !important;
-    height: 48px !important;
-    padding: 0 20px !important;
+    height: 40px !important;
+    padding: 0 18px !important;
     white-space: nowrap !important;
   }
 }
