@@ -47,7 +47,7 @@
   margin: 0 !important;
 }
 
- {
+.hero-category-img {
   width: 100% !important;
   height: 100% !important;
   max-width: none !important;
@@ -1727,15 +1727,8 @@ a.hero-tab {
     border-radius: 10px !important;
   }
 
-  /* Soft dim backdrop — MUST stay under the calendar and not capture clicks */
-  body.hsf-cal-open::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background: rgba(15, 23, 42, 0.28);
-    z-index: 99990 !important;
-    pointer-events: none !important; /* never block calendar clicks */
-  }
+  /* No page dimming when calendar is open */
+  body.hsf-cal-open::before { content: none !important; display: none !important; background: none !important; }
 
   /* Calendar always on top and fully interactive */
   .hsf-calendar-popup {
@@ -1794,6 +1787,154 @@ a.hero-tab {
   display: none !important;
   pointer-events: none !important;
 }
+body.hsf-cal-open::before { content: none !important; display: none !important; background: none !important; }
+
+
+/* ============================================================
+   Main search bar mobile/tablet — Flight / Bus / Train
+   2 rows, smaller passenger, horizontal swap, no calendar dim
+   ============================================================ */
+
 body.hsf-cal-open::before {
+  content: none !important;
+  display: none !important;
+  background: transparent !important;
   pointer-events: none !important;
+}
+
+/* Never dim the page for calendar */
+.hsf-calendar-popup {
+  /* keep white card; no forced page overlay */
+}
+
+@media (max-width: 1023.98px) {
+  /* Swap arrow: always left-right on main search */
+  .hero-search-card .hsf-reverse-btn,
+  .hero-search-form .hsf-reverse-btn,
+  #reverseBtn {
+    transform: none !important;
+  }
+  .hero-search-card .hsf-reverse-btn.is-swapping,
+  .hero-search-form .hsf-reverse-btn.is-swapping,
+  #reverseBtn.is-swapping {
+    transform: rotate(180deg) !important;
+  }
+}
+
+@media (max-width: 767.98px) {
+  /* Flight / Bus / Train: two rows */
+  .hsf-search-row--route {
+    display: grid !important;
+    grid-template-columns: 1fr auto 1fr !important;
+    grid-template-areas:
+      "from swap to"
+      "pax date date" !important;
+    gap: 8px !important;
+    align-items: center !important;
+  }
+  .hsf-search-row--route #originField { grid-area: from !important; min-width: 0 !important; }
+  .hsf-search-row--route #destField { grid-area: to !important; min-width: 0 !important; }
+  .hsf-search-row--route #reverseBtn {
+    grid-area: swap !important;
+    width: 34px !important;
+    height: 34px !important;
+    transform: none !important;
+  }
+  .hsf-search-row--route .hsf-passenger-field {
+    grid-area: pax !important;
+    width: 100% !important;
+    max-width: 132px !important; /* smaller passenger */
+    min-width: 0 !important;
+  }
+  .hsf-search-row--route .hsf-date-group {
+    grid-area: date !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  /* Dates side-by-side in one row as two separate boxes */
+  .hsf-search-row--route .hsf-date-group {
+    border: none !important;
+    background: transparent !important;
+    height: auto !important;
+    max-height: none !important;
+    padding: 0 !important;
+  }
+  .hsf-search-row--route .hsf-date-box {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+    border: none !important;
+    background: transparent !important;
+    height: auto !important;
+    max-height: none !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+  .hsf-search-row--route .hsf-date-segment {
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 10px !important;
+    background: #fff !important;
+    min-height: 42px !important;
+    height: 42px !important;
+  }
+  .hsf-search-row--route .hsf-date-divider { display: none !important; }
+  .hsf-search-row--route .hsf-date-nudge { display: none !important; }
+
+  .hsf-search-row--route .hsf-passenger-field {
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 10px !important;
+    background: #fff !important;
+    height: 42px !important;
+    min-height: 42px !important;
+    display: flex !important;
+    align-items: center !important;
+    overflow: hidden !important;
+  }
+  .hsf-search-row--route .hsf-passenger-field .hsf-date-trigger {
+    border: none !important;
+    background: transparent !important;
+    height: 42px !important;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023.98px) {
+  /* Tablet: same 2-row idea with a bit more room */
+  .hsf-search-row--route {
+    display: grid !important;
+    grid-template-columns: 1fr auto 1fr !important;
+    grid-template-areas:
+      "from swap to"
+      "pax date date" !important;
+    gap: 10px !important;
+    align-items: center !important;
+  }
+  .hsf-search-row--route #originField { grid-area: from !important; }
+  .hsf-search-row--route #destField { grid-area: to !important; }
+  .hsf-search-row--route #reverseBtn {
+    grid-area: swap !important;
+    transform: none !important;
+  }
+  .hsf-search-row--route .hsf-passenger-field {
+    grid-area: pax !important;
+    max-width: 160px !important;
+  }
+  .hsf-search-row--route .hsf-date-group { grid-area: date !important; }
+
+  .hsf-search-row--route .hsf-date-box {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+    border: none !important;
+    background: transparent !important;
+    height: auto !important;
+    max-height: none !important;
+    padding: 0 !important;
+  }
+  .hsf-search-row--route .hsf-date-segment {
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 10px !important;
+    background: #fff !important;
+  }
+  .hsf-search-row--route .hsf-date-divider { display: none !important; }
 }

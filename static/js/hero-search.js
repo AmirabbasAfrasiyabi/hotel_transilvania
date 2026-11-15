@@ -433,7 +433,7 @@
     calendarPopup.style.display = 'block';
     calendarPopup.style.left = '';
     calendarPopup.style.right = '';
-    document.body.classList.add('hsf-cal-open');
+    /* no page dim */
     renderCalendar();
     if (window.matchMedia('(min-width: 1024px)').matches) {
       keepCalendarInViewport();
@@ -472,7 +472,7 @@
     if (!calendarPopup) return;
     calendarPopup.hidden = true;
     calendarPopup.style.display = 'none';
-    document.body.classList.remove('hsf-cal-open');
+    /* no page dim */
   }
 
   function setRangeMode(rangeMode) {
