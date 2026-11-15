@@ -1,0 +1,135 @@
+/* ==========================================================================
+   Word-like styling for rich-text blog content (CKEditor output)
+   Applies only inside .post-rich-content so it never touches other sections.
+   ========================================================================== */
+
+.post-rich-content {
+    font-family: 'Poppins', Georgia, 'Times New Roman', serif;
+    font-size: 17px;
+    line-height: 1.9;
+    color: #444444;
+    text-align: justify;
+    max-width: 100%;
+}
+
+.post-rich-content p {
+    margin: 0 0 18px 0;
+}
+
+.post-rich-content h1,
+.post-rich-content h2,
+.post-rich-content h3,
+.post-rich-content h4,
+.post-rich-content h5,
+.post-rich-content h6 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    color: #222222;
+    margin: 32px 0 16px 0;
+    line-height: 1.4;
+}
+
+.post-rich-content h1 { font-size: 30px; }
+.post-rich-content h2 { font-size: 26px; }
+.post-rich-content h3 { font-size: 22px; }
+.post-rich-content h4 { font-size: 19px; }
+
+.post-rich-content strong,
+.post-rich-content b {
+    font-weight: 700;
+    color: #222222;
+}
+
+.post-rich-content em,
+.post-rich-content i {
+    font-style: italic;
+}
+
+.post-rich-content u {
+    text-decoration: underline;
+}
+
+.post-rich-content a {
+    color: #ff5a3c;
+    text-decoration: underline;
+}
+
+.post-rich-content a:hover {
+    color: #222222;
+}
+
+.post-rich-content ul,
+.post-rich-content ol {
+    margin: 0 0 18px 30px;
+    padding: 0;
+}
+
+.post-rich-content li {
+    margin-bottom: 8px;
+}
+
+.post-rich-content blockquote {
+    margin: 25px 0;
+    padding: 15px 25px;
+    border-left: 4px solid #ff5a3c;
+    background: #f9f9f9;
+    font-style: italic;
+    color: #555555;
+}
+
+.post-rich-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 6px;
+    margin: 20px 0;
+    display: block;
+}
+
+.post-rich-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.post-rich-content table td,
+.post-rich-content table th {
+    border: 1px solid #e2e2e2;
+    padding: 10px 14px;
+}
+
+.post-rich-content table th {
+    background: #f5f5f5;
+    font-weight: 600;
+}
+
+.post-rich-content hr {
+    border: none;
+    border-top: 1px solid #e2e2e2;
+    margin: 30px 0;
+}
+
+.post-rich-content code {
+    background: #f2f2f2;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Space Mono', monospace;
+    font-size: 15px;
+}
+
+.post-rich-content pre {
+    background: #2b2b2b;
+    color: #f5f5f5;
+    padding: 16px;
+    border-radius: 6px;
+    overflow-x: auto;
+    margin: 20px 0;
+}
+
+/* Text alignment classes CKEditor may output */
+.post-rich-content .text-center { text-align: center; }
+.post-rich-content .text-right  { text-align: right; }
+.post-rich-content .text-left   { text-align: left; }
+
+
+.faqi-answer-rich { }
+.faqi-answer-rich, .post-rich-content { }

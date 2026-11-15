@@ -1,0 +1,1799 @@
+/* ============================================================
+   Hero Search – Snaptrip style (compact single-row, unified date,
+   full banners, consistent heights)
+   ============================================================ */
+
+/* Space under fixed header */
+.hero-search-area {
+  padding: 96px 16px 36px !important;
+  background: #f8f6f2 !important;
+}
+
+@media (max-width: 767px) {
+  .hero-search-area {
+    padding: 88px 12px 28px !important;
+  }
+}
+
+.hero-layout {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  align-items: stretch !important;
+  max-width: 1100px !important;
+  margin: 0 auto !important;
+  width: 100% !important;
+}
+
+/* Banner and search card must share the exact same width */
+.hero-image-col,
+.hero-search-col,
+.hero-search-card {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* ========== BANNER – taller so full illustration elements stay visible ========== */
+.hero-image-col {
+  position: relative !important;
+  width: 100% !important;
+  order: -1 !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  background: #e8eef5 !important;
+  /* taller aspect = less vertical crop, still fills width */
+  aspect-ratio: 2.55 / 1 !important;
+  max-height: 280px !important;
+  margin: 0 !important;
+}
+
+.hero-category-img {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  object-fit: cover !important;
+  object-position: center 42% !important;
+  display: block !important;
+  border-radius: 0 !important;
+}
+
+.hero-search-col {
+  width: 100% !important;
+  order: 2 !important;
+  min-width: 0 !important;
+}
+
+/* ========== Labels hidden – text lives inside fields ========== */
+.hsf-label {
+  display: none !important;
+}
+
+/* ========== Unified compact field height (same on all pages) ========== */
+.hsf-input,
+.hsf-date-trigger,
+.hsf-passenger-field .hsf-date-trigger,
+.hero-search-submit {
+  height: 40px !important;
+  min-height: 40px !important;
+  box-sizing: border-box !important;
+}
+
+.hsf-input,
+.hsf-date-trigger,
+.hsf-passenger-field .hsf-date-trigger {
+  padding: 0 12px !important;
+  font-size: 13.5px !important;
+  border-radius: 10px !important;
+  background: #fff !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #0f172a !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.hsf-input::placeholder {
+  color: #94a3b8 !important;
+  opacity: 1 !important;
+}
+
+/* ========== Date group = ONE single box ========== */
+.hsf-date-group {
+  display: flex !important;
+  align-items: stretch !important;
+  min-width: 0 !important;
+}
+
+.hsf-date-box {
+  display: flex !important;
+  align-items: stretch !important;
+  width: 100% !important;
+  height: 40px !important;
+  background: #fff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+}
+
+.hsf-date-segment {
+  flex: 1 1 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  min-width: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  padding: 0 4px !important;
+}
+
+.hsf-date-segment .hsf-date-row {
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+  height: 100% !important;
+  gap: 2px !important;
+}
+
+.hsf-date-segment .hsf-date-trigger {
+  flex: 1 1 auto !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+  padding: 0 6px !important;
+  box-shadow: none !important;
+  justify-content: flex-start !important;
+}
+
+.hsf-date-divider {
+  width: 1px !important;
+  align-self: stretch !important;
+  background: #e2e8f0 !important;
+  margin: 8px 0 !important;
+  flex: 0 0 1px !important;
+}
+
+.hsf-date-nudge {
+  width: 22px !important;
+  height: 22px !important;
+  min-width: 22px !important;
+  border: none !important;
+  background: transparent !important;
+  color: #94a3b8 !important;
+  font-size: 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+}
+.hsf-date-nudge:hover {
+  background: #f1f5f9 !important;
+  color: #334155 !important;
+}
+
+/* One-way "+ Return date" appearance (still inside the unified box) */
+#returnField.is-add-return {
+  flex: 0 0 auto !important;
+  min-width: 110px !important;
+}
+#returnField.is-add-return .hsf-date-trigger {
+  color: #f97316 !important;
+  font-weight: 500 !important;
+  justify-content: center !important;
+  background: #fff7ed !important;
+}
+#returnField.is-add-return .hsf-date-nudge,
+#returnField.is-add-return .hsf-date-trigger i {
+  display: none !important;
+}
+#returnField.is-add-return #returnTriggerText {
+  color: #f97316 !important;
+}
+
+/* ========== SEARCH button ========== */
+.hero-search-submit {
+  padding: 0 18px !important;
+  border-radius: 10px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  background: #f97316 !important;
+  border: none !important;
+  color: #fff !important;
+  white-space: nowrap !important;
+  cursor: pointer !important;
+  flex-shrink: 0 !important;
+}
+.hero-search-submit:hover {
+  background: #ea580c !important;
+}
+
+/* ========== Form layout – desktop single row, aligned ========== */
+.hero-search-form {
+  padding: 12px 14px !important;
+}
+
+.hsf-toolbar {
+  margin-bottom: 10px !important;
+}
+
+@media (min-width: 1024px) {
+  /* Put fields + SEARCH in one horizontal row, same baseline */
+  .hero-search-form {
+    display: grid !important;
+    grid-template-columns: 1fr auto !important;
+    grid-template-areas:
+      "toolbar toolbar"
+      "fields  submit"
+      "error   ." !important;
+    column-gap: 10px !important;
+    row-gap: 8px !important;
+    align-items: end !important;
+  }
+  .hero-search-form > .hsf-toolbar {
+    grid-area: toolbar !important;
+    margin-bottom: 0 !important;
+  }
+  .hero-search-form > .hsf-search-row {
+    grid-area: fields !important;
+    margin: 0 !important;
+  }
+  .hero-search-form > .hsf-actions-row {
+    grid-area: submit !important;
+    display: flex !important;
+    margin: 0 !important;
+    align-self: end !important;
+    padding: 0 !important;
+  }
+  .hero-search-form > .hsf-form-error {
+    grid-area: error !important;
+  }
+  .hero-search-form > input[type="hidden"] {
+    display: none !important;
+  }
+
+  .hsf-search-row--route,
+  .hsf-search-row--destination {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    gap: 8px !important;
+    align-items: center !important; /* same vertical alignment */
+  }
+
+  /* Flight / Bus / Train */
+  .hsf-search-row--route .hsf-field {
+    flex: 1 1 120px !important;
+    min-width: 100px !important;
+  }
+  .hsf-search-row--route #reverseBtn {
+    flex: 0 0 36px !important;
+    width: 36px !important;
+    height: 36px !important;
+    margin: 0 !important;
+    align-self: center !important;
+  }
+  .hsf-search-row--route .hsf-passenger-field {
+    flex: 0 0 130px !important;
+  }
+  .hsf-search-row--route .hsf-date-group {
+    flex: 1 1 240px !important;
+    min-width: 200px !important;
+  }
+
+  /* Hotel / Villa / Tour – Destination narrower, Guests wider */
+  .hsf-search-row--destination #originField {
+    flex: 1.2 1 180px !important;
+    min-width: 160px !important;
+  }
+  .hsf-search-row--destination .hsf-passenger-field {
+    flex: 0 0 160px !important; /* wider Guests & Rooms */
+    min-width: 150px !important;
+  }
+  .hsf-search-row--destination .hsf-date-group {
+    flex: 1 1 220px !important;
+    min-width: 190px !important;
+  }
+
+  .hero-search-submit {
+    width: auto !important;
+    min-width: 108px !important;
+    height: 40px !important;
+  }
+}
+
+/* ========== TABLET ========== */
+@media (min-width: 640px) and (max-width: 1023.98px) {
+  .hero-image-col {
+    aspect-ratio: 2.4 / 1 !important;
+    max-height: 220px !important;
+  }
+
+  .hsf-search-row--route {
+    display: grid !important;
+    grid-template-columns: 1fr 40px 1fr !important;
+    grid-template-areas:
+      "from swap to"
+      "pax  pax  date" !important;
+    gap: 10px !important;
+    align-items: center !important;
+  }
+  .hsf-search-row--route #originField { grid-area: from !important; }
+  .hsf-search-row--route #reverseBtn {
+    grid-area: swap !important;
+    align-self: center !important;
+    justify-self: center !important;
+  }
+  .hsf-search-row--route #destField { grid-area: to !important; }
+  .hsf-search-row--route .hsf-passenger-field { grid-area: pax !important; }
+  .hsf-search-row--route .hsf-date-group { grid-area: date !important; }
+
+  .hsf-search-row--destination {
+    display: grid !important;
+    grid-template-columns: 1.3fr 1fr !important;
+    grid-template-areas:
+      "dest dest"
+      "pax  date" !important;
+    gap: 10px !important;
+  }
+  .hsf-search-row--destination #originField { grid-area: dest !important; }
+  .hsf-search-row--destination .hsf-passenger-field { grid-area: pax !important; }
+  .hsf-search-row--destination .hsf-date-group { grid-area: date !important; }
+
+  .hsf-actions-row {
+    width: 100% !important;
+    margin-top: 10px !important;
+  }
+  .hero-search-submit {
+    width: 100% !important;
+    height: 42px !important;
+  }
+}
+
+/* ========== MOBILE ========== */
+@media (max-width: 639.98px) {
+  .hero-image-col {
+    aspect-ratio: 2.0 / 1 !important;
+    max-height: 160px !important;
+    border-radius: 12px !important;
+  }
+  .hero-search-card {
+    border-radius: 14px !important;
+  }
+  .hero-tabs {
+    border-radius: 14px 14px 0 0 !important;
+  }
+
+  .hsf-search-row--route {
+    display: grid !important;
+    grid-template-columns: 1fr 40px 1fr !important;
+    grid-template-areas:
+      "from swap to"
+      "pax  pax  pax"
+      "date date date" !important;
+    gap: 10px 8px !important;
+    align-items: center !important;
+  }
+  .hsf-search-row--route > * {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+  .hsf-search-row--route #originField { grid-area: from !important; }
+  .hsf-search-row--route #reverseBtn {
+    grid-area: swap !important;
+    align-self: center !important;
+    justify-self: center !important;
+  }
+  .hsf-search-row--route #destField { grid-area: to !important; }
+  .hsf-search-row--route .hsf-passenger-field { grid-area: pax !important; }
+  .hsf-search-row--route .hsf-date-group { grid-area: date !important; }
+
+  .hsf-search-row--destination {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    grid-template-areas:
+      "dest dest"
+      "pax  pax"
+      "date date" !important;
+    gap: 10px 8px !important;
+  }
+  .hsf-search-row--destination #originField { grid-area: dest !important; }
+  .hsf-search-row--destination .hsf-passenger-field { grid-area: pax !important; }
+  .hsf-search-row--destination .hsf-date-group { grid-area: date !important; }
+  .hsf-search-row--destination > * {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .hsf-actions-row {
+    width: 100% !important;
+    margin-top: 12px !important;
+  }
+  .hero-search-submit {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 44px !important;
+  }
+
+  .hero-search-form {
+    padding: 12px 12px 14px !important;
+  }
+  .hsf-toolbar {
+    margin-bottom: 10px !important;
+  }
+}
+
+
+/* ========== FORCE unified single date box (override any main.css leftovers) ========== */
+.hsf-date-group .hsf-date-box,
+.hsf-date-group {
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  background: #fff !important;
+  height: 40px !important;
+  overflow: hidden !important;
+}
+.hsf-date-group .hsf-date-box {
+  border: none !important; /* outer group already has the border */
+  height: 100% !important;
+}
+.hsf-date-segment,
+.hsf-date-segment .hsf-date-row,
+.hsf-date-segment .hsf-date-trigger {
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+.hsf-date-segment .hsf-date-trigger {
+  height: 100% !important;
+  min-height: 0 !important;
+  border-radius: 0 !important;
+  padding: 0 8px !important;
+}
+/* remove double border that appears from main.css */
+.hsf-date-group .hsf-date-trigger,
+.hsf-date-box .hsf-date-trigger {
+  border: 0 !important;
+  background: transparent !important;
+}
+
+/* reduce overall input height a bit more */
+.hsf-input,
+.hsf-date-trigger,
+.hsf-passenger-field .hsf-date-trigger,
+.hero-search-submit,
+.hsf-date-box,
+.hsf-date-group {
+  height: 38px !important;
+  min-height: 38px !important;
+}
+.hsf-date-box {
+  height: 38px !important;
+}
+
+/* Hotel / Villa / Tour: make Guests wider, Destination a bit narrower */
+@media (min-width: 1024px) {
+  .hsf-search-row--destination #originField {
+    flex: 1.4 1 0 !important;
+    min-width: 0 !important;
+  }
+  .hsf-search-row--destination .hsf-passenger-field {
+    flex: 0 0 170px !important;
+    min-width: 160px !important;
+  }
+  .hsf-search-row--destination .hsf-date-group {
+    flex: 1.2 1 0 !important;
+    min-width: 200px !important;
+  }
+}
+
+/* Perfect vertical alignment of SEARCH with fields */
+@media (min-width: 1024px) {
+  .hero-search-form {
+    align-items: end !important;
+  }
+  .hero-search-form > .hsf-actions-row,
+  .hero-search-form > .hsf-search-row {
+    align-self: end !important;
+  }
+  .hero-search-submit {
+    height: 38px !important;
+    align-self: end !important;
+  }
+}
+
+/* ========== FINAL overrides – single visual date control ========== */
+.hsf-date-group {
+  background: #fff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  height: 38px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: stretch !important;
+}
+
+.hsf-date-group .hsf-date-box {
+  display: flex !important;
+  width: 100% !important;
+  height: 100% !important;
+  border: none !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.hsf-date-group .hsf-date-segment {
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  height: 100% !important;
+}
+
+.hsf-date-group .hsf-date-trigger {
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  height: 100% !important;
+  border-radius: 0 !important;
+  padding: 0 8px !important;
+}
+
+/* when +Return is active, keep it inside the same outer box */
+#returnField.is-add-return {
+  background: #fff7ed !important;
+  border-left: 1px solid #fed7aa !important;
+}
+#returnField.is-add-return .hsf-date-trigger {
+  background: transparent !important;
+  color: #ea580c !important;
+}
+
+/* kill any leftover double border from main.css */
+.hsf-date-group *,
+.hsf-date-box * {
+  box-sizing: border-box !important;
+}
+
+/* uniform height everywhere */
+.hsf-input,
+.hsf-passenger-field .hsf-date-trigger,
+.hsf-date-group,
+.hero-search-submit {
+  height: 38px !important;
+  min-height: 38px !important;
+  max-height: 38px !important;
+}
+
+/* desktop: SEARCH same baseline */
+@media (min-width: 1024px) {
+  .hero-search-form {
+    display: grid !important;
+    grid-template-columns: 1fr auto !important;
+    column-gap: 10px !important;
+    align-items: end !important;
+  }
+  .hero-search-form > .hsf-search-row {
+    margin-bottom: 0 !important;
+  }
+  .hero-search-form > .hsf-actions-row {
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: end !important;
+  }
+}
+
+
+/* ========== Compact search card – minimal white space (~5px breathing room) ========== */
+.hero-search-card {
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+.hero-search-form {
+  padding: 6px 12px 8px !important;   /* ~5-6px top/bottom */
+}
+
+.hsf-toolbar {
+  margin-bottom: 6px !important;
+  padding: 0 !important;
+}
+
+.hsf-search-row {
+  margin-bottom: 0 !important;
+  margin-top: 0 !important;
+}
+
+.hsf-actions-row {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* keep fields and button at 38px, tightly packed */
+.hsf-input,
+.hsf-date-trigger,
+.hsf-passenger-field .hsf-date-trigger,
+.hsf-date-group,
+.hsf-date-box,
+.hero-search-submit {
+  height: 38px !important;
+  min-height: 38px !important;
+  max-height: 38px !important;
+}
+
+/* desktop: everything on one baseline with almost no extra vertical space */
+@media (min-width: 1024px) {
+  .hero-search-form {
+    padding: 6px 12px 8px !important;
+    row-gap: 6px !important;
+  }
+  .hero-search-form > .hsf-toolbar {
+    margin-bottom: 4px !important;
+  }
+}
+
+/* mobile still a bit more breathing room */
+@media (max-width: 639.98px) {
+  .hero-search-form {
+    padding: 10px 12px 12px !important;
+  }
+  .hsf-toolbar {
+    margin-bottom: 8px !important;
+  }
+}
+
+
+/* ========== KILL empty white space inside search card ========== */
+.hero-search-card {
+  padding: 0 !important;
+  min-height: 0 !important;
+  height: auto !important;
+}
+
+.hero-search-form {
+  padding: 5px 12px 6px !important;
+  margin: 0 !important;
+  min-height: 0 !important;
+  height: auto !important;
+  row-gap: 4px !important;
+}
+
+.hsf-toolbar {
+  margin: 0 0 4px 0 !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+}
+
+.hsf-toolbar--top {
+  margin-bottom: 4px !important;
+}
+
+.hsf-search-row {
+  margin: 0 !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+}
+
+.hsf-actions-row {
+  margin: 0 !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+}
+
+/* remove any leftover bottom spacing from main.css */
+.hero-search-card .hero-search-form > *:last-child {
+  margin-bottom: 0 !important;
+}
+
+.hero-search-form > .hsf-form-error {
+  margin-top: 4px !important;
+  margin-bottom: 0 !important;
+}
+
+/* force the card to hug content */
+.hero-search-card,
+.hero-search-col,
+.hero-search-form {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+}
+
+.hero-search-form {
+  flex: 0 0 auto !important;
+}
+
+/* desktop keep tight */
+@media (min-width: 1024px) {
+  .hero-search-form {
+    padding: 5px 12px 6px !important;
+    row-gap: 4px !important;
+  }
+  .hsf-toolbar {
+    margin-bottom: 3px !important;
+  }
+}
+
+/* mobile a little more air */
+@media (max-width: 639.98px) {
+  .hero-search-form {
+    padding: 8px 12px 10px !important;
+  }
+  .hsf-toolbar {
+    margin-bottom: 6px !important;
+  }
+}
+
+
+/* ============================================================
+   FINAL DESKTOP LAYOUT – single row like photo 4
+   All fields + SEARCH on one line, same height, no wrap
+   ============================================================ */
+@media (min-width: 1024px) {
+  .hero-search-form {
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 8px 14px 10px !important;
+    gap: 6px !important;
+  }
+
+  .hsf-toolbar {
+    margin: 0 !important;
+    padding: 0 !important;
+    align-self: flex-start !important;
+  }
+
+  /* Put the fields row and the SEARCH button side-by-side */
+  .hero-search-form > .hsf-search-row {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    gap: 8px !important;
+    margin: 0 !important;
+    width: 100% !important;
+  }
+
+  /* Make the actions-row (SEARCH) sit on the SAME row via negative margin trick
+     or by changing the form to a 2-column grid for the content area */
+  .hero-search-form {
+    display: grid !important;
+    grid-template-columns: 1fr auto !important;
+    grid-template-rows: auto auto !important;
+    grid-template-areas:
+      "toolbar toolbar"
+      "fields  submit" !important;
+    column-gap: 10px !important;
+    row-gap: 6px !important;
+    align-items: center !important;
+    padding: 8px 14px 10px !important;
+  }
+
+  .hero-search-form > .hsf-toolbar {
+    grid-area: toolbar !important;
+  }
+  .hero-search-form > .hsf-search-row {
+    grid-area: fields !important;
+    margin: 0 !important;
+  }
+  .hero-search-form > .hsf-actions-row {
+    grid-area: submit !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    align-self: center !important;
+  }
+  .hero-search-form > .hsf-form-error {
+    grid-column: 1 / -1 !important;
+  }
+  .hero-search-form > input[type="hidden"] {
+    display: none !important;
+  }
+
+  /* fields themselves in one horizontal line */
+  .hsf-search-row--route,
+  .hsf-search-row--destination {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+
+  .hsf-search-row--route .hsf-field {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+  }
+  .hsf-search-row--route #reverseBtn {
+    flex: 0 0 36px !important;
+  }
+  .hsf-search-row--route .hsf-passenger-field {
+    flex: 0 0 130px !important;
+  }
+  .hsf-search-row--route .hsf-date-group {
+    flex: 1 1 200px !important;
+    min-width: 180px !important;
+  }
+
+  .hsf-search-row--destination #originField {
+    flex: 1.6 1 0 !important;
+    min-width: 0 !important;
+  }
+  .hsf-search-row--destination .hsf-passenger-field {
+    flex: 0 0 160px !important;
+  }
+  .hsf-search-row--destination .hsf-date-group {
+    flex: 1.2 1 0 !important;
+    min-width: 190px !important;
+  }
+
+  .hero-search-submit {
+    height: 38px !important;
+    min-width: 100px !important;
+    padding: 0 18px !important;
+    flex-shrink: 0 !important;
+  }
+}
+
+/* Keep card height compact and consistent on all pages */
+.hero-search-card {
+  padding: 0 !important;
+  min-height: 0 !important;
+}
+.hero-search-form {
+  min-height: 0 !important;
+}
+
+
+/* ========== TABS must be clickable ========== */
+.hero-tabs {
+  position: relative !important;
+  z-index: 20 !important;
+  pointer-events: auto !important;
+  overflow: visible !important;
+}
+.hero-tab {
+  position: relative !important;
+  z-index: 21 !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+.hero-tab a,
+a.hero-tab {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+/* Make sure nothing covers the tabs */
+.hero-search-card {
+  position: relative !important;
+  overflow: visible !important;
+}
+.hero-search-form {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Kill any accidental full-size overlay inside the card */
+.hero-search-card > *:not(.hero-tabs):not(.hero-search-form) {
+  pointer-events: none !important;
+}
+.hero-search-card > .hero-tabs,
+.hero-search-card > .hero-search-form,
+.hero-search-card > .hero-search-form * {
+  pointer-events: auto !important;
+}
+
+
+/* ============================================================
+   FIX: popups must be visible & clickable
+   ============================================================ */
+
+/* Never clip the calendar / passenger / suggestions popups */
+.hsf-date-group,
+.hsf-date-box,
+.hsf-date-segment,
+.hsf-passenger-field,
+.hsf-field,
+.hero-search-form,
+.hero-search-card {
+  overflow: visible !important;
+}
+
+/* Keep the visual "single box" look WITHOUT clipping children */
+.hsf-date-group {
+  position: relative !important;
+  background: #fff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  height: 38px !important;
+}
+
+.hsf-date-box {
+  overflow: hidden !important; /* only the inner visual shell clips its own bg */
+  border: none !important;
+  height: 100% !important;
+  border-radius: 10px !important;
+}
+
+/* Popups always on top and visible */
+.hsf-calendar-popup,
+.hsf-passenger-popup,
+.hsf-suggestions,
+.hsf-select-popup {
+  display: block !important; /* JS toggles [hidden]; when not hidden must show */
+  z-index: 200 !important;
+  pointer-events: auto !important;
+  position: absolute !important;
+}
+
+/* When the hidden attribute is present, force hide */
+.hsf-calendar-popup[hidden],
+.hsf-passenger-popup[hidden],
+.hsf-suggestions[hidden],
+.hsf-select-popup[hidden] {
+  display: none !important;
+}
+
+/* Ensure triggers are clickable */
+.hsf-date-trigger,
+.hsf-input,
+.hsf-passenger-field .hsf-date-trigger,
+.hsf-select-trigger,
+#passengerTrigger,
+#departTrigger,
+#returnTrigger,
+#originInput,
+#destInput {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+/* ========== BANNER: no crop – full illustration visible ========== */
+.hero-image-col {
+  aspect-ratio: 3.2 / 1 !important;
+  max-height: 240px !important;
+  background: #eef2f7 !important;
+  overflow: hidden !important;
+}
+
+.hero-category-img {
+  object-fit: contain !important;   /* ALL elements visible, no crop */
+  object-position: center center !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+
+/* ============================================================
+   FINAL polish: taller fields, popups above everything, banner
+   ============================================================ */
+
+/* --- Slightly taller search fields (style unchanged, just bigger) --- */
+.hsf-input,
+.hsf-date-trigger,
+.hsf-passenger-field .hsf-date-trigger,
+.hsf-date-group,
+.hsf-date-box,
+.hero-search-submit {
+  height: 44px !important;
+  min-height: 44px !important;
+  max-height: 44px !important;
+  font-size: 14px !important;
+}
+
+.hero-search-form {
+  padding: 10px 14px 12px !important;
+}
+
+.hsf-toolbar {
+  margin-bottom: 6px !important;
+}
+
+@media (min-width: 1024px) {
+  .hero-search-form {
+    padding: 10px 14px 12px !important;
+    row-gap: 6px !important;
+  }
+  .hero-search-submit {
+    height: 44px !important;
+    min-width: 110px !important;
+  }
+}
+
+/* --- Popups MUST be above Popular Destinations and everything else --- */
+.hero-search-card,
+.hero-search-col,
+.hero-search-form {
+  position: relative !important;
+  z-index: 100 !important;
+}
+
+.hsf-calendar-popup,
+.hsf-passenger-popup,
+.hsf-suggestions,
+.hsf-select-popup {
+  z-index: 99999 !important;
+  position: absolute !important;
+  pointer-events: auto !important;
+}
+
+.hsf-calendar-popup[hidden],
+.hsf-passenger-popup[hidden],
+.hsf-suggestions[hidden],
+.hsf-select-popup[hidden] {
+  display: none !important;
+}
+
+/* Popular destinations and their number badges stay BELOW popups */
+.popular-destination-area,
+.single-destination,
+.pd-card,
+.pd-card *,
+[class*="popular"],
+[class*="destination-card"] {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* --- Banner: fill the frame, no crop of content ---
+   Using contain so every element stays visible.
+   Soft background fills any letterbox so the box still looks full.
+   To get BOTH perfect fill AND zero crop, the image aspect ratio
+   must match the container (~3.2:1). If you replace the hero images
+   with versions composed for that ratio, switch object-fit back to cover.
+*/
+.hero-image-col {
+  aspect-ratio: 3.2 / 1 !important;
+  max-height: 240px !important;
+  background: linear-gradient(180deg, #eef2f7 0%, #e8eef5 100%) !important;
+  overflow: hidden !important;
+}
+
+.hero-category-img {
+  object-fit: contain !important;
+  object-position: center center !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+
+/* ============================================================
+   Banner images now match 3.2:1 → use cover, fill frame, no crop
+   ============================================================ */
+.hero-image-col {
+  aspect-ratio: 3.2 / 1 !important;
+  max-height: 240px !important;
+  overflow: hidden !important;
+  background: #eef2f7 !important;
+}
+
+.hero-category-img {
+  object-fit: cover !important;
+  object-position: center center !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Slightly larger fields (still responsive) */
+.hsf-input,
+.hsf-date-trigger,
+.hsf-passenger-field .hsf-date-trigger,
+.hsf-date-group,
+.hsf-date-box,
+.hero-search-submit {
+  height: 46px !important;
+  min-height: 46px !important;
+  max-height: 46px !important;
+  font-size: 14.5px !important;
+}
+
+.hero-search-form {
+  padding: 11px 14px 13px !important;
+}
+
+@media (min-width: 1024px) {
+  .hero-search-submit {
+    height: 46px !important;
+    min-width: 112px !important;
+  }
+}
+
+@media (max-width: 639.98px) {
+  .hsf-input,
+  .hsf-date-trigger,
+  .hsf-passenger-field .hsf-date-trigger,
+  .hsf-date-group,
+  .hsf-date-box,
+  .hero-search-submit {
+    height: 44px !important;
+    min-height: 44px !important;
+    max-height: 44px !important;
+  }
+}
+
+
+/* ============================================================
+   Taller banner (2.6:1) + slightly larger search fields
+   Images rebuilt as cover-fill → no gray side bars
+   ============================================================ */
+.hero-image-col {
+  aspect-ratio: 2.6 / 1 !important;
+  max-height: 280px !important;
+  overflow: hidden !important;
+  background: #e8eef5 !important;
+}
+
+.hero-category-img {
+  object-fit: cover !important;
+  object-position: center center !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+@media (min-width: 640px) and (max-width: 1023.98px) {
+  .hero-image-col {
+    aspect-ratio: 2.5 / 1 !important;
+    max-height: 220px !important;
+  }
+}
+
+@media (max-width: 639.98px) {
+  .hero-image-col {
+    aspect-ratio: 2.2 / 1 !important;
+    max-height: 160px !important;
+  }
+}
+
+/* Search fields a bit taller */
+.hsf-input,
+.hsf-date-trigger,
+.hsf-passenger-field .hsf-date-trigger,
+.hsf-date-group,
+.hsf-date-box,
+.hero-search-submit {
+  height: 48px !important;
+  min-height: 48px !important;
+  max-height: 48px !important;
+  font-size: 14.5px !important;
+}
+
+.hero-search-form {
+  padding: 12px 14px 14px !important;
+}
+
+@media (min-width: 1024px) {
+  .hero-search-submit {
+    height: 48px !important;
+    min-width: 114px !important;
+  }
+}
+
+@media (max-width: 639.98px) {
+  .hsf-input,
+  .hsf-date-trigger,
+  .hsf-passenger-field .hsf-date-trigger,
+  .hsf-date-group,
+  .hsf-date-box,
+  .hero-search-submit {
+    height: 44px !important;
+    min-height: 44px !important;
+    max-height: 44px !important;
+  }
+  .hero-search-form {
+    padding: 10px 12px 12px !important;
+  }
+}
+
+
+/* ============================================================
+   MUCH taller banner – less crop, more of the illustration visible
+   ============================================================ */
+.hero-image-col {
+  aspect-ratio: 2 / 1 !important;
+  max-height: 360px !important;
+  overflow: hidden !important;
+  background: #e8eef5 !important;
+}
+
+.hero-category-img {
+  object-fit: cover !important;
+  object-position: center center !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+@media (min-width: 640px) and (max-width: 1023.98px) {
+  .hero-image-col {
+    aspect-ratio: 2 / 1 !important;
+    max-height: 280px !important;
+  }
+}
+
+@media (max-width: 639.98px) {
+  .hero-image-col {
+    aspect-ratio: 1.9 / 1 !important;
+    max-height: 180px !important;
+  }
+}
+
+
+/* ============================================================
+   Banner: images contain FULL original art (no crop of elements).
+   Side areas filled with soft blur of same image → frame is full.
+   ============================================================ */
+.hero-image-col {
+  aspect-ratio: 2.2 / 1 !important;
+  max-height: 340px !important;
+  overflow: hidden !important;
+  background: #e8eef5 !important;
+}
+
+.hero-category-img {
+  object-fit: cover !important;
+  object-position: center center !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+@media (min-width: 640px) and (max-width: 1023.98px) {
+  .hero-image-col {
+    aspect-ratio: 2.2 / 1 !important;
+    max-height: 260px !important;
+  }
+}
+
+@media (max-width: 639.98px) {
+  .hero-image-col {
+    aspect-ratio: 2 / 1 !important;
+    max-height: 170px !important;
+  }
+}
+
+
+/* ============================================================
+   FINAL banner: original images, NO side frame, taller box
+   ============================================================ */
+.hero-image-col {
+  width: 100% !important;
+  /* taller so more of the illustration is visible */
+  height: 420px !important;
+  max-height: 420px !important;
+  aspect-ratio: auto !important;
+  overflow: hidden !important;
+  border-radius: 16px !important;
+  background: #f0f4f8 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.hero-category-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+  display: block !important;
+  border: none !important;
+  border-radius: 0 !important;
+}
+
+@media (min-width: 640px) and (max-width: 1023.98px) {
+  .hero-image-col {
+    height: 300px !important;
+    max-height: 300px !important;
+  }
+}
+
+@media (max-width: 639.98px) {
+  .hero-image-col {
+    height: 180px !important;
+    max-height: 180px !important;
+  }
+}
+
+
+/* Slightly smaller banner – keep cover, avoid heavy re-crop */
+.hero-image-col {
+  height: 390px !important;
+  max-height: 390px !important;
+}
+@media (min-width: 640px) and (max-width: 1023.98px) {
+  .hero-image-col {
+    height: 280px !important;
+    max-height: 280px !important;
+  }
+}
+@media (max-width: 639.98px) {
+  .hero-image-col {
+    height: 170px !important;
+    max-height: 170px !important;
+  }
+}
+
+
+/* Calendar footer: Clear + Confirm */
+.hsf-calendar-popup .cal-footer {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 10px !important;
+  flex-wrap: wrap !important;
+  padding: 12px 4px 4px !important;
+  border-top: 1px solid #eef2f7 !important;
+  margin-top: 8px !important;
+}
+.hsf-calendar-popup .cal-range-hint {
+  margin-right: auto !important;
+  font-size: 12px !important;
+  color: #64748b !important;
+}
+.hsf-calendar-popup .cal-clear-btn {
+  border: none !important;
+  background: transparent !important;
+  color: #64748b !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  padding: 8px 14px !important;
+  border-radius: 8px !important;
+  cursor: pointer !important;
+}
+.hsf-calendar-popup .cal-clear-btn:hover {
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+.hsf-calendar-popup .cal-done-btn {
+  border: none !important;
+  background: #ff6f59 !important;
+  color: #fff !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  padding: 8px 18px !important;
+  border-radius: 8px !important;
+  cursor: pointer !important;
+}
+.hsf-calendar-popup .cal-done-btn:hover {
+  background: #f05a44 !important;
+}
+
+
+/* ============================================================
+   MOBILE + TABLET — match Snaptrip-style mockups
+   Mobile  : stacked fields, icon-only tabs, full-width SEARCH
+   Tablet  : 2-col rows where mockups show side-by-side
+   ============================================================ */
+
+/* ---- Shared < 1024px ---- */
+@media (max-width: 1023.98px) {
+  /* Tabs: single row, icons only, equal width */
+  .hero-tabs {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+    gap: 0 !important;
+    padding: 0 !important;
+  }
+  .hero-tab,
+  a.hero-tab {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    padding: 12px 4px !important;
+    justify-content: center !important;
+    gap: 0 !important;
+  }
+  .hero-tab span,
+  a.hero-tab span {
+    display: none !important; /* icon-only like mockup */
+  }
+  .hero-tab i,
+  .hero-tab svg,
+  a.hero-tab i {
+    font-size: 16px !important;
+    margin: 0 !important;
+  }
+
+  /* Toolbar: trip type on the right */
+  .hsf-toolbar {
+    display: flex !important;
+    justify-content: flex-end !important;
+    margin-bottom: 10px !important;
+  }
+
+  .hero-search-form {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    padding: 12px !important;
+  }
+
+  .hsf-search-row,
+  .hsf-search-row--route,
+  .hsf-search-row--destination {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+
+  /* Full-width SEARCH */
+  .hsf-actions-row,
+  .hero-search-form > .hsf-actions-row {
+    width: 100% !important;
+    display: block !important;
+  }
+  .hero-search-submit {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    height: 48px !important;
+    border-radius: 12px !important;
+  }
+
+  /* Fields full width by default */
+  .hsf-field,
+  .hsf-passenger-field,
+  .hsf-date-group,
+  .hsf-date-box,
+  #originField,
+  #destInput,
+  #originInput {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .hsf-input,
+  .hsf-date-trigger,
+  .hsf-passenger-field .hsf-date-trigger {
+    width: 100% !important;
+    height: 48px !important;
+    min-height: 48px !important;
+  }
+
+  /* Hide desktop-only nudge arrows on small screens if too tight */
+  .hsf-date-nudge {
+    display: none !important;
+  }
+}
+
+/* ---- MOBILE only (< 640px) — Flight / Bus / Train ---- */
+@media (max-width: 639.98px) {
+  /* From | swap | To on one row */
+  .hsf-search-row--route {
+    display: grid !important;
+    grid-template-columns: 1fr auto 1fr !important;
+    grid-template-areas:
+      "from swap to"
+      "pax pax pax"
+      "date date date" !important;
+    gap: 10px !important;
+    align-items: center !important;
+  }
+  .hsf-search-row--route #originField { grid-area: from !important; }
+  .hsf-search-row--route #reverseBtn {
+    grid-area: swap !important;
+    width: 36px !important;
+    height: 36px !important;
+    flex-shrink: 0 !important;
+  }
+  .hsf-search-row--route #destField,
+  .hsf-search-row--route .hsf-field:nth-of-type(2) {
+    grid-area: to !important;
+  }
+  .hsf-search-row--route .hsf-passenger-field {
+    grid-area: pax !important;
+    width: 100% !important;
+  }
+  .hsf-search-row--route .hsf-date-group {
+    grid-area: date !important;
+    width: 100% !important;
+  }
+
+  /* Date box: stack Departure + Return vertically like mockup */
+  .hsf-date-box {
+    display: flex !important;
+    flex-direction: column !important;
+    height: auto !important;
+    min-height: 48px !important;
+    max-height: none !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    padding: 4px 0 !important;
+  }
+  .hsf-date-group {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    border: none !important;
+    background: transparent !important;
+  }
+  .hsf-date-segment {
+    width: 100% !important;
+    border: none !important;
+  }
+  .hsf-date-divider {
+    display: none !important;
+  }
+  .hsf-date-trigger {
+    height: 40px !important;
+    min-height: 40px !important;
+    justify-content: flex-start !important;
+    padding: 0 12px !important;
+  }
+  /* "+ Return date" stays visible under departure */
+  #returnField.is-add-return .hsf-date-trigger,
+  .hsf-date-trigger.is-add-return {
+    color: #ff6f59 !important;
+  }
+
+  /* Hotels / Villa / Tours mobile */
+  .hsf-search-row--destination {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+  .hsf-search-row--destination .hsf-date-group,
+  .hsf-search-row--destination .hsf-date-box {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+    border: none !important;
+    background: transparent !important;
+    height: auto !important;
+    padding: 0 !important;
+  }
+  .hsf-search-row--destination .hsf-date-segment {
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+    background: #fff !important;
+  }
+  .hsf-search-row--destination .hsf-date-divider {
+    display: none !important;
+  }
+}
+
+/* ---- TABLET (640–1023) — Flight / Bus / Train ---- */
+@media (min-width: 640px) and (max-width: 1023.98px) {
+  .hsf-search-row--route {
+    display: grid !important;
+    grid-template-columns: 1fr auto 1fr;
+    grid-template-areas:
+      "from swap to"
+      "pax pax date" !important;
+    gap: 10px 12px !important;
+    align-items: center !important;
+  }
+  .hsf-search-row--route #originField { grid-area: from !important; }
+  .hsf-search-row--route #reverseBtn {
+    grid-area: swap !important;
+    width: 40px !important;
+    height: 40px !important;
+  }
+  .hsf-search-row--route #destField,
+  .hsf-search-row--route .hsf-field:nth-of-type(2) {
+    grid-area: to !important;
+  }
+  .hsf-search-row--route .hsf-passenger-field {
+    grid-area: pax !important;
+    width: 100% !important;
+  }
+  .hsf-search-row--route .hsf-date-group {
+    grid-area: date !important;
+    width: 100% !important;
+  }
+
+  /* Date: departure + return in one rounded box (side by side) */
+  .hsf-search-row--route .hsf-date-box {
+    display: flex !important;
+    flex-direction: column !important;
+    height: auto !important;
+    min-height: 48px !important;
+    max-height: none !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+    padding: 4px 0 !important;
+  }
+  .hsf-search-row--route .hsf-date-group {
+    height: auto !important;
+    max-height: none !important;
+    border: none !important;
+  }
+  .hsf-search-row--route .hsf-date-divider { display: none !important; }
+  .hsf-search-row--route .hsf-date-trigger {
+    height: 40px !important;
+    justify-content: flex-start !important;
+  }
+
+  /* Hotels / Villa / Tours tablet */
+  .hsf-search-row--destination {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+  .hsf-search-row--destination #originField {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+  }
+  .hsf-search-row--destination .hsf-passenger-field {
+    width: 100% !important;
+  }
+  .hsf-search-row--destination .hsf-date-group,
+  .hsf-search-row--destination .hsf-date-box {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+    width: 100% !important;
+    border: none !important;
+    background: transparent !important;
+    height: auto !important;
+    padding: 0 !important;
+  }
+  .hsf-search-row--destination .hsf-date-segment {
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+    background: #fff !important;
+  }
+  .hsf-search-row--destination .hsf-date-divider {
+    display: none !important;
+  }
+}
+
+
+/* ============================================================
+   Calendar on mobile/tablet: full popup, visible Confirm/Clear
+   Fixed to viewport so it is never clipped by parent overflow
+   ============================================================ */
+@media (max-width: 1023.98px) {
+  .hsf-calendar-popup {
+    position: fixed !important;
+    left: 50% !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: 12px !important;
+    transform: translateX(-50%) !important;
+    width: min(400px, calc(100vw - 20px)) !important;
+    max-width: calc(100vw - 20px) !important;
+    max-height: min(78vh, 580px) !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    z-index: 100000 !important;
+    padding: 14px 14px 12px !important;
+    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.35) !important;
+    border-radius: 16px !important;
+  }
+
+  .hsf-calendar-popup[hidden] {
+    display: none !important;
+    transform: none !important;
+  }
+
+  /* One month on small screens for full visibility */
+  .hsf-calendar-popup .cal-months {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .hsf-calendar-popup .cal-footer {
+    position: sticky !important;
+    bottom: 0 !important;
+    background: #fff !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+    padding: 12px 0 4px !important;
+    margin-top: 10px !important;
+    border-top: 1px solid #e8eef5 !important;
+    z-index: 2 !important;
+  }
+
+  .hsf-calendar-popup .cal-range-hint {
+    flex: 1 1 100% !important;
+    margin: 0 0 6px !important;
+    order: -1 !important;
+  }
+
+  .hsf-calendar-popup .cal-clear-btn {
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    min-height: 40px !important;
+    padding: 8px 14px !important;
+    font-size: 14px !important;
+  }
+
+  .hsf-calendar-popup .cal-done-btn {
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    min-height: 40px !important;
+    padding: 8px 20px !important;
+    font-size: 14px !important;
+    background: #ff6f59 !important;
+    color: #fff !important;
+    border-radius: 10px !important;
+  }
+
+  /* Soft dim backdrop — MUST stay under the calendar and not capture clicks */
+  body.hsf-cal-open::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.28);
+    z-index: 99990 !important;
+    pointer-events: none !important; /* never block calendar clicks */
+  }
+
+  /* Calendar always on top and fully interactive */
+  .hsf-calendar-popup {
+    z-index: 100001 !important;
+    pointer-events: auto !important;
+    opacity: 1 !important;
+    filter: none !important;
+    background: #fff !important;
+    color: #0f172a !important;
+  }
+  .hsf-calendar-popup * {
+    pointer-events: auto !important;
+  }
+  .hsf-calendar-popup .cal-day:not(:disabled) {
+    opacity: 1 !important;
+    color: #0f172a !important;
+    cursor: pointer !important;
+  }
+  .hsf-calendar-popup .cal-day:disabled {
+    opacity: 0.35 !important;
+    cursor: default !important;
+  }
+  .hsf-calendar-popup .cal-clear-btn,
+  .hsf-calendar-popup .cal-done-btn {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    opacity: 1 !important;
+  }
+}
+
+
+/* Desktop calendar: ensure footer buttons always show */
+@media (min-width: 1024px) {
+  .hsf-calendar-popup {
+    overflow: visible !important;
+    max-height: none !important;
+  }
+  .hsf-calendar-popup .cal-footer {
+    display: flex !important;
+  }
+  .hsf-calendar-popup .cal-clear-btn,
+  .hsf-calendar-popup .cal-done-btn {
+    display: inline-flex !important;
+  }
+}
+
+
+/* Global: calendar must never be blocked by overlays */
+.hsf-calendar-popup {
+  z-index: 100001 !important;
+  pointer-events: auto !important;
+  opacity: 1 !important;
+  background: #ffffff !important;
+}
+.hsf-calendar-popup[hidden] {
+  display: none !important;
+  pointer-events: none !important;
+}
+body.hsf-cal-open::before {
+  pointer-events: none !important;
+}

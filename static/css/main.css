@@ -1,4 +1,4 @@
-﻿/******************************************************************
+/******************************************************************
 Theme Name: Travel
 Description:
 Author: Colorlib
@@ -49,61 +49,61 @@ $black			: #222;
 /*  Typography Scale (Unified & Responsive)
 /* =================================== */
 /*
-  █î┌⌐ ┘å╪╕╪º┘à ╪¬╪º█î┘╛┘ê┌»╪▒╪º┘ü█î █î┌⌐┘╛╪º╪▒┌å┘ç ╪¿╪▒╪º█î ┌⌐┘ä ╪│╪º█î╪¬:
-  - ┘ç╪▒ ╪│╪╖╪¡ ╪º╪▓ ╪¬█î╪¬╪▒┘ç╪º (h1 ╪¬╪º h6) ╪»╪▒ ┘ç┘à┘ç ╪╡┘ü╪¡╪º╪¬ ╪»┘é█î┘é╪º █î┌⌐ ╪º┘å╪»╪º╪▓┘ç ╪»╪º╪▒╪»
-  - ┘à╪¬┘å ╪º╪╡┘ä█î (body/p) ╪»╪▒ ┌⌐┘ä ╪│╪º█î╪¬ █î┌⌐ ╪º┘å╪»╪º╪▓┘ç ╪»╪º╪▒╪»
-  - ┘à╪¬┘åΓÇî┘ç╪º█î ┘ü╪▒╪╣█î (╪¬╪º╪▒█î╪«╪î ┌⌐┘╛╪┤┘å╪î ┘╛┘ä█î╪│ΓÇî┘ç┘ê┘ä╪»╪▒ ┘ê...) █î┌⌐ ╪º┘å╪»╪º╪▓┘ç ╪½╪º╪¿╪¬ ╪»╪º╪▒┘å╪»
-  - ┘ç┘à┘ç ╪º┘å╪»╪º╪▓┘çΓÇî┘ç╪º ╪¿╪º clamp() ╪▒█î╪│┘╛╪º┘å╪│█î┘ê ┘ç╪│╪¬┘å╪» (╪¿█î┘å ┘à┘ê╪¿╪º█î┘ä ┘ê ╪»╪│┌⌐╪¬╪º┘╛ ╪¿┘çΓÇî╪╡┘ê╪▒╪¬ ╪▒┘ê╪º┘å ╪¬╪║█î█î╪▒ ┘à█îΓÇî┌⌐┘å┘å╪»)
+  یک نظام تایپوگرافی یکپارچه برای کل سایت:
+  - هر سطح از تیترها (h1 تا h6) در همه صفحات دقیقا یک اندازه دارد
+  - متن اصلی (body/p) در کل سایت یک اندازه دارد
+  - متن‌های فرعی (تاریخ، کپشن، پلیس‌هولدر و...) یک اندازه ثابت دارند
+  - همه اندازه‌ها با clamp() ریسپانسیو هستند (بین موبایل و دسکتاپ به‌صورت روان تغییر می‌کنند)
 */
 :root {
   --font-primary: "Poppins", sans-serif;
 
-  /* ╪▒┘å┌»ΓÇî┘ç╪º (╪¿╪»┘ê┘å ╪¬╪║█î█î╪▒╪î ┘ü┘é╪╖ ╪¿╪▒╪º█î ╪º╪▒╪¼╪º╪╣ ╪»╪▒ ╪º█î┘å ╪¿╪«╪┤) */
+  /* رنگ‌ها (بدون تغییر، فقط برای ارجاع در این بخش) */
   --title-color: #222222;
   --text-color: #777777;
 
-  /* ┘à╪¬┘å ╪º╪╡┘ä█î ╪│╪º█î╪¬ - █î┌⌐ ╪º┘å╪»╪º╪▓┘ç ╪¿╪▒╪º█î ┘ç┘à┘ç ┘╛╪º╪▒╪º┌»╪▒╪º┘üΓÇî┘ç╪º ┘ê ┘à╪¬┘ê┘å ╪¿╪»┘å┘ç */
+  /* متن اصلی سایت - یک اندازه برای همه پاراگراف‌ها و متون بدنه */
   --text-size: 1rem;
   /* 16px */
   --text-line-height: 1.6;
 
-  /* ┘à╪¬┘å ┘ü╪▒╪╣█î - ╪¬╪º╪▒█î╪«╪î ┌⌐┘╛╪┤┘å╪î ┘╛┘ä█î╪│ΓÇî┘ç┘ê┘ä╪»╪▒╪î ┘à╪¬┘åΓÇî┘ç╪º█î ┌⌐┘ê┌å┌⌐ */
+  /* متن فرعی - تاریخ، کپشن، پلیس‌هولدر، متن‌های کوچک */
   --text-size-small: 0.875rem;
   /* 14px */
   --text-line-height-small: 1.5;
 
-  /* ╪│┘ä╪│┘ä┘çΓÇî┘à╪▒╪º╪¬╪¿ ╪¬█î╪¬╪▒┘ç╪º - ┘ç╪▒ ╪│╪╖╪¡ ╪»┘é█î┘é╪º █î┌⌐ ╪º┘å╪»╪º╪▓┘çΓÇî█î ╪▒█î╪│┘╛╪º┘å╪│█î┘ê ╪»╪º╪▒╪» */
+  /* سلسله‌مراتب تیترها - هر سطح دقیقا یک اندازه‌ی ریسپانسیو دارد */
   --h1-size: clamp(1.75rem, 1.35rem + 2vw, 2.5rem);
-  /* 28px ΓåÆ 40px */
+  /* 28px → 40px */
   --h2-size: clamp(1.5rem, 1.2rem + 1.5vw, 1.875rem);
-  /* 24px ΓåÆ 30px */
+  /* 24px → 30px */
   --h3-size: clamp(1.25rem, 1.05rem + 1vw, 1.5rem);
-  /* 20px ΓåÆ 24px */
+  /* 20px → 24px */
   --h4-size: clamp(1.125rem, 1rem + 0.6vw, 1.25rem);
-  /* 18px ΓåÆ 20px */
+  /* 18px → 20px */
   --h5-size: clamp(1rem, 0.95rem + 0.3vw, 1.125rem);
-  /* 16px ΓåÆ 18px */
+  /* 16px → 18px */
   --h6-size: 1rem;
-  /* 16px╪î ╪½╪º╪¿╪¬ */
+  /* 16px، ثابت */
   --heading-line-height: 1.3;
 
-  /* ╪¬█î╪¬╪▒ ┘å┘à╪º█î╪┤█î (Hero) - ╪¿╪▓╪▒┌»ΓÇî╪¬╪▒ ╪º╪▓ ╪¬█î╪¬╪▒┘ç╪º█î ┘à╪╣┘à┘ê┘ä█î ┘à╪¡╪¬┘ê╪º╪î ╪¿╪▒╪º█î ╪¿┘å╪▒ ╪╡┘ü╪¡╪º╪¬ */
+  /* تیتر نمایشی (Hero) - بزرگ‌تر از تیترهای معمولی محتوا، برای بنر صفحات */
   --hero-title-size: clamp(2rem, 1.3rem + 3.5vw, 3.75rem);
-  /* 32px ΓåÆ 60px */
+  /* 32px → 60px */
 
 --font-display: var(--font-primary);
 --font-mono: var(--font-primary);
 
   --text-size-tiny: 0.75rem;
-  /* 12px - ╪¿┘Ä╪¼╪î ┌⌐┘╛╪┤┘å ╪▒█î╪▓╪î ┘ä█î╪¿┘ä ┘ü█î┘ä╪» */
+  /* 12px - بَج، کپشن ریز، لیبل فیلد */
   --text-size-micro: 0.6875rem;
-  /* 11px - ┘ä█î╪¿┘äΓÇî┘ç╪º█î uppercase ╪¿╪º letter-spacing */
+  /* 11px - لیبل‌های uppercase با letter-spacing */
   --icon-size-micro: 0.5625rem;
-  /* 9px - ┌»┘ä█î┘ü ╪»╪º╪«┘ä ╪ó█î┌⌐┘åΓÇî┘ç╪º█î ╪»╪º█î╪▒┘çΓÇî╪º█î ┌⌐┘ê┌å┌⌐ */
+  /* 9px - گلیف داخل آیکن‌های دایره‌ای کوچک */
 
-  /* --- ┘╛┘ä┘çΓÇî┘ç╪º█î ╪¿╪▓╪▒┌»ΓÇî╪¬╪▒ ╪¿╪▒╪º█î ╪¬█î╪¬╪▒ ╪¿╪«╪┤ΓÇî┘ç╪º --- */
+  /* --- پله‌های بزرگ‌تر برای تیتر بخش‌ها --- */
   --display-size: clamp(1.625rem, 1.3rem + 1.6vw, 2rem);
-  /* 26px ΓåÆ 32px */
+  /* 26px → 32px */
 }
 
 /* =================================== */
@@ -715,7 +715,7 @@ b, sup, sub, u, del {
 }
 
 .progress-table .table-row .country img {
-  margin-right: 12px;
+  margin-right: 15px;
 }
 
 .progress-table .table-row .percentage .progress {
@@ -1501,7 +1501,7 @@ b, sup, sub, u, del {
 
 .header-top ul li {
   display: inline-block;
-  margin-right: 12px;
+  margin-right: 15px;
 }
 
 @media (max-width: 414px) {
@@ -1535,16 +1535,16 @@ b, sup, sub, u, del {
    a dark hero image. #header now always carries a solid background (see
    below), so text here is legible on every page, not just the homepage. */
 .main-menu {
-  padding-bottom: 12px;
-  padding-top: 12px;
+  padding-bottom: 20px;
+  padding-top: 20px;
   background: transparent;
   padding-left: 15px;
-  padding-right: 12px;
+  padding-right: 15px;
   -webkit-transition: all 0.3s ease 0s;
   transition: all 0.3s ease 0s;
 }
 
-/* ┌⌐╪º╪»╪▒ ┘ç╪»╪▒ ╪▒╪º ╪»╪▒ ╪»╪│┌⌐╪¬╪º┘╛ ┌⌐┘à█î ╪¿╪▓╪▒┌»ΓÇî╪¬╪▒/╪╣╪▒█î╪╢ΓÇî╪¬╪▒ ┘à█îΓÇî┌⌐┘å█î┘à ╪¬╪º ┘à┘å┘ê ┘ê ╪»┌⌐┘à┘çΓÇî┘ç╪º█î ╪¡╪│╪º╪¿ ┌⌐╪º╪▒╪¿╪▒█î ╪»╪▒ █î┌⌐ ╪▒╪»█î┘ü ╪¼╪º ╪┤┘ê┘å╪» */
+/* کادر هدر را در دسکتاپ کمی بزرگ‌تر/عریض‌تر می‌کنیم تا منو و دکمه‌های حساب کاربری در یک ردیف جا شوند */
 @media (min-width: 992px) {
   .container.main-menu {
     max-width: 1600px;
@@ -1552,6 +1552,11 @@ b, sup, sub, u, del {
 
   .main-menu .row {
     flex-wrap: nowrap;
+    /* FIX (Navbar icons on the left): was space-between, which let the
+       nav-menu float wherever the 3-item math landed it. flex-start pins
+       it snugly after the logo; the auto margin below pushes the
+       Sign Up group to the far right with a guaranteed, standard gap
+       instead of letting it butt up against the menu. */
     justify-content: flex-start;
   }
 
@@ -1563,12 +1568,12 @@ b, sup, sub, u, del {
 
   .main-menu .header-account-actions {
     flex-shrink: 0;
-    margin-left: auto;
+    margin-left: auto; /* standard, guaranteed gap from the nav-menu icons */
     padding-left: 24px;
   }
 }
 
-
+/* در عرض‌های نزدیک به بریک‌پوینت موبایل، کمی فاصله‌ها را جمع‌تر می‌کنیم تا فشرده‌تر جا شوند */
 @media (min-width: 992px) and (max-width: 1300px) {
   .nav-menu > li {
     margin-left: 6px;
@@ -1588,6 +1593,8 @@ b, sup, sub, u, del {
   right: 0;
   transition: all 0.5s;
   z-index: 997;
+  /* FIXED: dark background instead of white so the gold logo mark and the
+     nav links/icons both have proper contrast (they were washing out on white). */
   background-color: #1c1e26;
   box-shadow: 0 2px 20px rgba(20, 20, 30, 0.08);
 }
@@ -1603,8 +1610,8 @@ b, sup, sub, u, del {
 }
 
 #header.header-scrolled .main-menu {
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 12px;
+  padding-bottom: 12px;
 }
 
 /*--------------------------------------------------------------
@@ -1656,7 +1663,7 @@ b, sup, sub, u, del {
 .sf-arrows .sf-with-ul:after {
   content: "\f107";
   position: absolute;
-  right: 12px;
+  right: 15px;
   font-family: FontAwesome;
   font-style: normal;
   font-weight: normal;
@@ -1678,6 +1685,7 @@ b, sup, sub, u, del {
   padding: 0 8px 0px 8px;
   text-decoration: none;
   display: inline-block;
+  /* FIXED: was #222222, invisible on the new dark header background */
   color: #ffffff;
   font-weight: 500;
   font-size: var(--text-size-small);
@@ -1850,22 +1858,22 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 #logo {
-  padding-left: 0;
+  padding-left: 15px;
 }
 
 #logo img {
-  max-height: 36px;
+  max-height: 42px;
   width: auto;
   -webkit-transition: all 0.3s ease 0s;
   transition: all 0.3s ease 0s;
 }
 
 #header.header-scrolled #logo img {
-  max-height: 30px;
+  max-height: 34px;
 }
 
 #nav-menu-container {
-  padding-right: 12px;
+  padding-right: 15px;
 }
 
 /*--------------------------------------------------------------
@@ -1876,7 +1884,7 @@ body.mobile-nav-active #mobile-nav-toggle {
   align-items: center;
   gap: 8px;
   flex-shrink: 0;
-  padding-right: 12px;
+  padding-right: 15px;
 }
 
 .account-action-link {
@@ -1934,34 +1942,9 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 @media (max-width: 991px) {
-  .main-menu .row.main-menu-grid {
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    align-items: center;
-  }
-
-  .main-menu #logo {
-    flex-shrink: 0;
-  }
-
-  .container.main-menu {
-    position: relative;
-  }
-
-  #mobile-nav-toggle {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    margin-top: 0;
-    float: none;
-  }
-
   .header-account-actions {
-    margin-left: auto;
-    margin-right: 40px;
-    /* ┘ü╪╢╪º█î ┘ä╪º╪▓┘à ╪¿╪▒╪º█î ╪»┌⌐┘à┘ç ┘à┘å┘ê█î ┘à┘ê╪¿╪º█î┘ä */
-    padding-right: 0;
+    margin-right: 45px;
+    /* فضای لازم برای دکمه منوی موبایل */
     gap: 4px;
   }
   .account-action-link span,
@@ -2822,7 +2805,7 @@ body.mobile-nav-active #mobile-nav-toggle {
      approach as the FAQ hero) so overflow:hidden + object-fit can size it. */
   background: none;
   overflow: hidden;
-  /* FIXED: bigger image, per request ΓÇö increased from 210/130 (matches FAQ). */
+  /* FIXED: bigger image, per request — increased from 210/130 (matches FAQ). */
   padding: 250px 0 160px;
 }
 
@@ -2865,7 +2848,7 @@ body.mobile-nav-active #mobile-nav-toggle {
    image/overlay layers (same pattern as .faq-hero .faq-hero-inner).
    Also cancels the generic .about-content margin/padding this element also
    carries, so .blog-home-banner's own padding is the only vertical spacing
-   ΓÇö keeping the total height in line with the FAQ hero. */
+   — keeping the total height in line with the FAQ hero. */
 .blog-header-content {
   position: relative;
   z-index: 3;
@@ -2878,9 +2861,9 @@ body.mobile-nav-active #mobile-nav-toggle {
   max-width: 1100px;
   margin-left: auto;
   margin-right: auto;
-  /* FIXED: per request ΓÇö using the same title spec as the site's other
+  /* FIXED: per request — using the same title spec as the site's other
      hero titles (bigger, uppercase). Kept nowrap since the hero was
-     widened to fit; the Γëñ576px override still allows wrapping. */
+     widened to fit; the ≤576px override still allows wrapping. */
   font-size: var(--hero-title-size);
   line-height: var(--heading-line-height);
   text-transform: uppercase;
@@ -4177,7 +4160,7 @@ body.mobile-nav-active #mobile-nav-toggle {
 
 .footer-area .ft-footer-logo img{
     width: 220px;
-    max-width: 80%;/* ╪º┘å╪»╪º╪▓┘ç ┘ä┘ê┌»┘ê */
+    max-width: 80%;/* اندازه لوگو */
     height: auto;
     display: block;
 }
@@ -4380,7 +4363,7 @@ body.mobile-nav-active #mobile-nav-toggle {
 /* =================================================================
    10. Help Center / FAQ Page Styles
    (moved out of FAQ.html per FAQ Help Center Improvement Plan #3:
-   no inline <style> tags, no inline style attributes ΓÇö everything
+   no inline <style> tags, no inline style attributes — everything
    lives here, grouped and commented, so it can't clash with other
    pages and is easy to extend later.)
 ================================================================= */
@@ -4405,7 +4388,7 @@ body.mobile-nav-active #mobile-nav-toggle {
 .faq-page .faq-hero {
   position: relative;
   overflow: hidden;
-  /* FIXED: bigger image, per request ΓÇö increased from 210/130. */
+  /* FIXED: bigger image, per request — increased from 210/130. */
   padding: 250px 20px 160px;
   margin-bottom: 40px;
 }
@@ -4483,9 +4466,9 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 .faq-page .faq-head h1 {
-  /* FIXED: per request ΓÇö using the same title spec as the site's other
+  /* FIXED: per request — using the same title spec as the site's other
      hero titles (bigger, uppercase). Kept nowrap since the hero was
-     widened to fit; the Γëñ576px override below still allows wrapping. */
+     widened to fit; the ≤576px override below still allows wrapping. */
   font-size: var(--hero-title-size);
   line-height: var(--heading-line-height);
   text-transform: uppercase;
@@ -4841,7 +4824,7 @@ body.mobile-nav-active #mobile-nav-toggle {
   }
 }
 /* =================================================================
-   11. About Us Page ΓÇö Extended Sections
+   11. About Us Page — Extended Sections
    (added for the redesigned About Us page: hero, story, mission/vision,
    values, features, why-us, stats, CSR, security, how-it-works,
    contact strip)
@@ -5001,7 +4984,7 @@ body.mobile-nav-active #mobile-nav-toggle {
    centered .title wrappers in Core Values / Platform Features /
    Security). This section is a left-aligned image+text layout instead
    (same pattern as Mission & Vision / CSR / How It Works), so the
-   label needs to sit flush left with the heading and list below it ΓÇö
+   label needs to sit flush left with the heading and list below it —
    otherwise it stays centered while everything else is left-aligned,
    which looks especially broken once the columns stack on mobile. */
 .why-us-area .text-center-label {
@@ -5238,10 +5221,10 @@ body.mobile-nav-active #mobile-nav-toggle {
 
 
 /* ==========================================================================
-   >>> START: TRAVELISTA ΓÇö CONTACT PAGE ("BOARDING PASS") BLOCK <<<
-   ┌⌐┘╛█î ╪º█î┘å ┌⌐┘ä ╪¿┘ä┘ê┌⌐ (╪¬╪º ╪º┘å╪¬┘ç╪º█î ┘ü╪º█î┘ä╪î ╪¬╪º ╪«╪╖ "END") ╪▒╪º ╪»╪▒ ╪º┘å╪¬┘ç╪º█î main.css ╪¿┌å╪│╪¿╪º┘å.
-   ┘å┌⌐╪¬┘ç: ┘ü┘ê┘å╪¬ΓÇî┘ç╪º█î Fraunces / Space Mono ╪¿╪º <link> ╪»╪▒ <head> ┘ä┘ê╪» ┘à█îΓÇî╪┤┘ê┘å╪»
-   (╪¿┘ç ╪¿╪«╪┤ █▓ ┘╛╪º╪│╪« ┘à╪▒╪º╪¼╪╣┘ç ┌⌐┘å)╪î ┘å┘ç ╪¿╪º @import╪î ┌å┘ê┘å @import ┘ê╪│╪╖ ┘ü╪º█î┘ä ┌⌐╪º╪▒ ┘å┘à█îΓÇî┌⌐┘å╪».
+   >>> START: TRAVELISTA — CONTACT PAGE ("BOARDING PASS") BLOCK <<<
+   کپی این کل بلوک (تا انتهای فایل، تا خط "END") را در انتهای main.css بچسبان.
+   نکته: فونت‌های Fraunces / Space Mono با <link> در <head> لود می‌شوند
+   (به بخش ۲ پاسخ مراجعه کن)، نه با @import، چون @import وسط فایل کار نمی‌کند.
    ========================================================================== */
 
 :root {
@@ -5638,16 +5621,16 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 /* ==========================================================================
-   >>> END: TRAVELISTA ΓÇö CONTACT PAGE ("BOARDING PASS") BLOCK <<<
+   >>> END: TRAVELISTA — CONTACT PAGE ("BOARDING PASS") BLOCK <<<
    ========================================================================== */
 
 
 
 /* ==========================================================================
-   >>> START: TRAVELISTA ΓÇö "WHY TRAVELISTA" PAGE BLOCK <<<
-   ┌⌐┘╛█î ╪º█î┘å ╪¿┘ä┘ê┌⌐ ╪▒╪º ╪»╪▒ ╪º┘å╪¬┘ç╪º█î main.css ╪¿┌å╪│╪¿╪º┘å (╪¿╪╣╪» ╪º╪▓ ╪¿┘ä┘ê┌⌐ ╪╡┘ü╪¡┘ç Contact).
-   ┘ê╪º╪¿╪│╪¬┘ç ╪¿┘ç ┘à╪¬╪║█î╪▒┘ç╪º█î --tvl-* ┌⌐┘ç ╪»╪▒ ╪¿┘ä┘ê┌⌐ ╪╡┘ü╪¡┘ç Contact ╪¬╪╣╪▒█î┘ü ╪┤╪»┘çΓÇî╪º┘å╪» ΓÇö
-   ┘╛╪│ ╪º█î┘å ╪¿┘ä┘ê┌⌐ ╪¿╪º█î╪» *╪¿╪╣╪»* ╪º╪▓ ╪º┘ê┘å ╪¿┘ä┘ê┌⌐ ╪»╪▒ main.css ╪¿█î╪º╪».
+   >>> START: TRAVELISTA — "WHY TRAVELISTA" PAGE BLOCK <<<
+   کپی این بلوک را در انتهای main.css بچسبان (بعد از بلوک صفحه Contact).
+   وابسته به متغیرهای --tvl-* که در بلوک صفحه Contact تعریف شده‌اند —
+   پس این بلوک باید *بعد* از اون بلوک در main.css بیاد.
    ========================================================================== */
 
 /* ---------- Generic reusable page shell (same header/footer gap as Contact) ---------- */
@@ -5826,19 +5809,19 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 /* ==========================================================================
-   >>> END: TRAVELISTA ΓÇö "WHY TRAVELISTA" PAGE BLOCK <<<
+   >>> END: TRAVELISTA — "WHY TRAVELISTA" PAGE BLOCK <<<
    ========================================================================== */
 
 /* ==========================================================================
    >>> START: HERO SEARCH REDESIGN (Alibaba.ir / Google Flights style) <<<
    ------------------------------------------------------------------------
-   ┘å┌⌐╪º╪¬:
-   - ╪º╪▓ ╪▒┘å┌»ΓÇî┘ç╪º/┘ü┘ê┘å╪¬ ┘╛╪▒┘ê┌ÿ┘ç ╪º╪│╪¬┘ü╪º╪»┘ç ╪┤╪»┘ç (#f8b600, #222222, #777777, var(--font-primary))
-     █î╪╣┘å█î ┘ç█î┌å ╪▒┘å┌» ╪¼╪»█î╪»█î ╪¿┘ç ┘╛╪▒┘ê┌ÿ┘ç ╪º╪╢╪º┘ü┘ç ┘å╪┤╪»┘ç ΓÇö ┘ü┘é╪╖ ┌å█î╪»┘à╪º┘å/╪╕╪º┘ç╪▒ Search Bar ╪╣┘ê╪╢ ╪┤╪»┘ç.
-   - ╪º╪▓ ┘ç┘à╪º┘å ┌⌐┘ä╪º╪│ΓÇî┘ç╪º█î background/overlay ┘é╪¿┘ä█î (.banner-area / .overlay-bg)
-     ╪º╪│╪¬┘ü╪º╪»┘ç ┘à█îΓÇî╪┤┘ê╪»╪î ┘╛╪│ ╪¿┌⌐ΓÇî┌»╪▒╪º┘å╪» ┘ê ╪º┘ü┌⌐╪¬ ╪▒┘ê█î ╪ó┘å ╪»╪│╪¬ΓÇî┘å╪«┘ê╪▒╪»┘ç ╪¿╪º┘é█î ┘à█îΓÇî┘à╪º┘å╪».
-   - ╪º█î┘å ╪¿┘ä┘ê┌⌐ ┌⌐╪º┘à┘ä╪º┘ï Namespaced ╪¿╪º ┘╛█î╪┤┘ê┘å╪» ┬½hs-┬╗ / ┬½hero-search-┬╗ ╪º╪│╪¬ ╪¬╪º ╪¿╪º
-     ┘ç█î┌å ╪º╪│╪¬╪º█î┘ä ╪»█î┌»╪▒█î ╪»╪▒ main.css ╪¬╪╡╪º╪»┘à ┘å┌⌐┘å╪».
+   نکات:
+   - از رنگ‌ها/فونت پروژه استفاده شده (#f8b600, #222222, #777777, var(--font-primary))
+     یعنی هیچ رنگ جدیدی به پروژه اضافه نشده — فقط چیدمان/ظاهر Search Bar عوض شده.
+   - از همان کلاس‌های background/overlay قبلی (.banner-area / .overlay-bg)
+     استفاده می‌شود، پس بک‌گراند و افکت روی آن دست‌نخورده باقی می‌ماند.
+   - این بلوک کاملاً Namespaced با پیشوند «hs-» / «hero-search-» است تا با
+     هیچ استایل دیگری در main.css تصادم نکند.
    ========================================================================== */
 
 .hero-search-area {
@@ -6178,7 +6161,7 @@ body.mobile-nav-active #mobile-nav-toggle {
 
 .hs-suggest-empty:hover { background: transparent; }
 
-/* ---------- jQuery UI Datepicker ΓÇö restyled to match brand ---------- */
+/* ---------- jQuery UI Datepicker — restyled to match brand ---------- */
 #ui-datepicker-div.ui-datepicker {
   border: none !important;
   border-radius: 16px !important;
@@ -6278,12 +6261,12 @@ body.mobile-nav-active #mobile-nav-toggle {
 
 
 /* ==========================================================================
-   >>> START: TRAVELISTA ΓÇö HOME HERO SEARCH BLOCK <<<
-   ┌⌐┘╛█î ╪º█î┘å ┌⌐┘ä ╪¿┘ä┘ê┌⌐ ╪▒╪º ╪»╪▒ ╪º┘å╪¬┘ç╪º█î main.css ╪¿┌å╪│╪¿╪º┘å (╪¿╪╣╪» ╪º╪▓ ╪¿┘ä┘ê┌⌐ "WHY TRAVELISTA").
-   ┘ê╪º╪¿╪│╪¬┘ç ╪¿┘ç ┘à╪¬╪║█î╪▒┘ç╪º█î --tvl-* ┌⌐┘ç ╪»╪▒ ╪¿┘ä┘ê┌⌐ ╪╡┘ü╪¡┘ç Contact ╪¬╪╣╪▒█î┘ü ╪┤╪»┘çΓÇî╪º┘å╪» ΓÇö
-   ┘╛╪│ ╪¿╪º█î╪» *╪¿╪╣╪»* ╪º╪▓ ╪º┘ê┘å ╪¿┘ä┘ê┌⌐ΓÇî┘ç╪º ╪»╪▒ main.css ╪¿█î╪º╪».
-   ┘ü┘ê┘å╪¬ΓÇî┘ç╪º█î Fraunces / Space Mono ╪¿╪º█î╪» ╪¿╪º <link> ╪»╪▒ <head> ┘ä┘ê╪» ╪┤╪»┘ç ╪¿╪º╪┤┘å╪»
-   (╪¿┘ç ╪¿╪«╪┤ base.html ╪»╪▒ ┘ç┘à█î┘å ╪¬╪¡┘ê█î┘ä ┘à╪▒╪º╪¼╪╣┘ç ┌⌐┘å).
+   >>> START: TRAVELISTA — HOME HERO SEARCH BLOCK <<<
+   کپی این کل بلوک را در انتهای main.css بچسبان (بعد از بلوک "WHY TRAVELISTA").
+   وابسته به متغیرهای --tvl-* که در بلوک صفحه Contact تعریف شده‌اند —
+   پس باید *بعد* از اون بلوک‌ها در main.css بیاد.
+   فونت‌های Fraunces / Space Mono باید با <link> در <head> لود شده باشند
+   (به بخش base.html در همین تحویل مراجعه کن).
    ========================================================================== */
 
 /* ---------- Hero layout: image on top + search card below ---------- */
@@ -6315,17 +6298,11 @@ body.mobile-nav-active #mobile-nav-toggle {
 
 .hero-category-img {
   width: 100%;
-<<<<<<< HEAD
   max-width: 420px;          /* smaller */
   height: auto;
   max-height: 280px;
   object-fit: contain;
   border-radius: 18px;
-=======
-  height: 100%;
-  object-fit: cover;
-  object-position: center center;
->>>>>>> 85742dc885136c06ce0c44592dcd139b822716f4
   display: block;
 }
 
@@ -6454,8 +6431,7 @@ body.mobile-nav-active #mobile-nav-toggle {
 
 /* ---------- Search form ---------- */
 .hero-search-form {
-<<<<<<< HEAD
-  padding: 16px 24px 18px;
+  padding: 20px 28px 28px;
   position: relative;
 }
 
@@ -6478,7 +6454,7 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 /* ==========================================================================
-   >>> START: HERO SEARCH ΓÇö MERGED ROW (Origin/Swap/Destination/Travelers/Date) <<<
+   >>> START: HERO SEARCH — MERGED ROW (Origin/Swap/Destination/Travelers/Date) <<<
    Replaces the old two-row layout (locations row + dates/travelers row)
    with a single row, per the latest request. Two variants:
      .hsf-search-row--route        -> Flight / Bus / Train (has Origin+Swap)
@@ -6491,7 +6467,7 @@ body.mobile-nav-active #mobile-nav-toggle {
   margin-bottom: 16px;
 }
 
-/* Google Flights layout: From | swap | To | Dates ΓÇö equal visual weight */
+/* Google Flights layout: From | swap | To | Dates — equal visual weight */
 .hsf-search-row--route {
   grid-template-columns: 1fr 44px 1fr 1.15fr;
 }
@@ -6519,88 +6495,16 @@ body.mobile-nav-active #mobile-nav-toggle {
   }
 }
 /* ==========================================================================
-   >>> END: HERO SEARCH ΓÇö MERGED ROW <<<
+   >>> END: HERO SEARCH — MERGED ROW <<<
    ========================================================================== */
 
 .hsf-field {
   position: relative;
-=======
-  padding: 12px 14px 14px;
-}
-
-.hsf-toolbar {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 12px;
-}
-.hsf-toolbar--spacer { display: none !important; }
-
-.hsf-select { position: relative; }
-.hsf-select-trigger {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 12px;
-  font-size: 13px;
-  background: #f1f5f9;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  cursor: pointer;
-  color: #334155;
-}
-.hsf-select-trigger:hover { background: #e2e8f0; }
-.hsf-select-chevron { font-size: 10px; opacity: 0.7; }
-
-.hsf-select-popup {
-  position: absolute;
-  top: calc(100% + 4px);
-  right: 0;
-  background: #fff;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  box-shadow: 0 8px 24px rgba(15,23,42,0.12);
-  padding: 6px;
-  z-index: 50;
-  min-width: 140px;
-}
-.hsf-select-option {
-  display: block;
-  width: 100%;
-  text-align: left;
-  padding: 8px 12px;
-  font-size: 13.5px;
-  background: transparent;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  color: #334155;
-}
-.hsf-select-option:hover,
-.hsf-select-option.active {
-  background: #f1f5f9;
-  color: #0f172a;
-}
-
-.hsf-label {
-  display: none !important; /* labels removed – text lives inside the fields only */
->>>>>>> 85742dc885136c06ce0c44592dcd139b822716f4
 }
 
 .hsf-input,
 .hsf-date-trigger {
   width: 100%;
-<<<<<<< HEAD
-=======
-  height: 40px;
-  padding: 0 10px;
-  font-size: 13.5px;
-  color: #0f172a;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  outline: none;
-  transition: border-color 0.15s, box-shadow 0.15s;
->>>>>>> 85742dc885136c06ce0c44592dcd139b822716f4
   box-sizing: border-box;
   min-height: 50px;
   background: #fff;
@@ -6633,7 +6537,6 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 .hsf-reverse-btn {
-<<<<<<< HEAD
   width: 42px;
   height: 42px;
   border-radius: 50%;
@@ -6641,12 +6544,6 @@ body.mobile-nav-active #mobile-nav-toggle {
   background: #fff;
   color: var(--tvl-teal);
   display: flex;
-=======
-  width: 36px;
-  height: 36px;
-  flex: 0 0 36px;
-  display: inline-flex;
->>>>>>> 85742dc885136c06ce0c44592dcd139b822716f4
   align-items: center;
   justify-content: center;
   cursor: pointer;
@@ -6654,7 +6551,6 @@ body.mobile-nav-active #mobile-nav-toggle {
   transition: transform 0.35s ease, background 0.2s ease, color 0.2s ease;
 }
 
-<<<<<<< HEAD
 .hsf-reverse-btn:hover {
   background: var(--tvl-teal);
   color: #fff;
@@ -6669,28 +6565,6 @@ body.mobile-nav-active #mobile-nav-toggle {
   grid-template-columns: 1.3fr 1fr;
   gap: 14px;
   margin-bottom: 22px;
-=======
-/* Date group */
-.hsf-date-group { position: relative; }
-.hsf-date-box {
-  display: flex;
-  align-items: stretch;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  overflow: hidden;
-  min-height: 40px;
-}
-.hsf-date-segment {
-  flex: 1;
-  padding: 2px 6px;
-  min-width: 0;
-  display: flex;
-  align-items: center;
-}
-.hsf-date-segment .hsf-label {
-  display: none !important;
->>>>>>> 85742dc885136c06ce0c44592dcd139b822716f4
 }
 
 /* ---------- Suggestions / autocomplete ---------- */
@@ -6769,18 +6643,15 @@ body.mobile-nav-active #mobile-nav-toggle {
 /* ---------- Calendar popup ---------- */
 .hsf-calendar-popup {
   position: absolute;
-  top: calc(100% + 6px);
+  top: calc(100% + 10px);
   left: 0;
   background: #fff;
-<<<<<<< HEAD
   border-radius: 14px;
   box-shadow: 0 25px 50px -12px rgba(18, 41, 61, 0.32);
-  padding: 14px 16px;
-  z-index: 300;
-  width: min(580px, 92vw);
+  padding: 20px;
+  z-index: 70;
+  width: min(620px, 90vw);
   max-width: calc(100vw - 16px);
-  max-height: min(360px, 58vh);
-  overflow-y: auto;
   box-sizing: border-box;
   animation: hsfPopIn 0.18s ease both;
 }
@@ -6793,26 +6664,6 @@ body.mobile-nav-active #mobile-nav-toggle {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 24px;
-=======
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  box-shadow: 0 12px 40px rgba(15,23,42,0.14);
-  z-index: 60;
-  max-height: 320px;
-  overflow-y: auto;
-}
-.hsf-passenger-popup {
-  padding: 12px;
-  min-width: 260px;
-}
-.hsf-group-label {
-  font-size: 11px;
-  font-weight: 600;
-  color: #64748b;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  margin-bottom: 6px;
->>>>>>> 85742dc885136c06ce0c44592dcd139b822716f4
 }
 
 @media (max-width: 640px) {
@@ -6824,7 +6675,6 @@ body.mobile-nav-active #mobile-nav-toggle {
 .cal-month-head {
   display: flex;
   align-items: center;
-<<<<<<< HEAD
   justify-content: space-between;
   margin-bottom: 12px;
 }
@@ -6925,16 +6775,14 @@ body.mobile-nav-active #mobile-nav-toggle {
 /* ---------- Passenger selector ---------- */
 .hsf-passenger-popup {
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% + 10px);
   right: 0;
   background: #fff;
   border-radius: 14px;
   box-shadow: 0 25px 50px -12px rgba(18, 41, 61, 0.32);
-  padding: 14px 16px;
-  z-index: 300;
-  width: min(300px, 90vw);
-  max-height: min(300px, 50vh);
-  overflow-y: auto;
+  padding: 20px;
+  z-index: 70;
+  width: min(320px, 90vw);
   animation: hsfPopIn 0.18s ease both;
 }
 
@@ -7039,43 +6887,10 @@ body.mobile-nav-active #mobile-nav-toggle {
 
 .pax-apply-btn:hover {
   background: var(--tvl-coral-dark);
-=======
-  gap: 10px;
-  padding: 10px 14px;
-  cursor: pointer;
-  border: none;
-  background: transparent;
-  width: 100%;
-  text-align: left;
-  font-size: 14px;
-  color: #0f172a;
-}
-.hsf-suggestion-item:hover { background: #f1f5f9; }
-.hsf-suggestion-item i { color: #64748b; width: 16px; text-align: center; }
-
-.hsf-form-error {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 12px;
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  border-radius: 8px;
-  color: #b91c1c;
-  font-size: 13px;
-  margin-top: 8px;
-}
-
-.hsf-actions-row {
-  display: flex;
-  justify-content: center;
-  margin-top: 12px;
->>>>>>> 85742dc885136c06ce0c44592dcd139b822716f4
 }
 
 /* ---------- Submit button ---------- */
 .hero-search-submit {
-<<<<<<< HEAD
   width: 100%;
   box-sizing: border-box;
   min-height: 50px;
@@ -7104,36 +6919,19 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 .hero-search-submit .btn-loading {
-=======
->>>>>>> 85742dc885136c06ce0c44592dcd139b822716f4
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   gap: 8px;
-  height: 40px;
-  padding: 0 28px;
-  background: #f97316;
-  color: #fff;
-  font-size: 15px;
-  font-weight: 600;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background 0.15s, transform 0.1s;
-}
-.hero-search-submit:hover {
-  background: #ea580c;
 }
 
-<<<<<<< HEAD
-/* ---------- Toolbar (Google Flights): trip type ┬╖ passengers ┬╖ cabin at top ---------- */
+/* ---------- Toolbar (Google Flights): trip type · passengers · cabin at top ---------- */
 .hsf-toolbar {
   display: flex;
   justify-content: flex-start;
   flex-wrap: wrap;
   align-items: center;
   gap: 4px 12px;
-  margin-bottom: 10px;
+  margin-bottom: 16px;
 }
 
 .hsf-toolbar--top {
@@ -7152,7 +6950,7 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 /* ---------- Google-Flights-style dropdown (Trip type / Cabin / Compartment / Gender)
-   No pill/border ΓÇö just clean text + chevron, matching google.com/travel/flights ---------- */
+   No pill/border — just clean text + chevron, matching google.com/travel/flights ---------- */
 .hsf-select {
   position: relative;
 }
@@ -7349,11 +7147,11 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 /* ==========================================================================
-   >>> END: TRAVELISTA ΓÇö HOME HERO SEARCH BLOCK <<<
+   >>> END: TRAVELISTA — HOME HERO SEARCH BLOCK <<<
    ========================================================================== */
 
 /* ==========================================================================
-   >>> START: HERO SEARCH ΓÇö ROOMS MANAGER + FORM ERROR BOX <<<
+   >>> START: HERO SEARCH — ROOMS MANAGER + FORM ERROR BOX <<<
    Added for the Hotel/Villa "Guests & Rooms" redesign: a per-room
    Adults/Children breakdown (max 4 guests/room) and a shared inline
    validation message above the Search button. Uses the existing
@@ -7486,12 +7284,12 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 /* ==========================================================================
-   >>> END: HERO SEARCH ΓÇö ROOMS MANAGER + FORM ERROR BOX <<<
+   >>> END: HERO SEARCH — ROOMS MANAGER + FORM ERROR BOX <<<
    ========================================================================== */
 
 
 /* ==========================================================================
-   >>> START: HERO SEARCH ΓÇö BUGFIXES (row-2 layout, popup gap, button width) <<<
+   >>> START: HERO SEARCH — BUGFIXES (row-2 layout, popup gap, button width) <<<
    Fixes reported after first Hotel/Villa review:
    1) Check-in/Check-out were stacking instead of sitting side by side
       because .hsf-date-group had no layout rule at all.
@@ -7504,8 +7302,8 @@ body.mobile-nav-active #mobile-nav-toggle {
 
 /* ---------- Unified Google-Flights-style date box ----------
    One bordered container with Departure | Return side-by-side,
-   each side has its own ┬▒1-day nudge arrows. Calendar anchors under it.
-   Same height as From/To inputs ΓÇö not larger. */
+   each side has its own ±1-day nudge arrows. Calendar anchors under it.
+   Same height as From/To inputs — not larger. */
 .hsf-date-group {
   display: flex;
   gap: 0;
@@ -7586,7 +7384,7 @@ body.mobile-nav-active #mobile-nav-toggle {
   flex-shrink: 0;
 }
 
-/* ┬▒1 day nudge arrows (Google Flights style) */
+/* ±1 day nudge arrows (Google Flights style) */
 .hsf-date-nudge {
   flex-shrink: 0;
   width: 26px;
@@ -7620,8 +7418,9 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 .hsf-calendar-popup {
-  top: calc(100% + 6px) !important;
-  bottom: auto !important;
+  /* was inheriting position from a distant ancestor; now anchored
+     directly under .hsf-date-group with a tight, consistent gap */
+  top: calc(100% + 6px);
 }
 
 @media (max-width: 767px) {
@@ -7687,22 +7486,22 @@ body.mobile-nav-active #mobile-nav-toggle {
 
 @media (max-width: 767px) {
   /* On mobile the date fields already stack per the global responsive
-     rules below ΓÇö keep that, just don't fight it with flex here. */
+     rules below — keep that, just don't fight it with flex here. */
   .hsf-date-group {
     flex-direction: column;
   }
 }
 
 /* ==========================================================================
-   >>> END: HERO SEARCH ΓÇö BUGFIXES <<<
+   >>> END: HERO SEARCH — BUGFIXES <<<
    ========================================================================== */
 /* ==========================================================================
-   >>> START: TRAVELISTA ΓÇö POPULAR DESTINATIONS (Native Scroll-Snap Carousel) <
-   ╪¿╪»┘ê┘å ┘ê╪º╪¿╪│╪¬┌»█î ╪¿┘ç Owl Carousel ΓÇö █î┌⌐ ╪▒╪»█î┘ü╪î █î┌⌐ ╪¼┘ü╪¬ ┘ü┘ä╪┤ ╪│╪▒╪º╪│╪▒█î╪î ╪º╪│┌⌐╪▒┘ê┘äΓÇî╪¿╪º╪▒ ╪│┘ü╪º╪▒╪┤█î
+   >>> START: TRAVELISTA — POPULAR DESTINATIONS (Native Scroll-Snap Carousel) <
+   بدون وابستگی به Owl Carousel — یک ردیف، یک جفت فلش سراسری، اسکرول‌بار سفارشی
    ========================================================================== */
 
 .popular-destinations-area {
-  /* ┘╛╪º┘ä╪¬ ┘à╪¼╪▓╪º ┘ê ╪¬█î╪▒┘ç╪î ╪»┘é█î┘é╪º┘ï ┘ç┘àΓÇî╪▒╪º╪│╪¬╪º ╪¿╪º ╪╣┌⌐╪│ ╪▒┘ü╪▒┘å╪│ */
+  /* پالت مجزا و تیره، دقیقاً هم‌راستا با عکس رفرنس */
   --pd-bg: rgba(245, 166, 35, 0.1);
   --pd-card-bg: #ffffff;
   --pd-accent: #f5a623;
@@ -7724,7 +7523,7 @@ body.mobile-nav-active #mobile-nav-toggle {
   color: var(--pd-text-soft);
 }
 
-/* ---------- ╪¬╪¿ ╪»╪º╪«┘ä█î/╪«╪º╪▒╪¼█î (┘ü┘é╪╖ ╪╡┘ü╪¡┘çΓÇî█î ┘ç╪¬┘ä╪î ┘ê┘é╪¬█î ┘à┘é╪╡╪»┘ç╪º ╪¬┘ü┌⌐█î┌⌐ ╪┤╪»┘ç ╪¿╪º╪┤┘å╪») ---------- */
+/* ---------- تب داخلی/خارجی (فقط صفحه‌ی هتل، وقتی مقصدها تفکیک شده باشند) ---------- */
 .pd-tabs {
   display: flex;
   justify-content: center;
@@ -7774,7 +7573,7 @@ body.mobile-nav-active #mobile-nav-toggle {
   .pd-tab { transition: none; }
 }
 
-/* ---------- ┌⌐╪º╪»╪▒ ╪¿█î╪▒┘ê┘å█î: ┘ü┘ä╪┤ΓÇî┘ç╪º + ╪▒╪»█î┘ü ┌⌐╪º╪▒╪¬ΓÇî┘ç╪º ---------- */
+/* ---------- کادر بیرونی: فلش‌ها + ردیف کارت‌ها ---------- */
 .pd-carousel-wrap {
   max-width: 1040px;
   margin: 0 auto;
@@ -7783,7 +7582,7 @@ body.mobile-nav-active #mobile-nav-toggle {
   gap: 12px;
 }
 
-/* ---------- ╪▒╪»█î┘ü ┌⌐╪º╪▒╪¬ΓÇî┘ç╪º (Scroll-Snap) ---------- */
+/* ---------- ردیف کارت‌ها (Scroll-Snap) ---------- */
 .pd-track {
   flex: 1;
   display: flex;
@@ -7792,7 +7591,7 @@ body.mobile-nav-active #mobile-nav-toggle {
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
   padding: 10px 4px 4px;
-  /* ╪º╪│┌⌐╪▒┘ê┘äΓÇî╪¿╪º╪▒ ┘╛█î╪┤ΓÇî┘ü╪▒╪╢ ┘à╪▒┘ê╪▒┌»╪▒ ┘à╪«┘ü█î ┘à█îΓÇî╪┤┘ê╪»╪î ┌å┘ê┘å ╪º╪│┌⌐╪▒┘ê┘äΓÇî╪¿╪º╪▒ ╪│┘ü╪º╪▒╪┤█î ╪«┘ê╪»┘à╪º┘å ╪▒╪º ╪▓█î╪▒ ╪ó┘å ┘à█îΓÇî╪│╪º╪▓█î┘à */
+  /* اسکرول‌بار پیش‌فرض مرورگر مخفی می‌شود، چون اسکرول‌بار سفارشی خودمان را زیر آن می‌سازیم */
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -7807,7 +7606,7 @@ body.mobile-nav-active #mobile-nav-toggle {
   border-radius: 12px;
 }
 
-/* ---------- ┌⌐╪º╪▒╪¬ ┘à┘é╪╡╪» ---------- */
+/* ---------- کارت مقصد ---------- */
 .pd-card {
   position: relative;
   flex: 0 0 auto;
@@ -7860,7 +7659,7 @@ body.mobile-nav-active #mobile-nav-toggle {
   transform: scale(1.08);
 }
 
-/* ---- ┌⌐┘å╪¬╪▒╪º╪│╪¬ ┘à╪¬┘å ╪▒┘ê█î ╪¬╪╡╪º┘ê█î╪▒ ╪▒┘ê╪┤┘å ---- */
+/* ---- کنتراست متن روی تصاویر روشن ---- */
 .pd-card-overlay {
   position: absolute;
   inset: 0;
@@ -7917,7 +7716,7 @@ body.mobile-nav-active #mobile-nav-toggle {
   margin-top: 2px;
 }
 
-/* ---------- ┘ü┘ä╪┤ΓÇî┘ç╪º█î ╪│╪▒╪º╪│╪▒█î (╪¬┘å┘ç╪º █î┌⌐ ╪¼┘ü╪¬╪î ╪¿█î╪▒┘ê┘å ┌⌐╪º╪▒╪¬ΓÇî┘ç╪º) ---------- */
+/* ---------- فلش‌های سراسری (تنها یک جفت، بیرون کارت‌ها) ---------- */
 .pd-nav {
   flex-shrink: 0;
   width: 44px;
@@ -7950,11 +7749,11 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 @media (max-width: 575px) {
-  .pd-nav { display: none; } /* ╪▒┘ê█î ┘à┘ê╪¿╪º█î┘ä ╪«█î┘ä█î ┌⌐┘ê┌å┌⌐╪î swipe ╪¼╪º█î ┘ü┘ä╪┤ ╪▒╪º ┘à█îΓÇî┌»█î╪▒╪» */
+  .pd-nav { display: none; } /* روی موبایل خیلی کوچک، swipe جای فلش را می‌گیرد */
   .pd-carousel-wrap { gap: 0; }
 }
 
-/* ---------- ╪º╪│┌⌐╪▒┘ê┘äΓÇî╪¿╪º╪▒ ╪│┘ü╪º╪▒╪┤█î ╪▓█î╪¿╪º ---------- */
+/* ---------- اسکرول‌بار سفارشی زیبا ---------- */
 .pd-scrollbar {
   max-width: 1040px;
   margin: 22px auto 0;
@@ -7985,13 +7784,13 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 /* ==========================================================================
-   >>> END: TRAVELISTA ΓÇö POPULAR DESTINATIONS <
+   >>> END: TRAVELISTA — POPULAR DESTINATIONS <
    ========================================================================== */
 
 
     .tvl-toast-container {
         position: fixed;
-        top: 90px; /* ┘╛╪º█î█î┘åΓÇî╪¬╪▒ ╪º╪▓ header ╪┤┘à╪º */
+        top: 90px; /* پایین‌تر از header شما */
         right: 20px;
         z-index: 9999;
         display: flex;
@@ -8043,16 +7842,16 @@ body.mobile-nav-active #mobile-nav-toggle {
         to   { opacity: 0; transform: translateX(20px); }
     }
 /* ==========================================================================
-   >>> START: TRAVELISTA ΓÇö INLINE FAQ (╪╡┘ü╪¡┘çΓÇî█î ┘╛╪▒┘ê╪º╪▓┘ç╪º█î ╪»╪º╪«┘ä█î) <<<
-   ╪º█î┘å ╪¿┘ä┘ê┌⌐ ╪▒╪º ╪¿┘ç ╪º┘å╪¬┘ç╪º█î main.css ╪º╪╢╪º┘ü┘ç ┌⌐┘å.
-   ┘ê╪º╪¿╪│╪¬┘ç ╪¿┘ç ┘à╪¬╪║█î╪▒┘ç╪º█î --pd-* ┌⌐┘ç ╪»╪º╪«┘ä .popular-destinations-area ╪¬╪╣╪▒█î┘ü
-   ╪┤╪»┘çΓÇî╪º┘å╪» (╪╖╪¿┘é ╪»╪▒╪«┘ê╪º╪│╪¬: ┘ç┘à╪º┘ç┘å┌» ╪¿╪º ╪¬┘à Popular Destinations).
-   ┌⌐╪º┘à┘ä╪º┘ï RTL ΓÇö ╪¿╪»┘ê┘å ┘ç█î┌å hack ╪»╪│╪¬█î ╪▒┘ê█î direction ╪¬┌⌐ΓÇî╪¬┌⌐ ╪╣┘å╪º╪╡╪▒.
+   >>> START: TRAVELISTA — INLINE FAQ (صفحه‌ی پروازهای داخلی) <<<
+   این بلوک را به انتهای main.css اضافه کن.
+   وابسته به متغیرهای --pd-* که داخل .popular-destinations-area تعریف
+   شده‌اند (طبق درخواست: هماهنگ با تم Popular Destinations).
+   کاملاً RTL — بدون هیچ hack دستی روی direction تک‌تک عناصر.
    ========================================================================== */
 
 .faq-inline-area {
-  /* fallback ┘à┘é╪º╪»█î╪▒ ╪¿╪▒╪º█î ╪▓┘à╪º┘å█î ┌⌐┘ç ╪¿┘ç ┘ç╪▒ ╪»┘ä█î┘ä ╪º█î┘å ╪¿╪«╪┤ ╪«╪º╪▒╪¼ ╪º╪▓
-     .popular-destinations-area ╪▒┘å╪»╪▒ ╪┤┘ê╪» ┘ê ┘à╪¬╪║█î╪▒┘ç╪º█î pd-* ╪»╪▒ ╪»╪│╪¬╪▒╪│ ┘å╪¿╪º╪┤┘å╪» */
+  /* fallback مقادیر برای زمانی که به هر دلیل این بخش خارج از
+     .popular-destinations-area رندر شود و متغیرهای pd-* در دسترس نباشند */
   --fq-bg: rgba(245, 166, 35, 0.1);
   --fq-card-bg: #ffffff;
   --fq-accent: #f5a623;
@@ -8117,7 +7916,7 @@ body.mobile-nav-active #mobile-nav-toggle {
   font-size: var(--text-size);
   font-weight: 500;
   color: var(--fq-text);
-  line-height: 1.65; /* ╪¿╪▒╪º█î ╪│┘ê╪º┘äΓÇî┘ç╪º█î ╪»┘ê╪«╪╖█î/┌å┘å╪»╪«╪╖█î */
+  line-height: 1.65; /* برای سوال‌های دوخطی/چندخطی */
 }
 
 .faqi-icon {
@@ -8131,8 +7930,8 @@ body.mobile-nav-active #mobile-nav-toggle {
   align-items: center;
   justify-content: center;
   font-size: var(--text-size-tiny);
-  /* ╪»╪▒ RTL ╪¼┘ç╪¬ ┌å╪▒╪«╪┤ ╪¿╪º LTR ┘ü╪▒┘é█î ┘å┘à█îΓÇî┌⌐┘å╪» ┌å┘ê┘å ┘ü┘ä╪┤ ╪▒┘ê ╪¿┘ç ┘╛╪º█î█î┘å/╪¿╪º┘ä╪º ┘à█îΓÇî┌å╪▒╪«╪»╪¢
-     ┘å█î╪º╪▓█î ╪¿┘ç mirror ┌⌐╪▒╪»┘å ╪º█î┘å ╪ó█î┌⌐┘ê┘å ┘å█î╪│╪¬. */
+  /* در RTL جهت چرخش با LTR فرقی نمی‌کند چون فلش رو به پایین/بالا می‌چرخد؛
+     نیازی به mirror کردن این آیکون نیست. */
   transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
 }
 
@@ -8145,8 +7944,8 @@ body.mobile-nav-active #mobile-nav-toggle {
 .faqi-answer {
   max-height: 0;
   overflow: hidden;
-  /* ╪º╪▒╪¬┘ü╪º╪╣ ┘ê╪º┘é╪╣█î ╪¬┘ê╪│╪╖ JS (╪¿╪▒ ╪º╪│╪º╪│ scrollHeight) ╪│╪¬ ┘à█îΓÇî╪┤┘ê╪» ╪¬╪º Animation
-     ╪¿╪▒╪º█î ┘╛╪º╪│╪«ΓÇî┘ç╪º█î ┌⌐┘ê╪¬╪º┘ç ┘ê ╪¿┘ä┘å╪» ┘ç╪▒ ╪»┘ê ╪»╪▒╪│╪¬ ┌⌐╪º╪▒ ┌⌐┘å╪». */
+  /* ارتفاع واقعی توسط JS (بر اساس scrollHeight) ست می‌شود تا Animation
+     برای پاسخ‌های کوتاه و بلند هر دو درست کار کند. */
   transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -8159,7 +7958,7 @@ body.mobile-nav-active #mobile-nav-toggle {
 
 .faqi-answer-inner p { margin: 0; }
 
-/* ---------- Feedback buttons (≡ƒæì / ≡ƒæÄ) ---------- */
+/* ---------- Feedback buttons (👍 / 👎) ---------- */
 .faqi-feedback {
   margin-top: 16px;
   padding-top: 14px;
@@ -8182,7 +7981,7 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 .faqi-fb-btn {
-  /* ╪¡╪»╪º┘é┘ä █┤█░px ╪╖╪¿┘é ┌å┌⌐ΓÇî┘ä█î╪│╪¬ ╪«┘ê╪»╪¬ ╪¿╪▒╪º█î Target ┘é╪º╪¿┘ä ┘ä┘à╪│ ┘à┘å╪º╪│╪¿ ┘à┘ê╪¿╪º█î┘ä */
+  /* حداقل ۴۰px طبق چک‌لیست خودت برای Target قابل لمس مناسب موبایل */
   min-width: 40px;
   min-height: 40px;
   border-radius: 50%;
@@ -8220,17 +8019,17 @@ body.mobile-nav-active #mobile-nav-toggle {
   .faqi-question { padding: 15px 14px; gap: 10px; }
   .faqi-answer-inner { padding: 0 14px 16px; }
 
-  /* FIX: ╪»╪▒ ╪»╪│┌⌐╪¬╪º┘╛ ┌å█î╪▓█î ╪¬╪║█î█î╪▒ ┘å┌⌐╪▒╪»┘ç. ╪»╪▒ ┘à┘ê╪¿╪º█î┘ä╪î .faqi-wrap ╪¿┘çΓÇî╪╡┘ê╪▒╪¬ ┘ê╪º┘é╪╣█î
-     RTL ┘à█îΓÇî╪┤┘ê╪» (┘å┘ç ┘ü┘é╪╖ text-align) ╪¬╪º ┘ç┘à ┘à╪¬┘å ╪│┘ê╪º┘ä ┘ê ┘ç┘à ╪«┘ê╪» ┌⌐╪º╪▒╪¬ ╪º╪▓ ╪│┘à╪¬
-     ╪▒╪º╪│╪¬ ╪╡┘ü╪¡┘ç ╪┤╪▒┘ê╪╣ ╪┤┘ê┘å╪» ┘ê ╪ó█î┌⌐┘ê┘å ┘ü┘ä╪┤ ┘ç┘à ╪»╪▒ ╪º┘å╪¬┘ç╪º█î ╪╡╪¡█î╪¡ (╪│┘à╪¬ ┌å┘╛) ╪¿┘å╪┤█î┘å╪» ΓÇö
-     ╪»┘é█î┘é╪º┘ï ┘à╪╖╪º╪¿┘é ╪│╪º╪«╪¬╪º╪▒ RTL╪î ╪¿╪»┘ê┘å position/margin/transform ╪»╪│╪¬█î. */
+  /* FIX: در دسکتاپ چیزی تغییر نکرده. در موبایل، .faqi-wrap به‌صورت واقعی
+     RTL می‌شود (نه فقط text-align) تا هم متن سوال و هم خود کارت از سمت
+     راست صفحه شروع شوند و آیکون فلش هم در انتهای صحیح (سمت چپ) بنشیند —
+     دقیقاً مطابق ساختار RTL، بدون position/margin/transform دستی. */
   .faqi-wrap {
     direction: rtl;
   }
 }
 
 @media (max-width: 360px) {
-  /* ┘à┘ê╪¿╪º█î┘ä ╪¿╪│█î╪º╪▒ ╪¿╪º╪▒█î┌⌐: ┘ü╪┤╪▒╪»┘çΓÇî╪¬╪▒ ┘ê┘ä█î ╪¿╪»┘ê┘å ╪┤┌⌐╪│╪¬┘å layout */
+  /* موبایل بسیار باریک: فشرده‌تر ولی بدون شکستن layout */
   .faqi-question { padding: 13px 10px; }
   .faqi-question-text { font-size: var(--text-size-small); }
   .faqi-icon { width: 26px; height: 26px; font-size: var(--text-size-micro); }
@@ -8245,10 +8044,10 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 /* ==========================================================================
-   >>> END: TRAVELISTA ΓÇö INLINE FAQ <<<
+   >>> END: TRAVELISTA — INLINE FAQ <<<
    ========================================================================== */
 /* ==========================================================================
-   >>> START: HOTEL TRANSILVANIA ΓÇö AUTH PAGES (Login / Signup)
+   >>> START: HOTEL TRANSILVANIA — AUTH PAGES (Login / Signup)
    ========================================================================== */
 
 .auth-page {
@@ -8261,7 +8060,7 @@ body.mobile-nav-active #mobile-nav-toggle {
   font-family: var(--font-primary);
 }
 
-/* ---------- ╪╖╪▒╪¡ ┌»╪▒╪º┘ü█î┌⌐█î █▒: ╪¡╪¿╪º╪¿ΓÇî┘ç╪º█î ┘å┘ê╪▒█î ┘à╪¬╪¡╪▒┌⌐ ┘╛╪┤╪¬ ╪▓┘à█î┘å┘ç ---------- */
+/* ---------- طرح گرافیکی ۱: حباب‌های نوری متحرک پشت زمینه ---------- */
 .auth-page::before,
 .auth-page::after {
   content: "";
@@ -8318,7 +8117,7 @@ body.mobile-nav-active #mobile-nav-toggle {
   z-index: 1;
 }
 
-/* ---------- ╪╖╪▒╪¡ ┌»╪▒╪º┘ü█î┌⌐█î █▓: ┘å╪┤╪º┘å (badge) ╪¿╪▒┘å╪» ╪¿╪º┘ä╪º█î ┌⌐╪º╪▒╪¬ ---------- */
+/* ---------- طرح گرافیکی ۲: نشان (badge) برند بالای کارت ---------- */
 .auth-brand {
   width: 46px;
   height: 46px;
@@ -8340,9 +8139,9 @@ body.mobile-nav-active #mobile-nav-toggle {
 .auth-card {
   width: 100%;
   max-width: 430px;
-  /* ╪¡╪»╪º┌⌐╪½╪▒ ╪º╪▒╪¬┘ü╪º╪╣ ┘à╪¼╪º╪▓ ┌⌐╪º╪▒╪¬ = ╪º╪▒╪¬┘ü╪º╪╣ ╪╡┘ü╪¡┘ç ┘à┘å┘ç╪º█î ┌⌐┘à█î ╪¡╪º╪┤█î┘ç╪¢ ╪º┌»╪▒ ┘à╪¡╪¬┘ê╪º
-     ╪¿╪º╪▓┘ç┘à ╪¿█î╪┤╪¬╪▒ ╪¿┘ê╪» (┘à╪½┘ä╪º┘ï ╪▒┘ê█î ┘à┘ê╪¿╪º█î┘ä ╪«█î┘ä█î ┌⌐┘ê╪¬╪º┘ç)╪î ┘ü┘é╪╖ ╪«┘ê╪»┘É ┌⌐╪º╪▒╪¬
-     ╪º╪│┌⌐╪▒┘ê┘ä ╪»╪º╪«┘ä█î ┘à█îΓÇî┌»█î╪▒╪»╪î ┘å┘ç ┌⌐┘ä ╪╡┘ü╪¡┘ç╪î ╪¬╪º ╪¿╪▒┘å╪»/╪╣┘å┘ê╪º┘å ┘ç┘à█î╪┤┘ç ╪½╪º╪¿╪¬ ╪¿┘à╪º┘å┘å╪». */
+  /* حداکثر ارتفاع مجاز کارت = ارتفاع صفحه منهای کمی حاشیه؛ اگر محتوا
+     بازهم بیشتر بود (مثلاً روی موبایل خیلی کوتاه)، فقط خودِ کارت
+     اسکرول داخلی می‌گیرد، نه کل صفحه، تا برند/عنوان همیشه ثابت بمانند. */
   max-height: calc(100vh - 24px);
   overflow-y: auto;
   background: #ffffff;
@@ -8373,7 +8172,7 @@ body.mobile-nav-active #mobile-nav-toggle {
   font-size: var(--text-size-tiny);
 }
 
-/* ---------- ┘ü╪▒┘à ╪¼┘å┌»┘ê (form.as_p) ---------- */
+/* ---------- فرم جنگو (form.as_p) ---------- */
 .django-form p,
 .auth-card form p {
   margin-bottom: 10px;
@@ -8480,7 +8279,7 @@ body.mobile-nav-active #mobile-nav-toggle {
   text-decoration: underline;
 }
 
-/* ---------- ┌å┌⌐ΓÇî┘ä█î╪│╪¬ ╪▒┘å┌»█î ╪┤╪▒╪º█î╪╖ ┘╛╪│┘ê╪▒╪» (╪│╪¿╪▓/┘é╪▒┘à╪▓) ---------- */
+/* ---------- چک‌لیست رنگی شرایط پسورد (سبز/قرمز) ---------- */
 .password-rules {
   list-style: none;
   margin: -4px 0 10px 0;
@@ -8519,10 +8318,10 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 .rule-icon::after {
-  content: "\2715"; /* ├ù */
+  content: "\2715"; /* × */
 }
 
-/* ╪┤╪▒╪╖ ╪▒╪╣╪º█î╪¬ ┘å╪┤╪»┘ç = ┘é╪▒┘à╪▓ */
+/* شرط رعایت نشده = قرمز */
 .rule-item.rule-invalid {
   color: #dc2626;
 }
@@ -8531,7 +8330,7 @@ body.mobile-nav-active #mobile-nav-toggle {
   background: #dc2626;
 }
 
-/* ╪┤╪▒╪╖ ╪▒╪╣╪º█î╪¬ ╪┤╪»┘ç = ╪│╪¿╪▓ */
+/* شرط رعایت شده = سبز */
 .rule-item.rule-valid {
   color: #16a34a;
 }
@@ -8542,7 +8341,7 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 .rule-item.rule-valid .rule-icon::after {
-  content: "\2713"; /* Γ£ô */
+  content: "\2713"; /* ✓ */
 }
 
 @media (max-width: 480px) {
@@ -8555,8 +8354,8 @@ body.mobile-nav-active #mobile-nav-toggle {
   }
 }
 
-/* ╪▒┘ê█î ┘å┘à╪º█î╪┤┌»╪▒┘ç╪º█î ╪«█î┘ä█î ┌⌐┘ê╪¬╪º┘ç (┘à╪½┘ä╪º┘ï ┘ä┘╛ΓÇî╪¬╪º┘╛ ╪¿╪º ┘å┘ê╪º╪▒ ┘à╪▒┘ê╪▒┌»╪▒/╪¿┘ê┌⌐┘à╪º╪▒┌⌐ ╪▓█î╪º╪»)
-   ┌⌐╪º╪▒╪¬ ┌⌐┘à█î ╪¼┘à╪╣ΓÇî┘ê╪¼┘ê╪▒╪¬╪▒ ┘à█îΓÇî╪┤┘ê╪» ╪¬╪º ┘ç┘à┌å┘å╪º┘å ╪¿╪»┘ê┘å ╪º╪│┌⌐╪▒┘ê┘ä ┌⌐╪º┘à┘ä ╪»█î╪»┘ç ╪┤┘ê╪» */
+/* روی نمایشگرهای خیلی کوتاه (مثلاً لپ‌تاپ با نوار مرورگر/بوکمارک زیاد)
+   کارت کمی جمع‌وجورتر می‌شود تا همچنان بدون اسکرول کامل دیده شود */
 @media (max-height: 700px) {
   .auth-container { padding: 10px 15px; }
   .auth-brand { width: 38px; height: 38px; margin-bottom: 6px; }
@@ -8570,19 +8369,19 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 /* ==========================================================================
-   >>> END: HOTEL TRANSILVANIA ΓÇö AUTH PAGES
+   >>> END: HOTEL TRANSILVANIA — AUTH PAGES
    ========================================================================== */
 /* ==========================================================================
-   >>> START: LAYOUT PASS ΓÇö NAVBAR / AUTH / SEARCH BAR / RESPONSIVE GRID <<<
-   ╪º█î┘å ╪¿┘ä┘ê┌⌐ ╪ó╪«╪▒█î┘å ╪¿┘ä┘ê┌⌐ ┘ü╪º█î┘ä ╪º╪│╪¬╪î ┘╛╪│ ╪¿╪»┘ê┘å ╪¿╪º┘ä╪º ╪¿╪▒╪»┘å specificity (┘ü┘é╪╖ ╪¿╪º
-   ╪¬╪▒╪¬█î╪¿ cascade) ╪▒┘ê█î ┘é┘ê╪º┘å█î┘å ┘é╪¿┘ä█î ┘à█îΓÇî┘å╪┤█î┘å╪» ┘ê ┘ç█î┌å !important ┘ä╪º╪▓┘à ┘å╪»╪º╪▒╪».
+   >>> START: LAYOUT PASS — NAVBAR / AUTH / SEARCH BAR / RESPONSIVE GRID <<<
+   این بلوک آخرین بلوک فایل است، پس بدون بالا بردن specificity (فقط با
+   ترتیب cascade) روی قوانین قبلی می‌نشیند و هیچ !important لازم ندارد.
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   █▒) Navbar ΓÇö ╪│╪º╪«╪¬╪º╪▒ Grid ╪│┘çΓÇî╪│╪¬┘ê┘å┘ç: [logo | nav | account]
-   ┘é╪¿┘ä╪º┘ï ╪▒┘ê█î Flex + float ╪¿┘ê╪»╪¢ float ╪¿╪º╪╣╪½ ┘à█îΓÇî╪┤╪» ╪»╪▒ ╪╣╪▒╪╢ΓÇî┘ç╪º█î ┘à█î╪º┘å█î ╪ó█î╪¬┘àΓÇî┘ç╪º
-   ╪¼╪º╪¿┘çΓÇî╪¼╪º/╪▒┘ê█îΓÇî┘ç┘à ╪¿█î┘ü╪¬┘å╪» ┘ê ╪¬╪▒╪¬█î╪¿ DOM ╪¿╪º ╪¬╪▒╪¬█î╪¿ ╪»█î╪»┘çΓÇî╪┤╪»┘ç █î┌⌐█î ┘å╪¿╪º╪┤╪».
-   ╪¬╪▒╪¬█î╪¿ DOM ╪»╪│╪¬ΓÇî┘å╪«┘ê╪▒╪»┘ç ┘à╪º┘å╪»┘ç╪¢ ┘ü┘é╪╖ ┌å█î╪»┘à╪º┘å ╪╣┘ê╪╢ ╪┤╪»┘ç ╪º╪│╪¬.
+   ۱) Navbar — ساختار Grid سه‌ستونه: [logo | nav | account]
+   قبلاً روی Flex + float بود؛ float باعث می‌شد در عرض‌های میانی آیتم‌ها
+   جابه‌جا/روی‌هم بیفتند و ترتیب DOM با ترتیب دیده‌شده یکی نباشد.
+   ترتیب DOM دست‌نخورده مانده؛ فقط چیدمان عوض شده است.
    -------------------------------------------------------------------------- */
 @media (min-width: 992px) {
   .main-menu .main-menu-grid {
@@ -8600,17 +8399,17 @@ body.mobile-nav-active #mobile-nav-toggle {
   .main-menu-grid > .header-account-actions { grid-area: account; padding-right: 0; margin-left: 0; }
 }
 
-/* ┘à┘å┘ê█î ╪º╪╡┘ä█î: ╪¿┘çΓÇî╪¼╪º█î float ╪º╪▓ flex ╪¿╪º gap ╪▒█î╪│┘╛╪º┘å╪│█î┘ê ΓÇö ╪ó█î╪¬┘àΓÇî┘ç╪º ╪»█î┌»╪▒ ╪▒┘ê█î ┘ç┘à ┘å┘à█îΓÇî╪º┘ü╪¬┘å╪» */
+/* منوی اصلی: به‌جای float از flex با gap ریسپانسیو — آیتم‌ها دیگر روی هم نمی‌افتند */
 .main-menu-grid .nav-menu {
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
-  /* ┘ü╪º╪╡┘ä┘çΓÇî█î ╪¿█î┘å ╪ó█î┌⌐┘åΓÇî┘ç╪º█î ┘å┘ê╪¿╪º╪▒ (┘é╪¿┘ä╪º┘ï clamp(2px, 0.6vw, 10px) ╪¿┘ê╪»).
-     ┘ü┘é╪╖ ╪▒┘ê█î .nav-menu ╪º╪╣┘à╪º┘ä ┘à█îΓÇî╪┤┘ê╪»╪¢ Search Bar (.hero-search-* / .hsf-*) ╪º╪╡┘ä╪º┘ï ╪»╪▒┌»█î╪▒ ┘å█î╪│╪¬. */
+  /* فاصله‌ی بین آیکن‌های نوبار (قبلاً clamp(2px, 0.6vw, 10px) بود).
+     فقط روی .nav-menu اعمال می‌شود؛ Search Bar (.hero-search-* / .hsf-*) اصلاً درگیر نیست. */
   gap: 20px;
 }
 
-/* ╪╣╪▒╪╢ΓÇî┘ç╪º█î ╪¿╪▓╪▒┌»: ┘ü╪º╪╡┘ä┘çΓÇî█î ╪¿█î╪┤╪¬╪▒ */
+/* عرض‌های بزرگ: فاصله‌ی بیشتر */
 @media (min-width: 1600px) {
   .main-menu-grid .nav-menu { gap: 24px; }
 }
@@ -8629,7 +8428,7 @@ body.mobile-nav-active #mobile-nav-toggle {
   white-space: nowrap;
 }
 
-/* ╪▓█î╪▒┘à┘å┘ê┘ç╪º ┘ç┘à┌å┘å╪º┘å absolute ┘ç╪│╪¬┘å╪»╪î ┘╛╪│ ┘å╪¿╪º█î╪» ╪»╪▒ ╪¼╪▒█î╪º┘å grid ╪¿█î┘ü╪¬┘å╪» */
+/* زیرمنوها همچنان absolute هستند، پس نباید در جریان grid بیفتند */
 .main-menu-grid .nav-menu ul {
   display: none;
   flex-wrap: nowrap;
@@ -8639,114 +8438,43 @@ body.mobile-nav-active #mobile-nav-toggle {
   display: block;
 }
 
-/* ╪▓█î╪▒┘à┘å┘ê█î ╪│┘à╪¬ ╪▒╪º╪│╪¬ΓÇî╪¬╪▒█î┘å ╪ó█î╪¬┘à (╪¡╪│╪º╪¿ ┌⌐╪º╪▒╪¿╪▒█î) ╪º╪▓ ┘ä╪¿┘ç ╪╡┘ü╪¡┘ç ╪¿█î╪▒┘ê┘å ┘å╪▓┘å╪» */
+/* زیرمنوی سمت راست‌ترین آیتم (حساب کاربری) از لبه صفحه بیرون نزند */
 .main-menu-grid .header-account-actions .nav-menu ul {
   right: 0;
   left: auto;
 }
 
-/* Tablet: ┘à┘å┘ê ┘ü╪┤╪▒╪»┘çΓÇî╪¬╪▒╪î ╪¿╪»┘ê┘å overflow ╪º┘ü┘é█î */
+/* Tablet: منو فشرده‌تر، بدون overflow افقی */
 @media (min-width: 992px) and (max-width: 1199px) {
-  .main-menu-grid .nav-menu { gap: 16px; } /* ╪¬╪¿┘ä╪¬ */
+  .main-menu-grid .nav-menu { gap: 16px; } /* تبلت */
   .main-menu-grid .nav-menu > li > a { font-size: var(--text-size-tiny); }
   .main-menu-grid .nav-menu > li > a i { font-size: var(--text-size-tiny); }
 }
 
-/* Mobile/Tablet: ┘à╪½┘ä ┘ç╪»╪▒ booking ΓÇö ┘ä┘ê┌»┘ê ┌å┘╛╪î ╪º┌⌐╪º┘å╪¬ ╪▒╪º╪│╪¬╪î ┘ç┘à╪¿╪▒┌»╪▒ ╪¼╪»╪º */
+/* Mobile/Tablet: منوی اصلی به mobile-nav منتقل می‌شود (رفتار فعلی حفظ شد) */
 @media (max-width: 991px) {
-  .main-menu .main-menu-grid,
-  .main-menu .row.main-menu-grid {
-    display: flex !important;
-    flex-wrap: nowrap !important;
-    align-items: center !important;
-    justify-content: flex-start !important; /* ┘å┘ç space-between */
-    gap: 12px;
+  .main-menu .main-menu-grid {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
   }
-
-  .main-menu-grid > #logo {
-    flex: 0 0 auto;
-    padding-left: 0;
-  }
-
-  .main-menu-grid > #nav-menu-container {
-    display: none !important;
-  }
-
-  .main-menu-grid > .header-account-actions {
-    flex: 0 0 auto;
-    margin-left: auto !important;
-    margin-right: 40px; /* ╪¼╪º ╪¿╪▒╪º█î ┘ç┘à╪¿╪▒┌»╪▒ ΓÇö ┘ç┘à╪º┘ç┘å┌» ╪¿╪º booking */
-    padding-right: 0;
-    padding-left: 8px;
-    min-width: 0;
-  }
-
+  .main-menu-grid > #logo { flex: 0 0 auto; }
+  .main-menu-grid > .header-account-actions { flex: 0 1 auto; min-width: 0; }
   .main-menu-grid .header-account-actions .nav-menu > li > a {
-    max-width: 36vw;
+    max-width: 38vw;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    text-transform: uppercase;
-    font-weight: 500;
-    letter-spacing: normal;
-    font-size: 0.8125rem;
-    padding: 0;
   }
-
-  .container.main-menu {
-    position: relative;
-    padding-left: 16px !important;
-    padding-right: 16px !important;
-  }
-
-  #mobile-nav-toggle {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    margin-top: 0;
-    float: none;
-    z-index: 5;
-    width: 36px;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-}
-
-/* █î┌⌐╪│╪º┘åΓÇî╪│╪º╪▓█î ╪º┘å╪»╪º╪▓┘ç ┘ä┘ê┌»┘ê ┘ê padding ╪¿╪º ┘ç╪»╪▒ booking */
-.main-menu {
-  padding-top: 12px !important;
-  padding-bottom: 12px !important;
-}
-
-#header.header-scrolled .main-menu {
-  padding-top: 8px !important;
-  padding-bottom: 8px !important;
-}
-
-#logo img {
-  max-height: 36px !important;
-}
-
-#header.header-scrolled #logo img {
-  max-height: 30px !important;
-}
-
-/* ┘å╪º┘à ┌⌐╪º╪▒╪¿╪▒ ╪»╪▒ ┘ç╪»╪▒ ╪º╪╡┘ä█î ΓÇö ┘à╪½┘ä booking */
-.header-account-actions .nav-menu > li > a {
-  text-transform: uppercase;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  font-size: 0.875rem;
 }
 
 /* --------------------------------------------------------------------------
-   █▓) Search Bar ΓÇö ┘ü█î┘ä╪» ╪¬╪º╪▒█î╪« ╪»█î┌»╪▒ ┘à╪¬┘å ╪▒╪º ╪¿█î╪▒┘ê┘å ┘å┘à█îΓÇî╪º┘å╪»╪º╪▓╪»
-   ╪╣┘ä╪¬ ╪º╪╡┘ä█î ╪¿█î╪▒┘ê┘åΓÇî╪▓╪»┌»█î: ╪»┌⌐┘à┘çΓÇî█î ╪¬╪º╪▒█î╪« min-width ┘╛█î╪┤ΓÇî┘ü╪▒╪╢ auto ╪»╪º╪┤╪¬ ┘ê ╪»╪º╪«┘ä
-   █î┌⌐ grid item ┘ü╪┤╪▒╪»┘ç ┌⌐┘ê┌å┌⌐ΓÇî╪¬╪▒ ╪º╪▓ ┘à╪¡╪¬┘ê╪º█î╪┤ ┘å┘à█îΓÇî╪┤╪». min-width:0 ╪ó┘å ╪▒╪º ╪¡┘ä ┘à█îΓÇî┌⌐┘å╪»
-   ┘ê ellipsis ╪¿┘çΓÇî╪╣┘å┘ê╪º┘å ╪¬┘ê╪▒ ╪º█î┘à┘å█î ╪╣┘à┘ä ┘à█îΓÇî┌⌐┘å╪» (┘å┘ç ╪¿┘çΓÇî╪¼╪º█î ╪º╪╡┘ä┘É ╪▒╪º┘çΓÇî╪¡┘ä).
+   ۲) Search Bar — فیلد تاریخ دیگر متن را بیرون نمی‌اندازد
+   علت اصلی بیرون‌زدگی: دکمه‌ی تاریخ min-width پیش‌فرض auto داشت و داخل
+   یک grid item فشرده کوچک‌تر از محتوایش نمی‌شد. min-width:0 آن را حل می‌کند
+   و ellipsis به‌عنوان تور ایمنی عمل می‌کند (نه به‌جای اصلِ راه‌حل).
    -------------------------------------------------------------------------- */
 .hsf-date-group,
 .hsf-date-box,
@@ -8774,15 +8502,15 @@ body.mobile-nav-active #mobile-nav-toggle {
   flex: 0 0 auto;
 }
 
-/* ╪ó█î┌⌐┘å ┘ê ┘à╪¬┘å ┘ç█î┌åΓÇî┘ê┘é╪¬ ╪▒┘ê█î ┘ç┘à ┘å┘à█îΓÇî╪º┘ü╪¬┘å╪» */
+/* آیکن و متن هیچ‌وقت روی هم نمی‌افتند */
 .hsf-date-nudge { flex: 0 0 auto; }
 
-/* ╪▒╪»█î┘ü █▓ (Travel Options) ╪»╪▒ ┘ç┘à┘ç ╪╡┘ü╪¡╪º╪¬ █î┌⌐ ╪┤┌⌐┘ä ╪¿╪º╪┤╪» */
+/* ردیف ۲ (Travel Options) در همه صفحات یک شکل باشد */
 .hero-search-form > .hsf-toolbar--top {
   margin-bottom: 14px;
 }
 
-/* ╪▒╪»█î┘ü █┤: ╪»┌⌐┘à┘ç Search ΓÇö ╪»╪│┌⌐╪¬╪º┘╛ ╪╣╪▒╪╢ ┘à╪¡╪»┘ê╪»╪î ┘à┘ê╪¿╪º█î┘ä ╪¬┘à╪º┘àΓÇî╪╣╪▒╪╢ */
+/* ردیف ۴: دکمه Search — دسکتاپ عرض محدود، موبایل تمام‌عرض */
 .hsf-actions-row--center .hero-search-submit {
   min-width: 220px;
 }
@@ -8814,7 +8542,7 @@ body.mobile-nav-active #mobile-nav-toggle {
   }
 }
 
-/* ╪¬╪¿ΓÇî┘ç╪º█î ╪▒╪»█î┘ü █▒ ╪▒┘ê█î ┘à┘ê╪¿╪º█î┘ä: ╪¿┘çΓÇî╪¼╪º█î ╪º╪│┌⌐╪▒┘ê┘ä ╪º┘ü┘é█î┘É ┘à╪«┘ü█î╪î ╪»┘ê/╪│┘ç ╪│╪¬┘ê┘å┘ç */
+/* تب‌های ردیف ۱ روی موبایل: به‌جای اسکرول افقیِ مخفی، دو/سه ستونه */
 @media (max-width: 575px) {
   .hero-tabs {
     display: grid;
@@ -8825,14 +8553,14 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 /* --------------------------------------------------------------------------
-   █│) ╪╡┘ü╪¡╪º╪¬ Login / Register ΓÇö ╪¼╪º ╪┤╪»┘å ╪»╪▒ viewport ╪¿╪»┘ê┘å ╪º╪│┌⌐╪▒┘ê┘ä ╪º╪╢╪º┘ü█î
-   ╪╣┘ä╪¬ ┘ê╪º┘é╪╣█î ╪¿┘ä┘å╪» ╪¿┘ê╪»┘å ┘ü╪▒┘à Register: █╡ ┘ü█î┘ä╪» + ┌å┌⌐ΓÇî┘ä█î╪│╪¬ ┘╛╪│┘ê╪▒╪» ┘ç┘à┘ç ╪»╪▒ █î┌⌐ ╪│╪¬┘ê┘å
-   ┌å█î╪»┘ç ╪┤╪»┘ç ╪¿┘ê╪»┘å╪». ╪▒╪º┘çΓÇî╪¡┘ä: ┌⌐╪º╪▒╪¬ ╪╣╪▒█î╪╢ΓÇî╪¬╪▒ + ┌»╪▒█î╪» ╪»┘ê ╪│╪¬┘ê┘å┘ç ╪»╪▒ ╪»╪│┌⌐╪¬╪º┘╛╪î
-   ┘å┘ç overflow: hidden.
+   ۳) صفحات Login / Register — جا شدن در viewport بدون اسکرول اضافی
+   علت واقعی بلند بودن فرم Register: ۵ فیلد + چک‌لیست پسورد همه در یک ستون
+   چیده شده بودند. راه‌حل: کارت عریض‌تر + گرید دو ستونه در دسکتاپ،
+   نه overflow: hidden.
    -------------------------------------------------------------------------- */
 .auth-page,
 .auth-container {
-  /* dvh ┘å┘ê╪º╪▒ ╪ó╪»╪▒╪│ ┘à┘ê╪¿╪º█î┘ä ╪▒╪º ┘ç┘à ╪¡╪│╪º╪¿ ┘à█îΓÇî┌⌐┘å╪»╪¢ 100vh ╪ó┘å╪¼╪º ╪¿█î╪┤ ╪º╪▓ ╪¡╪» ╪¿┘ä┘å╪» ╪º╪│╪¬ */
+  /* dvh نوار آدرس موبایل را هم حساب می‌کند؛ 100vh آنجا بیش از حد بلند است */
   min-height: 100dvh;
 }
 
@@ -8842,18 +8570,18 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 .auth-card {
-  /* ┌⌐╪º╪▒╪¬ ╪»█î┌»╪▒ ╪º╪│┌⌐╪▒┘ê┘ä ╪»╪º╪«┘ä█î┘É ╪«┘ê╪»╪┤ ╪▒╪º ┘å╪»╪º╪▒╪»╪¢ ╪»╪▒ ╪»╪│┌⌐╪¬╪º┘╛ ┌⌐╪º┘à┘ä ╪¼╪º ┘à█îΓÇî╪┤┘ê╪» */
+  /* کارت دیگر اسکرول داخلیِ خودش را ندارد؛ در دسکتاپ کامل جا می‌شود */
   max-height: none;
   overflow: visible;
   padding: clamp(16px, 2.4vh, 24px) clamp(20px, 3vw, 32px);
 }
 
-/* ┌⌐╪º╪▒╪¬ ╪╣╪▒█î╪╢ ┘à╪«╪╡┘ê╪╡ ╪╡┘ü╪¡┘ç ╪½╪¿╪¬ΓÇî┘å╪º┘à */
+/* کارت عریض مخصوص صفحه ثبت‌نام */
 .auth-card--wide {
   max-width: 720px;
 }
 
-/* --- ┌»╪▒█î╪» ╪»┘ê ╪│╪¬┘ê┘å┘ç ┘ü┘é╪╖ ╪º╪▓ ╪¬╪¿┘ä╪¬ ╪¿┘ç ╪¿╪º┘ä╪º --- */
+/* --- گرید دو ستونه فقط از تبلت به بالا --- */
 @media (min-width: 640px) {
   .auth-card--wide .django-form {
     display: grid;
@@ -8868,7 +8596,7 @@ body.mobile-nav-active #mobile-nav-toggle {
     min-width: 0;
   }
 
-  /* ╪º█î┘åΓÇî┘ç╪º ╪¿╪º█î╪» ╪¬┘à╪º┘à ╪╣╪▒╪╢ ╪▒╪º ╪¿┌»█î╪▒┘å╪» */
+  /* این‌ها باید تمام عرض را بگیرند */
   .auth-card--wide .django-form > .password-rules,
   .auth-card--wide .django-form > .auth-btn,
   .auth-card--wide .django-form > .errorlist,
@@ -8876,7 +8604,7 @@ body.mobile-nav-active #mobile-nav-toggle {
     grid-column: 1 / -1;
   }
 
-  /* ┌å┌⌐ΓÇî┘ä█î╪│╪¬ ┘╛╪│┘ê╪▒╪» ┘ç┘à ╪»┘ê ╪│╪¬┘ê┘å┘ç ┘à█îΓÇî╪┤┘ê╪» ╪¬╪º ╪º╪▒╪¬┘ü╪º╪╣ ┘å╪╡┘ü ╪┤┘ê╪» */
+  /* چک‌لیست پسورد هم دو ستونه می‌شود تا ارتفاع نصف شود */
   .auth-card--wide .password-rules {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
@@ -8884,7 +8612,7 @@ body.mobile-nav-active #mobile-nav-toggle {
   }
 }
 
-/* ┘ü╪º╪╡┘ä┘çΓÇî┘ç╪º█î ╪╣┘à┘ê╪»█î ╪▒█î╪│┘╛╪º┘å╪│█î┘ê (╪¿┘çΓÇî╪¼╪º█î ┘à┘é╪º╪»█î╪▒ ╪½╪º╪¿╪¬) */
+/* فاصله‌های عمودی ریسپانسیو (به‌جای مقادیر ثابت) */
 .auth-card h1 { margin-bottom: clamp(2px, 0.5vh, 4px); }
 .auth-subtitle { margin-bottom: clamp(8px, 1.6vh, 14px); }
 .auth-brand { margin-bottom: clamp(6px, 1.2vh, 10px); }
@@ -8892,7 +8620,7 @@ body.mobile-nav-active #mobile-nav-toggle {
 .auth-card form p { margin-bottom: clamp(6px, 1.2vh, 10px); }
 .bottom-text { margin-top: clamp(8px, 1.4vh, 12px); }
 
-/* ┘à┘ê╪¿╪º█î┘ä: ╪º╪│┌⌐╪▒┘ê┘ä ╪╖╪¿█î╪╣█î ┘à╪¼╪º╪▓ ╪º╪│╪¬╪î ┘ü┘é╪╖ ┘à╪¡╪¬┘ê╪º ╪¿╪▒█î╪»┘ç ┘å╪┤┘ê╪» */
+/* موبایل: اسکرول طبیعی مجاز است، فقط محتوا بریده نشود */
 @media (max-width: 639px) {
   .auth-container {
     align-items: flex-start;
@@ -8903,7 +8631,7 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 /* --------------------------------------------------------------------------
-   █┤) ╪╡┘ü╪¡┘ç ┬½╪»╪│╪¬╪▒╪│█î ┘å╪»╪º╪▒█î╪»┬╗ ┘╛┘å┘ä ╪º╪»┘à█î┘å
+   ۴) صفحه «دسترسی ندارید» پنل ادمین
    -------------------------------------------------------------------------- */
 .access-denied-area {
   padding: clamp(90px, 14vh, 160px) 0 clamp(60px, 10vh, 120px);
@@ -8967,13 +8695,13 @@ body.mobile-nav-active #mobile-nav-toggle {
 .access-denied-btn:hover { transform: translateY(-2px); }
 
 /* --------------------------------------------------------------------------
-   █╡) ╪¼┘ä┘ê┌»█î╪▒█î ╪º╪▓ Horizontal Overflow ΓÇö ╪╣┘ä╪¬ΓÇî┘à╪¡┘ê╪▒╪î ┘å┘ç overflow-x: hidden ┌⌐┘ê╪▒
+   ۵) جلوگیری از Horizontal Overflow — علت‌محور، نه overflow-x: hidden کور
    -------------------------------------------------------------------------- */
 *, *::before, *::after { box-sizing: border-box; }
 
 img, svg, video, canvas { max-width: 100%; height: auto; }
 
-/* ┘ç╪▒ ╪╣┘å╪╡╪▒█î ┌⌐┘ç ┘à┘à┌⌐┘å ╪º╪│╪¬ ┘à╪¬┘å ╪╖┘ê┘ä╪º┘å█î ╪»╪º╪┤╪¬┘ç ╪¿╪º╪┤╪» ┘å╪¿╪º█î╪» container ╪▒╪º ╪¿╪┤┌⌐┘å╪» */
+/* هر عنصری که ممکن است متن طولانی داشته باشد نباید container را بشکند */
 .nav-menu a,
 .ft-nav-list a,
 .hsf-select-label,
@@ -8981,9 +8709,9 @@ img, svg, video, canvas { max-width: 100%; height: auto; }
   min-width: 0;
 }
 
-/* ┌»╪▒█î╪» ╪╣┘à┘ê┘à█î ╪ó█î┌⌐┘å/┌»╪▓█î┘å┘çΓÇî┘ç╪º: ╪»╪│┌⌐╪¬╪º┘╛ █┤╪î ╪¬╪¿┘ä╪¬ █│╪î ┘à┘ê╪¿╪º█î┘ä █▓
-   (╪¬╪╣╪»╪º╪» ╪│╪¬┘ê┘åΓÇî┘ç╪º ╪¿╪º auto-fit ┘ê minmax ╪«┘ê╪»╪┤ ╪▒╪º ╪¿╪º ┘à╪¡╪¬┘ê╪º ╪¬╪╖╪¿█î┘é ┘à█îΓÇî╪»┘ç╪»╪î
-    ┘╛╪│ ╪¬╪▒╪¬█î╪¿ DOM ┘ç█î┌åΓÇî╪¼╪º ╪¬╪║█î█î╪▒ ┘å┘à█îΓÇî┌⌐┘å╪») */
+/* گرید عمومی آیکن/گزینه‌ها: دسکتاپ ۴، تبلت ۳، موبایل ۲
+   (تعداد ستون‌ها با auto-fit و minmax خودش را با محتوا تطبیق می‌دهد،
+    پس ترتیب DOM هیچ‌جا تغییر نمی‌کند) */
 .icon-grid,
 .options-grid {
   display: grid;
@@ -8996,9 +8724,9 @@ img, svg, video, canvas { max-width: 100%; height: auto; }
    >>> END: LAYOUT PASS <<<
    ========================================================================== */
 /* ==========================================================================
-   Search Bar = CSS Grid ╪│┘çΓÇî╪▒╪»█î┘ü┘ç: [Travel Options] / [Fields] / [Search]
-   ┘å┌⌐╪¬┘ç: ╪╣┘å╪╡╪▒ hidden (┘à╪½┘ä formErrorBox) display:none ╪º╪│╪¬ ┘ê ╪ó█î╪¬┘à ┌»╪▒█î╪» ╪¡╪│╪º╪¿
-   ┘å┘à█îΓÇî╪┤┘ê╪»╪î ┘╛╪│ ╪▒╪»█î┘ü ╪º╪╢╪º┘ü┘ç ┘ê gap ╪º╪╢╪º┘ü┘ç ┘å┘à█îΓÇî╪│╪º╪▓╪». ╪¬╪▒╪¬█î╪¿ DOM ╪¿╪»┘ê┘å ╪¬╪║█î█î╪▒ ╪º╪│╪¬.
+   Search Bar = CSS Grid سه‌ردیفه: [Travel Options] / [Fields] / [Search]
+   نکته: عنصر hidden (مثل formErrorBox) display:none است و آیتم گرید حساب
+   نمی‌شود، پس ردیف اضافه و gap اضافه نمی‌سازد. ترتیب DOM بدون تغییر است.
    ========================================================================== */
 .hero-search-form {
   display: grid;
@@ -9010,16 +8738,16 @@ img, svg, video, canvas { max-width: 100%; height: auto; }
 .hero-search-form > .hsf-search-row,
 .hero-search-form > .hsf-form-error,
 .hero-search-form > .hsf-actions-row {
-  margin: 0; /* spacing ┘ü┘é╪╖ ╪¿╪º row-gap */
+  margin: 0; /* spacing فقط با row-gap */
 }
 
-/* ╪▒╪»█î┘ü █▓ ΓÇö ┘à╪│█î╪▒ (Flight/Bus/Train): █╡ ┘ü╪▒╪▓┘å╪» = █╡ ╪│╪¬┘ê┘å */
+/* ردیف ۲ — مسیر (Flight/Bus/Train): ۵ فرزند = ۵ ستون */
 .hsf-search-row--route {
   grid-template-columns:
     minmax(0, 1fr) 44px minmax(0, 1fr) minmax(0, 0.9fr) minmax(0, 1.4fr);
 }
 
-/* ╪▒╪»█î┘ü █▓ ΓÇö ╪º┘é╪º┘à╪¬ (Hotel/Villa): █│ ┘ü╪▒╪▓┘å╪» */
+/* ردیف ۲ — اقامت (Hotel/Villa): ۳ فرزند */
 .hsf-search-row--destination {
   grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, 1.4fr);
 }
@@ -9040,22 +8768,10 @@ img, svg, video, canvas { max-width: 100%; height: auto; }
   .hsf-search-row--destination > .hsf-date-group {
     grid-column: 1 / -1;
   }
-=======
-/* One-way "+ Return date" state */
-.hsf-date-segment.is-add-return .hsf-date-trigger,
-#returnField.is-add-return .hsf-date-trigger {
-  color: #f97316;
-  font-weight: 500;
-  justify-content: center;
 }
-#returnField.is-add-return .hsf-date-nudge,
-#returnField.is-add-return .hsf-date-trigger i {
-  display: none !important;
->>>>>>> 85742dc885136c06ce0c44592dcd139b822716f4
-}
-/* Mobile: ┘é╪º┘å┘ê┘å ┘à┘ê╪¼┘ê╪» (@media 767px ΓåÆ 1fr !important) ╪¿╪»┘ê┘å ╪¬╪║█î█î╪▒ ┌⌐╪º╪▒ ┘à█îΓÇî┌⌐┘å╪» */
+/* Mobile: قانون موجود (@media 767px → 1fr !important) بدون تغییر کار می‌کند */
 
-/* ---------- ╪ó█î┌⌐┘ê┘åΓÇî┘ç╪º█î ╪¬╪¿ΓÇî┘ç╪º (Hero Tabs) = Grid ┘ê╪º┘é╪╣█î╪î ╪¬╪▒╪¬█î╪¿ DOM ╪½╪º╪¿╪¬ ---------- */
+/* ---------- آیکون‌های تب‌ها (Hero Tabs) = Grid واقعی، ترتیب DOM ثابت ---------- */
 .hero-tabs {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(clamp(72px, 14vw, 140px), 1fr));
@@ -9073,7 +8789,7 @@ img, svg, video, canvas { max-width: 100%; height: auto; }
 
 
 /* ==========================================================================
-   FIX: date box text was cut ("OcΓÇª"). Same grid, just a little more room.
+   FIX: date box text was cut ("Oc…"). Same grid, just a little more room.
    ========================================================================== */
 @media (min-width: 1200px) {
   .hsf-search-row--route {
@@ -9086,29 +8802,29 @@ img, svg, video, canvas { max-width: 100%; height: auto; }
 .hsf-date-nudge { width: 22px; }
 .hsf-date-box .hsf-date-trigger { gap: 6px; padding: 2px; }
 /* ==========================================================================
-   HERO v2 ΓÇö Image banner (top) + Search card (bottom), cream background
+   HERO v2 — Image banner (top) + Search card (bottom), cream background
    Applies to every page that uses .hero-layout (Flight, Hotel, Villa,
    Train, Bus, Tours). Banner height synced via --hero-card-h (JS optional).
    ========================================================================== */
 .hero-search-area {
-  padding: 90px 0 40px;
+  padding: 110px 0 70px;
   background: rgba(245, 166, 35, 0.1);
   position: relative;
   overflow: visible !important;   /* CRITICAL: allow dropdowns to escape */
 }
 
 .hero-layout {
-  --hero-card-h: 200px;
+  --hero-card-h: 320px;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 16px;
+  gap: 24px;
   max-width: 1100px;
   margin: 0 auto;
   padding: 0 16px;
   align-items: stretch;
 }
 
-/* ---- Row 1: category image ΓÇö fills entire box, no white space ---- */
+/* ---- Row 1: category image — fills entire box, no white space ---- */
 .hero-image-col {
   order: 1;
   height: var(--hero-card-h);
@@ -9158,7 +8874,7 @@ img, svg, video, canvas { max-width: 100%; height: auto; }
   box-shadow: 0 12px 40px -12px rgba(18, 41, 61, 0.18);
   border: 1px solid rgba(18, 41, 61, 0.06);
   overflow: visible !important;   /* dropdowns / calendar must overflow */
-  min-height: 0;
+  min-height: 280px;
   display: flex;
   flex-direction: column;
 }
@@ -9203,9 +8919,9 @@ img, svg, video, canvas { max-width: 100%; height: auto; }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 767px) {
-  .hero-search-area { padding: 80px 0 28px; }
-  .hero-layout { gap: 12px; --hero-card-h: 140px; }
-  .hero-image-col { height: 140px; }
+  .hero-search-area { padding: 100px 0 50px; }
+  .hero-layout { gap: 18px; }
+  .hero-image-col { height: 200px; }
 
   .hero-search-submit {
     width: 100% !important;
@@ -9216,12 +8932,12 @@ img, svg, video, canvas { max-width: 100%; height: auto; }
 
 
 /* =========================================================
-   FINAL POLISH ΓÇö plane image + Search button spacing
+   FINAL POLISH — plane image + Search button spacing
    ========================================================= */
 
-/* █▒) ╪¬╪╡┘ê█î╪▒ ┘ç█î╪▒┘ê: ┘ç┘ê╪º┘╛█î┘à╪º ┌⌐╪º┘à┘ä ╪»█î╪»┘ç ╪┤┘ê╪» */
+/* ۱) تصویر هیرو: هواپیما کامل دیده شود */
 .hero-image-col {
-  height: var(--hero-card-h, 200px);
+  height: var(--hero-card-h, 320px);
   overflow: hidden;
   border-radius: 18px;
   background: transparent;
@@ -9232,35 +8948,35 @@ img, svg, video, canvas { max-width: 100%; height: auto; }
   height: 100% !important;
   max-width: none !important;
   object-fit: cover !important;
-  /* ┘ç┘ê╪º┘╛█î┘à╪º ╪»╪▒ ╪¿╪º┘ä╪º█î ╪¬╪╡┘ê█î╪▒ ╪º╪│╪¬ ΓåÆ ┌⌐┘à█î ╪¿┘ç ╪¿╪º┘ä╪º ┘à╪¬┘à╪º█î┘ä ┘à█îΓÇî╪┤┘ê█î┘à */
+  /* هواپیما در بالای تصویر است → کمی به بالا متمایل می‌شویم */
   object-position: center center !important;
   border-radius: 18px;
 }
 
 @media (max-width: 767px) {
-  .hero-image-col { height: 140px; }
+  .hero-image-col { height: 200px; }
   .hero-category-img { object-position: center center !important; }
 }
 
-/* █▓) ╪»┌⌐┘à┘ç Search ╪»┘é█î┘é╪º┘ï ┘ê╪│╪╖ ┘ü╪╢╪º█î ╪«╪º┘ä█î ╪▓█î╪▒ ┘ü█î┘ä╪»┘ç╪º */
+/* ۲) دکمه Search دقیقاً وسط فضای خالی زیر فیلدها */
 .hero-search-form {
   display: grid !important;
   grid-template-columns: minmax(0, 1fr);
-  /* ╪▒╪»█î┘üΓÇî┘ç╪º: toolbar | fields | error | actions */
-  grid-template-rows: auto auto auto auto;
-  row-gap: 12px;
+  /* ردیف‌ها: toolbar | fields | error | actions */
+  grid-template-rows: auto auto auto 1fr;
+  row-gap: 14px;
   min-height: 0;
 }
 
-/* ╪▒╪»█î┘ü ╪»┌⌐┘à┘ç: ┘ü╪╢╪º█î ╪¿╪º┘é█îΓÇî┘à╪º┘å╪»┘ç ╪▒╪º ╪¿┌»█î╪▒╪» ┘ê ╪»┌⌐┘à┘ç ╪▒╪º ┘ê╪│╪╖ ╪╣┘à┘ê╪»█î ┘é╪▒╪º╪▒ ╪»┘ç╪» */
+/* ردیف دکمه: فضای باقی‌مانده را بگیرد و دکمه را وسط عمودی قرار دهد */
 .hsf-actions-row,
 .hsf-actions-row--center {
   display: flex !important;
-  align-items: center !important;      /* ┘ê╪│╪╖ ╪╣┘à┘ê╪»█î */
-  justify-content: center !important;  /* ┘ê╪│╪╖ ╪º┘ü┘é█î */
-  min-height: 56px;
+  align-items: center !important;      /* وسط عمودی */
+  justify-content: center !important;  /* وسط افقی */
+  min-height: 72px;                    /* فضای خالی یکسان بالا و پایین */
   margin: 0 !important;
-  padding: 4px 0 !important;
+  padding: 0 !important;
 }
 
 .hero-search-submit {
@@ -9287,11 +9003,11 @@ img, svg, video, canvas { max-width: 100%; height: auto; }
 
 
 /* =========================================================
-   Hero images ΓÇö per-category object-position
+   Hero images — per-category object-position
    Flight plane sits high; other illustrations sit lower/right.
    ========================================================= */
 .hero-image-col {
-  height: var(--hero-card-h, 200px);
+  height: var(--hero-card-h, 340px);
   overflow: hidden;
   border-radius: 18px;
   background: transparent !important;
@@ -9341,394 +9057,7 @@ img, svg, video, canvas { max-width: 100%; height: auto; }
 }
 
 @media (max-width: 767px) {
-  .hero-image-col { height: 140px; }
+  .hero-image-col { height: 200px; }
   .hero-category-img { object-position: center center !important; }
   .hero-category-img[src*="flight"] { object-position: center 20% !important; }
 }
-
-
-/* =========================================================
-   No dropdown arrows on main header (hover-only open)
-   ========================================================= */
-.sf-arrows .sf-with-ul {
-  padding-right: 8px !important;
-}
-.sf-arrows .sf-with-ul:after,
-.sf-arrows ul .sf-with-ul:after {
-  content: none !important;
-  display: none !important;
-}
-
-/* Ensure main header account dropdown also opens purely on hover */
-.header-account-actions .dropdown:hover > .submenu,
-.nav-menu .dropdown:hover > .submenu {
-  display: block;
-}
-/* =========================================================
-   FINAL HEADER ALIGNMENT FIX (safe ΓÇö does not break nav grid)
-   ========================================================= */
-
-/* header-top is empty in base.html ΓÇö hide it always so height matches booking */
-.header-top {
-  display: none !important;
-  padding: 0 !important;
-  height: 0 !important;
-  overflow: hidden !important;
-}
-
-/* Equal vertical padding only ΓÇö DO NOT change display (grid must stay) */
-.main-menu {
-  padding-top: 12px !important;
-  padding-bottom: 12px !important;
-}
-
-#header.header-scrolled .main-menu {
-  padding-top: 8px !important;
-  padding-bottom: 8px !important;
-}
-
-/* Logo size ΓÇö exact match with booking */
-#logo img {
-  max-height: 36px !important;
-  height: auto !important;
-  width: auto !important;
-  display: block !important;
-  object-fit: contain !important;
-}
-
-#header.header-scrolled #logo img {
-  max-height: 30px !important;
-}
-
-/* Username only ΓÇö do not touch main nav links */
-.header-account-actions .nav-menu > li > a,
-.header-account-actions .nav-menu > li > a span {
-  font-weight: 500 !important;
-  letter-spacing: normal !important;
-  font-size: 0.875rem !important;
-  text-transform: uppercase !important;
-  color: #ffffff !important;
-}
-
-.header-account-actions .nav-menu > li:hover > a,
-.header-account-actions .nav-menu > li:hover > a span {
-  color: #f8b600 !important;
-}
-
-/* Restore main nav link styles if anything overrode them */
-#nav-menu-container .nav-menu > li > a {
-  color: #ffffff !important;
-  font-weight: 500 !important;
-  font-size: 0.875rem !important;
-  text-transform: uppercase !important;
-  letter-spacing: normal !important;
-}
-
-#nav-menu-container .nav-menu > li:hover > a {
-  color: #f8b600 !important;
-}
-
-/* =========================================================
-   MOBILE ΓÇö forced alignment with booking header
-   ========================================================= */
-@media (max-width: 991px) {
-  .container.main-menu {
-    max-width: 100% !important;
-    width: 100% !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-    position: relative !important;
-  }
-
-  .main-menu {
-    padding: 10px 16px !important;   /* same 10 / 16 as booking */
-    box-sizing: border-box !important;
-  }
-
-  #header.header-scrolled .main-menu {
-    padding: 8px 16px !important;
-  }
-
-  .main-menu .main-menu-grid,
-  .main-menu .row.main-menu-grid {
-    display: flex !important;
-    flex-wrap: nowrap !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
-    gap: 12px !important;
-    margin: 0 !important;
-    width: 100% !important;
-  }
-
-  #logo {
-    flex: 0 0 auto !important;
-    padding: 0 !important;
-    margin: 0 !important;
-  }
-
-  #logo img {
-    max-height: 32px !important;
-    height: auto !important;
-    width: auto !important;
-    display: block !important;
-  }
-
-  #header.header-scrolled #logo img {
-    max-height: 28px !important;
-  }
-
-  .main-menu-grid > #nav-menu-container {
-    display: none !important;
-  }
-
-  .main-menu-grid > .header-account-actions {
-    flex: 0 0 auto !important;
-    margin-left: auto !important;
-    margin-right: 40px !important;
-    padding: 0 0 0 8px !important;
-  }
-
-  .main-menu-grid .header-account-actions .nav-menu > li > a,
-  .main-menu-grid .header-account-actions .nav-menu > li > a span {
-    font-size: 0.8125rem !important;
-    font-weight: 500 !important;
-    letter-spacing: normal !important;
-    text-transform: uppercase !important;
-    padding: 0 !important;
-    max-width: 36vw !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    white-space: nowrap !important;
-    color: #ffffff !important;
-  }
-
-  #mobile-nav-toggle {
-    position: absolute !important;
-    right: 12px !important;
-    top: 50% !important;
-    transform: translateY(-50%) !important;
-    width: 36px !important;
-    height: 36px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    margin: 0 !important;
-    float: none !important;
-    z-index: 5 !important;
-  }
-
-  #mobile-nav-toggle i {
-    font-size: 1.25rem !important;
-    line-height: 1 !important;
-  }
-}
-
-@media (max-width: 575px) {
-  .main-menu {
-    padding-left: 12px !important;
-    padding-right: 12px !important;
-  }
-
-  .main-menu-grid > .header-account-actions {
-    margin-right: 36px !important;
-  }
-}
-
-/* ========== FORCE MOBILE ALIGN (paste-safe) ========== */
-@media (max-width: 991px) {
-  #header .container.main-menu {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
-  #header .main-menu {
-    padding: 10px 16px !important;
-    min-height: 52px !important;
-    box-sizing: border-box !important;
-    position: relative !important;
-  }
-  #header #logo img {
-    max-height: 32px !important;
-    height: 32px !important;
-    width: auto !important;
-  }
-
-  /* username ΓÇö leave clear gap before hamburger */
-  #header .header-account-actions {
-    margin-left: auto !important;
-    margin-right: 48px !important; /* 32px icon + 16px gap */
-    padding-right: 0 !important;
-  }
-  #header .header-account-actions .nav-menu > li > a,
-  #header .header-account-actions .nav-menu > li > a span {
-    font-size: 13px !important;
-    font-weight: 500 !important;
-    line-height: 32px !important;
-    padding: 0 !important;
-    letter-spacing: normal !important;
-  }
-
-  /* Hamburger ΓÇö not glued to username */
-  #header #mobile-nav-toggle {
-    position: absolute !important;
-    right: 12px !important;
-    top: 50% !important;
-    transform: translateY(-50%) !important;
-    width: 32px !important;
-    height: 32px !important;
-    min-width: 32px !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    border: 0 !important;
-    background: transparent !important;
-    color: #ffffff !important;
-    cursor: pointer !important;
-    z-index: 10 !important;
-  }
-  #header #mobile-nav-toggle i,
-  #header #mobile-nav-toggle .lnr,
-  #header #mobile-nav-toggle:before {
-    font-size: 22px !important;
-    line-height: 1 !important;
-    color: #ffffff !important;
-    font-weight: normal !important;
-  }
-}
-
-@media (max-width: 575px) {
-  #header .main-menu {
-    padding-left: 12px !important;
-    padding-right: 12px !important;
-  }
-  #header .header-account-actions {
-    margin-right: 44px !important;
-  }
-  #header #mobile-nav-toggle {
-    right: 8px !important;
-  }
-}
-
-
-/* =========================================================
-   MOBILE SEARCH BAR ΓÇö equal tabs + compact From/To row
-   Applies on all hero pages (Flight, Bus, Train, Hotel, ΓÇª)
-   ========================================================= */
-
-/* ╪¬╪¿ΓÇî┘ç╪º: ┘ç┘à█î╪┤┘ç █╢ ╪│╪¬┘ê┘å ┘à╪│╪º┘ê█î ΓÇö ┘ü┘é╪╖ ╪ó█î┌⌐┘å╪î ╪¿╪»┘ê┘å ╪º╪│┌⌐╪▒┘ê┘ä ╪º┘ü┘é█î */
-.hero-tabs {
-  display: grid !important;
-  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
-  overflow: hidden !important;
-  width: 100%;
-}
-
-.hero-tab {
-  flex: unset !important;
-  min-width: 0 !important;
-  padding: 14px 4px !important;
-  gap: 0 !important;
-  justify-content: center !important;
-}
-
-.hero-tab i {
-  font-size: 1.05rem !important;
-  line-height: 1 !important;
-}
-
-/* ┘à╪¬┘å ╪¬╪¿ ┘ü┘é╪╖ ╪º╪▓ ╪¬╪¿┘ä╪¬ ╪¿┘ç ╪¿╪º┘ä╪º */
-@media (max-width: 991px) {
-  .hero-tab span {
-    display: none !important;
-  }
-}
-
-@media (min-width: 992px) {
-  .hero-tab {
-    padding: 16px 10px !important;
-    gap: 8px !important;
-  }
-  .hero-tab span {
-    display: inline !important;
-  }
-}
-
-/* ┘à┘ê╪¿╪º█î┘ä: From | Swap | To ╪»╪▒ █î┌⌐ ╪▒╪»█î┘ü ΓÇö ╪¿╪╣╪» ┘à╪│╪º┘ü╪▒ ┘ê ╪¬╪º╪▒█î╪« */
-@media (max-width: 767px) {
-  .hero-search-form {
-    padding: 14px 14px 16px !important;
-    row-gap: 12px !important;
-  }
-
-  .hsf-toolbar--top {
-    margin-bottom: 0 !important;
-  }
-
-  /* ┘à╪│█î╪▒ (┘╛╪▒┘ê╪º╪▓/╪º╪¬┘ê╪¿┘ê╪│/┘é╪╖╪º╪▒): From + Swap + To ╪¿╪º┘ä╪º╪î ╪¿┘é█î┘ç ┘╛╪º█î█î┘å */
-  .hsf-search-row--route {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) 40px minmax(0, 1fr) !important;
-    grid-template-areas:
-      "origin swap dest"
-      "pax   pax  pax"
-      "date  date date" !important;
-    gap: 10px 8px !important;
-    align-items: end !important;
-  }
-
-  /* ╪¬╪▒╪¬█î╪¿ DOM ╪½╪º╪¿╪¬: origin | swap | dest | pax | date */
-  .hsf-search-row--route > :nth-child(1) { grid-area: origin; }
-  .hsf-search-row--route > :nth-child(2) {
-    grid-area: swap;
-    justify-self: center;
-    align-self: end;
-    margin-bottom: 4px;
-    transform: none !important; /* ╪º┘ü┘é█î ╪¿█î┘å From ┘ê To */
-  }
-  .hsf-search-row--route > :nth-child(3) { grid-area: dest; }
-  .hsf-search-row--route > :nth-child(4) { grid-area: pax; }
-  .hsf-search-row--route > :nth-child(5) { grid-area: date; }
-
-  /* ╪º┘é╪º┘à╪¬ (┘ç╪¬┘ä/┘ê█î┘ä╪º): ┘à┘é╪╡╪» ┘ê ╪¬╪º╪▒█î╪«/┘à╪│╪º┘ü╪▒ */
-  .hsf-search-row--destination {
-    display: grid !important;
-    grid-template-columns: 1fr !important;
-    gap: 10px !important;
-  }
-
-  .hsf-reverse-btn.is-swapping {
-    transform: rotate(180deg) !important;
-  }
-
-  /* ╪º╪▒╪¬┘ü╪º╪╣ █î┌⌐╪│╪º┘å ┘ü█î┘ä╪»┘ç╪º */
-  .hsf-input,
-  .hsf-date-trigger,
-  .hsf-date-box {
-    min-height: 48px !important;
-  }
-
-  .hero-search-submit {
-    width: 100% !important;
-    min-width: 0 !important;
-    max-width: none !important;
-    height: 48px !important;
-    min-height: 48px !important;
-  }
-
-  .hsf-actions-row,
-  .hsf-actions-row--center {
-    min-height: 48px !important;
-  }
-}
-
-/* ┌»┘ê╪┤█î ╪«█î┘ä█î ╪¿╪º╪▒█î┌⌐: ╪¬╪¿ΓÇî┘ç╪º ┌⌐┘à█î ┘ü╪┤╪▒╪»┘çΓÇî╪¬╪▒ */
-@media (max-width: 380px) {
-  .hero-tab {
-    padding: 12px 2px !important;
-  }
-  .hero-tab i {
-    font-size: 0.95rem !important;
-  }
-}
-
