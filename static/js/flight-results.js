@@ -1660,32 +1660,22 @@
     );
 
   function openEditor() {
-
     if (editor) {
-      editor.hidden =
-        false;
+      editor.hidden = false;
     }
-
     if (pillBtn) {
-      pillBtn.setAttribute(
-        "aria-expanded",
-        "true"
-      );
+      pillBtn.setAttribute("aria-expanded", "true");
+      pillBtn.hidden = true; // hide oval when editor is open
     }
   }
 
   function closeEditor() {
-
     if (editor) {
-      editor.hidden =
-        true;
+      editor.hidden = true;
     }
-
     if (pillBtn) {
-      pillBtn.setAttribute(
-        "aria-expanded",
-        "false"
-      );
+      pillBtn.setAttribute("aria-expanded", "false");
+      pillBtn.hidden = false; // show oval again
     }
   }
 
@@ -1725,35 +1715,33 @@
       params.children +
       params.infants;
 
-    var text =
-      params.origin +
-      " \u2192 " +
-      params.destination +
-      " \u00b7 " +
-      params.travel_date;
-
-    if (
-      params.trip_type ===
-      "roundtrip" &&
-      params.return_date
-    ) {
-
-      text +=
-        " \u2013 " +
-        params.return_date;
+    function formatShortDate(iso) {
+      if (!iso) return "";
+      try {
+        var d = new Date(iso + "T00:00:00");
+        if (isNaN(d.getTime())) return iso;
+        return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+      } catch (e) {
+        return iso;
+      }
     }
 
-    text +=
-      " \u00b7 " +
-      travellers +
-      (
-        travellers === 1
-          ? " traveller"
-          : " travellers"
-      );
+    var route =
+      "Flight ticket " +
+      (params.origin || "—") +
+      " to " +
+      (params.destination || "—");
 
-    pillText.textContent =
-      text;
+    var datePart = formatShortDate(params.travel_date);
+    if (params.trip_type === "roundtrip" && params.return_date) {
+      datePart += " – " + formatShortDate(params.return_date);
+    }
+
+    var paxPart =
+      travellers + (travellers === 1 ? " traveller" : " travellers");
+
+    // SnappTrip-style: route | date | passengers
+    pillText.textContent = route + "  |  " + datePart + "  |  " + paxPart;
   }
 
   document.addEventListener(

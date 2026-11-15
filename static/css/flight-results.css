@@ -25,51 +25,108 @@
 }
 .fr-newsearch:hover { background: var(--tvl-coral, #FF6F59); color: #fff; }
 
-/* ---------- inline search bar ---------- */
-.frs-searchbar { margin-bottom: 18px; }
-
-.frs-pill {
+/* ---------- inline search bar (SnappTrip-style) ---------- */
+.frs-searchbar {
+  margin-bottom: 18px;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 10px;
-  width: 100%;
-  max-width: 720px;
+}
+
+/* Collapsed oval summary */
+.frs-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  width: auto;
+  max-width: min(820px, calc(100% - 24px));
   margin: 0 auto;
-  padding: 12px 20px;
-  border: none;
+  padding: 8px 16px 8px 8px;
+  border: 1px solid #e5e7eb;
   border-radius: 999px;
   background: #fff;
-  box-shadow: var(--tvl-shadow, 0 20px 45px -20px rgba(18, 41, 61, .35));
-  color: var(--tvl-navy, #12293D);
-  font-weight: 600;
+  box-shadow: 0 4px 18px rgba(18, 41, 61, 0.08);
+  color: #12293D;
+  font-weight: 500;
+  font-size: 14px;
   cursor: pointer;
+  transition: box-shadow 0.15s ease;
 }
-.frs-pill i:first-child { color: var(--tvl-coral, #FF6F59); }
-.frs-pill-text { flex: 1; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.frs-pill-chevron { color: var(--tvl-ink-soft, #6B6560); }
+.frs-pill:hover {
+  box-shadow: 0 6px 22px rgba(18, 41, 61, 0.12);
+}
+.frs-pill[hidden] {
+  display: none !important;
+}
 
+/* Red circular search icon like SnappTrip */
+.frs-pill > i.fa-magnifying-glass,
+.frs-pill > i:first-child {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #ff6f59;
+  color: #fff !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.frs-pill-text {
+  flex: 1;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #1e293b;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+.frs-pill-chevron {
+  color: #94a3b8;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+/* Expanded rectangular editor — pill is hidden while this is open */
 .frs-editor {
   position: relative;
   width: 100%;
-  margin: 12px auto 0;
+  max-width: 1100px;
+  margin: 0 auto;
   background: #ffffff;
-  border: 1px solid rgba(44, 42, 40, 0.08);
-  border-radius: var(--tvl-radius, 18px);
-  box-shadow: 0 20px 45px -20px rgba(18, 41, 61, .25);
-  padding: 36px 20px 20px;
+  border: 1px solid #e8ecf1;
+  border-radius: 16px;
+  box-shadow: 0 12px 40px -12px rgba(18, 41, 61, 0.18);
+  padding: 28px 20px 18px;
+}
+.frs-editor[hidden] {
+  display: none !important;
 }
 
 .frs-editor-close {
   position: absolute;
-  top: 10px; left: 14px;
+  top: 12px;
+  left: 14px;
   border: none;
   background: none;
   font-size: 22px;
   line-height: 1;
-  color: var(--tvl-ink-soft, #6B6560);
+  color: #64748b;
   cursor: pointer;
+  z-index: 2;
 }
-.frs-editor-close:hover { color: var(--tvl-coral, #FF6F59); }
+.frs-editor-close:hover { color: #ff6f59; }
+
+/* Keep the inline hero form compact inside the editor */
+.frs-editor .hero-search-form {
+  padding: 0 !important;
+}
+.frs-editor .hero-search-submit {
+  white-space: nowrap;
+}
 
 /* ---------- grid layout ---------- */
 .fr-layout {
@@ -518,4 +575,192 @@
 
 .fr-baggage i {
   font-size: 11px;
+}
+
+
+/* ============================================================
+   Results editor — mobile: 2 rows, horizontal swap arrow
+   ============================================================ */
+@media (max-width: 767.98px) {
+  .frs-editor {
+    padding: 32px 12px 14px !important;
+  }
+
+  .frs-editor .hero-search-form {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  /* Route row: From | swap | To */
+  .frs-editor .hsf-search-row--route {
+    display: grid !important;
+    grid-template-columns: 1fr auto 1fr !important;
+    grid-template-areas:
+      "from swap to"
+      "pax date date" !important;
+    gap: 8px 8px !important;
+    align-items: center !important;
+  }
+
+  .frs-editor .hsf-search-row--route #originField {
+    grid-area: from !important;
+    min-width: 0 !important;
+  }
+  .frs-editor .hsf-search-row--route #destField {
+    grid-area: to !important;
+    min-width: 0 !important;
+  }
+  .frs-editor .hsf-search-row--route #reverseBtn {
+    grid-area: swap !important;
+    width: 34px !important;
+    height: 34px !important;
+    transform: none !important; /* keep left-right, not rotated */
+  }
+  .frs-editor .hsf-search-row--route #reverseBtn.is-swapping {
+    transform: rotate(180deg) !important;
+  }
+  .frs-editor .hsf-search-row--route .hsf-passenger-field {
+    grid-area: pax !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 140px !important; /* smaller passenger box */
+  }
+  .frs-editor .hsf-search-row--route .hsf-date-group {
+    grid-area: date !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .frs-editor .hsf-input,
+  .frs-editor .hsf-date-trigger {
+    height: 42px !important;
+    min-height: 42px !important;
+    font-size: 13px !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .frs-editor .hsf-passenger-field .hsf-date-trigger {
+    max-width: 100% !important;
+  }
+
+  /* Two separate date boxes (depart + return) */
+  .frs-editor .hsf-date-group {
+    border: none !important;
+    background: transparent !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    padding: 0 !important;
+  }
+  .frs-editor .hsf-date-box {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    border: none !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    overflow: visible !important;
+    padding: 0 !important;
+  }
+  .frs-editor .hsf-date-segment {
+    flex: none !important;
+    min-width: 0 !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 10px !important;
+    background: #fff !important;
+    height: 42px !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+  .frs-editor .hsf-date-divider {
+    display: none !important;
+  }
+  .frs-editor .hsf-date-nudge {
+    display: none !important;
+  }
+  .frs-editor .hsf-date-trigger {
+    width: 100% !important;
+    border: none !important;
+    background: transparent !important;
+    height: 42px !important;
+  }
+
+  .frs-editor .hero-search-submit {
+    width: 100% !important;
+    height: 44px !important;
+  }
+
+  /* Override any global mobile rule that rotates reverse btn */
+  .frs-editor .hsf-reverse-btn {
+    transform: none !important;
+  }
+}
+
+/* Also kill global rotate on results page for reverse button */
+.fr-page .hsf-reverse-btn {
+  transform: none !important;
+}
+.fr-page .hsf-reverse-btn.is-swapping {
+  transform: rotate(180deg) !important;
+}
+
+
+/* Results editor: always two independent date boxes */
+.frs-editor .hsf-date-group {
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  height: auto !important;
+  max-height: none !important;
+  padding: 0 !important;
+}
+.frs-editor .hsf-date-box {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 8px !important;
+  border: none !important;
+  background: transparent !important;
+  height: auto !important;
+  max-height: none !important;
+  padding: 0 !important;
+  overflow: visible !important;
+}
+.frs-editor .hsf-date-segment {
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  background: #fff !important;
+  min-height: 42px !important;
+}
+.frs-editor .hsf-date-divider {
+  display: none !important;
+}
+
+
+/* Results editor: passenger field gets its own bordered box */
+.frs-editor .hsf-passenger-field {
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  background: #fff !important;
+  min-height: 42px !important;
+  height: 42px !important;
+  display: flex !important;
+  align-items: center !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
+.frs-editor .hsf-passenger-field .hsf-date-trigger {
+  width: 100% !important;
+  height: 100% !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 12px !important;
+}
+.frs-editor .hsf-passenger-field .hsf-label {
+  display: none !important;
 }
