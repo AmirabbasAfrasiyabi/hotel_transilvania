@@ -5,6 +5,7 @@
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/flight-results.css' %}">
+<link rel="stylesheet" href="{% static 'css/flight-results-responsive.css' %}">
 <link rel="stylesheet" href="{% static 'css/flight-details-modal.css' %}">
 
 <section class="fr-page">
@@ -194,9 +195,9 @@
 
 {% if not errors %}
 <script src="{% static 'js/flight-results.js' %}" defer></script>
+<script src="{% static 'js/flight-results-responsive.js' %}" defer></script>
 <script src="{% static 'js/flight-details-modal.js' %}" defer></script>
 {% endif %}
-
 
 <!-- ========== FLIGHT DETAILS MODAL ========== -->
 <div id="flightDetailsModal" class="fd-modal" hidden aria-hidden="true" role="dialog" aria-labelledby="fdModalTitle">
