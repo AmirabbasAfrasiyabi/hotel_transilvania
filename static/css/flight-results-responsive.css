@@ -1,0 +1,148 @@
+/* Responsive flight-results toolbar and card-height refinements. */
+
+/* Desktop: keep the toolbar aligned with the results grid and anchor sort on the left. */
+@media (min-width: 1024px) {
+  .fr-toolbar {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 58px;
+    padding: 10px 16px;
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+  }
+
+  .fr-toolbar-left {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .fr-sort-line {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .fr-sort-btn {
+    border-radius: 6px;
+  }
+
+  .fr-sort-btn.is-active {
+    border-radius: 6px;
+  }
+}
+
+/* Tablet: controls at the left, live result summary at the right, in one grid row. */
+@media (min-width: 768px) and (max-width: 1023.98px) {
+  .frs-tablet-bar {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 58px;
+    padding: 10px 16px;
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+  }
+
+  .frs-tablet-bar-left {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 20px;
+  }
+
+  /* Remove the oval outlines/backgrounds around Filter and Sort (including icon chips). */
+  .frs-tablet-bar .frs-chip-btn,
+  .frs-mobile-bar .frs-chip-btn#frsOpenFilters,
+  .frs-mobile-bar .frs-chip-btn#frsOpenSort {
+    height: auto;
+    min-height: 36px;
+    padding: 4px 2px;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .frs-tablet-count {
+    margin-left: auto;
+    font-size: 15px;
+    font-weight: 700;
+    color: #12293d;
+    white-space: nowrap;
+    text-align: right;
+  }
+}
+
+/* Phone: keep the filter/sort navbar on top; put search summary on its own
+   right-aligned row below a thin divider. */
+@media (max-width: 767.98px) {
+  .frs-mobile-bar {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 52px;
+    gap: 18px;
+    padding: 6px 8px;
+    overflow-x: auto;
+    border-bottom: 1px solid #e5e7eb;
+    scrollbar-width: none;
+  }
+
+  .frs-mobile-bar::-webkit-scrollbar { display: none; }
+
+  .frs-mobile-count {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 42px;
+    margin: 0;
+    padding: 10px 8px 8px !important;
+    border-top: 0;
+    text-align: right;
+    font-size: 14px;
+    font-weight: 600;
+    color: #12293d;
+  }
+
+  .fr-card {
+    min-height: 0;
+    align-items: stretch;
+    gap: 12px !important;
+    padding: 14px !important;
+  }
+
+  .fr-left { gap: 10px; }
+  .fr-slices { gap: 12px; }
+  .fr-slice + .fr-slice { padding-top: 12px; }
+}
+
+/* Keep results cards from gaining excess height from inconsistent grid alignment. */
+.fr-card {
+  box-sizing: border-box;
+  align-items: center;
+}
+
+.fr-card .fr-left,
+.fr-card .fr-price-col {
+  min-width: 0;
+}
+
+@media (min-width: 768px) {
+  .fr-card { min-height: 184px; }
+  .fr-card .fr-price-col { justify-content: center; }
+}
+
+@media (min-width: 768px) and (max-width: 1023.98px) {
+  .fr-card { min-height: 196px; }
+}
