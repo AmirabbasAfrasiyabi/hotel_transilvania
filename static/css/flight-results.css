@@ -502,65 +502,207 @@
   font-weight: 500;
 }
 
-/* ---------- Responsive ---------- */
-@media (max-width: 991px) {
+/* ---------- Responsive: tablet + mobile (SnappTrip-style filters) ---------- */
+@media (max-width: 1023.98px) {
   .fr-layout {
-    grid-template-columns: 1fr;
-    grid-template-rows: none;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    grid-template-columns: none !important;
   }
+
+  /* Results take full width — never squeezed by sidebar */
   .frs-datestrip,
   .fr-toolbar,
-  #frResults,
+  #frResults {
+    width: 100% !important;
+    max-width: 100% !important;
+    grid-column: auto !important;
+  }
+
+  /* Hide desktop sticky sidebar; becomes bottom sheet when open */
   .frs-filters {
-    grid-column: 1;
-    grid-row: auto;
+    position: fixed !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    top: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: min(85vh, 640px) !important;
+    margin: 0 !important;
+    border-radius: 18px 18px 0 0 !important;
+    box-shadow: 0 -12px 40px rgba(15, 23, 42, 0.2) !important;
+    z-index: 100050 !important;
+    overflow-y: auto !important;
+    padding: 16px 16px 88px !important;
+    transform: translateY(110%) !important;
+    transition: transform 0.28s ease !important;
+    pointer-events: none !important;
   }
-  .frs-filters {
-    position: static;
+  .frs-filters.is-open {
+    transform: translateY(0) !important;
+    pointer-events: auto !important;
+  }
+  .frs-filters[hidden] {
+    display: none !important;
   }
 
-  .fr-card {
-    grid-template-columns: 1fr;
-    gap: 16px;
+  /* Backdrop behind filter sheet */
+  .frs-filter-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.35);
+    z-index: 100040;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+  .frs-filter-backdrop[hidden] {
+    display: none !important;
   }
 
-  .fr-price-col {
-    border-left: none;
-    border-top: 1px solid var(--tvl-paper-dark, #E7D9C2);
-    padding-left: 0;
-    padding-top: 14px;
-    align-items: stretch;
-    min-width: 0;
-  }
-
-  .fr-select-btn {
+  /* Top action chips: Filters + Sort */
+  .frs-mobile-bar {
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
     width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 4px 2px 6px;
+  }
+  .frs-mobile-bar[hidden] {
+    display: none !important;
+  }
+  .frs-chip-btn {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 36px;
+    padding: 0 14px;
+    border-radius: 999px;
+    border: 1px solid #e2e8f0;
+    background: #fff;
+    color: #12293D;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .frs-chip-btn i { font-size: 12px; }
+  .frs-chip-btn.is-active {
+    border-color: #ff6f59;
+    color: #ff6f59;
+  }
+
+  /* Desktop sort line stays usable under chips */
+  .fr-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Cards full width, no crop */
+  .fr-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+    overflow: visible !important;
+  }
+  .fr-price-col {
+    border-left: none !important;
+    border-top: 1px solid #e7d9c2;
+    padding-left: 0 !important;
+    padding-top: 12px !important;
+    align-items: stretch !important;
+    min-width: 0 !important;
+  }
+  .fr-select-btn {
+    width: 100% !important;
+  }
+
+  /* Sticky footer actions inside filter sheet */
+  .frs-filters-actions {
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    gap: 10px;
+    padding: 12px 0 4px;
+    background: linear-gradient(to top, #fff 70%, rgba(255,255,255,0));
+    margin-top: 12px;
+  }
+  .frs-filters-actions .frs-clear-btn,
+  .frs-filters-actions .frs-apply-btn {
+    flex: 1;
+    height: 44px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+  }
+  .frs-filters-actions .frs-clear-btn {
+    background: #f1f5f9;
+    color: #64748b;
+  }
+  .frs-filters-actions .frs-apply-btn {
+    background: #ff6f59;
+    color: #fff;
+  }
+
+  .frs-filters-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .frs-filters-header h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #12293D;
+  }
+  .frs-filters-close {
+    border: none;
+    background: #f1f5f9;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    color: #64748b;
+  }
+}
+
+/* Desktop: hide mobile-only UI */
+@media (min-width: 1024px) {
+  .frs-mobile-bar,
+  .frs-filter-backdrop,
+  .frs-filters-header,
+  .frs-filters-actions {
+    display: none !important;
   }
 }
 
 @media (max-width: 575px) {
   .fr-card {
-    padding: 16px;
+    padding: 16px !important;
   }
-
   .fr-main-row {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
   }
-
-  .fr-airline {
-    min-width: 0;
-  }
-
-  .fr-time {
-    font-size: 20px;
-  }
-
-  .fr-point {
-    min-width: 80px;
-  }
+  .fr-time { font-size: 20px !important; }
+  .fr-point { min-width: 72px !important; }
 }
+
 
 
 .fr-baggage {
@@ -763,4 +905,345 @@
 }
 .frs-editor .hsf-passenger-field .hsf-label {
   display: none !important;
+}
+
+
+/* Mobile toolbar: hide desktop sort row; show chips + count */
+@media (max-width: 1023.98px) {
+  .fr-toolbar.fr-toolbar--desktop-only,
+  .fr-toolbar {
+    display: none !important;
+  }
+  .frs-mobile-count {
+    display: block !important;
+    width: 100%;
+    padding: 4px 4px 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #12293D;
+  }
+  .frs-mobile-count[hidden] { display: none !important; }
+
+  /* Sort bottom sheet */
+  .frs-sort-sheet {
+    position: fixed !important;
+    left: 0; right: 0; bottom: 0;
+    max-height: 70vh;
+    background: #fff;
+    border-radius: 18px 18px 0 0;
+    z-index: 100050;
+    padding: 16px 16px 24px;
+    box-shadow: 0 -12px 40px rgba(15,23,42,.2);
+    transform: translateY(110%);
+    transition: transform .28s ease;
+  }
+  .frs-sort-sheet.is-open {
+    transform: translateY(0);
+  }
+  .frs-sort-sheet[hidden] { display: none !important; }
+  .frs-sort-sheet-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .frs-sort-sheet-head h3 { margin: 0; font-size: 18px; }
+  .frs-sort-sheet-body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .frs-sort-sheet-body .fr-sort-btn {
+    width: 100%;
+    text-align: left;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    background: #fff;
+  }
+  .frs-sort-sheet-body .fr-sort-btn.is-active {
+    background: #12293D;
+    color: #fff;
+    border-color: #12293D;
+  }
+
+  /* Date strip: no hole/gap with arrows */
+  .frs-datestrip {
+    display: flex !important;
+    align-items: stretch !important;
+    gap: 6px !important;
+    width: 100% !important;
+    overflow: hidden !important;
+  }
+  .frs-datestrip-track {
+    flex: 1 1 auto !important;
+    display: flex !important;
+    gap: 6px !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    min-width: 0 !important;
+  }
+  .frs-date-nav {
+    flex: 0 0 36px !important;
+    width: 36px !important;
+    height: 36px !important;
+    align-self: center !important;
+  }
+  .frs-date-day {
+    flex: 0 0 auto !important;
+    scroll-snap-align: start;
+  }
+}
+
+@media (min-width: 1024px) {
+  .frs-mobile-bar,
+  .frs-mobile-count,
+  .frs-sort-sheet,
+  .frs-filter-backdrop {
+    display: none !important;
+  }
+  .fr-toolbar {
+    display: flex !important;
+  }
+  /* Critical: desktop sidebar always visible when content exists */
+  .frs-filters:not([hidden]) {
+    display: block !important;
+    position: sticky !important;
+    transform: none !important;
+    pointer-events: auto !important;
+    max-height: none !important;
+  }
+}
+
+
+/* ===== Fix filter sheet visibility (must beat [hidden] conflicts) ===== */
+@media (max-width: 1023.98px) {
+  aside.frs-filters.is-open,
+  .frs-filters.is-open {
+    display: block !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+    pointer-events: auto !important;
+    opacity: 1 !important;
+    z-index: 100060 !important;
+  }
+
+  .frs-filter-backdrop:not([hidden]) {
+    display: block !important;
+    z-index: 100055 !important;
+  }
+
+  .frs-mobile-count {
+    display: block !important;
+    width: 100%;
+    text-align: left;
+    padding: 2px 6px 12px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #12293D;
+  }
+
+  /* Date strip tablet/mobile: eliminate arrow hole */
+  .frs-datestrip {
+    display: grid !important;
+    grid-template-columns: 36px 1fr 36px !important;
+    align-items: center !important;
+    gap: 4px !important;
+    width: 100% !important;
+    overflow: hidden !important;
+  }
+  .frs-datestrip-track {
+    grid-column: 2 !important;
+    display: flex !important;
+    gap: 6px !important;
+    overflow-x: auto !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    scrollbar-width: none;
+  }
+  .frs-datestrip-track::-webkit-scrollbar { display: none; }
+  .frs-date-nav {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    border-radius: 50% !important;
+    flex: none !important;
+    margin: 0 !important;
+  }
+  #frsDatePrev { grid-column: 1 !important; }
+  #frsDateNext { grid-column: 3 !important; }
+}
+
+/* ===== Tablet-only flight card grid polish ===== */
+@media (min-width: 768px) and (max-width: 1023.98px) {
+  .fr-card {
+    display: grid !important;
+    grid-template-columns: 1fr 160px !important;
+    grid-template-rows: auto auto !important;
+    gap: 12px 16px !important;
+    align-items: center !important;
+    padding: 16px 18px !important;
+  }
+  .fr-card .fr-left,
+  .fr-card .fr-slices {
+    grid-column: 1 !important;
+  }
+  .fr-card .fr-price-col {
+    grid-column: 2 !important;
+    grid-row: 1 / span 2 !important;
+    border-top: none !important;
+    border-left: 1px solid #eee !important;
+    padding: 0 0 0 16px !important;
+    align-items: flex-end !important;
+    justify-content: center !important;
+    min-width: 0 !important;
+  }
+  .fr-card .fr-select-btn {
+    width: 100% !important;
+    min-width: 120px !important;
+  }
+  .fr-main-row {
+    display: grid !important;
+    grid-template-columns: 140px 1fr !important;
+    gap: 12px !important;
+    align-items: center !important;
+  }
+}
+
+
+/* ============================================================
+   Tablet: single row — Filters + Sort left, count right
+   Hide Duration/Price/... chips
+   ============================================================ */
+@media (min-width: 768px) and (max-width: 1023.98px) {
+  .frs-mobile-bar {
+    display: none !important;
+  }
+
+  .frs-tablet-bar {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    padding: 6px 4px 10px;
+  }
+  .frs-tablet-bar[hidden] { display: none !important; }
+
+  .frs-tablet-bar-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .frs-tablet-bar .frs-chip-btn {
+    height: 36px;
+    padding: 0 14px;
+    border-radius: 999px;
+    border: 1px solid #e2e8f0;
+    background: #fff;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+  }
+
+  .frs-tablet-count {
+    font-size: 15px;
+    font-weight: 700;
+    color: #12293D;
+    white-space: nowrap;
+  }
+
+  /* Hide mobile count row on tablet — count lives in tablet bar */
+  .frs-mobile-count {
+    display: none !important;
+  }
+
+  /* Date strip: kill the hole next to arrows */
+  .frs-datestrip {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+    padding: 0 4px !important;
+    box-sizing: border-box !important;
+  }
+  .frs-date-nav {
+    flex: 0 0 40px !important;
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    max-width: 40px !important;
+    border-radius: 50% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .frs-datestrip-track {
+    flex: 1 1 auto !important;
+    display: flex !important;
+    gap: 8px !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    min-width: 0 !important;
+    width: auto !important;
+    max-width: none !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+    mask-image: none !important;
+    -webkit-mask-image: none !important;
+  }
+  .frs-datestrip-track::-webkit-scrollbar { display: none !important; height: 0 !important; }
+  .frs-date-cell {
+    flex: 1 1 0 !important;
+    min-width: 88px !important;
+    max-width: 120px !important;
+  }
+}
+
+/* Mobile keeps its multi-chip bar; hide tablet bar */
+@media (max-width: 767.98px) {
+  .frs-tablet-bar { display: none !important; }
+}
+
+/* ============================================================
+   Desktop: Sort left + results count right (above flight cards)
+   ============================================================ */
+@media (min-width: 1024px) {
+  .frs-tablet-bar,
+  .frs-mobile-bar,
+  .frs-mobile-count {
+    display: none !important;
+  }
+
+  .fr-toolbar {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    gap: 16px !important;
+    margin-bottom: 8px !important;
+  }
+
+  .fr-toolbar-left {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+  }
+
+  .fr-toolbar-count {
+    margin-left: auto !important;
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    color: #12293D !important;
+    white-space: nowrap !important;
+  }
+
+  /* Hide the old count inside the filter sidebar on desktop */
+  .frs-filters .frs-filters-count {
+    display: none !important;
+  }
 }

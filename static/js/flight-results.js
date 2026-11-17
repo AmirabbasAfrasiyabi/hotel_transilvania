@@ -6,8 +6,371 @@
 
   var apiUrl = root.dataset.apiUrl + window.location.search;
 
+  
   var filtersEl = document.getElementById("frFilters");
+
+  /* ---- Mobile / tablet filter sheet (SnappTrip-style) ---- */
+  function isMobileFilters() {
+    return window.matchMedia("(max-width: 1023.98px)").matches;
+  }
+
+  function ensureMobileFilterChrome() {
+    var layout = document.querySelector(".fr-layout");
+    if (!layout) return;
+
+    var bar = document.getElementById("frsMobileBar");
+    if (!bar) {
+      bar = document.createElement("div");
+      bar.id = "frsMobileBar";
+      bar.className = "frs-mobile-bar";
+      bar.hidden = true;
+      bar.innerHTML =
+        '<button type="button" class="frs-chip-btn" id="frsOpenFilters" data-chip="all">' +
+        '<i class="fa-solid fa-sliders" aria-hidden="true"></i> Filters</button>' +
+        '<button type="button" class="frs-chip-btn" id="frsOpenSort">' +
+        '<i class="fa-solid fa-arrow-down-short-wide" aria-hidden="true"></i> Sort</button>' +
+        '<button type="button" class="frs-chip-btn" data-chip="duration">Duration</button>' +
+        '<button type="button" class="frs-chip-btn" data-chip="price">Price</button>' +
+        '<button type="button" class="frs-chip-btn" data-chip="airline">Airline</button>' +
+        '<button type="button" class="frs-chip-btn" data-chip="cabin">Cabin</button>' +
+        '<button type="button" class="frs-chip-btn" data-chip="stops">Stops</button>' +
+        '<button type="button" class="frs-chip-btn" data-chip="baggage">Baggage</button>';
+      var toolbar = document.getElementById("frToolbar");
+      if (toolbar && toolbar.parentNode) {
+        toolbar.parentNode.insertBefore(bar, toolbar);
+      } else {
+        layout.insertBefore(bar, layout.firstChild);
+      }
+    }
+
+    
+    // Tablet bar: Filters + Sort left, count right (single row)
+    var tbar = document.getElementById("frsTabletBar");
+    if (!tbar) {
+      tbar = document.createElement("div");
+      tbar.id = "frsTabletBar";
+      tbar.className = "frs-tablet-bar";
+      tbar.hidden = true;
+      tbar.innerHTML =
+        '<div class="frs-tablet-bar-left">' +
+          '<button type="button" class="frs-chip-btn" id="frsTabletFilters">' +
+            '<i class="fa-solid fa-sliders" aria-hidden="true"></i> Filters</button>' +
+          '<button type="button" class="frs-chip-btn" id="frsTabletSort">' +
+            '<i class="fa-solid fa-arrow-down-short-wide" aria-hidden="true"></i> Sort</button>' +
+        '</div>' +
+        '<div class="frs-tablet-count" id="frsTabletCount"></div>';
+      var toolbar0 = document.getElementById("frToolbar");
+      if (toolbar0 && toolbar0.parentNode) {
+        toolbar0.parentNode.insertBefore(tbar, toolbar0);
+      } else if (bar && bar.parentNode) {
+        bar.parentNode.insertBefore(tbar, bar.nextSibling);
+      }
+      tbar.querySelector("#frsTabletFilters").addEventListener("click", function () {
+        if (window.__frOpenFiltersSheet) window.__frOpenFiltersSheet(null);
+      });
+      tbar.querySelector("#frsTabletSort").addEventListener("click", function () {
+        var sortBtn = document.getElementById("frsOpenSort");
+        if (sortBtn) sortBtn.click();
+        else if (window.__frOpenFiltersSheet) {
+          // fallback open sort sheet via chrome
+          var s = document.getElementById("frsOpenSort");
+          if (s) s.click();
+        }
+      });
+    }
+
+    // Results count row under chips
+    var countRow = document.getElementById("frsMobileCount");
+    if (!countRow) {
+      countRow = document.createElement("div");
+      countRow.id = "frsMobileCount";
+      countRow.className = "frs-mobile-count";
+      countRow.hidden = true;
+      bar.parentNode.insertBefore(countRow, bar.nextSibling);
+    }
+
+    // Sort sheet (options live here on mobile)
+    var sortSheet = document.getElementById("frsSortSheet");
+    if (!sortSheet) {
+      sortSheet = document.createElement("div");
+      sortSheet.id = "frsSortSheet";
+      sortSheet.className = "frs-sort-sheet";
+      sortSheet.hidden = true;
+      sortSheet.innerHTML =
+        '<div class="frs-sort-sheet-head">' +
+        "<h3>Sort by</h3>" +
+        '<button type="button" class="frs-filters-close" id="frsSortClose" aria-label="Close">&times;</button>' +
+        "</div>" +
+        '<div class="frs-sort-sheet-body" id="frsSortSheetBody"></div>';
+      document.body.appendChild(sortSheet);
+    }
+
+    var backdrop = document.getElementById("frsFilterBackdrop");
+    if (!backdrop) {
+      backdrop = document.createElement("button");
+      backdrop.type = "button";
+      backdrop.id = "frsFilterBackdrop";
+      backdrop.className = "frs-filter-backdrop";
+      backdrop.setAttribute("aria-label", "Close");
+      backdrop.hidden = true;
+      document.body.appendChild(backdrop);
+    }
+
+    function openFiltersSheet(scrollKey) {
+      if (!filtersEl) return;
+
+      // Do NOT call syncMobileFilterVisibility here — it re-hides the sheet on mobile.
+
+      filtersEl.hidden = false;
+      filtersEl.removeAttribute("hidden");
+      filtersEl.style.display = "block";
+      filtersEl.style.visibility = "visible";
+      filtersEl.style.pointerEvents = "auto";
+
+      if (!filtersEl.querySelector(".frs-filters-header")) {
+        var head = document.createElement("div");
+        head.className = "frs-filters-header";
+        head.innerHTML =
+          "<h3>Filters</h3>" +
+          '<button type="button" class="frs-filters-close" aria-label="Close">&times;</button>';
+        filtersEl.insertBefore(head, filtersEl.firstChild);
+        head.querySelector(".frs-filters-close").addEventListener("click", closeAllSheets);
+      }
+      if (!filtersEl.querySelector(".frs-filters-actions")) {
+        var acts = document.createElement("div");
+        acts.className = "frs-filters-actions";
+        acts.innerHTML =
+          '<button type="button" class="frs-clear-btn" id="frsClearFilters">Clear</button>' +
+          '<button type="button" class="frs-apply-btn" id="frsApplyFilters">Show results</button>';
+        filtersEl.appendChild(acts);
+        acts.querySelector("#frsApplyFilters").addEventListener("click", closeAllSheets);
+        acts.querySelector("#frsClearFilters").addEventListener("click", function () {
+          filtersEl.querySelectorAll("input[type=checkbox]").forEach(function (c) {
+            c.checked = true;
+            c.dispatchEvent(new Event("change", { bubbles: true }));
+          });
+        });
+      }
+
+      closeSortSheet(true);
+      requestAnimationFrame(function () {
+        filtersEl.classList.add("is-open");
+      });
+      backdrop.hidden = false;
+      backdrop.removeAttribute("hidden");
+      document.body.style.overflow = "hidden";
+
+      if (scrollKey) {
+        setTimeout(function () {
+          var target =
+            filtersEl.querySelector('[data-range-group="' + scrollKey + '"]') ||
+            filtersEl.querySelector('.frs-filter-group[data-group="' + scrollKey + '"]');
+          if (!target) {
+            var map = {
+              duration: "Duration",
+              price: "Price",
+              airline: "Airline",
+              cabin: "Cabin",
+              stops: "Stops",
+              baggage: "Baggage"
+            };
+            filtersEl.querySelectorAll(".frs-filter-group").forEach(function (g) {
+              var t = ((g.querySelector(".frs-filter-title") || {}).textContent || "").trim();
+              if (map[scrollKey] && t.indexOf(map[scrollKey]) === 0) target = g;
+            });
+          }
+          if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 120);
+      } else {
+        filtersEl.scrollTop = 0;
+      }
+    }
+
+    function closeFiltersSheet() {
+      if (!filtersEl) return;
+      filtersEl.classList.remove("is-open");
+      if (isMobileFilters()) {
+        setTimeout(function () {
+          if (filtersEl && !filtersEl.classList.contains("is-open")) {
+            filtersEl.hidden = true;
+            filtersEl.style.display = "";
+            filtersEl.style.visibility = "";
+            filtersEl.style.pointerEvents = "";
+          }
+        }, 280);
+      } else {
+        filtersEl.hidden = false;
+        filtersEl.style.display = "";
+        filtersEl.style.visibility = "";
+        filtersEl.style.pointerEvents = "";
+      }
+    }
+
+    function openSortSheet() {
+      // Copy sort buttons into sheet
+      var body = document.getElementById("frsSortSheetBody");
+      var line = document.getElementById("frSortLine");
+      if (body && line) {
+        body.innerHTML = "";
+        line.querySelectorAll(".fr-sort-btn").forEach(function (btn) {
+          var b = btn.cloneNode(true);
+          b.addEventListener("click", function () {
+            btn.click();
+            closeAllSheets();
+          });
+          body.appendChild(b);
+        });
+      }
+      closeFiltersSheet();
+      sortSheet.hidden = false;
+      sortSheet.classList.add("is-open");
+      backdrop.hidden = false;
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeSortSheet(skipBackdrop) {
+      sortSheet.classList.remove("is-open");
+      sortSheet.hidden = true;
+      if (!skipBackdrop) {
+        // only clear backdrop if filters not open
+        if (!filtersEl || !filtersEl.classList.contains("is-open")) {
+          backdrop.hidden = true;
+          document.body.style.overflow = "";
+        }
+      }
+    }
+
+    function closeAllSheets() {
+      closeFiltersSheet();
+      closeSortSheet(true);
+      backdrop.hidden = true;
+      document.body.style.overflow = "";
+    }
+
+    // Bind chips once
+    if (!bar.__bound) {
+      bar.__bound = true;
+      bar.addEventListener("click", function (e) {
+        var chip = e.target.closest(".frs-chip-btn");
+        if (!chip) return;
+        if (chip.id === "frsOpenSort") {
+          openSortSheet();
+          return;
+        }
+        var key = chip.getAttribute("data-chip");
+        if (key === "all" || chip.id === "frsOpenFilters") {
+          openFiltersSheet(null);
+        } else if (key) {
+          openFiltersSheet(key);
+        }
+      });
+    }
+    if (backdrop && !backdrop.__bound) {
+      backdrop.__bound = true;
+      backdrop.addEventListener("click", closeAllSheets);
+    }
+    var sortClose = document.getElementById("frsSortClose");
+    if (sortClose && !sortClose.__bound) {
+      sortClose.__bound = true;
+      sortClose.addEventListener("click", closeAllSheets);
+    }
+
+    window.__frOpenFiltersSheet = openFiltersSheet;
+    window.__frCloseFiltersSheet = closeAllSheets;
+    window.__frUpdateMobileCount = function (n) {
+      var origin = "";
+      var dest = "";
+      try {
+        var q = new URLSearchParams(window.location.search);
+        origin = q.get("origin") || "";
+        dest = q.get("destination") || "";
+      } catch (e) {}
+      if (state && state.params) {
+        origin = state.params.origin || origin;
+        dest = state.params.destination || dest;
+      }
+      var route = "";
+      if (origin && dest) {
+        route = " · " + origin + " to " + dest;
+      }
+      var text = n + (n === 1 ? " flight" : " flights") + route;
+
+      var el = document.getElementById("frsMobileCount");
+      if (el) {
+        if (window.matchMedia("(max-width: 767.98px)").matches) {
+          el.hidden = false;
+          el.textContent = text;
+        } else {
+          el.hidden = true;
+        }
+      }
+      var tcount = document.getElementById("frsTabletCount");
+      if (tcount) tcount.textContent = text;
+
+      var dcount = document.getElementById("frToolbarCount");
+      if (dcount) dcount.textContent = text;
+    };
+  }
+
+  function syncMobileFilterVisibility() {
+    ensureMobileFilterChrome();
+    var bar = document.getElementById("frsMobileBar");
+    var countRow = document.getElementById("frsMobileCount");
+    var backdrop = document.getElementById("frsFilterBackdrop");
+    var sortSheet = document.getElementById("frsSortSheet");
+    var toolbar = document.getElementById("frToolbar");
+
+    var isTablet = window.matchMedia("(min-width: 768px) and (max-width: 1023.98px)").matches;
+    var isPhone = window.matchMedia("(max-width: 767.98px)").matches;
+    var tbar = document.getElementById("frsTabletBar");
+
+    if (isMobileFilters()) {
+      if (bar) bar.hidden = !isPhone; // phone only multi-chip bar
+      if (tbar) tbar.hidden = !isTablet;
+      if (countRow) countRow.hidden = !isPhone;
+      if (toolbar) toolbar.classList.add("fr-toolbar--desktop-only");
+      if (filtersEl && !filtersEl.classList.contains("is-open")) {
+        filtersEl.hidden = true;
+      }
+    } else {
+      // DESKTOP: restore everything
+      if (bar) bar.hidden = true;
+      if (tbar) tbar.hidden = true;
+      if (countRow) countRow.hidden = true;
+      if (backdrop) backdrop.hidden = true;
+      if (sortSheet) {
+        sortSheet.hidden = true;
+        sortSheet.classList.remove("is-open");
+      }
+      document.body.style.overflow = "";
+      if (toolbar) toolbar.classList.remove("fr-toolbar--desktop-only");
+      if (filtersEl) {
+        filtersEl.classList.remove("is-open");
+        // Only show if it has content
+        if (filtersEl.innerHTML.trim()) {
+          filtersEl.hidden = false;
+        }
+      }
+    }
+  }
+
+  window.addEventListener("resize", syncMobileFilterVisibility);
+
+
   var toolbarEl = document.getElementById("frToolbar");
+  if (toolbarEl && !document.getElementById("frToolbarCount")) {
+    var left = document.createElement("div");
+    left.className = "fr-toolbar-left";
+    while (toolbarEl.firstChild) {
+      left.appendChild(toolbarEl.firstChild);
+    }
+    toolbarEl.appendChild(left);
+    var dc = document.createElement("div");
+    dc.id = "frToolbarCount";
+    dc.className = "fr-toolbar-count";
+    toolbarEl.appendChild(dc);
+  }
+
   var sortLine = document.getElementById("frSortLine");
   var dateStripEl = document.getElementById("frsDateStrip");
   var dateTrackEl = document.getElementById("frsDateTrack");
@@ -686,7 +1049,7 @@
       .join("");
 
     return (
-      '<div class="frs-filter-group">' +
+      '<div class="frs-filter-group" data-group="' + key + '">' +
 
         '<div class="frs-filter-title">' +
           esc(title) +
@@ -1174,6 +1537,10 @@
               state.flights.length
             : ""
         );
+    }
+
+    if (window.__frUpdateMobileCount) {
+      window.__frUpdateMobileCount(visible.length);
     }
 
     if (!visible.length) {
