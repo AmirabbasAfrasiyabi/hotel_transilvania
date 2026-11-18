@@ -1,3 +1,5 @@
+@import url("flight-results.css");
+
 /* Responsive flight-results toolbar and card-height refinements. */
 
 /* Desktop: result summary on the left, sort navigation anchored on the right. */
@@ -17,7 +19,6 @@
     direction: ltr;
   }
 
-  /* JS places the sort label and choices inside this wrapper. */
   .fr-toolbar-left {
     order: 2;
     display: flex;
@@ -36,17 +37,9 @@
     gap: 4px;
   }
 
-  .fr-sort-label {
-    white-space: nowrap;
-  }
-
-  .fr-sort-btn {
-    border-radius: 6px;
-  }
-
-  .fr-sort-btn.is-active {
-    border-radius: 6px;
-  }
+  .fr-sort-label { white-space: nowrap; }
+  .fr-sort-btn,
+  .fr-sort-btn.is-active { border-radius: 6px; }
 
   .fr-toolbar-count {
     order: 1;
@@ -82,7 +75,6 @@
     gap: 20px;
   }
 
-  /* Remove the oval outlines/backgrounds around Filter and Sort (including icon chips). */
   .frs-tablet-bar .frs-chip-btn,
   .frs-mobile-bar .frs-chip-btn#frsOpenFilters,
   .frs-mobile-bar .frs-chip-btn#frsOpenSort {
@@ -105,8 +97,7 @@
   }
 }
 
-/* Phone: keep the filter/sort navbar on top; put search summary on its own
-   right-aligned row below a thin divider. */
+/* Phone: keep filter/sort controls above the right-aligned search summary. */
 @media (max-width: 767.98px) {
   .frs-mobile-bar {
     box-sizing: border-box;
@@ -153,9 +144,7 @@
 }
 
 .fr-card .fr-left,
-.fr-card .fr-price-col {
-  min-width: 0;
-}
+.fr-card .fr-price-col { min-width: 0; }
 
 @media (min-width: 768px) {
   .fr-card { min-height: 184px; }
